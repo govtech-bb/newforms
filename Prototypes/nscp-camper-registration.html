@@ -71,9 +71,7 @@ const FLOW = [
   'nutrition',
   'guardian-name',
   'guardian-contact',
-  'emergency-activities',
   'emergency-contact',
-  'permissions',
   'conduct',
   'check',
   'confirmation'
@@ -274,16 +272,13 @@ const PAGES = {
       </div>
     </form>`,
 
-  /* ── Camp + curriculum ── */
+  /* ── Camp + curriculum + activities + photo permission ── */
   'camp': () => {
     const parish = GovBB.D['camp-parish'] || '';
     const venueOptions = parish && CAMP_VENUES[parish] ? CAMP_VENUES[parish] : [];
     const venueDropdown = parish
       ? styledSelect('camp-name', 'Name of camp', venueOptions, { placeholder: 'Select a camp' })
-      : `<div class="field-group flex flex-col gap-xs w-full items-start">
-           <p class="block text-[1.25rem] leading-normal font-bold text-bb-black-00">Name of camp</p>
-           <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00">Select a parish first to see available camps.</p>
-         </div>`;
+      : '';
     return `
     <form novalidate>
       ${GovBB.caption()}
@@ -306,6 +301,20 @@ const PAGES = {
           ${GovBB.checkboxItem('curriculum-self',        'Self-Management Tools <span class="font-normal text-bb-mid-grey-00">(includes health &amp; wellness, self-care, religious knowledge, ethics, etiquette)</span>')}
           ${GovBB.checkboxItem('curriculum-finance',     'Financial Literacy')}
           ${GovBB.checkboxItem('curriculum-agriculture', 'Agriculture')}
+        </div>
+
+        <div class="space-y-6">
+          <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-s">Activities</h2>
+          ${GovBB.textareaField('activity-exemptions', 'Are there any activities your child should not take part in?', {
+            hint: 'If there are no restrictions, write "None". We give permission for trained camp staff to give first aid and seek emergency care for your child if we cannot reach you.',
+            rows: 4
+          })}
+        </div>
+
+        <div class="space-y-6">
+          <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-s">Photos and videos</h2>
+          <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00">Photos and videos may be used in National Summer Camp Programme materials and communications.</p>
+          ${GovBB.radioGroup('photo-permission', 'Do you give permission for photos or videos of your child during camp activities?', ['Yes', 'No'])}
         </div>
 
         ${btnGroup()}
@@ -343,6 +352,12 @@ const PAGES = {
         ${styledSelect('guardian-relationship', 'Your relationship to the camper', RELATIONSHIPS, {
           placeholder: 'Select a relationship'
         })}
+        <div data-show-when-name="guardian-relationship" data-show-when-value="Other" style="display:${GovBB.D['guardian-relationship'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
+          ${GovBB.textField('guardian-relationship-other', 'Please describe your relationship to the camper')}
+        </div>
+        ${GovBB.radioGroup('guardian-is-emergency', 'Are you the emergency contact?', ['Yes', 'No'], {
+          hint: 'If yes, we will use your contact details above in an emergency.'
+        })}
         ${btnGroup()}
       </div>
     </form>`,
@@ -351,7 +366,7 @@ const PAGES = {
   'guardian-contact': () => `
     <form novalidate>
       ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your address and contact details</h1>
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">How to reach you</h1>
 
       <div class="space-y-8">
 
@@ -390,22 +405,6 @@ const PAGES = {
       </div>
     </form>`,
 
-  /* ── Emergency activities ── */
-  'emergency-activities': () => `
-    <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Are there any activities your child should not take part in?</h1>
-      <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00 mb-8">We give permission for trained camp staff to give first aid and seek emergency care for your child if we cannot reach you. If there are activities your child cannot take part in, list them below.</p>
-
-      <div class="space-y-8">
-        ${GovBB.textareaField('activity-exemptions', 'List any activities your child should be exempt from', {
-          hint: 'If there are no restrictions, write "None".',
-          rows: 4
-        })}
-        ${btnGroup()}
-      </div>
-    </form>`,
-
   /* ── Emergency contact ── */
   'emergency-contact': () => `
     <form novalidate>
@@ -417,23 +416,13 @@ const PAGES = {
         ${styledSelect('emerg-relationship', 'Relationship to camper', RELATIONSHIPS, {
           placeholder: 'Select a relationship'
         })}
+        <div data-show-when-name="emerg-relationship" data-show-when-value="Other" style="display:${GovBB.D['emerg-relationship'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
+          ${GovBB.textField('emerg-relationship-other', 'Please describe their relationship to the camper')}
+        </div>
         ${GovBB.telField('emerg-phone', 'Phone number', {
           hint: 'For example, 246 555-1234.',
           placeholder: '246 555-1234'
         })}
-        ${btnGroup()}
-      </div>
-    </form>`,
-
-  /* ── Permissions ── */
-  'permissions': () => `
-    <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Can we take photos or videos of your child?</h1>
-      <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00 mb-8">Photos and videos may be used in National Summer Camp Programme materials and communications.</p>
-
-      <div class="space-y-8">
-        ${GovBB.radioGroup('photo-permission', 'Do you give permission for photos or videos of your child during camp activities?', ['Yes', 'No'])}
         ${btnGroup()}
       </div>
     </form>`,
@@ -501,6 +490,8 @@ const PAGES = {
             ${GovBB.summaryRow('Parish of camp', GovBB.D['camp-parish'] || '—', 'camp')}
             ${GovBB.summaryRow('Camp name', GovBB.D['camp-name'] || '—', 'camp')}
             ${GovBB.summaryRow('Topics of interest', curriculumSummary(), 'camp')}
+            ${GovBB.summaryRow('Activity exemptions', GovBB.D['activity-exemptions'] || '—', 'camp')}
+            ${GovBB.summaryRow('Photo/video permission', GovBB.D['photo-permission'] || '—', 'camp')}
           </dl>
         </div>
 
@@ -516,7 +507,8 @@ const PAGES = {
           <h2 class="font-bold text-[1.5rem] mb-4">Parent or guardian</h2>
           <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
             ${GovBB.summaryRow('Full name', guardianFullName(), 'guardian-name')}
-            ${GovBB.summaryRow('Relationship', GovBB.D['guardian-relationship'] || '—', 'guardian-name')}
+            ${GovBB.summaryRow('Relationship', GovBB.D['guardian-relationship'] === 'Other' ? (GovBB.D['guardian-relationship-other'] || 'Other') : (GovBB.D['guardian-relationship'] || '—'), 'guardian-name')}
+            ${GovBB.summaryRow('Is emergency contact?', GovBB.D['guardian-is-emergency'] || '—', 'guardian-name')}
             ${GovBB.summaryRow('Address', [GovBB.D['address-line1'], GovBB.D['address-line2'], GovBB.D['address-parish'], GovBB.D['address-postal']].filter(Boolean).join(', ') || '—', 'guardian-contact')}
             ${GovBB.summaryRow('Mobile', GovBB.D['phone-cell'] || '—', 'guardian-contact')}
             ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'] || '—', 'guardian-contact')}
@@ -527,19 +519,13 @@ const PAGES = {
         </div>
 
         <div>
-          <h2 class="font-bold text-[1.5rem] mb-4">Emergency information</h2>
+          <h2 class="font-bold text-[1.5rem] mb-4">Emergency contact</h2>
           <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.summaryRow('Activity exemptions', GovBB.D['activity-exemptions'] || '—', 'emergency-activities')}
-            ${GovBB.summaryRow('Emergency contact', emergencyFullName(), 'emergency-contact')}
-            ${GovBB.summaryRow('Relationship', GovBB.D['emerg-relationship'] || '—', 'emergency-contact')}
-            ${GovBB.summaryRow('Emergency phone', GovBB.D['emerg-phone'] || '—', 'emergency-contact')}
-          </dl>
-        </div>
-
-        <div>
-          <h2 class="font-bold text-[1.5rem] mb-4">Permissions</h2>
-          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.summaryRow('Photo/video permission', GovBB.D['photo-permission'] || '—', 'permissions')}
+            ${GovBB.D['guardian-is-emergency'] === 'Yes'
+              ? GovBB.summaryRow('Emergency contact', guardianFullName() + ' (parent / guardian)', 'guardian-name')
+              : `${GovBB.summaryRow('Emergency contact', emergencyFullName(), 'emergency-contact')}
+                 ${GovBB.summaryRow('Relationship', GovBB.D['emerg-relationship'] === 'Other' ? (GovBB.D['emerg-relationship-other'] || 'Other') : (GovBB.D['emerg-relationship'] || '—'), 'emergency-contact')}
+                 ${GovBB.summaryRow('Emergency phone', GovBB.D['emerg-phone'] || '—', 'emergency-contact')}`}
           </dl>
         </div>
 
@@ -619,6 +605,9 @@ function validate(pageId) {
     const anyTopic = D['curriculum-arts'] || D['curriculum-innovation'] || D['curriculum-youth'] ||
                      D['curriculum-health'] || D['curriculum-self'] || D['curriculum-finance'] || D['curriculum-agriculture'];
     if (!anyTopic) errors.push({ id: 'curriculum-arts', msg: 'Choose at least one topic that interests your child' });
+    if (!D['activity-exemptions'] || !D['activity-exemptions'].trim())
+      errors.push({ id: 'activity-exemptions', msg: 'Enter any activity exemptions, or write "None"' });
+    if (!D['photo-permission']) errors.push({ id: 'photo-permission', msg: 'Select yes or no for photo and video permission' });
   }
 
   if (pageId === 'nutrition') {
@@ -630,7 +619,10 @@ function validate(pageId) {
 
   if (pageId === 'guardian-name') {
     if (!D['guardian-fullname'] || !D['guardian-fullname'].trim()) errors.push({ id: 'guardian-fullname', msg: 'Enter your full name' });
-    if (!D['guardian-relationship'])  errors.push({ id: 'guardian-relationship', msg: 'Select your relationship to the camper' });
+    if (!D['guardian-relationship']) errors.push({ id: 'guardian-relationship', msg: 'Select your relationship to the camper' });
+    if (D['guardian-relationship'] === 'Other' && (!D['guardian-relationship-other'] || !D['guardian-relationship-other'].trim()))
+      errors.push({ id: 'guardian-relationship-other', msg: 'Describe your relationship to the camper' });
+    if (!D['guardian-is-emergency']) errors.push({ id: 'guardian-is-emergency', msg: 'Select yes or no — are you the emergency contact?' });
   }
 
   if (pageId === 'guardian-contact') {
@@ -642,20 +634,15 @@ function validate(pageId) {
     if (!D['employer'] || !D['employer'].trim())           errors.push({ id: 'employer', msg: 'Enter your employer or business name' });
   }
 
-  if (pageId === 'emergency-activities') {
-    if (!D['activity-exemptions'] || !D['activity-exemptions'].trim())
-      errors.push({ id: 'activity-exemptions', msg: 'Enter any activity exemptions, or write "None"' });
-  }
 
   if (pageId === 'emergency-contact') {
     if (!D['emerg-fullname'] || !D['emerg-fullname'].trim()) errors.push({ id: 'emerg-fullname', msg: 'Enter the emergency contact\'s full name' });
-    if (!D['emerg-relationship'])  errors.push({ id: 'emerg-relationship', msg: 'Select the emergency contact\'s relationship to the camper' });
-    if (!D['emerg-phone'] || !D['emerg-phone'].trim())       errors.push({ id: 'emerg-phone', msg: 'Enter an emergency phone number' });
+    if (!D['emerg-relationship']) errors.push({ id: 'emerg-relationship', msg: 'Select the emergency contact\'s relationship to the camper' });
+    if (D['emerg-relationship'] === 'Other' && (!D['emerg-relationship-other'] || !D['emerg-relationship-other'].trim()))
+      errors.push({ id: 'emerg-relationship-other', msg: 'Describe their relationship to the camper' });
+    if (!D['emerg-phone'] || !D['emerg-phone'].trim()) errors.push({ id: 'emerg-phone', msg: 'Enter an emergency phone number' });
   }
 
-  if (pageId === 'permissions') {
-    if (!D['photo-permission']) errors.push({ id: 'photo-permission', msg: 'Select yes or no for photo and video permission' });
-  }
 
   if (pageId === 'conduct') {
     if (!conductAllChecked())
@@ -668,9 +655,17 @@ function validate(pageId) {
 /* ───────── Init ───────── */
 GovBB.init({
   formName: FORM_NAME,
-  flow: FLOW,
+  getFlow: function() {
+    if (GovBB.D['guardian-is-emergency'] === 'Yes') {
+      return FLOW.filter(p => p !== 'emergency-contact');
+    }
+    return FLOW;
+  },
   pages: PAGES,
-  validate: validate
+  validate: validate,
+  onRadioChange: function(name) {
+    if (name === 'guardian-is-emergency') GovBB.render();
+  }
 });
 </script>
 </body>
