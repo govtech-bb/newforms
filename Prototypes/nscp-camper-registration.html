@@ -194,20 +194,20 @@ function fmtDate(prefix) {
   const d = GovBB.D[prefix + '-day'];
   const m = GovBB.D[prefix + '-month'];
   const y = GovBB.D[prefix + '-year'];
-  if (!d && !m && !y) return '—';
+  if (!d && !m && !y) return '';
   return [d, m, y].filter(Boolean).join(' / ');
 }
 
 function camperFullName() {
-  return GovBB.D['camper-fullname'] || '—';
+  return GovBB.D['camper-fullname'] || '';
 }
 
 function guardianFullName() {
-  return GovBB.D['guardian-fullname'] || '—';
+  return GovBB.D['guardian-fullname'] || '';
 }
 
 function emergencyFullName() {
-  return GovBB.D['emerg-fullname'] || '—';
+  return GovBB.D['emerg-fullname'] || '';
 }
 
 function curriculumSummary() {
@@ -221,7 +221,7 @@ function curriculumSummary() {
     ['curriculum-agriculture', 'Agriculture']
   ];
   const selected = topics.filter(t => GovBB.D[t[0]]).map(t => t[1]);
-  return selected.length ? selected.join(', ') : '—';
+  return selected.length ? selected.join(', ') : '';
 }
 
 function conductAllChecked() {
@@ -246,7 +246,7 @@ const PAGES = {
       <div class="space-y-3">
         <h2 class="font-bold text-[1.5rem]">What you'll need</h2>
         <ul class="list-disc pl-6 space-y-2 text-[1.25rem] leading-normal">
-          <li>Your child's National ID Number (NRN) — found on their national ID card. For example, 110915-0048.</li>
+          <li>Your child's National ID Number (NRN), found on their national ID card. For example, 110915-0048.</li>
           <li>Your child's date of birth</li>
           <li>Details of any illnesses, medications, disabilities, or allergies your child has</li>
           <li>Your contact details (address, phone, email)</li>
@@ -407,7 +407,7 @@ const PAGES = {
   'guardian-name': () => `
     <form novalidate>
       ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">About you — the parent or guardian</h1>
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">About you, the parent or guardian</h1>
 
       <div class="space-y-8">
         ${GovBB.textField('guardian-fullname', 'Full name')}
@@ -525,43 +525,43 @@ const PAGES = {
           <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
             ${GovBB.summaryRow('Full name', camperFullName(), 'camper-details')}
             ${GovBB.summaryRow('Date of birth', fmtDate('dob'), 'camper-details')}
-            ${GovBB.summaryRow('National ID Number', GovBB.D['nid'] || '—', 'camper-details')}
-            ${GovBB.summaryRow('Gender', GovBB.D['gender'] || '—', 'camper-details')}
-            ${GovBB.summaryRow('Religion', GovBB.D['religion'] === 'Other' ? (GovBB.D['religion-other'] || 'Other') : (GovBB.D['religion'] || '—'), 'camper-details')}
+            ${GovBB.summaryRow('National ID Number', GovBB.D['nid'] || '', 'camper-details')}
+            ${GovBB.summaryRow('Gender', GovBB.D['gender'] || '', 'camper-details')}
+            ${GovBB.summaryRow('Religion', GovBB.D['religion'] === 'Other' ? (GovBB.D['religion-other'] || 'Other') : (GovBB.D['religion'] || ''), 'camper-details')}
           </dl>
         </div>
 
         <div>
           <h2 class="font-bold text-[1.5rem] mb-4">Medical &amp; health</h2>
           <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.summaryRow('Has illness?', GovBB.D['illness'] || '—', 'camper-health')}
-            ${GovBB.D['illness'] === 'Yes' ? GovBB.summaryRow('Illness details', GovBB.D['illness-details'] || '—', 'camper-health') : ''}
-            ${GovBB.summaryRow('On medication?', GovBB.D['medication'] || '—', 'camper-health')}
-            ${GovBB.D['medication'] === 'Yes' ? GovBB.summaryRow('Medication details', GovBB.D['medication-details'] || '—', 'camper-health') : ''}
-            ${GovBB.summaryRow('Has disability?', GovBB.D['disability'] || '—', 'camper-health')}
-            ${GovBB.D['disability'] === 'Yes' ? GovBB.summaryRow('Disability details', GovBB.D['disability-details'] || '—', 'camper-health') : ''}
-            ${GovBB.summaryRow('Has allergies?', GovBB.D['allergies'] || '—', 'camper-health')}
-            ${GovBB.D['allergies'] === 'Yes' ? GovBB.summaryRow('Allergy details', GovBB.D['allergies-details'] || '—', 'camper-health') : ''}
-            ${GovBB.summaryRow('Doctor or polyclinic', GovBB.D['doctor-name'] || '—', 'camper-health')}
+            ${GovBB.summaryRow('Has illness?', GovBB.D['illness'] || '', 'camper-health')}
+            ${GovBB.D['illness'] === 'Yes' ? GovBB.summaryRow('Illness details', GovBB.D['illness-details'] || '', 'camper-health') : ''}
+            ${GovBB.summaryRow('On medication?', GovBB.D['medication'] || '', 'camper-health')}
+            ${GovBB.D['medication'] === 'Yes' ? GovBB.summaryRow('Medication details', GovBB.D['medication-details'] || '', 'camper-health') : ''}
+            ${GovBB.summaryRow('Has disability?', GovBB.D['disability'] || '', 'camper-health')}
+            ${GovBB.D['disability'] === 'Yes' ? GovBB.summaryRow('Disability details', GovBB.D['disability-details'] || '', 'camper-health') : ''}
+            ${GovBB.summaryRow('Has allergies?', GovBB.D['allergies'] || '', 'camper-health')}
+            ${GovBB.D['allergies'] === 'Yes' ? GovBB.summaryRow('Allergy details', GovBB.D['allergies-details'] || '', 'camper-health') : ''}
+            ${GovBB.summaryRow('Doctor or polyclinic', GovBB.D['doctor-name'] || '', 'camper-health')}
           </dl>
         </div>
 
         <div>
           <h2 class="font-bold text-[1.5rem] mb-4">Camp</h2>
           <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.summaryRow('Parish of camp', GovBB.D['camp-parish'] || '—', 'camp')}
-            ${GovBB.summaryRow('Camp name', GovBB.D['camp-name'] || '—', 'camp')}
+            ${GovBB.summaryRow('Parish of camp', GovBB.D['camp-parish'] || '', 'camp')}
+            ${GovBB.summaryRow('Camp name', GovBB.D['camp-name'] || '', 'camp')}
             ${GovBB.summaryRow('Topics of interest', curriculumSummary(), 'camp')}
-            ${GovBB.summaryRow('Activity exemptions', GovBB.D['activity-exemptions'] || '—', 'camp')}
-            ${GovBB.summaryRow('Photo/video permission', GovBB.D['photo-permission'] || '—', 'camp')}
+            ${GovBB.summaryRow('Activity exemptions', GovBB.D['activity-exemptions'] || '', 'camp')}
+            ${GovBB.summaryRow('Photo/video permission', GovBB.D['photo-permission'] || '', 'camp')}
           </dl>
         </div>
 
         <div>
           <h2 class="font-bold text-[1.5rem] mb-4">Nutrition</h2>
           <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.summaryRow('Will eat camp meals?', GovBB.D['meals-provided'] || '—', 'nutrition')}
-            ${GovBB.summaryRow('Dietary restrictions', GovBB.D['dietary'] === 'Other' ? (GovBB.D['dietary-other'] || 'Other') : (GovBB.D['dietary'] || '—'), 'nutrition')}
+            ${GovBB.summaryRow('Will eat camp meals?', GovBB.D['meals-provided'] || '', 'nutrition')}
+            ${GovBB.summaryRow('Dietary restrictions', GovBB.D['dietary'] === 'Other' ? (GovBB.D['dietary-other'] || 'Other') : (GovBB.D['dietary'] || ''), 'nutrition')}
           </dl>
         </div>
 
@@ -569,14 +569,14 @@ const PAGES = {
           <h2 class="font-bold text-[1.5rem] mb-4">Parent or guardian</h2>
           <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
             ${GovBB.summaryRow('Full name', guardianFullName(), 'guardian-name')}
-            ${GovBB.summaryRow('Relationship', GovBB.D['guardian-relationship'] === 'Other' ? (GovBB.D['guardian-relationship-other'] || 'Other') : (GovBB.D['guardian-relationship'] || '—'), 'guardian-name')}
-            ${GovBB.summaryRow('Is emergency contact?', GovBB.D['guardian-is-emergency'] || '—', 'guardian-name')}
-            ${GovBB.summaryRow('Address', [GovBB.D['address-line1'], GovBB.D['address-line2'], GovBB.D['address-parish'], GovBB.D['address-postal']].filter(Boolean).join(', ') || '—', 'guardian-contact')}
-            ${GovBB.summaryRow('Mobile', GovBB.D['phone-cell'] || '—', 'guardian-contact')}
-            ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'] || '—', 'guardian-contact')}
-            ${GovBB.summaryRow('Work phone', GovBB.D['phone-work'] || '—', 'guardian-contact')}
-            ${GovBB.summaryRow('Email', GovBB.D['contact-email'] || '—', 'guardian-contact')}
-            ${GovBB.summaryRow('Employer', GovBB.D['employer'] || '—', 'guardian-contact')}
+            ${GovBB.summaryRow('Relationship', GovBB.D['guardian-relationship'] === 'Other' ? (GovBB.D['guardian-relationship-other'] || 'Other') : (GovBB.D['guardian-relationship'] || ''), 'guardian-name')}
+            ${GovBB.summaryRow('Is emergency contact?', GovBB.D['guardian-is-emergency'] || '', 'guardian-name')}
+            ${GovBB.summaryRow('Address', [GovBB.D['address-line1'], GovBB.D['address-line2'], GovBB.D['address-parish'], GovBB.D['address-postal']].filter(Boolean).join(', ') || '', 'guardian-contact')}
+            ${GovBB.summaryRow('Mobile', GovBB.D['phone-cell'] || '', 'guardian-contact')}
+            ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'] || '', 'guardian-contact')}
+            ${GovBB.summaryRow('Work phone', GovBB.D['phone-work'] || '', 'guardian-contact')}
+            ${GovBB.summaryRow('Email', GovBB.D['contact-email'] || '', 'guardian-contact')}
+            ${GovBB.summaryRow('Employer', GovBB.D['employer'] || '', 'guardian-contact')}
           </dl>
         </div>
 
@@ -586,8 +586,8 @@ const PAGES = {
             ${GovBB.D['guardian-is-emergency'] === 'Yes'
               ? GovBB.summaryRow('Emergency contact', guardianFullName() + ' (parent / guardian)', 'guardian-name')
               : `${GovBB.summaryRow('Emergency contact', emergencyFullName(), 'emergency-contact')}
-                 ${GovBB.summaryRow('Relationship', GovBB.D['emerg-relationship'] === 'Other' ? (GovBB.D['emerg-relationship-other'] || 'Other') : (GovBB.D['emerg-relationship'] || '—'), 'emergency-contact')}
-                 ${GovBB.summaryRow('Emergency phone', GovBB.D['emerg-phone'] || '—', 'emergency-contact')}`}
+                 ${GovBB.summaryRow('Relationship', GovBB.D['emerg-relationship'] === 'Other' ? (GovBB.D['emerg-relationship-other'] || 'Other') : (GovBB.D['emerg-relationship'] || ''), 'emergency-contact')}
+                 ${GovBB.summaryRow('Emergency phone', GovBB.D['emerg-phone'] || '', 'emergency-contact')}`}
           </dl>
         </div>
 
@@ -637,8 +637,24 @@ function validate(pageId) {
 
   if (pageId === 'camper-details') {
     if (!D['camper-fullname'] || !D['camper-fullname'].trim()) errors.push({ id: 'camper-fullname', msg: 'Enter your child\'s full name' });
-    if (!D['dob-day'] || !D['dob-month'] || !D['dob-year'])
+    if (!D['dob-day'] || !D['dob-month'] || !D['dob-year']) {
       errors.push({ id: 'dob-day', msg: 'Date of birth – Enter a complete date of birth' });
+    } else {
+      const day = parseInt(D['dob-day'], 10), month = parseInt(D['dob-month'], 10), year = parseInt(D['dob-year'], 10);
+      const parsed = new Date(year, month - 1, day);
+      if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) {
+        errors.push({ id: 'dob-day', msg: 'Date of birth – Enter a real date, for example 15 06 2017' });
+      } else if (parsed >= new Date()) {
+        errors.push({ id: 'dob-day', msg: 'Date of birth – The date of birth must be in the past' });
+      } else {
+        const today = new Date();
+        let age = today.getFullYear() - year;
+        if (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)) age--;
+        if (age < 4 || age > 15) {
+          errors.push({ id: 'dob-day', msg: 'Date of birth – Your child must be between 4 and 15 years old to register' });
+        }
+      }
+    }
     if (!D['nid'] || !D['nid'].trim())  errors.push({ id: 'nid', msg: 'Enter your child\'s National ID Number' });
     if (!D['gender'])                   errors.push({ id: 'gender', msg: 'Select your child\'s gender' });
     if (!D['religion'])                 errors.push({ id: 'religion', msg: 'Select your child\'s religion' });
@@ -686,7 +702,7 @@ function validate(pageId) {
     if (!D['guardian-relationship']) errors.push({ id: 'guardian-relationship', msg: 'Select your relationship to the camper' });
     if (D['guardian-relationship'] === 'Other' && (!D['guardian-relationship-other'] || !D['guardian-relationship-other'].trim()))
       errors.push({ id: 'guardian-relationship-other', msg: 'Describe your relationship to the camper' });
-    if (!D['guardian-is-emergency']) errors.push({ id: 'guardian-is-emergency', msg: 'Select yes or no — are you the emergency contact?' });
+    if (!D['guardian-is-emergency']) errors.push({ id: 'guardian-is-emergency', msg: 'Select yes or no: are you the emergency contact?' });
   }
 
   if (pageId === 'guardian-contact') {
