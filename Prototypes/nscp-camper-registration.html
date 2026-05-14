@@ -396,7 +396,7 @@ const PAGES = {
         ${styledSelect('dietary', 'Dietary restrictions', ['None', 'Vegetarian', 'Vegan', 'Gluten-free', 'Other'], {
           placeholder: 'Select one', triggerRender: true
         })}
-        <div data-show-when-name="dietary" data-show-when-value="Other" style="display:${GovBB.D['dietary'] === 'Other' ? '' : 'none'}">
+        <div data-show-when-name="dietary" data-show-when-value="Other" style="display:${GovBB.D['dietary'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
           ${GovBB.textField('dietary-other', 'Please describe the dietary restriction')}
         </div>
         ${btnGroup()}
