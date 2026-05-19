@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elder Care Companion Application – Ministry of People Empowerment and Elder Affairs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../assets/govbb-tailwind-config.js"></script>
+  <link rel="stylesheet" href="../assets/govbb-base.css">
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="bg-bb-blue-100 text-bb-white-00">
+  <div class="container flex items-center gap-2 py-2 text-[0.875rem]">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Coat_of_arms_of_Barbados_%282%29.svg/1280px-Coat_of_arms_of_Barbados_%282%29.svg.png" alt="Barbados coat of arms" style="height:20px;width:auto;">
+    Official website of the Government of Barbados
+  </div>
+</div>
+
+<!-- Header -->
+<header class="bg-bb-yellow-100">
+  <div class="container py-s">
+    <div class="text-bb-black-00" style="width:276px;height:27px;">
+      <svg width="100%" viewBox="0 0 276 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img"><g><path d="M39.079 21.527C37.5026 21.527 36.103 21.1903 34.8802 20.5168C33.6721 19.8286 32.7219 18.8916 32.0294 17.7057C31.337 16.5051 30.9908 15.1288 30.9908 13.5769C30.9908 12.0249 31.337 10.6559 32.0294 9.47001C32.7219 8.26943 33.6721 7.3324 34.8802 6.65891C36.103 5.97077 37.5026 5.6267 39.079 5.6267C40.0219 5.6267 40.8911 5.7658 41.6867 6.04398C42.4823 6.32216 43.1821 6.71015 43.7861 7.20795C44.4049 7.69111 44.9205 8.24747 45.3331 8.87704L42.858 10.4144C42.6075 10.0191 42.276 9.66767 41.8635 9.3602C41.4657 9.05274 41.0237 8.81116 40.5376 8.63547C40.0514 8.45977 39.5652 8.37192 39.079 8.37192C38.1067 8.37192 37.2448 8.59886 36.4934 9.05274C35.7421 9.49197 35.1527 10.0996 34.7255 10.8756C34.2982 11.6515 34.0846 12.552 34.0846 13.5769C34.0846 14.5871 34.2909 15.4875 34.7034 16.2782C35.1307 17.0688 35.7273 17.691 36.4934 18.1449C37.2595 18.5841 38.1435 18.8038 39.1453 18.8038C39.8967 18.8038 40.567 18.6647 41.1563 18.3865C41.7456 18.0937 42.2171 17.691 42.5707 17.1786C42.9243 16.6661 43.1231 16.0659 43.1673 15.3777H39.5873V13.0278H46.0844V14.8946C46.055 16.3001 45.7382 17.5007 45.1342 18.4963C44.5301 19.4773 43.7051 20.2313 42.6591 20.7584C41.613 21.2708 40.4197 21.527 39.079 21.527Z"></path><path d="M52.8353 21.527C51.7156 21.527 50.7138 21.2854 49.8298 20.8023C48.9606 20.3045 48.2755 19.6237 47.7746 18.7598C47.2884 17.896 47.0453 16.9004 47.0453 15.773C47.0453 14.6457 47.2884 13.6501 47.7746 12.7862C48.2608 11.9224 48.9385 11.2489 49.8077 10.7658C50.677 10.268 51.6714 10.0191 52.7911 10.0191C53.9255 10.0191 54.9273 10.268 55.7966 10.7658C56.6658 11.2489 57.3435 11.9224 57.8297 12.7862C58.3159 13.6501 58.559 14.6457 58.559 15.773C58.559 16.9004 58.3159 17.896 57.8297 18.7598C57.3435 19.6237 56.6658 20.3045 55.7966 20.8023C54.9421 21.2854 53.955 21.527 52.8353 21.527ZM52.8353 18.8477C53.3804 18.8477 53.8592 18.7159 54.2717 18.4524C54.6843 18.1888 55.001 17.8301 55.222 17.3763C55.4577 16.9077 55.5756 16.3733 55.5756 15.773C55.5756 15.1728 55.4577 14.6457 55.222 14.1918C54.9863 13.7233 54.6548 13.3572 54.2275 13.0937C53.815 12.8302 53.3362 12.6984 52.7911 12.6984C52.2607 12.6984 51.7819 12.8302 51.3547 13.0937C50.9421 13.3572 50.618 13.7233 50.3823 14.1918C50.1466 14.6457 50.0287 15.1728 50.0287 15.773C50.0287 16.3733 50.1466 16.9077 50.3823 17.3763C50.618 17.8301 50.9495 18.1888 51.3768 18.4524C51.804 18.7159 52.2902 18.8477 52.8353 18.8477Z"></path><path d="M62.8109 21.2635L58.2806 10.2826H61.2861L64.2694 17.9472L67.2528 10.2826H70.2583L65.728 21.2635H62.8109Z"></path><path d="M12.5786 0C11.6253 2.46943 10.6536 5.03986 8.57466 7.00774C9.21998 6.80573 10.3493 6.62461 11.0753 6.64203V17.0283L7.988 17.4636C7.878 17.4532 7.84133 17.2895 7.84133 17.0666C7.54434 13.8413 6.74135 11.1316 5.81736 8.32779C5.75136 7.94466 4.58171 6.48181 5.4837 6.73955C5.5937 6.75348 6.80002 7.2202 6.60935 6.99729C4.96671 5.38119 2.56508 4.21788 0.233112 3.87306C0.0277812 3.8243 -0.0932171 3.92183 0.0901136 4.14822C3.18474 8.6726 5.77336 14.012 5.75136 20.3475C6.95401 20.3475 9.86897 19.6718 11.0753 19.6718V27H12.5969L12.9453 6.53406L12.5786 0Z"></path><path d="M12.5786 0C13.5319 2.46943 14.5036 5.03986 16.5825 7.00774C15.9372 6.80573 14.8079 6.62461 14.0819 6.64203V17.0283L17.1692 17.4636C17.2792 17.4532 17.3159 17.2895 17.3159 17.0666C17.6129 13.8413 18.4158 11.1316 19.3398 8.32779C19.4058 7.94466 20.5755 6.48181 19.6735 6.73955C19.5635 6.75348 18.3572 7.2202 18.5478 6.99729C20.1905 5.38119 22.5921 4.21788 24.9241 3.87306C25.1294 3.8243 25.2504 3.92183 25.0671 4.14822C21.9725 8.6726 19.3838 14.012 19.4058 20.3475C18.2032 20.3475 15.2882 19.6718 14.0819 19.6718V27H12.5603L12.2119 6.53406L12.5786 0Z"></path></g></svg>
+    </div>
+  </div>
+</header>
+
+<!-- Alpha banner -->
+<div class="bg-bb-blue-10">
+  <div class="container py-xs text-[1rem]">
+    This page is in <a href="#" class="inline-flex outline-none underline-offset-2 underline hover:no-underline active:bg-bb-yellow-100 active:no-underline focus-visible:bg-bb-yellow-100 focus-visible:no-underline active:text-bb-black-00 focus-visible:text-bb-black-00 text-bb-teal-00 hover:text-bb-black-00 hover:bg-bb-teal-10">Alpha</a>. Your feedback helps us improve.
+  </div>
+</div>
+
+<!-- Main -->
+<main>
+  <div class="container py-l">
+    <div class="max-w-3xl" id="app"></div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-bb-blue-100 text-bb-white-00">
+  <div class="container py-l text-[1rem]">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <p>&copy; 2025 Government of Barbados. All rights reserved.</p>
+      <div class="flex gap-4">
+        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Privacy</a>
+        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Terms</a>
+        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+/* ───────── Form configuration ───────── */
+const FORM_NAME = 'Elder Care Companion Application';
+
+const FLOW = [
+  'start',
+  'applicant-details',
+  'contact',
+  'living-situation',
+  'health-wellbeing',
+  'companion-preferences',
+  'referral',
+  'emergency-contact',
+  'declaration',
+  'check',
+  'confirmation'
+];
+
+/* ───────── Custom styled select (matches design system) ───────── */
+function styledSelect(id, label, options, opts) {
+  opts = opts || {};
+  const val = GovBB.D[id] || '';
+  const hint = opts.hint
+    ? `<p class="text-[1.25rem] leading-normal text-bb-mid-grey-00">${opts.hint}</p>`
+    : '';
+  const triggerAttr = opts.triggerRender ? ' data-trigger-render="1"' : '';
+  const placeholder = opts.placeholder || 'Select one';
+  let ops = `<option value="">${placeholder}</option>`;
+  options.forEach(o => {
+    const v = typeof o === 'object' ? o.value : o;
+    const l = typeof o === 'object' ? o.label : o;
+    ops += `<option value="${v}"${val === v ? ' selected' : ''}>${l}</option>`;
+  });
+  return `
+    <div class="field-group flex flex-col gap-xs w-full items-start">
+      <label for="${id}" class="block text-[1.25rem] leading-normal font-bold text-bb-black-00">${label}</label>
+      ${hint}
+      <div class="relative flex w-full rounded-sm border-2 border-bb-black-00 bg-bb-white-00 overflow-hidden hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
+        <select id="${id}" name="${id}" data-field="${id}"${triggerAttr}
+          class="w-full min-w-0 p-s outline-none bg-transparent appearance-none cursor-pointer text-[1.25rem] leading-normal">
+          ${ops}
+        </select>
+        <div class="flex items-center justify-center w-14 shrink-0 bg-[#f0f0f0] border-l-2 border-bb-black-00 pointer-events-none" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ───────── Helpers ───────── */
+function fmtDate(prefix) {
+  const d = GovBB.D[prefix + '-day'];
+  const m = GovBB.D[prefix + '-month'];
+  const y = GovBB.D[prefix + '-year'];
+  if (!d && !m && !y) return '';
+  return [d, m, y].filter(Boolean).join(' / ');
+}
+
+function companionDaysSummary() {
+  const days = [
+    ['pref-mon', 'Mondays'],
+    ['pref-tue', 'Tuesdays'],
+    ['pref-wed', 'Wednesdays'],
+    ['pref-thu', 'Thursdays'],
+    ['pref-fri', 'Fridays']
+  ];
+  const selected = days.filter(d => GovBB.D[d[0]]).map(d => d[1]);
+  return selected.length ? selected.join(', ') : '';
+}
+
+function allDeclChecked() {
+  return GovBB.D['decl-accurate'] && GovBB.D['decl-consent'] &&
+         GovBB.D['decl-changes'] && GovBB.D['decl-visit'];
+}
+
+/* ───────── Previous + Continue button group ───────── */
+const PREV_BTN_CLS = 'relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-grey-00 text-bb-black-00 hover:bg-[#c8cdd4] active:bg-[#b0b5bc] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100 focus-visible:rounded-sm';
+
+function btnGroup(continueLabel) {
+  return `<div class="mt-8 flex gap-4 items-center flex-wrap">
+    <button type="button" onclick="back()" class="${PREV_BTN_CLS}">Previous</button>
+    <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">${continueLabel || 'Continue'}</button>
+  </div>`;
+}
+
+/* ───────── Pages ───────── */
+const PAGES = {
+
+  /* ── Start ── */
+  'start': () => `
+    <div class="space-y-6">
+      <p class="border-bb-blue-40 border-l-4 py-xs pl-s text-bb-mid-grey-00">Ministry of People Empowerment and Elder Affairs</p>
+      <h1 class="font-bold text-[3.5rem] leading-[1.15]">Elder Care Companion Application</h1>
+      <hr class="border-bb-grey-00">
+
+      <p class="text-[1.25rem] leading-normal">Apply for a regular home companion if you are an older person who would benefit from company, conversation, and light support at home.</p>
+      <p class="text-[1.25rem] leading-normal">A companion will visit you at home on agreed days to spend time with you. This is not a medical or nursing service.</p>
+      <p class="text-[1.25rem] leading-normal">Most people finish this form in about <strong>10 minutes</strong>.</p>
+
+      <div class="space-y-3">
+        <h2 class="font-bold text-[1.5rem]">What you'll need</h2>
+        <ul class="list-disc pl-6 space-y-2 text-[1.25rem] leading-normal">
+          <li>National Registration Number (NRN)</li>
+          <li>Your doctor's name</li>
+          <li>Emergency contact details</li>
+          <li>Details of how often you'd like a companion to visit</li>
+        </ul>
+      </div>
+
+      <div class="space-y-3">
+        <h2 class="font-bold text-[1.5rem]">Contact us</h2>
+        <p class="text-[1.25rem] leading-normal">Call <strong>+1 (246) 467-4900</strong> if you need help completing this form.</p>
+      </div>
+
+      ${GovBB.startBtn('Start application')}
+    </div>`,
+
+  /* ── About you ── */
+  'applicant-details': () => `
+    <form novalidate>
+      ${GovBB.caption()}
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">About you</h1>
+      <div class="space-y-8">
+        ${GovBB.textField('fullname', 'Full name')}
+        ${GovBB.dateField('dob', 'Date of birth')}
+        ${GovBB.textField('nrn', 'National Registration Number', {
+          hint: 'Your 11-digit NRN, for example 110915-0048.',
+          placeholder: '110915-0048'
+        })}
+        ${styledSelect('gender', 'Gender', ['Male', 'Female', 'Prefer not to say'], { placeholder: 'Select one' })}
+        ${styledSelect('marital-status', 'Marital status', ['Single', 'Married', 'Common-law', 'Widowed', 'Divorced', 'Separated'], { placeholder: 'Select one' })}
+        ${styledSelect('parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
+        ${btnGroup()}
+      </div>
+    </form>`,
+
+  /* ── Contact details ── */
+  'contact': () => `
+    <form novalidate>
+      ${GovBB.caption()}
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your contact details</h1>
+      <div class="space-y-8">
+        ${GovBB.textField('address-line1', 'Address line 1')}
+        ${GovBB.textField('address-line2', 'Address line 2 (optional)')}
+        ${GovBB.textField('address-postal', 'Postal code (optional)', {
+          hint: 'For example, BB11000.',
+          placeholder: 'BB11000'
+        })}
+        ${GovBB.telField('phone-cell', 'Mobile number', {
+          hint: '246 249-1234.',
+          placeholder: '246 249-1234'
+        })}
+        ${GovBB.telField('phone-home', 'Home phone number (optional).', {
+          placeholder: '246 433-1234'
+        })}
+        ${GovBB.emailField('email', 'Email address (optional).')}
+        ${btnGroup()}
+      </div>
+    </form>`,
+
+  /* ── Living situation ── */
+  'living-situation': () => `
+    <form novalidate>
+      ${GovBB.caption()}
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your living situation</h1>
+      <div class="space-y-8">
+
+        <div class="space-y-4">
+          ${GovBB.radioGroup('lives-alone', 'Do you live alone?', ['Yes', 'No'])}
+          <div data-show-when-name="lives-alone" data-show-when-value="No" style="display:${GovBB.D['lives-alone'] === 'No' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
+            ${GovBB.textField('household-members', 'Who else lives with you?', {
+              hint: 'For example: adult child, spouse.'
+            })}
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          ${GovBB.radioGroup('housing-type', 'What type of home do you live in?', ['House', 'Apartment or flat', 'Rented room', 'Government housing', 'Other'])}
+          <div data-show-when-name="housing-type" data-show-when-value="Other" style="display:${GovBB.D['housing-type'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
+            ${GovBB.textField('housing-other', 'Please describe your housing')}
+          </div>
+        </div>
+
+        ${GovBB.radioGroup('feels-isolated', 'Do you sometimes feel lonely or isolated?', ['Yes', 'Sometimes', 'No'])}
+        ${GovBB.textareaField('daily-life', 'Tell us a little about your typical day', {
+          hint: 'For example, what you enjoy doing, any challenges you face.',
+          rows: 3
+        })}
+        ${btnGroup()}
+      </div>
+    </form>`,
+
+  /* ── Health and wellbeing ── */
+  'health-wellbeing': () => `
+    <form novalidate>
+      ${GovBB.caption()}
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your health and wellbeing</h1>
+      <div class="space-y-8">
+
+        ${GovBB.radioGroup('mobility', 'How would you describe your mobility?', [
+          'Fully mobile', 'Mobile with aid', 'Wheelchair user', 'Mostly stays indoors', 'Bedbound'
+        ])}
+
+        <div class="space-y-4">
+          ${GovBB.radioGroup('chronic-conditions', 'Do you have any ongoing health conditions?', ['Yes', 'No'])}
+          <div data-show-when-name="chronic-conditions" data-show-when-value="Yes" style="display:${GovBB.D['chronic-conditions'] === 'Yes' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
+            ${GovBB.textareaField('chronic-conditions-details', 'Please describe', {
+              hint: 'For example: diabetes, hypertension, arthritis.',
+              rows: 3
+            })}
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          ${GovBB.radioGroup('cognitive', 'Do you have any memory or cognitive difficulties?', ['Yes', 'No'])}
+          <div data-show-when-name="cognitive" data-show-when-value="Yes" style="display:${GovBB.D['cognitive'] === 'Yes' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
+            ${GovBB.textareaField('cognitive-details', 'Please describe', { rows: 2 })}
+          </div>
+        </div>
+
+        ${GovBB.radioGroup('mental-health', 'Have you been feeling anxious, low, or depressed recently?', ['Yes', 'Sometimes', 'No'], {
+          hint: 'A companion can offer a friendly ear, but this service is not a substitute for professional mental health support.'
+        })}
+
+        <div class="space-y-4">
+          ${GovBB.radioGroup('care-package', 'Do you currently receive any other care or support services?', ['Yes', 'No'])}
+          <div data-show-when-name="care-package" data-show-when-value="Yes" style="display:${GovBB.D['care-package'] === 'Yes' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
+            ${GovBB.textareaField('care-package-details', 'What services do you receive?', { rows: 2 })}
+          </div>
+        </div>
+
+        ${btnGroup()}
+      </div>
+    </form>`,
+
+  /* ── Companion preferences ── */
+  'companion-preferences': () => `
+    <form novalidate>
+      ${GovBB.caption()}
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">About your companion visits</h1>
+      <div class="space-y-8">
+
+        ${GovBB.radioGroup('visit-frequency', 'How often would you like a companion to visit?', [
+          'Once a week', 'Twice a week', 'Three times a week', 'As often as possible'
+        ])}
+
+        <div class="space-y-4">
+          <p class="text-[1.25rem] leading-normal font-bold text-bb-black-00">Which days work best for you? (choose all that apply)</p>
+          ${GovBB.checkboxItem('pref-mon', 'Mondays')}
+          ${GovBB.checkboxItem('pref-tue', 'Tuesdays')}
+          ${GovBB.checkboxItem('pref-wed', 'Wednesdays')}
+          ${GovBB.checkboxItem('pref-thu', 'Thursdays')}
+          ${GovBB.checkboxItem('pref-fri', 'Fridays')}
+        </div>
+
+        ${GovBB.radioGroup('visit-duration', 'How long would you like each visit to be?', [
+          'About 1 hour', 'About 2 hours', 'About 3 hours', 'Flexible'
+        ])}
+
+        ${GovBB.textareaField('companion-activities', 'What would you enjoy doing with a companion?', {
+          hint: 'For example: conversation, reading, board games, walking, watching TV, cooking together.',
+          rows: 3
+        })}
+
+        ${GovBB.radioGroup('companion-gender', 'Do you have a preference for your companion\'s gender?', [
+          'No preference', 'Female companion preferred', 'Male companion preferred'
+        ])}
+
+        ${btnGroup()}
+      </div>
+    </form>`,
+
+  /* ── Referral ── */
+  'referral': () => `
+    <form novalidate>
+      ${GovBB.caption()}
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">How you heard about this programme</h1>
+      <div class="space-y-8">
+
+        ${styledSelect('referral-source', 'How did you find out about this programme?', [
+          'My doctor or nurse',
+          'A social worker',
+          'A family member or friend',
+          'The Ministry of People Empowerment and Elder Affairs',
+          'Polyclinic or health centre',
+          'Radio or TV',
+          'Newspaper or flyer',
+          'Other'
+        ], { placeholder: 'Select one', triggerRender: true })}
+        <div data-show-when-name="referral-source" data-show-when-value="Other" style="display:${GovBB.D['referral-source'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
+          ${GovBB.textField('referral-other', 'Please tell us how you heard about this programme')}
+        </div>
+
+        ${GovBB.radioGroup('referral-gp', 'Has your doctor recommended this programme?', [
+          'Yes', 'No', 'I have not spoken to my doctor about it'
+        ])}
+
+        ${GovBB.textField('gp-name', 'Your doctor or polyclinic', {
+          hint: 'For example: Dr. Adams, Glebe Polyclinic.'
+        })}
+
+        ${GovBB.telField('gp-phone', 'Doctor\'s phone number (optional).', {
+          placeholder: '246 249-1234'
+        })}
+
+        ${btnGroup()}
+      </div>
+    </form>`,
+
+  /* ── Emergency contact ── */
+  'emergency-contact': () => `
+    <form novalidate>
+      ${GovBB.caption()}
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Emergency contact</h1>
+      <p class="text-[1.25rem] leading-normal mb-8">This is the person we will call in an emergency. They do not need to be your carer.</p>
+
+      <div class="space-y-8">
+        ${GovBB.textField('emerg-fullname', 'Full name')}
+        ${styledSelect('emerg-relationship', 'Their relationship to you', [
+          'Spouse', 'Partner', 'Son', 'Daughter', 'Sibling', 'Aunt', 'Uncle', 'Friend', 'Neighbour', 'Social worker', 'Other'
+        ], { placeholder: 'Select a relationship', triggerRender: true })}
+        <div data-show-when-name="emerg-relationship" data-show-when-value="Other" style="display:${GovBB.D['emerg-relationship'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
+          ${GovBB.textField('emerg-relationship-other', 'Please describe their relationship to you')}
+        </div>
+        ${GovBB.telField('emerg-phone', 'Phone number', {
+          hint: '246 249-1234.',
+          placeholder: '246 249-1234'
+        })}
+        ${GovBB.telField('emerg-phone-alt', 'Alternative phone number (optional).', {
+          placeholder: '246 249-1234'
+        })}
+        ${GovBB.emailField('emerg-email', 'Email address (optional).')}
+        ${btnGroup()}
+      </div>
+    </form>`,
+
+  /* ── Declaration ── */
+  'declaration': () => `
+    <form novalidate>
+      ${GovBB.caption()}
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Declaration and consent</h1>
+      <p class="text-[1.25rem] leading-normal mb-8">By submitting this form, you confirm the following.</p>
+
+      <div class="space-y-6 mb-8">
+        ${GovBB.checkboxItem('decl-accurate', 'The information I have given is accurate and complete.')}
+        ${GovBB.checkboxItem('decl-consent', 'I consent to my personal and health information being used to match me with a suitable companion and deliver this service.')}
+        ${GovBB.checkboxItem('decl-changes', 'I will let the programme know if my circumstances or needs change.')}
+        ${GovBB.checkboxItem('decl-visit', 'I understand that an assessor may visit me at home before a companion is assigned.')}
+      </div>
+
+      ${btnGroup('Submit application')}
+    </form>`,
+
+  /* ── Check your answers ── */
+  'check': () => `
+    <div>
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Check your answers</h1>
+
+      <div class="space-y-10">
+
+        <div>
+          <h2 class="font-bold text-[1.5rem] mb-4">About you</h2>
+          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
+            ${GovBB.summaryRow('Full name', GovBB.D['fullname'] || '', 'applicant-details')}
+            ${GovBB.summaryRow('Date of birth', fmtDate('dob'), 'applicant-details')}
+            ${GovBB.summaryRow('National Registration Number', GovBB.D['nrn'] || '', 'applicant-details')}
+            ${GovBB.summaryRow('Gender', GovBB.D['gender'] || '', 'applicant-details')}
+            ${GovBB.summaryRow('Marital status', GovBB.D['marital-status'] || '', 'applicant-details')}
+            ${GovBB.summaryRow('Parish', GovBB.D['parish'] || '', 'applicant-details')}
+          </dl>
+        </div>
+
+        <div>
+          <h2 class="font-bold text-[1.5rem] mb-4">Contact details</h2>
+          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
+            ${GovBB.summaryRow('Address', [GovBB.D['address-line1'], GovBB.D['address-line2'], GovBB.D['address-postal']].filter(Boolean).join(', ') || '', 'contact')}
+            ${GovBB.summaryRow('Mobile number', GovBB.D['phone-cell'] || '', 'contact')}
+            ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'] || '', 'contact')}
+            ${GovBB.summaryRow('Email', GovBB.D['email'] || '', 'contact')}
+          </dl>
+        </div>
+
+        <div>
+          <h2 class="font-bold text-[1.5rem] mb-4">Living situation</h2>
+          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
+            ${GovBB.summaryRow('Lives alone?', GovBB.D['lives-alone'] || '', 'living-situation')}
+            ${GovBB.D['lives-alone'] === 'No' ? GovBB.summaryRow('Other household members', GovBB.D['household-members'] || '', 'living-situation') : ''}
+            ${GovBB.summaryRow('Type of home', GovBB.D['housing-type'] === 'Other' ? (GovBB.D['housing-other'] || 'Other') : (GovBB.D['housing-type'] || ''), 'living-situation')}
+            ${GovBB.summaryRow('Feels lonely or isolated?', GovBB.D['feels-isolated'] || '', 'living-situation')}
+            ${GovBB.summaryRow('Typical day', GovBB.D['daily-life'] || '', 'living-situation')}
+          </dl>
+        </div>
+
+        <div>
+          <h2 class="font-bold text-[1.5rem] mb-4">Health and wellbeing</h2>
+          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
+            ${GovBB.summaryRow('Mobility', GovBB.D['mobility'] || '', 'health-wellbeing')}
+            ${GovBB.summaryRow('Ongoing health conditions?', GovBB.D['chronic-conditions'] || '', 'health-wellbeing')}
+            ${GovBB.D['chronic-conditions'] === 'Yes' ? GovBB.summaryRow('Health condition details', GovBB.D['chronic-conditions-details'] || '', 'health-wellbeing') : ''}
+            ${GovBB.summaryRow('Memory or cognitive difficulties?', GovBB.D['cognitive'] || '', 'health-wellbeing')}
+            ${GovBB.D['cognitive'] === 'Yes' ? GovBB.summaryRow('Cognitive details', GovBB.D['cognitive-details'] || '', 'health-wellbeing') : ''}
+            ${GovBB.summaryRow('Feeling anxious or low?', GovBB.D['mental-health'] || '', 'health-wellbeing')}
+            ${GovBB.summaryRow('Other care services?', GovBB.D['care-package'] || '', 'health-wellbeing')}
+            ${GovBB.D['care-package'] === 'Yes' ? GovBB.summaryRow('Care service details', GovBB.D['care-package-details'] || '', 'health-wellbeing') : ''}
+          </dl>
+        </div>
+
+        <div>
+          <h2 class="font-bold text-[1.5rem] mb-4">Companion visit preferences</h2>
+          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
+            ${GovBB.summaryRow('Visit frequency', GovBB.D['visit-frequency'] || '', 'companion-preferences')}
+            ${GovBB.summaryRow('Preferred days', companionDaysSummary(), 'companion-preferences')}
+            ${GovBB.summaryRow('Visit duration', GovBB.D['visit-duration'] || '', 'companion-preferences')}
+            ${GovBB.summaryRow('Activities enjoyed', GovBB.D['companion-activities'] || '', 'companion-preferences')}
+            ${GovBB.summaryRow('Companion gender preference', GovBB.D['companion-gender'] || '', 'companion-preferences')}
+          </dl>
+        </div>
+
+        <div>
+          <h2 class="font-bold text-[1.5rem] mb-4">Referral</h2>
+          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
+            ${GovBB.summaryRow('How you heard about the programme', GovBB.D['referral-source'] === 'Other' ? (GovBB.D['referral-other'] || 'Other') : (GovBB.D['referral-source'] || ''), 'referral')}
+            ${GovBB.summaryRow('Doctor recommended?', GovBB.D['referral-gp'] || '', 'referral')}
+            ${GovBB.summaryRow('Doctor or polyclinic', GovBB.D['gp-name'] || '', 'referral')}
+            ${GovBB.summaryRow('Doctor\'s phone', GovBB.D['gp-phone'] || '', 'referral')}
+          </dl>
+        </div>
+
+        <div>
+          <h2 class="font-bold text-[1.5rem] mb-4">Emergency contact</h2>
+          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
+            ${GovBB.summaryRow('Full name', GovBB.D['emerg-fullname'] || '', 'emergency-contact')}
+            ${GovBB.summaryRow('Relationship', GovBB.D['emerg-relationship'] === 'Other' ? (GovBB.D['emerg-relationship-other'] || 'Other') : (GovBB.D['emerg-relationship'] || ''), 'emergency-contact')}
+            ${GovBB.summaryRow('Phone number', GovBB.D['emerg-phone'] || '', 'emergency-contact')}
+            ${GovBB.summaryRow('Alternative phone', GovBB.D['emerg-phone-alt'] || '', 'emergency-contact')}
+            ${GovBB.summaryRow('Email', GovBB.D['emerg-email'] || '', 'emergency-contact')}
+          </dl>
+        </div>
+
+      </div>
+
+      <div class="mt-10">
+        ${btnGroup('Submit application')}
+      </div>
+    </div>`,
+
+  /* ── Confirmation ── */
+  'confirmation': () => {
+    const ref = window.__refNumber || ('ECCA-' + Math.random().toString(36).substring(2,8).toUpperCase());
+    return `
+    <div class="space-y-8">
+      <div style="border-left: 4px solid #00703c;" class="pl-6 space-y-4">
+        <h1 class="font-bold text-[3.5rem] leading-[1.15]">Application submitted</h1>
+        <p class="text-[1.25rem] leading-normal">Your reference number</p>
+        <p class="text-[2rem] font-bold">${ref}</p>
+      </div>
+
+      <p class="text-[1.25rem] leading-normal">We will review your application and contact you within <strong>10 working days</strong> to arrange a home assessment.</p>
+      <p class="text-[1.25rem] leading-normal">If you need to speak to someone sooner, call <strong>+1 (246) 467-4900</strong>.</p>
+
+      <div>
+        <button type="button" onclick="window.print()" class="${GovBB.BTN_CLS}">Print this page</button>
+      </div>
+    </div>`;
+  }
+
+};
+
+/* ───────── Validation ───────── */
+function validate(pageId) {
+  const D = GovBB.D;
+  const errors = [];
+
+  if (pageId === 'applicant-details') {
+    if (!D['fullname'] || !D['fullname'].trim()) errors.push({ id: 'fullname', msg: 'Enter your full name' });
+    if (!D['dob-day'] || !D['dob-month'] || !D['dob-year']) {
+      errors.push({ id: 'dob-day', msg: 'Date of birth – Enter a complete date of birth' });
+    } else {
+      const day = parseInt(D['dob-day'], 10), month = parseInt(D['dob-month'], 10), year = parseInt(D['dob-year'], 10);
+      const parsed = new Date(year, month - 1, day);
+      if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) {
+        errors.push({ id: 'dob-day', msg: 'Date of birth – Enter a real date, for example 15 06 1945' });
+      } else if (parsed >= new Date()) {
+        errors.push({ id: 'dob-day', msg: 'Date of birth – The date of birth must be in the past' });
+      }
+    }
+    if (!D['nrn'] || !D['nrn'].trim()) errors.push({ id: 'nrn', msg: 'Enter your National Registration Number' });
+    if (!D['gender'])         errors.push({ id: 'gender', msg: 'Select your gender' });
+    if (!D['marital-status']) errors.push({ id: 'marital-status', msg: 'Select your marital status' });
+    if (!D['parish'])         errors.push({ id: 'parish', msg: 'Select your parish' });
+  }
+
+  if (pageId === 'contact') {
+    if (!D['address-line1'] || !D['address-line1'].trim()) errors.push({ id: 'address-line1', msg: 'Enter your address' });
+    if (!D['phone-cell'] || !D['phone-cell'].trim()) errors.push({ id: 'phone-cell', msg: 'Enter a mobile number' });
+  }
+
+  if (pageId === 'living-situation') {
+    if (!D['lives-alone']) errors.push({ id: 'lives-alone', msg: 'Select yes or no – Do you live alone?' });
+    if (D['lives-alone'] === 'No' && (!D['household-members'] || !D['household-members'].trim()))
+      errors.push({ id: 'household-members', msg: 'Tell us who else lives with you' });
+    if (!D['housing-type']) errors.push({ id: 'housing-type', msg: 'Select what type of home you live in' });
+    if (D['housing-type'] === 'Other' && (!D['housing-other'] || !D['housing-other'].trim()))
+      errors.push({ id: 'housing-other', msg: 'Describe your housing' });
+    if (!D['feels-isolated']) errors.push({ id: 'feels-isolated', msg: 'Select an option – Do you sometimes feel lonely or isolated?' });
+  }
+
+  if (pageId === 'health-wellbeing') {
+    if (!D['mobility']) errors.push({ id: 'mobility', msg: 'Select how you would describe your mobility' });
+    if (!D['chronic-conditions']) errors.push({ id: 'chronic-conditions', msg: 'Select yes or no – Do you have any ongoing health conditions?' });
+    if (D['chronic-conditions'] === 'Yes' && (!D['chronic-conditions-details'] || !D['chronic-conditions-details'].trim()))
+      errors.push({ id: 'chronic-conditions-details', msg: 'Describe your health conditions' });
+    if (!D['cognitive']) errors.push({ id: 'cognitive', msg: 'Select yes or no – Do you have any memory or cognitive difficulties?' });
+    if (D['cognitive'] === 'Yes' && (!D['cognitive-details'] || !D['cognitive-details'].trim()))
+      errors.push({ id: 'cognitive-details', msg: 'Describe the cognitive difficulties' });
+    if (!D['mental-health']) errors.push({ id: 'mental-health', msg: 'Select an option – Have you been feeling anxious, low, or depressed recently?' });
+    if (!D['care-package']) errors.push({ id: 'care-package', msg: 'Select yes or no – Do you currently receive any other care or support services?' });
+    if (D['care-package'] === 'Yes' && (!D['care-package-details'] || !D['care-package-details'].trim()))
+      errors.push({ id: 'care-package-details', msg: 'Describe the care services you receive' });
+  }
+
+  if (pageId === 'companion-preferences') {
+    if (!D['visit-frequency']) errors.push({ id: 'visit-frequency', msg: 'Select how often you would like a companion to visit' });
+    if (!D['visit-duration'])  errors.push({ id: 'visit-duration',  msg: 'Select how long you would like each visit to be' });
+    if (!D['companion-gender']) errors.push({ id: 'companion-gender', msg: 'Select your companion gender preference' });
+  }
+
+  if (pageId === 'referral') {
+    if (!D['referral-source']) errors.push({ id: 'referral-source', msg: 'Select how you heard about this programme' });
+    if (D['referral-source'] === 'Other' && (!D['referral-other'] || !D['referral-other'].trim()))
+      errors.push({ id: 'referral-other', msg: 'Tell us how you heard about this programme' });
+    if (!D['referral-gp']) errors.push({ id: 'referral-gp', msg: 'Select yes or no – Has your doctor recommended this programme?' });
+    if (!D['gp-name'] || !D['gp-name'].trim()) errors.push({ id: 'gp-name', msg: 'Enter your doctor or polyclinic name' });
+  }
+
+  if (pageId === 'emergency-contact') {
+    if (!D['emerg-fullname'] || !D['emerg-fullname'].trim()) errors.push({ id: 'emerg-fullname', msg: 'Enter the emergency contact\'s full name' });
+    if (!D['emerg-relationship']) errors.push({ id: 'emerg-relationship', msg: 'Select their relationship to you' });
+    if (D['emerg-relationship'] === 'Other' && (!D['emerg-relationship-other'] || !D['emerg-relationship-other'].trim()))
+      errors.push({ id: 'emerg-relationship-other', msg: 'Describe their relationship to you' });
+    if (!D['emerg-phone'] || !D['emerg-phone'].trim()) errors.push({ id: 'emerg-phone', msg: 'Enter a phone number for the emergency contact' });
+  }
+
+  if (pageId === 'declaration') {
+    if (!allDeclChecked())
+      errors.push({ id: 'decl-accurate', msg: 'You must confirm all four statements before submitting' });
+  }
+
+  return errors;
+}
+
+/* ───────── Init ───────── */
+GovBB.init({
+  formName: FORM_NAME,
+  getFlow: function() { return FLOW; },
+  pages: PAGES,
+  validate: validate
+});
+</script>
+</body>
+</html>
