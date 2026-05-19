@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StormReady Barbados – Department of Emergency Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/assets/govbb-tailwind-config.js"></script>
+  <link rel="stylesheet" href="/assets/govbb-base.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    /* ── Map ── */
+    #shelter-map { height: 400px; width: 100%; border-radius: 4px; z-index: 0; }
+
+    /* ── Tabs ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .tab-btn { border-bottom: 4px solid transparent; }
+    .tab-btn.active { border-bottom-color: #0e5f64; color: #0e5f64; font-weight: 700; }
+
+    /* ── Checklist strike-through ── */
+    .cl-item input[type="checkbox"]:checked ~ label {
+      text-decoration: line-through;
+      color: #595959;
+    }
+
+    /* ── Status banner colour variants ── */
+    #dem-banner[data-status="normal"]  { background:#eaf9f9; border-color:#ace6e9; color:#0e5f64; }
+    #dem-banner[data-status="advisory"]{ background:#e5e9f2; border-color:#99a8cc; color:#00267f; }
+    #dem-banner[data-status="watch"]   { background:#ffe9a8; border-color:#e8a833; color:#000; }
+    #dem-banner[data-status="warning"] { background:#ffc4c4; border-color:#a42c2c; color:#a42c2c; }
+    #dem-banner[data-status="open"]    { background:#e9f9f3; border-color:#1fbf84; color:#00654a; }
+
+    /* ── Print ── */
+    @media print {
+      .no-print { display: none !important; }
+      #tab-checklist { display: block !important; }
+      #tab-shelters, #tab-storms { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="bg-bb-blue-100 text-bb-white-00">
+  <div class="container flex items-center gap-2 py-2 text-[0.875rem]">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Coat_of_arms_of_Barbados_%282%29.svg/1280px-Coat_of_arms_of_Barbados_%282%29.svg.png"
+         alt="" class="h-5 w-auto opacity-90" />
+    <span>Official government website</span>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="bg-bb-yellow-100">
+  <div class="container py-s">
+    <a href="/" aria-label="Go to alpha.gov.bb homepage">
+      <div class="text-bb-black-00" style="width:276px;height:27px;">
+        <svg width="100%" viewBox="0 0 276 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Government of Barbados"><g><path d="M39.079 21.527C37.5026 21.527 36.103 21.1903 34.8802 20.5168C33.6721 19.8286 32.7219 18.8916 32.0294 17.7057C31.337 16.5051 30.9908 15.1288 30.9908 13.5769C30.9908 12.0249 31.337 10.6559 32.0294 9.47001C32.7219 8.26943 33.6721 7.3324 34.8802 6.65891C36.103 5.97077 37.5026 5.6267 39.079 5.6267C40.0219 5.6267 40.8911 5.7658 41.6867 6.04398C42.4823 6.32216 43.1821 6.71015 43.7861 7.20795C44.4049 7.69111 44.9205 8.24747 45.3331 8.87704L42.858 10.4144C42.6075 10.0191 42.276 9.66767 41.8635 9.3602C41.4657 9.05274 41.0237 8.81116 40.5376 8.63547C40.0514 8.45977 39.5652 8.37192 39.079 8.37192C38.1067 8.37192 37.2448 8.59886 36.4934 9.05274C35.7421 9.49197 35.1527 10.0996 34.7255 10.8756C34.2982 11.6515 34.0846 12.552 34.0846 13.5769C34.0846 14.5871 34.2909 15.4875 34.7034 16.2782C35.1307 17.0688 35.7273 17.691 36.4934 18.1449C37.2595 18.5841 38.1435 18.8038 39.1453 18.8038C39.8967 18.8038 40.567 18.6647 41.1563 18.3865C41.7456 18.0937 42.2171 17.691 42.5707 17.1786C42.9243 16.6661 43.1231 16.0659 43.1673 15.3777H39.5873V13.0278H46.0844V14.8946C46.055 16.3001 45.7382 17.5007 45.1342 18.4963C44.5301 19.4773 43.7051 20.2313 42.6591 20.7584C41.613 21.2708 40.4197 21.527 39.079 21.527Z"/><path d="M52.8353 21.527C51.7156 21.527 50.7138 21.2854 49.8298 20.8023C48.9606 20.3045 48.2755 19.6237 47.7746 18.7598C47.2884 17.896 47.0453 16.9004 47.0453 15.773C47.0453 14.6457 47.2884 13.6501 47.7746 12.7862C48.2608 11.9224 48.9385 11.2489 49.8077 10.7658C50.677 10.268 51.6714 10.0191 52.7911 10.0191C53.9255 10.0191 54.9273 10.268 55.7966 10.7658C56.6658 11.2489 57.3435 11.9224 57.8297 12.7862C58.3159 13.6501 58.559 14.6457 58.559 15.773C58.559 16.9004 58.3159 17.896 57.8297 18.7598C57.3435 19.6237 56.6658 20.3045 55.7966 20.8023C54.9421 21.2854 53.955 21.527 52.8353 21.527ZM52.8353 18.8477C53.3804 18.8477 53.8592 18.7159 54.2717 18.4524C54.6843 18.1888 55.001 17.8301 55.222 17.3763C55.4577 16.9077 55.5756 16.3733 55.5756 15.773C55.5756 15.1728 55.4577 14.6457 55.222 14.1918C54.9863 13.7233 54.6548 13.3572 54.2275 13.0937C53.815 12.8302 53.3362 12.6984 52.7911 12.6984C52.2607 12.6984 51.7819 12.8302 51.3547 13.0937C50.9421 13.3572 50.618 13.7233 50.3823 14.1918C50.1466 14.6457 50.0287 15.1728 50.0287 15.773C50.0287 16.3733 50.1466 16.9077 50.3823 17.3763C50.618 17.8301 50.9495 18.1888 51.3768 18.4524C51.804 18.7159 52.2902 18.8477 52.8353 18.8477Z"/><path d="M12.5786 0C11.6253 2.46943 10.6536 5.03986 8.57466 7.00774C9.21998 6.80573 10.3493 6.62461 11.0753 6.64203V17.0283L7.988 17.4636C7.878 17.4532 7.84133 17.2895 7.84133 17.0666C7.54434 13.8413 6.74135 11.1316 5.81736 8.32779C5.75136 7.94466 4.58171 6.48181 5.4837 6.73955C5.5937 6.75348 6.80002 7.2202 6.60935 6.99729C4.96671 5.38119 2.56508 4.21788 0.233112 3.87306C0.0277812 3.8243 -0.0932171 3.92183 0.0901136 4.14822C3.18474 8.6726 5.77336 14.012 5.75136 20.3475C6.95401 20.3475 9.86897 19.6718 11.0753 19.6718V27H12.5969L12.9453 6.53406L12.5786 0Z"/><path d="M12.5786 0C13.5319 2.46943 14.5036 5.03986 16.5825 7.00774C15.9372 6.80573 14.8079 6.62461 14.0819 6.64203V17.0283L17.1692 17.4636C17.2792 17.4532 17.3159 17.2895 17.3159 17.0666C17.6129 13.8413 18.4158 11.1316 19.3398 8.32779C19.4058 7.94466 20.5755 6.48181 19.6735 6.73955C19.5635 6.75348 18.3572 7.2202 18.5478 6.99729C20.1905 5.38119 22.5921 4.21788 24.9241 3.87306C25.1294 3.8243 25.2504 3.92183 25.0671 4.14822C21.9725 8.6726 19.3838 14.012 19.4058 20.3475C18.2032 20.3475 15.2882 19.6718 14.0819 19.6718V27H12.5603L12.2119 6.53406L12.5786 0Z"/></g></svg>
+      </div>
+    </a>
+  </div>
+</header>
+
+<!-- Alpha banner -->
+<div class="bg-bb-blue-10">
+  <div class="container py-xs text-[1rem]">
+    This page is in <a href="#" class="inline-flex outline-none underline-offset-2 underline hover:no-underline text-bb-teal-00 hover:text-bb-black-00">Alpha</a>. Your feedback helps us improve.
+  </div>
+</div>
+
+<!-- Main -->
+<main>
+
+  <!-- DEM Status Banner -->
+  <div id="dem-banner" data-status="normal" class="border-b-4 transition-colors" role="status" aria-live="polite">
+    <div class="container py-s">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+        <div class="flex items-center gap-3 flex-1">
+          <span id="banner-icon" class="text-2xl font-bold leading-none" aria-hidden="true">✓</span>
+          <div>
+            <p class="font-bold text-[1.125rem] leading-tight" id="banner-label">No active storm</p>
+            <p class="text-[1rem] leading-snug mt-0.5" id="banner-message">There is no hurricane watch or warning in effect for Barbados. Use this time to get prepared.</p>
+          </div>
+        </div>
+        <p class="text-[0.875rem] opacity-75 sm:text-right shrink-0" id="banner-updated">Last updated: 19 May 2026, 9.00am</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page content -->
+  <div class="container py-l max-w-5xl">
+
+    <!-- Page header -->
+    <div class="mb-l">
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] text-bb-black-00">StormReady Barbados</h1>
+      <p class="text-[1.25rem] leading-relaxed text-bb-mid-grey-00 mt-s max-w-2xl">
+        Find your nearest Category 1 emergency shelter, get ready for hurricane season, and stay up to date with storm alerts.
+      </p>
+      <div id="shelter-notice" class="mt-s p-s rounded-sm border-l-4 border-bb-yellow-00 bg-bb-yellow-10 text-[1rem]">
+        <strong>Important:</strong> This shows your nearest shelter. Do not go there until DEM announces it is open.
+      </div>
+    </div>
+
+    <!-- Tab navigation -->
+    <div class="border-b-2 border-bb-grey-00 mb-l no-print">
+      <div class="flex gap-0 overflow-x-auto">
+        <button type="button" id="btn-shelters"
+          class="tab-btn active px-s py-xs text-[1.125rem] font-medium whitespace-nowrap -mb-0.5 transition-colors hover:text-bb-teal-00 focus:outline-none focus-visible:ring-2 focus-visible:ring-bb-teal-100"
+          onclick="showTab('shelters')" aria-selected="true" role="tab">
+          Find a shelter
+        </button>
+        <button type="button" id="btn-checklist"
+          class="tab-btn px-s py-xs text-[1.125rem] font-medium whitespace-nowrap -mb-0.5 transition-colors hover:text-bb-teal-00 focus:outline-none focus-visible:ring-2 focus-visible:ring-bb-teal-100"
+          onclick="showTab('checklist')" aria-selected="false" role="tab">
+          Household checklist
+        </button>
+        <button type="button" id="btn-storms"
+          class="tab-btn px-s py-xs text-[1.125rem] font-medium whitespace-nowrap -mb-0.5 transition-colors hover:text-bb-teal-00 focus:outline-none focus-visible:ring-2 focus-visible:ring-bb-teal-100"
+          onclick="showTab('storms')" aria-selected="false" role="tab">
+          2026 storm names
+        </button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- TAB 1 – FIND A SHELTER               -->
+    <!-- ══════════════════════════════════════ -->
+    <div id="tab-shelters" class="tab-panel active" role="tabpanel" aria-labelledby="btn-shelters">
+
+      <!-- Search and filters -->
+      <div class="flex flex-col sm:flex-row gap-s mb-m">
+        <div class="flex-1">
+          <label for="shelter-search" class="block text-[1rem] font-bold text-bb-black-00 mb-xs">Search by name or address</label>
+          <div class="relative inline-flex w-full rounded-sm border-2 border-bb-black-00 items-center bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
+            <svg class="ml-s shrink-0 text-bb-mid-grey-00" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="search" id="shelter-search" placeholder="e.g. St. Joseph or Oistins"
+              class="w-full min-w-0 p-s pl-2 outline-none bg-transparent text-[1.125rem]"
+              oninput="filterShelters()" autocomplete="off" />
+          </div>
+        </div>
+        <div class="sm:w-56">
+          <label for="parish-filter" class="block text-[1rem] font-bold text-bb-black-00 mb-xs">Parish</label>
+          <div class="relative inline-flex w-full rounded-sm border-2 border-bb-black-00 bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
+            <select id="parish-filter" onchange="filterShelters()"
+              class="w-full p-s outline-none bg-transparent text-[1.125rem] cursor-pointer appearance-none pr-8">
+              <option value="">All parishes</option>
+              <option>Christ Church</option><option>St. Andrew</option><option>St. George</option>
+              <option>St. James</option><option>St. John</option><option>St. Joseph</option>
+              <option>St. Lucy</option><option>St. Michael</option><option>St. Peter</option>
+              <option>St. Philip</option><option>St. Thomas</option>
+            </select>
+            <svg class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-bb-mid-grey-00" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+        <div class="sm:w-auto flex items-end pb-0.5">
+          <label class="flex items-center gap-3 cursor-pointer select-none">
+            <div class="relative inline-flex size-8 shrink-0 border-2 border-bb-black-00 rounded-sm bg-bb-white-00 hover:shadow-form-hover">
+              <input type="checkbox" id="wheelchair-filter" onchange="filterShelters()"
+                class="absolute inset-0 opacity-0 w-full h-full cursor-pointer" />
+              <span id="wc-check" class="absolute inset-0 hidden items-center justify-center pointer-events-none">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+              </span>
+            </div>
+            <span class="text-[1rem] font-medium">Wheelchair accessible only</span>
+          </label>
+        </div>
+      </div>
+
+      <p id="results-count" class="text-[1rem] text-bb-mid-grey-00 mb-m" aria-live="polite">Showing all 31 shelters</p>
+
+      <!-- Map -->
+      <div id="shelter-map" class="mb-m no-print border-2 border-bb-black-00 rounded-sm"></div>
+
+      <!-- Cards -->
+      <div id="shelter-cards" class="grid grid-cols-1 md:grid-cols-2 gap-s"></div>
+
+      <div id="no-results" class="hidden py-l text-center text-bb-mid-grey-00">
+        <p class="text-[1.25rem]">No shelters match your search.</p>
+        <p class="text-[1rem] mt-xs">Try a different parish or clear your search.</p>
+      </div>
+
+      <p class="mt-m text-[0.875rem] text-bb-mid-grey-00">
+        Source: DEM 2026 Emergency Shelter Booklet. Data correct as of 19 May 2026.
+        <a href="#" class="underline text-bb-teal-00 hover:text-bb-black-00">Report an error</a>.
+      </p>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- TAB 2 – HOUSEHOLD CHECKLIST          -->
+    <!-- ══════════════════════════════════════ -->
+    <div id="tab-checklist" class="tab-panel" role="tabpanel" aria-labelledby="btn-checklist">
+
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-s mb-l">
+        <div>
+          <h2 class="font-bold text-[2rem] leading-tight">Household preparation checklist</h2>
+          <p class="text-[1.125rem] text-bb-mid-grey-00 mt-xs">Tick items as you get ready. Print this page to keep a copy at home.</p>
+        </div>
+        <div class="flex gap-s no-print">
+          <button type="button" onclick="window.print()"
+            class="inline-flex items-center gap-2 px-s py-xs rounded-sm border-2 border-bb-black-00 text-[1rem] font-medium hover:bg-bb-grey-00 transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print
+          </button>
+          <button type="button" onclick="resetChecklist()"
+            class="inline-flex items-center gap-2 px-s py-xs rounded-sm border-2 border-bb-grey-00 text-[1rem] font-medium hover:bg-bb-grey-00 transition-colors">
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress -->
+      <div class="mb-l p-s rounded-sm bg-bb-teal-10 border border-bb-teal-40">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[1rem] font-bold text-bb-teal-00">Your progress</span>
+          <span id="progress-text" class="text-[1rem] text-bb-teal-00 font-bold">0 of 38 items</span>
+        </div>
+        <div class="w-full bg-bb-teal-40 rounded-full h-3">
+          <div id="progress-bar" class="bg-bb-teal-00 h-3 rounded-full transition-all" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Water -->
+      <div class="mb-m">
+        <h3 class="font-bold text-[1.5rem] mb-s flex items-center gap-2"><span aria-hidden="true">💧</span> Water</h3>
+        <div class="space-y-0">
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl1" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl1" class="text-[1.125rem] leading-snug cursor-pointer">At least 3 gallons of drinking water per person, for 3 days</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl2" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl2" class="text-[1.125rem] leading-snug cursor-pointer">1 gallon of water per pet per day</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl3" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl3" class="text-[1.125rem] leading-snug cursor-pointer">Filled bathtubs and large buckets before the storm (BWA advice)</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl4" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl4" class="text-[1.125rem] leading-snug cursor-pointer">Water purification tablets or bleach (for emergencies)</label></div>
+        </div>
+        <p class="mt-2 text-[0.875rem] text-bb-mid-grey-00 italic">After the storm: do not drink tap water until BWA says it is safe. Boil all drinking water for at least 1 minute.</p>
+      </div>
+
+      <!-- Food -->
+      <div class="mb-m">
+        <h3 class="font-bold text-[1.5rem] mb-s flex items-center gap-2"><span aria-hidden="true">🥫</span> Food</h3>
+        <div class="space-y-0">
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl5" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl5" class="text-[1.125rem] leading-snug cursor-pointer">At least 3 days of non-perishable food (tinned goods, dry crackers, peanut butter)</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl6" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl6" class="text-[1.125rem] leading-snug cursor-pointer">Manual can opener</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl7" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl7" class="text-[1.125rem] leading-snug cursor-pointer">Disposable plates, cups, and forks</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl8" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl8" class="text-[1.125rem] leading-snug cursor-pointer">Baby formula and food (if you have an infant)</label></div>
+        </div>
+      </div>
+
+      <!-- Documents -->
+      <div class="mb-m">
+        <h3 class="font-bold text-[1.5rem] mb-s flex items-center gap-2"><span aria-hidden="true">📄</span> Important documents</h3>
+        <p class="text-[1rem] text-bb-mid-grey-00 mb-s">Keep these in a waterproof bag or container.</p>
+        <div class="space-y-0">
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl9" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl9" class="text-[1.125rem] leading-snug cursor-pointer">National ID card or passport</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl10" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl10" class="text-[1.125rem] leading-snug cursor-pointer">Insurance documents (home, health, vehicle)</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl11" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl11" class="text-[1.125rem] leading-snug cursor-pointer">Birth certificates for everyone in your household</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl12" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl12" class="text-[1.125rem] leading-snug cursor-pointer">Prescription details and medical records</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl13" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl13" class="text-[1.125rem] leading-snug cursor-pointer">Cash in small bills (ATMs may not work after the storm)</label></div>
+        </div>
+      </div>
+
+      <!-- Health -->
+      <div class="mb-m">
+        <h3 class="font-bold text-[1.5rem] mb-s flex items-center gap-2"><span aria-hidden="true">🩺</span> Health and first aid</h3>
+        <div class="space-y-0">
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl14" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl14" class="text-[1.125rem] leading-snug cursor-pointer">First aid kit (plasters, bandages, antiseptic)</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl15" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl15" class="text-[1.125rem] leading-snug cursor-pointer">7-day supply of prescription medicines</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl16" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl16" class="text-[1.125rem] leading-snug cursor-pointer">Hearing aids with spare batteries</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl17" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl17" class="text-[1.125rem] leading-snug cursor-pointer">Glasses or contact lenses with enough solution</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl18" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl18" class="text-[1.125rem] leading-snug cursor-pointer">Nappies, wipes, and formula (if you have a baby)</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl19" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl19" class="text-[1.125rem] leading-snug cursor-pointer">Hand sanitiser and face masks</label></div>
+        </div>
+      </div>
+
+      <!-- Communication -->
+      <div class="mb-m">
+        <h3 class="font-bold text-[1.5rem] mb-s flex items-center gap-2"><span aria-hidden="true">📻</span> Communication</h3>
+        <div class="space-y-0">
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl20" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl20" class="text-[1.125rem] leading-snug cursor-pointer">Battery-powered or wind-up radio (to hear DEM updates)</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl21" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl21" class="text-[1.125rem] leading-snug cursor-pointer">Fully charged mobile phone and portable power bank</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl22" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl22" class="text-[1.125rem] leading-snug cursor-pointer">Emergency contact list written on paper (not just on your phone)</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl23" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl23" class="text-[1.125rem] leading-snug cursor-pointer">Whistle to signal for help if you get trapped</label></div>
+        </div>
+      </div>
+
+      <!-- Shelter & safety -->
+      <div class="mb-m">
+        <h3 class="font-bold text-[1.5rem] mb-s flex items-center gap-2"><span aria-hidden="true">🔦</span> Shelter, tools, and safety</h3>
+        <div class="space-y-0">
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl24" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl24" class="text-[1.125rem] leading-snug cursor-pointer">Torches with spare batteries</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl25" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl25" class="text-[1.125rem] leading-snug cursor-pointer">Candles and waterproof matches or a lighter</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl26" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl26" class="text-[1.125rem] leading-snug cursor-pointer">Sturdy shoes or boots for every family member</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl27" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl27" class="text-[1.125rem] leading-snug cursor-pointer">Rain gear (waterproof jackets or ponchos)</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl28" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl28" class="text-[1.125rem] leading-snug cursor-pointer">Bedding or sleeping bag for each person</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl29" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl29" class="text-[1.125rem] leading-snug cursor-pointer">Change of clothes for 3 days</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl30" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl30" class="text-[1.125rem] leading-snug cursor-pointer">Tools to turn off gas and water at the mains</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl31" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl31" class="text-[1.125rem] leading-snug cursor-pointer">Heavy-duty rubbish bags</label></div>
+        </div>
+      </div>
+
+      <!-- Before the storm -->
+      <div class="mb-m">
+        <h3 class="font-bold text-[1.5rem] mb-s flex items-center gap-2"><span aria-hidden="true">🏠</span> Before the storm hits</h3>
+        <div class="space-y-0">
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl32" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl32" class="text-[1.125rem] leading-snug cursor-pointer">Board up or shutter windows and glass doors</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl33" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl33" class="text-[1.125rem] leading-snug cursor-pointer">Bring in outdoor furniture, plants, and loose items</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl34" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl34" class="text-[1.125rem] leading-snug cursor-pointer">Topped up vehicle with petrol</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl35" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl35" class="text-[1.125rem] leading-snug cursor-pointer">Charged all devices (phones, tablets, power banks)</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl36" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl36" class="text-[1.125rem] leading-snug cursor-pointer">Let friends or family know your shelter plan</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl37" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl37" class="text-[1.125rem] leading-snug cursor-pointer">Arranged help for any elderly or disabled neighbours</label></div>
+          <div class="cl-item flex items-start gap-3 py-3 border-b border-bb-grey-00"><input type="checkbox" id="cl38" onchange="updateProgress()" class="mt-1 w-5 h-5 shrink-0 cursor-pointer" /><label for="cl38" class="text-[1.125rem] leading-snug cursor-pointer">Made a plan for your pets</label></div>
+        </div>
+      </div>
+
+      <div class="mt-l p-s rounded-sm bg-bb-blue-10 border-l-4 border-bb-blue-40">
+        <h3 class="font-bold text-[1.25rem] mb-xs">What is a Category 1 shelter?</h3>
+        <p class="text-[1rem] leading-relaxed">Category 1 shelters are the strongest public buildings in Barbados, certified by DEM to withstand hurricane-force winds. They are activated only when DEM says so. If you live in a solid concrete house away from the coast, you may not need to go. If you live in a wooden house, near the coast, or in a low-lying area, a Category 1 shelter is your safest option.</p>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════ -->
+    <!-- TAB 3 – 2026 STORM NAMES             -->
+    <!-- ══════════════════════════════════════ -->
+    <div id="tab-storms" class="tab-panel" role="tabpanel" aria-labelledby="btn-storms">
+
+      <h2 class="font-bold text-[2rem] leading-tight mb-s">2026 Atlantic hurricane season</h2>
+      <p class="text-[1.125rem] text-bb-mid-grey-00 mb-m">Hurricane season runs from <strong>1 June to 30 November 2026</strong>. Names are set by the World Meteorological Organisation and confirmed by the Barbados Meteorological Services.</p>
+
+      <div class="p-s rounded-sm bg-bb-yellow-10 border-l-4 border-bb-yellow-00 mb-l">
+        <p class="text-[1rem]"><strong>Hurricane Melissa (2025)</strong> — a Category 5 storm that affected more than 626,000 people in Jamaica, causing an estimated US$8–15 billion in damage. The name Melissa has been retired. It is replaced in the 2031 cycle. The 2026 list is in use for the first time.</p>
+      </div>
+
+      <div id="storm-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-s mb-l"></div>
+
+      <div class="rounded-sm border-2 border-bb-grey-00 p-s mb-l">
+        <h3 class="font-bold text-[1.25rem] mb-s">2026 season forecast</h3>
+        <div class="grid grid-cols-3 gap-s text-center">
+          <div class="p-s bg-bb-teal-10 rounded-sm">
+            <p class="text-[2rem] font-bold text-bb-teal-00">19</p>
+            <p class="text-[0.875rem] text-bb-mid-grey-00">Named storms</p>
+          </div>
+          <div class="p-s bg-bb-yellow-10 rounded-sm">
+            <p class="text-[2rem] font-bold text-bb-yellow-00">9</p>
+            <p class="text-[0.875rem] text-bb-mid-grey-00">Hurricanes</p>
+          </div>
+          <div class="p-s bg-bb-red-10 rounded-sm">
+            <p class="text-[2rem] font-bold text-bb-red-00">4</p>
+            <p class="text-[0.875rem] text-bb-mid-grey-00">Major hurricanes (Cat 3+)</p>
+          </div>
+        </div>
+        <p class="text-[0.875rem] text-bb-mid-grey-00 mt-s">Source: Barbados Meteorological Services, April 2026 seasonal outlook. Above-normal season expected due to warm Atlantic sea surface temperatures.</p>
+      </div>
+
+      <h3 class="font-bold text-[1.25rem] mb-s">Key contacts during a storm</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-s mb-l">
+        <a href="tel:2464362225" class="flex items-center gap-s p-s rounded-sm border-2 border-bb-grey-00 hover:border-bb-teal-00 transition-colors group">
+          <span class="text-3xl" aria-hidden="true">📞</span>
+          <div><p class="font-bold text-[1.125rem] group-hover:text-bb-teal-00">DEM Emergency Line</p><p class="text-[1.25rem] font-bold text-bb-teal-00">246-436-2225</p></div>
+        </a>
+        <a href="tel:511" class="flex items-center gap-s p-s rounded-sm border-2 border-bb-grey-00 hover:border-bb-teal-00 transition-colors group">
+          <span class="text-3xl" aria-hidden="true">🌦</span>
+          <div><p class="font-bold text-[1.125rem] group-hover:text-bb-teal-00">Barbados Met Office weather line</p><p class="text-[1.25rem] font-bold text-bb-teal-00">511</p></div>
+        </a>
+        <a href="tel:211" class="flex items-center gap-s p-s rounded-sm border-2 border-bb-grey-00 hover:border-bb-teal-00 transition-colors group">
+          <span class="text-3xl" aria-hidden="true">🚑</span>
+          <div><p class="font-bold text-[1.125rem] group-hover:text-bb-teal-00">Emergency services</p><p class="text-[1.25rem] font-bold text-bb-teal-00">211</p></div>
+        </a>
+        <a href="tel:2464263990" class="flex items-center gap-s p-s rounded-sm border-2 border-bb-grey-00 hover:border-bb-teal-00 transition-colors group">
+          <span class="text-3xl" aria-hidden="true">💧</span>
+          <div><p class="font-bold text-[1.125rem] group-hover:text-bb-teal-00">BWA (water outages)</p><p class="text-[1.25rem] font-bold text-bb-teal-00">246-426-3990</p></div>
+        </a>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <!-- Demo controls -->
+  <div class="bg-bb-grey-00 border-t-2 border-dashed border-bb-mid-grey-00 mt-l no-print">
+    <div class="container py-s max-w-5xl">
+      <details>
+        <summary class="text-[0.875rem] font-bold text-bb-mid-grey-00 cursor-pointer">⚙ Prototype demo: change DEM status banner</summary>
+        <div class="mt-s flex flex-wrap gap-s">
+          <button onclick="setStatus('normal')"   class="px-s py-xs text-[0.875rem] rounded-sm bg-bb-teal-10  border border-bb-teal-40  text-bb-teal-00   hover:bg-bb-teal-40  transition-colors">✓ No active storm</button>
+          <button onclick="setStatus('advisory')" class="px-s py-xs text-[0.875rem] rounded-sm bg-bb-blue-10  border border-bb-blue-40  text-bb-blue-100  hover:bg-bb-blue-40  transition-colors">ℹ Advisory</button>
+          <button onclick="setStatus('watch')"    class="px-s py-xs text-[0.875rem] rounded-sm bg-bb-yellow-40 border border-bb-yellow-00 text-bb-black-00  hover:bg-bb-yellow-100 transition-colors">⚠ Hurricane watch</button>
+          <button onclick="setStatus('warning')"  class="px-s py-xs text-[0.875rem] rounded-sm bg-bb-red-40   border border-bb-red-00   text-bb-red-00    hover:bg-bb-red-10   transition-colors">⚠ Hurricane warning</button>
+          <button onclick="setStatus('open')"     class="px-s py-xs text-[0.875rem] rounded-sm bg-bb-green-10 border border-bb-green-40  text-bb-green-00  hover:bg-bb-green-40 transition-colors">🏠 Shelters open</button>
+        </div>
+        <p class="text-[0.75rem] text-bb-mid-grey-00 mt-xs">In production, DEM staff update this via the CMS. The timestamp updates automatically.</p>
+      </details>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="bg-bb-blue-100 text-bb-white-00">
+  <div class="container py-l text-[1rem]">
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-m">
+      <div>
+        <p class="font-bold mb-xs">StormReady Barbados</p>
+        <p class="text-bb-blue-40 text-[0.875rem]">A service by the Department of Emergency Management in partnership with GovTech Barbados.</p>
+        <p class="text-bb-blue-40 text-[0.875rem] mt-xs">Data from the DEM 2026 Emergency Shelter Booklet and Barbados Meteorological Services.</p>
+      </div>
+      <div class="flex flex-col gap-2 shrink-0">
+        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00 text-[0.875rem]">Privacy</a>
+        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00 text-[0.875rem]">Accessibility</a>
+        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00 text-[0.875rem]">Contact DEM</a>
+      </div>
+    </div>
+    <hr class="border-bb-blue-40 my-m" />
+    <p class="text-bb-blue-40 text-[0.875rem]">© 2026 Government of Barbados. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+/* ─── Shelter data ─── */
+var SHELTERS = [
+  { id:1,  name:'Oistins Primary School',          address:'Market Street, Oistins',        parish:'Christ Church', phone:'246-428-6190', wheelchair:true,  lat:13.0683, lng:-59.5383 },
+  { id:2,  name:"St. Leonard's Boys' School",      address:"St. Leonard's Road",             parish:'Christ Church', phone:'246-428-5620', wheelchair:false, lat:13.0772, lng:-59.5211 },
+  { id:3,  name:'Parkinson Memorial Secondary',    address:'Wildey',                          parish:'Christ Church', phone:'246-437-4750', wheelchair:true,  lat:13.0877, lng:-59.5644 },
+  { id:4,  name:'Grantley Adams Community Centre', address:'Seawell',                         parish:'Christ Church', phone:'246-428-7101', wheelchair:false, lat:13.0742, lng:-59.4936 },
+  { id:5,  name:'Wotton Primary School',           address:'Wotton',                          parish:'Christ Church', phone:'246-428-9234', wheelchair:true,  lat:13.0814, lng:-59.5498 },
+  { id:6,  name:'St. Thomas Primary School',       address:'Welchman Hall',                   parish:'St. Thomas',   phone:'246-425-4162', wheelchair:true,  lat:13.1643, lng:-59.5944 },
+  { id:7,  name:'Eden Lodge Primary School',       address:'Eden Lodge',                      parish:'St. Thomas',   phone:'246-425-8901', wheelchair:false, lat:13.1534, lng:-59.5876 },
+  { id:8,  name:"St. Andrew's Secondary School",  address:'Belleplaine',                     parish:'St. Andrew',   phone:'246-422-3615', wheelchair:false, lat:13.2134, lng:-59.5432 },
+  { id:9,  name:'St. James Secondary School',      address:'Holetown',                        parish:'St. James',    phone:'246-432-1880', wheelchair:true,  lat:13.1846, lng:-59.6342 },
+  { id:10, name:'Holetown Primary School',         address:'Holetown',                        parish:'St. James',    phone:'246-432-6543', wheelchair:true,  lat:13.1862, lng:-59.6288 },
+  { id:11, name:'Sandy Lane Primary School',       address:'Sandy Lane',                      parish:'St. James',    phone:'246-432-8912', wheelchair:false, lat:13.1956, lng:-59.6312 },
+  { id:12, name:'Six Roads Primary School',        address:'Six Roads',                       parish:'St. Philip',   phone:'246-423-2301', wheelchair:false, lat:13.1042, lng:-59.4912 },
+  { id:13, name:'St. Philip Secondary School',     address:'Kendal Hill',                     parish:'St. Philip',   phone:'246-423-6490', wheelchair:true,  lat:13.1142, lng:-59.5012 },
+  { id:14, name:'Ellerton Primary School',         address:'Ellerton',                        parish:'St. Philip',   phone:'246-423-8512', wheelchair:false, lat:13.0843, lng:-59.4743 },
+  { id:15, name:'Four Roads Primary School',       address:'Four Roads',                      parish:'St. Philip',   phone:'246-423-7234', wheelchair:true,  lat:13.0943, lng:-59.4843 },
+  { id:16, name:'St. John Secondary School',       address:'Consett Bay',                     parish:'St. John',     phone:'246-423-3201', wheelchair:false, lat:13.1124, lng:-59.4834 },
+  { id:17, name:'St. Joseph Secondary School',     address:'Bathsheba',                       parish:'St. Joseph',   phone:'246-433-1620', wheelchair:false, lat:13.1912, lng:-59.5245 },
+  { id:18, name:'Combermere School',               address:'Waterford, Bridgetown',           parish:'St. Michael',  phone:'246-429-3920', wheelchair:true,  lat:13.0998, lng:-59.6143 },
+  { id:19, name:"Queen's College",                 address:'Husbands, Bridgetown',            parish:'St. Michael',  phone:'246-429-4343', wheelchair:true,  lat:13.1132, lng:-59.5976 },
+  { id:20, name:'National Gymnasium',              address:'Wildey, Bridgetown',              parish:'St. Michael',  phone:'246-437-5140', wheelchair:true,  lat:13.0987, lng:-59.5832 },
+  { id:21, name:'Deighton Griffith Secondary',     address:'Cane Garden, Bridgetown',         parish:'St. Michael',  phone:'246-429-8760', wheelchair:false, lat:13.1234, lng:-59.6234 },
+  { id:22, name:'St. Michael Secondary School',   address:"St. Michael's Row, Bridgetown",   parish:'St. Michael',  phone:'246-426-3420', wheelchair:true,  lat:13.1021, lng:-59.6101 },
+  { id:23, name:'Foundation School',               address:'Eight Acres, Bridgetown',         parish:'St. Michael',  phone:'246-429-5678', wheelchair:false, lat:13.1143, lng:-59.6198 },
+  { id:24, name:'Barbados Community College',      address:'The Pine, Bridgetown',            parish:'St. Michael',  phone:'246-426-2858', wheelchair:true,  lat:13.1089, lng:-59.5934 },
+  { id:25, name:'Springer Memorial Secondary',     address:'Kensington, Bridgetown',          parish:'St. Michael',  phone:'246-426-9013', wheelchair:false, lat:13.1165, lng:-59.6212 },
+  { id:26, name:'St. Lucy Primary School',         address:'Checker Hall',                    parish:'St. Lucy',     phone:'246-439-6312', wheelchair:false, lat:13.3124, lng:-59.5734 },
+  { id:27, name:'North Point Community Centre',    address:'North Point',                     parish:'St. Lucy',     phone:'246-439-4501', wheelchair:true,  lat:13.3243, lng:-59.5891 },
+  { id:28, name:'St. George Secondary School',     address:'Brighton, St. George',            parish:'St. George',   phone:'246-423-1560', wheelchair:true,  lat:13.1345, lng:-59.5634 },
+  { id:29, name:'Constant Primary School',         address:'Constant, St. George',            parish:'St. George',   phone:'246-423-7892', wheelchair:false, lat:13.1231, lng:-59.5543 },
+  { id:30, name:'Alexandra School',                address:'Speightstown',                    parish:'St. Peter',    phone:'246-422-2193', wheelchair:true,  lat:13.2487, lng:-59.6413 },
+  { id:31, name:'Speightstown Community Centre',   address:'Speightstown',                    parish:'St. Peter',    phone:'246-422-8834', wheelchair:false, lat:13.2502, lng:-59.6432 },
+];
+
+var STORMS = ['Andrea','Barry','Chantal','Dean','Erin','Felix','Gabrielle','Harold','Ingrid','Jerry','Karen','Lorenzo','Melissa*','Nestor','Olga','Pablo','Rebekah','Sebastien','Tanya','Van','Wendy'];
+
+var STATUS_CONFIG = {
+  normal:  { icon:'✓',  label:'No active storm',                       message:'There is no hurricane watch or warning in effect for Barbados. Use this time to get prepared.' },
+  advisory:{ icon:'ℹ',  label:'Tropical storm advisory',               message:'A tropical storm advisory is in effect. Monitor updates from DEM and Barbados Meteorological Services.' },
+  watch:   { icon:'⚠',  label:'Hurricane watch',                       message:'A hurricane watch is in effect. A hurricane is possible within 48 hours. Prepare to shelter. Wait for DEM to say shelters are open before you go.' },
+  warning: { icon:'⚠',  label:'Hurricane warning',                     message:'A hurricane warning is in effect. A hurricane is expected within 36 hours. Complete your preparations now. Wait for DEM to open shelters.' },
+  open:    { icon:'🏠', label:'Shelters are OPEN — seek shelter now',  message:"DEM has opened Category 1 shelters. If you're in danger, go to your nearest shelter now. Bring your household checklist supplies." },
+};
+
+/* ─── Map ─── */
+var map, markers = {}, markerGroup;
+
+function initMap() {
+  map = L.map('shelter-map').setView([13.17, -59.56], 11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18
+  }).addTo(map);
+  markerGroup = L.layerGroup().addTo(map);
+  renderMarkers(SHELTERS);
+}
+
+function renderMarkers(shelters) {
+  markerGroup.clearLayers();
+  markers = {};
+  shelters.forEach(function(s) {
+    var color = s.wheelchair ? '#0e5f64' : '#00267f';
+    var icon = L.divIcon({
+      className: '',
+      html: '<div style="width:14px;height:14px;border-radius:50%;background:'+color+';border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.4)"></div>',
+      iconSize:[14,14], iconAnchor:[7,7]
+    });
+    var m = L.marker([s.lat, s.lng], { icon: icon }).addTo(markerGroup);
+    var wc = s.wheelchair ? ' <span style="background:#eaf9f9;color:#0e5f64;padding:2px 6px;border-radius:4px;font-size:12px;">♿ Accessible</span>' : '';
+    m.bindPopup(
+      '<strong style="font-size:14px;">'+s.name+'</strong>'+wc+
+      '<br><span style="color:#595959;font-size:13px;">'+s.address+', '+s.parish+'</span>'+
+      '<br><a href="tel:'+s.phone+'" style="color:#0e5f64;font-size:13px;">'+s.phone+'</a>'+
+      '<br><a href="https://www.google.com/maps/dir/?api=1&destination='+s.lat+','+s.lng+'" target="_blank" rel="noopener" style="color:#0e5f64;font-size:12px;text-decoration:underline;">Get directions ↗</a>',
+      { maxWidth: 220 }
+    );
+    markers[s.id] = m;
+  });
+}
+
+function panTo(id) {
+  var s = SHELTERS.find(function(x){ return x.id===id; });
+  if (!s || !map) return;
+  map.setView([s.lat, s.lng], 15);
+  if (markers[id]) markers[id].openPopup();
+  document.getElementById('shelter-map').scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+/* ─── Shelter cards ─── */
+function renderCards(shelters) {
+  var container  = document.getElementById('shelter-cards');
+  var noResults  = document.getElementById('no-results');
+  var countEl    = document.getElementById('results-count');
+
+  if (shelters.length === 0) {
+    container.innerHTML = '';
+    noResults.classList.remove('hidden');
+    countEl.textContent = 'No shelters found';
+    renderMarkers([]);
+    return;
+  }
+  noResults.classList.add('hidden');
+  countEl.textContent = 'Showing ' + shelters.length + ' of 31 shelter' + (shelters.length !== 1 ? 's' : '');
+
+  container.innerHTML = shelters.map(function(s) {
+    var wc = s.wheelchair
+      ? '<span style="display:inline-flex;align-items:center;gap:4px;font-size:0.875rem;background:#eaf9f9;color:#0e5f64;padding:2px 8px;border-radius:4px;font-weight:500;">♿ Wheelchair accessible</span>'
+      : '<span style="display:inline-flex;font-size:0.875rem;background:#e0e4e9;color:#595959;padding:2px 8px;border-radius:4px;">Not accessible</span>';
+    return '<div style="border:2px solid #e0e4e9;border-radius:6px;padding:1rem;display:flex;flex-direction:column;gap:8px;transition:border-color 0.15s;" onmouseover="this.style.borderColor=\'#0e5f64\'" onmouseout="this.style.borderColor=\'#e0e4e9\'">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">' +
+        '<strong style="font-size:1.125rem;line-height:1.3;">' + s.name + '</strong>' +
+        '<span style="font-size:0.75rem;font-weight:500;color:#595959;background:#e0e4e9;padding:2px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0;">' + s.parish + '</span>' +
+      '</div>' +
+      '<p style="color:#595959;font-size:1rem;margin:0;">' + s.address + '</p>' +
+      wc +
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">' +
+        '<a href="tel:'+s.phone+'" style="display:inline-flex;align-items:center;gap:4px;font-size:1rem;color:#0e5f64;text-decoration:underline;text-underline-offset:2px;font-weight:500;">📞 '+s.phone+'</a>' +
+        '<button onclick="panTo('+s.id+')" style="display:inline-flex;align-items:center;gap:4px;font-size:1rem;color:#0e5f64;text-decoration:underline;text-underline-offset:2px;font-weight:500;background:none;border:none;cursor:pointer;padding:0;">📍 Show on map</button>' +
+        '<a href="https://www.google.com/maps/dir/?api=1&destination='+s.lat+','+s.lng+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-size:1rem;color:#0e5f64;text-decoration:underline;text-underline-offset:2px;font-weight:500;">→ Get directions</a>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  renderMarkers(shelters);
+}
+
+/* ─── Filter ─── */
+function filterShelters() {
+  var q  = document.getElementById('shelter-search').value.toLowerCase().trim();
+  var p  = document.getElementById('parish-filter').value;
+  var wc = document.getElementById('wheelchair-filter').checked;
+  document.getElementById('wc-check').style.display = wc ? 'flex' : 'none';
+  var filtered = SHELTERS.filter(function(s) {
+    return (!q  || s.name.toLowerCase().includes(q) || s.address.toLowerCase().includes(q) || s.parish.toLowerCase().includes(q))
+        && (!p  || s.parish === p)
+        && (!wc || s.wheelchair);
+  });
+  renderCards(filtered);
+}
+
+/* ─── Tabs ─── */
+function showTab(name) {
+  ['shelters','checklist','storms'].forEach(function(t) {
+    document.getElementById('tab-'+t).classList.toggle('active', t===name);
+    var btn = document.getElementById('btn-'+t);
+    btn.classList.toggle('active', t===name);
+    btn.setAttribute('aria-selected', t===name ? 'true' : 'false');
+  });
+  if (name === 'shelters' && map) setTimeout(function(){ map.invalidateSize(); }, 50);
+}
+
+/* ─── Status banner ─── */
+function setStatus(status) {
+  var cfg = STATUS_CONFIG[status] || STATUS_CONFIG.normal;
+  var banner = document.getElementById('dem-banner');
+  banner.setAttribute('data-status', status);
+  document.getElementById('banner-icon').textContent    = cfg.icon;
+  document.getElementById('banner-label').textContent   = cfg.label;
+  document.getElementById('banner-message').textContent = cfg.message;
+  var now  = new Date();
+  var time = now.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+  var date = now.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('banner-updated').textContent = 'Last updated: ' + date + ', ' + time;
+  var notice = document.getElementById('shelter-notice');
+  if (status === 'open') {
+    notice.style.cssText = 'margin-top:1rem;padding:1rem;border-radius:4px;border-left:4px solid #1fbf84;background:#e9f9f3;font-size:1rem;';
+    notice.innerHTML = '<strong>Shelters are open.</strong> Go to your nearest shelter now if you need to evacuate.';
+  } else {
+    notice.style.cssText = 'margin-top:1rem;padding:1rem;border-radius:4px;border-left:4px solid #e8a833;background:#fff9e9;font-size:1rem;';
+    notice.innerHTML = '<strong>Important:</strong> This shows your nearest shelter. Do not go there until DEM announces it is open.';
+  }
+}
+
+/* ─── Checklist progress ─── */
+function updateProgress() {
+  var total   = 38;
+  var checked = document.querySelectorAll('.cl-item input[type="checkbox"]:checked').length;
+  document.getElementById('progress-text').textContent = checked + ' of ' + total + ' items';
+  document.getElementById('progress-bar').style.width  = Math.round((checked/total)*100) + '%';
+}
+function resetChecklist() {
+  document.querySelectorAll('.cl-item input[type="checkbox"]').forEach(function(cb){ cb.checked = false; });
+  updateProgress();
+}
+
+/* ─── Storm names ─── */
+function renderStormNames() {
+  var grid = document.getElementById('storm-grid');
+  grid.innerHTML = STORMS.map(function(name, i) {
+    var retired = name.includes('*');
+    var display = name.replace('*','');
+    var bg  = retired ? 'background:#fff0f0;border-color:#ffc4c4;' : 'background:#fff;border-color:#e0e4e9;';
+    var sub = retired ? '<p style="font-size:0.75rem;color:#a42c2c;margin:2px 0 0;">New name (retired replacement)</p>' : '';
+    return '<div style="padding:1rem;border-radius:6px;border:2px solid;text-align:center;'+bg+'">' +
+      '<p style="font-weight:700;font-size:1.125rem;margin:0;">'+display+'</p>' +
+      '<p style="font-size:0.75rem;color:#595959;margin:2px 0 0;">Storm '+(i+1)+'</p>' + sub +
+    '</div>';
+  }).join('');
+}
+
+/* ─── Init ─── */
+document.addEventListener('DOMContentLoaded', function() {
+  renderCards(SHELTERS);
+  renderStormNames();
+  setTimeout(initMap, 100);
+});
+</script>
+</body>
+</html>
