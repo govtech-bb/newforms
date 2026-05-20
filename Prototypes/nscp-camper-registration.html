@@ -4,61 +4,88 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NSCP Camper Registration – Ministry of Youth, Sports and Community Empowerment</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="../assets/govbb-tailwind-config.js"></script>
-  <link rel="stylesheet" href="../assets/govbb-base.css">
+  <link rel="stylesheet" href="../dist/styles.css">
 </head>
-<body>
+<body class="govbb-page">
 
-<!-- Top bar -->
-<div class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container flex items-center gap-2 py-2 text-[0.875rem]">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Coat_of_arms_of_Barbados_%282%29.svg/1280px-Coat_of_arms_of_Barbados_%282%29.svg.png" alt="Barbados coat of arms" style="height:20px;width:auto;">
-    Official website of the Government of Barbados
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
   </div>
 </div>
 
-<!-- Header -->
-<header class="bg-bb-yellow-100">
-  <div class="container py-s">
-    <div class="text-bb-black-00" style="width:276px;height:27px;">
-      <svg width="100%" viewBox="0 0 276 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img"><g><path d="M39.079 21.527C37.5026 21.527 36.103 21.1903 34.8802 20.5168C33.6721 19.8286 32.7219 18.8916 32.0294 17.7057C31.337 16.5051 30.9908 15.1288 30.9908 13.5769C30.9908 12.0249 31.337 10.6559 32.0294 9.47001C32.7219 8.26943 33.6721 7.3324 34.8802 6.65891C36.103 5.97077 37.5026 5.6267 39.079 5.6267C40.0219 5.6267 40.8911 5.7658 41.6867 6.04398C42.4823 6.32216 43.1821 6.71015 43.7861 7.20795C44.4049 7.69111 44.9205 8.24747 45.3331 8.87704L42.858 10.4144C42.6075 10.0191 42.276 9.66767 41.8635 9.3602C41.4657 9.05274 41.0237 8.81116 40.5376 8.63547C40.0514 8.45977 39.5652 8.37192 39.079 8.37192C38.1067 8.37192 37.2448 8.59886 36.4934 9.05274C35.7421 9.49197 35.1527 10.0996 34.7255 10.8756C34.2982 11.6515 34.0846 12.552 34.0846 13.5769C34.0846 14.5871 34.2909 15.4875 34.7034 16.2782C35.1307 17.0688 35.7273 17.691 36.4934 18.1449C37.2595 18.5841 38.1435 18.8038 39.1453 18.8038C39.8967 18.8038 40.567 18.6647 41.1563 18.3865C41.7456 18.0937 42.2171 17.691 42.5707 17.1786C42.9243 16.6661 43.1231 16.0659 43.1673 15.3777H39.5873V13.0278H46.0844V14.8946C46.055 16.3001 45.7382 17.5007 45.1342 18.4963C44.5301 19.4773 43.7051 20.2313 42.6591 20.7584C41.613 21.2708 40.4197 21.527 39.079 21.527Z"></path><path d="M52.8353 21.527C51.7156 21.527 50.7138 21.2854 49.8298 20.8023C48.9606 20.3045 48.2755 19.6237 47.7746 18.7598C47.2884 17.896 47.0453 16.9004 47.0453 15.773C47.0453 14.6457 47.2884 13.6501 47.7746 12.7862C48.2608 11.9224 48.9385 11.2489 49.8077 10.7658C50.677 10.268 51.6714 10.0191 52.7911 10.0191C53.9255 10.0191 54.9273 10.268 55.7966 10.7658C56.6658 11.2489 57.3435 11.9224 57.8297 12.7862C58.3159 13.6501 58.559 14.6457 58.559 15.773C58.559 16.9004 58.3159 17.896 57.8297 18.7598C57.3435 19.6237 56.6658 20.3045 55.7966 20.8023C54.9421 21.2854 53.955 21.527 52.8353 21.527ZM52.8353 18.8477C53.3804 18.8477 53.8592 18.7159 54.2717 18.4524C54.6843 18.1888 55.001 17.8301 55.222 17.3763C55.4577 16.9077 55.5756 16.3733 55.5756 15.773C55.5756 15.1728 55.4577 14.6457 55.222 14.1918C54.9863 13.7233 54.6548 13.3572 54.2275 13.0937C53.815 12.8302 53.3362 12.6984 52.7911 12.6984C52.2607 12.6984 51.7819 12.8302 51.3547 13.0937C50.9421 13.3572 50.618 13.7233 50.3823 14.1918C50.1466 14.6457 50.0287 15.1728 50.0287 15.773C50.0287 16.3733 50.1466 16.9077 50.3823 17.3763C50.618 17.8301 50.9495 18.1888 51.3768 18.4524C51.804 18.7159 52.2902 18.8477 52.8353 18.8477Z"></path><path d="M62.8109 21.2635L58.2806 10.2826H61.2861L64.2694 17.9472L67.2528 10.2826H70.2583L65.728 21.2635H62.8109Z"></path><path d="M12.5786 0C11.6253 2.46943 10.6536 5.03986 8.57466 7.00774C9.21998 6.80573 10.3493 6.62461 11.0753 6.64203V17.0283L7.988 17.4636C7.878 17.4532 7.84133 17.2895 7.84133 17.0666C7.54434 13.8413 6.74135 11.1316 5.81736 8.32779C5.75136 7.94466 4.58171 6.48181 5.4837 6.73955C5.5937 6.75348 6.80002 7.2202 6.60935 6.99729C4.96671 5.38119 2.56508 4.21788 0.233112 3.87306C0.0277812 3.8243 -0.0932171 3.92183 0.0901136 4.14822C3.18474 8.6726 5.77336 14.012 5.75136 20.3475C6.95401 20.3475 9.86897 19.6718 11.0753 19.6718V27H12.5969L12.9453 6.53406L12.5786 0Z"></path><path d="M12.5786 0C13.5319 2.46943 14.5036 5.03986 16.5825 7.00774C15.9372 6.80573 14.8079 6.62461 14.0819 6.64203V17.0283L17.1692 17.4636C17.2792 17.4532 17.3159 17.2895 17.3159 17.0666C17.6129 13.8413 18.4158 11.1316 19.3398 8.32779C19.4058 7.94466 20.5755 6.48181 19.6735 6.73955C19.5635 6.75348 18.3572 7.2202 18.5478 6.99729C20.1905 5.38119 22.5921 4.21788 24.9241 3.87306C25.1294 3.8243 25.2504 3.92183 25.0671 4.14822C21.9725 8.6726 19.3838 14.012 19.4058 20.3475C18.2032 20.3475 15.2882 19.6718 14.0819 19.6718V27H12.5603L12.2119 6.53406L12.5786 0Z"></path></g></svg>
-    </div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
   </div>
 </header>
 
-<!-- Alpha banner -->
-<div class="bg-bb-blue-10">
-  <div class="container py-xs text-[1rem]">
-    This page is in <a href="#" class="inline-flex outline-none underline-offset-2 underline hover:no-underline active:bg-bb-yellow-100 active:no-underline focus-visible:bg-bb-yellow-100 focus-visible:no-underline active:text-bb-black-00 focus-visible:text-bb-black-00 text-bb-teal-00 hover:text-bb-black-00 hover:bg-bb-teal-10">Alpha</a>. Your feedback helps us improve.
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
   </div>
-</div>
-
-<!-- Main -->
-<main>
-  <div class="container py-l">
-    <div class="max-w-3xl" id="app"></div>
-  </div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
 </main>
 
-<!-- Footer -->
-<footer class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container py-l text-[1rem]">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <p>&copy; 2025 Government of Barbados. All rights reserved.</p>
-      <div class="flex gap-4">
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Privacy</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Terms</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Accessibility</a>
-      </div>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
     </div>
   </div>
 </footer>
 
 <script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  document.getElementById('app').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) group.appendChild(msg);
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
 <script>
 /* ───────── Form configuration ───────── */
 const FORM_NAME = 'National Summer Camp Programme: Camper Registration';
@@ -158,37 +185,6 @@ const RELATIONSHIPS = [
   'Stepfather', 'Sibling', 'Other'
 ];
 
-/* ───────── Custom styled select (matches design system screenshot) ───────── */
-function styledSelect(id, label, options, opts) {
-  opts = opts || {};
-  const val = GovBB.D[id] || '';
-  const hint = opts.hint
-    ? `<p class="text-[1.25rem] leading-normal text-bb-mid-grey-00">${opts.hint}</p>`
-    : '';
-  const triggerAttr = opts.triggerRender ? ' data-trigger-render="1"' : '';
-  const placeholder = opts.placeholder || 'Select one';
-  let ops = `<option value="">${placeholder}</option>`;
-  options.forEach(o => {
-    const v = typeof o === 'object' ? o.value : o;
-    const l = typeof o === 'object' ? o.label : o;
-    ops += `<option value="${v}"${val === v ? ' selected' : ''}>${l}</option>`;
-  });
-  return `
-    <div class="field-group flex flex-col gap-xs w-full items-start">
-      <label for="${id}" class="block text-[1.25rem] leading-normal font-bold text-bb-black-00">${label}</label>
-      ${hint}
-      <div class="relative flex w-full rounded-sm border-2 border-bb-black-00 bg-bb-white-00 overflow-hidden hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
-        <select id="${id}" name="${id}" data-field="${id}"${triggerAttr}
-          class="w-full min-w-0 p-s outline-none bg-transparent appearance-none cursor-pointer text-[1.25rem] leading-normal">
-          ${ops}
-        </select>
-        <div class="flex items-center justify-center w-14 shrink-0 bg-[#f0f0f0] border-l-2 border-bb-black-00 pointer-events-none" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
-        </div>
-      </div>
-    </div>`;
-}
-
 /* ───────── Helpers ───────── */
 function fmtDate(prefix) {
   const d = GovBB.D[prefix + '-day'];
@@ -234,103 +230,208 @@ const PAGES = {
 
   /* ── Start ── */
   'start': () => `
-    <div class="space-y-6">
-      <p class="border-bb-blue-40 border-l-4 py-xs pl-s text-bb-mid-grey-00">Ministry of Youth, Sports and Community Empowerment</p>
-      <h1 class="font-bold text-[3.5rem] leading-[1.15]">National Summer Camp Programme</h1>
-      <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00">Last updated: May 2025</p>
-      <hr class="border-bb-grey-00">
+    <div>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Ministry of Youth, Sports and Community Empowerment</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">National Summer Camp Programme</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);color:var(--color-mid-grey-00);">Last updated: May 2025</p>
+      <hr style="border-color:var(--color-grey-00);margin-bottom:var(--spacing-m);">
 
-      <p class="text-[1.25rem] leading-normal">Register your child for the National Summer Camp Programme. The camp is open to children aged <strong>4 to 15 years</strong>.</p>
-      <p class="text-[1.25rem] leading-normal">Most people finish this form in about <strong>10 minutes</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Register your child for the National Summer Camp Programme. The camp is open to children aged <strong>4 to 15 years</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Most people finish this form in about <strong>10 minutes</strong>.</p>
 
-      <div class="space-y-3">
-        <h2 class="font-bold text-[1.5rem]">What you'll need</h2>
-        <ul class="list-disc pl-6 space-y-2 text-[1.25rem] leading-normal">
-          <li>Your child's National ID Number (NRN), found on their national ID card. For example, 110915-0048.</li>
-          <li>Your child's date of birth</li>
-          <li>Details of any illnesses, medications, disabilities, or allergies your child has</li>
-          <li>Your contact details (address, phone, email)</li>
-          <li>Emergency contact details and your child's doctor or polyclinic</li>
-        </ul>
-      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your child's National ID Number (NRN), found on their national ID card. For example, 110915-0048.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your child's date of birth</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Details of any illnesses, medications, disabilities, or allergies your child has</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your contact details (address, phone, email)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Emergency contact details and your child's doctor or polyclinic</li>
+      </ul>
 
-      <div class="space-y-3">
-        <h2 class="font-bold text-[1.5rem]">Contact us</h2>
-        <p class="text-[1.25rem] leading-normal">Call <strong>+1 (246) 535-3835</strong> or email <a href="mailto:mysce.youthprojects@barbados.gov.bb" class="${GovBB.LINK_CLS}">mysce.youthprojects@barbados.gov.bb</a> if you need help.</p>
-      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call <strong>+1 (246) 535-3835</strong> or email <a href="mailto:mysce.youthprojects@barbados.gov.bb" class="govbb-link">mysce.youthprojects@barbados.gov.bb</a> if you need help.</p>
 
-      ${GovBB.startBtn('Start registration')}
+      <div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start registration</button></div>
     </div>`,
 
   /* ── Tell us about your child ── */
   'camper-details': () => `
     <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Tell us about your child</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('camper-fullname', 'Full name')}
-        ${GovBB.dateField('dob', 'Date of birth')}
-        ${GovBB.textField('nid', 'National ID Number', {
-          hint: 'You can find this on your child\'s national ID card. For example, 110915-0048.',
-          placeholder: '110915-0048'
-        })}
-        ${GovBB.radioGroup('gender', 'Gender', ['Male', 'Female'])}
-        ${styledSelect('religion', 'Religion', ['Christian', 'Islam', 'Rastafarianism', 'Hindu', 'Other'], {
-          placeholder: 'Select a religion', triggerRender: true
-        })}
-        <div data-show-when-name="religion" data-show-when-value="Other" style="display:${GovBB.D['religion'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-          ${GovBB.textField('religion-other', 'Please describe your child\'s religion')}
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Ministry of Youth, Sports and Community Empowerment</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Tell us about your child</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="camper-fullname">Full name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="camper-fullname" name="camper-fullname" data-field="camper-fullname" value="${GovBB.D['camper-fullname']||''}" />
         </div>
-        ${GovBB.continueBtn()}
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Date of birth</legend>
+        <p class="govbb-hint">For example, 27 03 2007</p>
+        <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-day">Day</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="dob-day" name="dob-day" data-field="dob-day" inputmode="numeric" value="${GovBB.D['dob-day']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-month">Month</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="dob-month" name="dob-month" data-field="dob-month" inputmode="numeric" value="${GovBB.D['dob-month']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-year">Year</label>
+            <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="dob-year" name="dob-year" data-field="dob-year" inputmode="numeric" value="${GovBB.D['dob-year']||''}" /></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nid">National ID Number</label>
+        <p class="govbb-hint">You can find this on your child's national ID card. For example, 110915-0048.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="nid" name="nid" data-field="nid" placeholder="110915-0048" value="${GovBB.D['nid']||''}" />
+        </div>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Gender</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="gender-male" name="gender" data-field="gender" value="Male"${GovBB.D['gender']==='Male'?' checked':''} />
+            <label class="govbb-radio-item__label" for="gender-male">Male</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="gender-female" name="gender" data-field="gender" value="Female"${GovBB.D['gender']==='Female'?' checked':''} />
+            <label class="govbb-radio-item__label" for="gender-female">Female</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="religion">Religion</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="religion" name="religion" data-field="religion" data-trigger-render="1">
+            <option value="">Select a religion</option>
+            ${['Christian','Islam','Rastafarianism','Hindu','Other'].map(o=>`<option value="${o}"${GovBB.D['religion']===o?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+      <div data-show-when-name="religion" data-show-when-value="Other" style="display:${GovBB.D['religion']==='Other'?'block':'none'};padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="religion-other">Please describe your child's religion</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="religion-other" name="religion-other" data-field="religion-other" value="${GovBB.D['religion-other']||''}" />
+          </div>
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
       </div>
     </form>`,
 
   /* ── Medical & health information ── */
   'camper-health': () => `
     <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-4">Your child's medical &amp; health information</h1>
-      <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00 mb-8">Answer all questions below. If your child takes medication at camp, you must also complete a Medication Authorisation Form before camp starts.</p>
-      <div class="space-y-8">
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Ministry of Youth, Sports and Community Empowerment</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Your child's medical &amp; health information</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">Answer all questions below. If your child takes medication at camp, you must also complete a Medication Authorisation Form before camp starts.</p>
 
-        <div class="space-y-4">
-          ${GovBB.radioGroup('illness', 'Does your child have any illness?', ['Yes', 'No'], {
-            hint: 'For example: blood clotting, respiratory conditions, heart conditions, frequent infections, diabetes, fainting.'
-          })}
-          <div data-show-when-name="illness" data-show-when-value="Yes" style="display:${GovBB.D['illness'] === 'Yes' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-            ${GovBB.textareaField('illness-details', 'Please describe the illness or illnesses', { rows: 3 })}
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Does your child have any illness?</legend>
+        <p class="govbb-hint">For example: blood clotting, respiratory conditions, heart conditions, frequent infections, diabetes, fainting.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="illness-yes" name="illness" data-field="illness" value="Yes"${GovBB.D['illness']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="illness-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="illness-no" name="illness" data-field="illness" value="No"${GovBB.D['illness']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="illness-no">No</label>
           </div>
         </div>
+      </fieldset>
+      <div data-show-when-name="illness" data-show-when-value="Yes" style="display:${GovBB.D['illness']==='Yes'?'block':'none'};padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="illness-details">Please describe the illness or illnesses</label>
+          <textarea class="govbb-textarea" id="illness-details" name="illness-details" data-field="illness-details" rows="3" style="width:100%;">${GovBB.D['illness-details']||''}</textarea>
+        </div>
+      </div>
 
-        <div class="space-y-4">
-          ${GovBB.radioGroup('medication', 'Is your child on any medication?', ['Yes', 'No'])}
-          <div data-show-when-name="medication" data-show-when-value="Yes" style="display:${GovBB.D['medication'] === 'Yes' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-            ${GovBB.textareaField('medication-details', 'What is the medication and dosage?', {
-              hint: 'Include the name of each medicine and how much your child takes.',
-              rows: 3
-            })}
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Is your child on any medication?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="medication-yes" name="medication" data-field="medication" value="Yes"${GovBB.D['medication']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="medication-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="medication-no" name="medication" data-field="medication" value="No"${GovBB.D['medication']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="medication-no">No</label>
           </div>
         </div>
+      </fieldset>
+      <div data-show-when-name="medication" data-show-when-value="Yes" style="display:${GovBB.D['medication']==='Yes'?'block':'none'};padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="medication-details">What is the medication and dosage?</label>
+          <p class="govbb-hint">Include the name of each medicine and how much your child takes.</p>
+          <textarea class="govbb-textarea" id="medication-details" name="medication-details" data-field="medication-details" rows="3" style="width:100%;">${GovBB.D['medication-details']||''}</textarea>
+        </div>
+      </div>
 
-        <div class="space-y-4">
-          ${GovBB.radioGroup('disability', 'Does your child have a disability?', ['Yes', 'No'])}
-          <div data-show-when-name="disability" data-show-when-value="Yes" style="display:${GovBB.D['disability'] === 'Yes' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-            ${GovBB.textareaField('disability-details', 'Please describe the disability', { rows: 3 })}
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Does your child have a disability?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="disability-yes" name="disability" data-field="disability" value="Yes"${GovBB.D['disability']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="disability-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="disability-no" name="disability" data-field="disability" value="No"${GovBB.D['disability']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="disability-no">No</label>
           </div>
         </div>
+      </fieldset>
+      <div data-show-when-name="disability" data-show-when-value="Yes" style="display:${GovBB.D['disability']==='Yes'?'block':'none'};padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="disability-details">Please describe the disability</label>
+          <textarea class="govbb-textarea" id="disability-details" name="disability-details" data-field="disability-details" rows="3" style="width:100%;">${GovBB.D['disability-details']||''}</textarea>
+        </div>
+      </div>
 
-        <div class="space-y-4">
-          ${GovBB.radioGroup('allergies', 'Does your child have any allergies?', ['Yes', 'No'])}
-          <div data-show-when-name="allergies" data-show-when-value="Yes" style="display:${GovBB.D['allergies'] === 'Yes' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-            ${GovBB.textareaField('allergies-details', 'Please describe the allergies', { rows: 3 })}
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Does your child have any allergies?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="allergies-yes" name="allergies" data-field="allergies" value="Yes"${GovBB.D['allergies']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="allergies-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="allergies-no" name="allergies" data-field="allergies" value="No"${GovBB.D['allergies']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="allergies-no">No</label>
           </div>
         </div>
+      </fieldset>
+      <div data-show-when-name="allergies" data-show-when-value="Yes" style="display:${GovBB.D['allergies']==='Yes'?'block':'none'};padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="allergies-details">Please describe the allergies</label>
+          <textarea class="govbb-textarea" id="allergies-details" name="allergies-details" data-field="allergies-details" rows="3" style="width:100%;">${GovBB.D['allergies-details']||''}</textarea>
+        </div>
+      </div>
 
-        ${GovBB.textField('doctor-name', "Your child's doctor or polyclinic", {
-          hint: 'For example: Dr. Adams, Glebe Polyclinic.'
-        })}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="doctor-name">Your child's doctor or polyclinic</label>
+        <p class="govbb-hint">For example: Dr. Adams, Glebe Polyclinic.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="doctor-name" name="doctor-name" data-field="doctor-name" value="${GovBB.D['doctor-name']||''}" />
+        </div>
+      </div>
 
-        ${btnGroup()}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -338,48 +439,92 @@ const PAGES = {
   'camp': () => {
     const parish = GovBB.D['camp-parish'] || '';
     const venueOptions = parish && CAMP_VENUES[parish] ? CAMP_VENUES[parish] : [];
-    const venueDropdown = parish
-      ? styledSelect('camp-name', 'Name of camp', venueOptions, { placeholder: 'Select a camp' })
-      : '';
+    const venueDropdown = parish ? `
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="camp-name">Name of camp</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="camp-name" name="camp-name" data-field="camp-name">
+            <option value="">Select a camp</option>
+            ${venueOptions.map(o=>`<option value="${o}"${GovBB.D['camp-name']===o?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>` : '';
     return `
     <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Choose a camp</h1>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Ministry of Youth, Sports and Community Empowerment</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Choose a camp</h1>
 
-      <div class="space-y-8">
-        ${styledSelect('camp-parish', 'Parish of camp', GovBB.PARISHES, {
-          placeholder: 'Select a parish',
-          triggerRender: true
-        })}
-        ${venueDropdown}
-
-        <div class="space-y-6">
-          <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-s">Topics that interest your child</h2>
-          <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00">Choose all that apply.</p>
-          ${GovBB.checkboxItem('curriculum-arts',        'Arts &amp; Culture <span class="font-normal text-bb-mid-grey-00">(includes visual &amp; performing arts)</span>')}
-          ${GovBB.checkboxItem('curriculum-innovation',  'Innovation <span class="font-normal text-bb-mid-grey-00">(includes digital media, science &amp; technology)</span>')}
-          ${GovBB.checkboxItem('curriculum-youth',       'Youth Empowerment <span class="font-normal text-bb-mid-grey-00">(includes entrepreneurship, career development, leadership, public speaking)</span>')}
-          ${GovBB.checkboxItem('curriculum-health',      'Health &amp; Fitness')}
-          ${GovBB.checkboxItem('curriculum-self',        'Self-Management Tools <span class="font-normal text-bb-mid-grey-00">(includes health &amp; wellness, self-care, religious knowledge, ethics, etiquette)</span>')}
-          ${GovBB.checkboxItem('curriculum-finance',     'Financial Literacy')}
-          ${GovBB.checkboxItem('curriculum-agriculture', 'Agriculture')}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="camp-parish">Parish of camp</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="camp-parish" name="camp-parish" data-field="camp-parish" data-trigger-render="1">
+            <option value="">Select a parish</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['camp-parish']===o?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
         </div>
+      </div>
+      ${venueDropdown}
 
-        <div class="space-y-6">
-          <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-s">Activities</h2>
-          ${GovBB.textareaField('activity-exemptions', 'Are there any activities your child should not take part in?', {
-            hint: 'If there are no restrictions, write "None". We give permission for trained camp staff to give first aid and seek emergency care for your child if we cannot reach you.',
-            rows: 4
-          })}
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Topics that interest your child</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);color:var(--color-mid-grey-00);">Choose all that apply.</p>
+
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="curriculum-arts" name="curriculum-arts" data-field="curriculum-arts"${GovBB.D['curriculum-arts']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="curriculum-arts">Arts &amp; Culture <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes visual &amp; performing arts)</span></label>
+      </div>
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="curriculum-innovation" name="curriculum-innovation" data-field="curriculum-innovation"${GovBB.D['curriculum-innovation']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="curriculum-innovation">Innovation <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes digital media, science &amp; technology)</span></label>
+      </div>
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="curriculum-youth" name="curriculum-youth" data-field="curriculum-youth"${GovBB.D['curriculum-youth']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="curriculum-youth">Youth Empowerment <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes entrepreneurship, career development, leadership, public speaking)</span></label>
+      </div>
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="curriculum-health" name="curriculum-health" data-field="curriculum-health"${GovBB.D['curriculum-health']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="curriculum-health">Health &amp; Fitness</label>
+      </div>
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="curriculum-self" name="curriculum-self" data-field="curriculum-self"${GovBB.D['curriculum-self']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="curriculum-self">Self-Management Tools <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes health &amp; wellness, self-care, religious knowledge, ethics, etiquette)</span></label>
+      </div>
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="curriculum-finance" name="curriculum-finance" data-field="curriculum-finance"${GovBB.D['curriculum-finance']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="curriculum-finance">Financial Literacy</label>
+      </div>
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-m);">
+        <input class="govbb-checkbox" type="checkbox" id="curriculum-agriculture" name="curriculum-agriculture" data-field="curriculum-agriculture"${GovBB.D['curriculum-agriculture']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="curriculum-agriculture">Agriculture</label>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Activities</h2>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="activity-exemptions">Are there any activities your child should not take part in?</label>
+        <p class="govbb-hint">If there are no restrictions, write "None". We give permission for trained camp staff to give first aid and seek emergency care for your child if we cannot reach you.</p>
+        <textarea class="govbb-textarea" id="activity-exemptions" name="activity-exemptions" data-field="activity-exemptions" rows="4" style="width:100%;">${GovBB.D['activity-exemptions']||''}</textarea>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Photos and videos</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);color:var(--color-mid-grey-00);">Photos and videos may be used in National Summer Camp Programme materials and communications.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Do you give permission for photos or videos of your child during camp activities?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="photo-permission-yes" name="photo-permission" data-field="photo-permission" value="Yes"${GovBB.D['photo-permission']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="photo-permission-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="photo-permission-no" name="photo-permission" data-field="photo-permission" value="No"${GovBB.D['photo-permission']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="photo-permission-no">No</label>
+          </div>
         </div>
+      </fieldset>
 
-        <div class="space-y-6">
-          <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-s">Photos and videos</h2>
-          <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00">Photos and videos may be used in National Summer Camp Programme materials and communications.</p>
-          ${GovBB.radioGroup('photo-permission', 'Do you give permission for photos or videos of your child during camp activities?', ['Yes', 'No'])}
-        </div>
-
-        ${btnGroup()}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`;
   },
@@ -387,248 +532,371 @@ const PAGES = {
   /* ── Nutrition ── */
   'nutrition': () => `
     <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Meals at camp</h1>
-      <p class="text-[1.25rem] leading-normal mb-8">School meals will be available at camp. If your child has dietary restrictions or food allergies, you are welcome to send meals from home.</p>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Ministry of Youth, Sports and Community Empowerment</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Meals at camp</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">School meals will be available at camp. If your child has dietary restrictions or food allergies, you are welcome to send meals from home.</p>
 
-      <div class="space-y-8">
-        ${GovBB.radioGroup('meals-provided', 'Will your child eat the meals provided at camp?', ['Yes', 'No'])}
-        ${styledSelect('dietary', 'Dietary restrictions', ['None', 'Vegetarian', 'Vegan', 'Gluten-free', 'Other'], {
-          placeholder: 'Select one', triggerRender: true
-        })}
-        <div data-show-when-name="dietary" data-show-when-value="Other" style="display:${GovBB.D['dietary'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-          ${GovBB.textField('dietary-other', 'Please describe the dietary restriction')}
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Will your child eat the meals provided at camp?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="meals-provided-yes" name="meals-provided" data-field="meals-provided" value="Yes"${GovBB.D['meals-provided']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="meals-provided-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="meals-provided-no" name="meals-provided" data-field="meals-provided" value="No"${GovBB.D['meals-provided']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="meals-provided-no">No</label>
+          </div>
         </div>
-        ${btnGroup()}
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="dietary">Dietary restrictions</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="dietary" name="dietary" data-field="dietary" data-trigger-render="1">
+            <option value="">Select one</option>
+            ${['None','Vegetarian','Vegan','Gluten-free','Other'].map(o=>`<option value="${o}"${GovBB.D['dietary']===o?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+      <div data-show-when-name="dietary" data-show-when-value="Other" style="display:${GovBB.D['dietary']==='Other'?'block':'none'};padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="dietary-other">Please describe the dietary restriction</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="dietary-other" name="dietary-other" data-field="dietary-other" value="${GovBB.D['dietary-other']||''}" />
+          </div>
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Guardian name + relationship ── */
   'guardian-name': () => `
     <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">About you, the parent or guardian</h1>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Ministry of Youth, Sports and Community Empowerment</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you, the parent or guardian</h1>
 
-      <div class="space-y-8">
-        ${GovBB.textField('guardian-fullname', 'Full name')}
-        ${styledSelect('guardian-relationship', 'Your relationship to the camper', RELATIONSHIPS, {
-          placeholder: 'Select a relationship', triggerRender: true
-        })}
-        <div data-show-when-name="guardian-relationship" data-show-when-value="Other" style="display:${GovBB.D['guardian-relationship'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-          ${GovBB.textField('guardian-relationship-other', 'Please describe your relationship to the camper')}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="guardian-fullname">Full name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="guardian-fullname" name="guardian-fullname" data-field="guardian-fullname" value="${GovBB.D['guardian-fullname']||''}" />
         </div>
-        ${GovBB.radioGroup('guardian-is-emergency', 'Are you the emergency contact?', ['Yes', 'No'], {
-          hint: 'If yes, we will use your contact details above in an emergency.'
-        })}
-        ${btnGroup()}
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="guardian-relationship">Your relationship to the camper</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="guardian-relationship" name="guardian-relationship" data-field="guardian-relationship" data-trigger-render="1">
+            <option value="">Select a relationship</option>
+            ${RELATIONSHIPS.map(o=>`<option value="${o}"${GovBB.D['guardian-relationship']===o?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+      <div data-show-when-name="guardian-relationship" data-show-when-value="Other" style="display:${GovBB.D['guardian-relationship']==='Other'?'block':'none'};padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="guardian-relationship-other">Please describe your relationship to the camper</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="guardian-relationship-other" name="guardian-relationship-other" data-field="guardian-relationship-other" value="${GovBB.D['guardian-relationship-other']||''}" />
+          </div>
+        </div>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Are you the emergency contact?</legend>
+        <p class="govbb-hint">If yes, we will use your contact details above in an emergency.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="guardian-is-emergency-yes" name="guardian-is-emergency" data-field="guardian-is-emergency" value="Yes"${GovBB.D['guardian-is-emergency']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="guardian-is-emergency-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="guardian-is-emergency-no" name="guardian-is-emergency" data-field="guardian-is-emergency" value="No"${GovBB.D['guardian-is-emergency']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="guardian-is-emergency-no">No</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Guardian contact (address + contact merged) ── */
   'guardian-contact': () => `
     <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">How to reach you</h1>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Ministry of Youth, Sports and Community Empowerment</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">How to reach you</h1>
 
-      <div class="space-y-8">
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Address</h2>
 
-        <div class="space-y-6">
-          <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-s">Address</h2>
-          ${GovBB.textField('address-line1', 'Address line 1')}
-          ${GovBB.textField('address-line2', 'Address line 2 (optional)')}
-          ${styledSelect('address-parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
-          ${GovBB.textField('address-postal', 'Postal code (optional)', {
-            hint: 'For example, BB11000.',
-            placeholder: 'BB11000'
-          })}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address-line1">Address line 1</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="address-line1" name="address-line1" data-field="address-line1" value="${GovBB.D['address-line1']||''}" />
         </div>
+      </div>
 
-        <div class="space-y-6">
-          <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-s">Contact details</h2>
-          ${GovBB.telField('phone-cell', 'Mobile number', {
-            hint: 'For example, 246 249-1234.',
-            placeholder: '246 249-1234'
-          })}
-          ${GovBB.telField('phone-home', 'Home phone (optional)', {
-            hint: 'For example, 246 433-1234.',
-            placeholder: '246 433-1234'
-          })}
-          ${GovBB.telField('phone-work', 'Work phone (optional)', {
-            hint: 'For example, 246 535-1234.',
-            placeholder: '246 535-1234'
-          })}
-          ${GovBB.emailField('contact-email', 'Email address', {
-            hint: 'We\'ll use this to send you a copy of your registration.'
-          })}
-          ${GovBB.textField('employer', 'Employer or business name')}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address-line2">Address line 2 (optional)</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="address-line2" name="address-line2" data-field="address-line2" value="${GovBB.D['address-line2']||''}" />
         </div>
+      </div>
 
-        ${btnGroup()}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address-parish">Parish</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="address-parish" name="address-parish" data-field="address-parish">
+            <option value="">Select a parish</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['address-parish']===o?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address-postal">Postal code (optional)</label>
+        <p class="govbb-hint">For example, BB11000.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="address-postal" name="address-postal" data-field="address-postal" placeholder="BB11000" value="${GovBB.D['address-postal']||''}" />
+        </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Contact details</h2>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="phone-cell">Mobile number</label>
+        <p class="govbb-hint">For example, 246 249-1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="phone-cell" name="phone-cell" data-field="phone-cell" placeholder="246 249-1234" value="${GovBB.D['phone-cell']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="phone-home">Home phone (optional)</label>
+        <p class="govbb-hint">For example, 246 433-1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="phone-home" name="phone-home" data-field="phone-home" placeholder="246 433-1234" value="${GovBB.D['phone-home']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="phone-work">Work phone (optional)</label>
+        <p class="govbb-hint">For example, 246 535-1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="phone-work" name="phone-work" data-field="phone-work" placeholder="246 535-1234" value="${GovBB.D['phone-work']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="contact-email">Email address</label>
+        <p class="govbb-hint">We'll use this to send you a copy of your registration.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="email" id="contact-email" name="contact-email" data-field="contact-email" value="${GovBB.D['contact-email']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="employer">Employer or business name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="employer" name="employer" data-field="employer" value="${GovBB.D['employer']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Emergency contact ── */
   'emergency-contact': () => `
     <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Emergency contact details</h1>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Ministry of Youth, Sports and Community Empowerment</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Emergency contact details</h1>
 
-      <div class="space-y-8">
-        ${GovBB.textField('emerg-fullname', 'Full name')}
-        ${styledSelect('emerg-relationship', 'Relationship to camper', RELATIONSHIPS, {
-          placeholder: 'Select a relationship', triggerRender: true
-        })}
-        <div data-show-when-name="emerg-relationship" data-show-when-value="Other" style="display:${GovBB.D['emerg-relationship'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-          ${GovBB.textField('emerg-relationship-other', 'Please describe their relationship to the camper')}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="emerg-fullname">Full name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="emerg-fullname" name="emerg-fullname" data-field="emerg-fullname" value="${GovBB.D['emerg-fullname']||''}" />
         </div>
-        ${GovBB.telField('emerg-phone', 'Phone number', {
-          hint: 'For example, 246 555-1234.',
-          placeholder: '246 555-1234'
-        })}
-        ${btnGroup()}
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="emerg-relationship">Relationship to camper</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="emerg-relationship" name="emerg-relationship" data-field="emerg-relationship" data-trigger-render="1">
+            <option value="">Select a relationship</option>
+            ${RELATIONSHIPS.map(o=>`<option value="${o}"${GovBB.D['emerg-relationship']===o?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+      <div data-show-when-name="emerg-relationship" data-show-when-value="Other" style="display:${GovBB.D['emerg-relationship']==='Other'?'block':'none'};padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="emerg-relationship-other">Please describe their relationship to the camper</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="emerg-relationship-other" name="emerg-relationship-other" data-field="emerg-relationship-other" value="${GovBB.D['emerg-relationship-other']||''}" />
+          </div>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="emerg-phone">Phone number</label>
+        <p class="govbb-hint">For example, 246 555-1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="emerg-phone" name="emerg-phone" data-field="emerg-phone" placeholder="246 555-1234" value="${GovBB.D['emerg-phone']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Conduct ── */
   'conduct': () => `
     <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Camper conduct agreement</h1>
-      <p class="text-[1.25rem] leading-normal mb-4">The National Summer Camp Programme gives campers a safe place to learn and grow together. Both you and your child must read and agree to these rules before your child attends camp.</p>
-      <p class="text-[1.25rem] leading-normal mb-8">Check all six boxes below to agree on behalf of yourself and your child.</p>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Ministry of Youth, Sports and Community Empowerment</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Camper conduct agreement</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">The National Summer Camp Programme gives campers a safe place to learn and grow together. Both you and your child must read and agree to these rules before your child attends camp.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Check all six boxes below to agree on behalf of yourself and your child.</p>
 
-      <div class="space-y-6 mb-8">
-        ${GovBB.checkboxItem('conduct-1', 'I will treat everyone in the camp community with respect at all times, including their belongings, privacy and feelings.')}
-        ${GovBB.checkboxItem('conduct-2', 'I understand that harassment based on colour, race, religion, creed, gender, age, sexual orientation or disability is not allowed.')}
-        ${GovBB.checkboxItem('conduct-3', 'I will treat the camp facilities and equipment with respect and will not take or damage any camp property.')}
-        ${GovBB.checkboxItem('conduct-4', 'I will not use offensive language, play music with offensive content, or make reference to violent or offensive actions.')}
-        ${GovBB.checkboxItem('conduct-5', 'I will not take part in any activity that puts myself, other campers, or staff at risk.')}
-        ${GovBB.checkboxItem('conduct-6', 'I agree to follow the rules of the camp and the directions given by camp staff at all times.')}
+      <div style="margin-bottom:var(--spacing-m);">
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="conduct-1" name="conduct-1" data-field="conduct-1"${GovBB.D['conduct-1']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="conduct-1">I will treat everyone in the camp community with respect at all times, including their belongings, privacy and feelings.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="conduct-2" name="conduct-2" data-field="conduct-2"${GovBB.D['conduct-2']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="conduct-2">I understand that harassment based on colour, race, religion, creed, gender, age, sexual orientation or disability is not allowed.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="conduct-3" name="conduct-3" data-field="conduct-3"${GovBB.D['conduct-3']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="conduct-3">I will treat the camp facilities and equipment with respect and will not take or damage any camp property.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="conduct-4" name="conduct-4" data-field="conduct-4"${GovBB.D['conduct-4']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="conduct-4">I will not use offensive language, play music with offensive content, or make reference to violent or offensive actions.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="conduct-5" name="conduct-5" data-field="conduct-5"${GovBB.D['conduct-5']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="conduct-5">I will not take part in any activity that puts myself, other campers, or staff at risk.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="conduct-6" name="conduct-6" data-field="conduct-6"${GovBB.D['conduct-6']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="conduct-6">I agree to follow the rules of the camp and the directions given by camp staff at all times.</label>
+        </div>
       </div>
 
-      <div class="bg-bb-yellow-10 border-l-4 border-bb-yellow-00 p-s mb-8 text-[1.25rem] leading-normal">
-        <p><strong>Important:</strong> If a camper breaks these rules, the parent or guardian will be contacted. Serious breaches may result in the camper being asked to leave camp immediately.</p>
+      <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Important:</strong> If a camper breaks these rules, the parent or guardian will be contacted. Serious breaches may result in the camper being asked to leave camp immediately.</p>
       </div>
 
-      ${btnGroup('Continue to review')}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue to review</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
     </form>`,
 
   /* ── Check your answers ── */
   'check': () => `
     <div>
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Check your answers before sending</h1>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before sending</h1>
 
-      <div class="space-y-10">
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About the camper</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Full name', camperFullName(), 'camper-details')}
+        ${GovBB.summaryRow('Date of birth', fmtDate('dob'), 'camper-details')}
+        ${GovBB.summaryRow('National ID Number', GovBB.D['nid'] || '', 'camper-details')}
+        ${GovBB.summaryRow('Gender', GovBB.D['gender'] || '', 'camper-details')}
+        ${GovBB.summaryRow('Religion', GovBB.D['religion'] === 'Other' ? (GovBB.D['religion-other'] || 'Other') : (GovBB.D['religion'] || ''), 'camper-details')}
+      </dl>
 
-        <div>
-          <h2 class="font-bold text-[1.5rem] mb-4">About the camper</h2>
-          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.summaryRow('Full name', camperFullName(), 'camper-details')}
-            ${GovBB.summaryRow('Date of birth', fmtDate('dob'), 'camper-details')}
-            ${GovBB.summaryRow('National ID Number', GovBB.D['nid'] || '', 'camper-details')}
-            ${GovBB.summaryRow('Gender', GovBB.D['gender'] || '', 'camper-details')}
-            ${GovBB.summaryRow('Religion', GovBB.D['religion'] === 'Other' ? (GovBB.D['religion-other'] || 'Other') : (GovBB.D['religion'] || ''), 'camper-details')}
-          </dl>
-        </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Medical &amp; health</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Has illness?', GovBB.D['illness'] || '', 'camper-health')}
+        ${GovBB.D['illness'] === 'Yes' ? GovBB.summaryRow('Illness details', GovBB.D['illness-details'] || '', 'camper-health') : ''}
+        ${GovBB.summaryRow('On medication?', GovBB.D['medication'] || '', 'camper-health')}
+        ${GovBB.D['medication'] === 'Yes' ? GovBB.summaryRow('Medication details', GovBB.D['medication-details'] || '', 'camper-health') : ''}
+        ${GovBB.summaryRow('Has disability?', GovBB.D['disability'] || '', 'camper-health')}
+        ${GovBB.D['disability'] === 'Yes' ? GovBB.summaryRow('Disability details', GovBB.D['disability-details'] || '', 'camper-health') : ''}
+        ${GovBB.summaryRow('Has allergies?', GovBB.D['allergies'] || '', 'camper-health')}
+        ${GovBB.D['allergies'] === 'Yes' ? GovBB.summaryRow('Allergy details', GovBB.D['allergies-details'] || '', 'camper-health') : ''}
+        ${GovBB.summaryRow('Doctor or polyclinic', GovBB.D['doctor-name'] || '', 'camper-health')}
+      </dl>
 
-        <div>
-          <h2 class="font-bold text-[1.5rem] mb-4">Medical &amp; health</h2>
-          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.summaryRow('Has illness?', GovBB.D['illness'] || '', 'camper-health')}
-            ${GovBB.D['illness'] === 'Yes' ? GovBB.summaryRow('Illness details', GovBB.D['illness-details'] || '', 'camper-health') : ''}
-            ${GovBB.summaryRow('On medication?', GovBB.D['medication'] || '', 'camper-health')}
-            ${GovBB.D['medication'] === 'Yes' ? GovBB.summaryRow('Medication details', GovBB.D['medication-details'] || '', 'camper-health') : ''}
-            ${GovBB.summaryRow('Has disability?', GovBB.D['disability'] || '', 'camper-health')}
-            ${GovBB.D['disability'] === 'Yes' ? GovBB.summaryRow('Disability details', GovBB.D['disability-details'] || '', 'camper-health') : ''}
-            ${GovBB.summaryRow('Has allergies?', GovBB.D['allergies'] || '', 'camper-health')}
-            ${GovBB.D['allergies'] === 'Yes' ? GovBB.summaryRow('Allergy details', GovBB.D['allergies-details'] || '', 'camper-health') : ''}
-            ${GovBB.summaryRow('Doctor or polyclinic', GovBB.D['doctor-name'] || '', 'camper-health')}
-          </dl>
-        </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Camp</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Parish of camp', GovBB.D['camp-parish'] || '', 'camp')}
+        ${GovBB.summaryRow('Camp name', GovBB.D['camp-name'] || '', 'camp')}
+        ${GovBB.summaryRow('Topics of interest', curriculumSummary(), 'camp')}
+        ${GovBB.summaryRow('Activity exemptions', GovBB.D['activity-exemptions'] || '', 'camp')}
+        ${GovBB.summaryRow('Photo/video permission', GovBB.D['photo-permission'] || '', 'camp')}
+      </dl>
 
-        <div>
-          <h2 class="font-bold text-[1.5rem] mb-4">Camp</h2>
-          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.summaryRow('Parish of camp', GovBB.D['camp-parish'] || '', 'camp')}
-            ${GovBB.summaryRow('Camp name', GovBB.D['camp-name'] || '', 'camp')}
-            ${GovBB.summaryRow('Topics of interest', curriculumSummary(), 'camp')}
-            ${GovBB.summaryRow('Activity exemptions', GovBB.D['activity-exemptions'] || '', 'camp')}
-            ${GovBB.summaryRow('Photo/video permission', GovBB.D['photo-permission'] || '', 'camp')}
-          </dl>
-        </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Nutrition</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Will eat camp meals?', GovBB.D['meals-provided'] || '', 'nutrition')}
+        ${GovBB.summaryRow('Dietary restrictions', GovBB.D['dietary'] === 'Other' ? (GovBB.D['dietary-other'] || 'Other') : (GovBB.D['dietary'] || ''), 'nutrition')}
+      </dl>
 
-        <div>
-          <h2 class="font-bold text-[1.5rem] mb-4">Nutrition</h2>
-          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.summaryRow('Will eat camp meals?', GovBB.D['meals-provided'] || '', 'nutrition')}
-            ${GovBB.summaryRow('Dietary restrictions', GovBB.D['dietary'] === 'Other' ? (GovBB.D['dietary-other'] || 'Other') : (GovBB.D['dietary'] || ''), 'nutrition')}
-          </dl>
-        </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parent or guardian</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Full name', guardianFullName(), 'guardian-name')}
+        ${GovBB.summaryRow('Relationship', GovBB.D['guardian-relationship'] === 'Other' ? (GovBB.D['guardian-relationship-other'] || 'Other') : (GovBB.D['guardian-relationship'] || ''), 'guardian-name')}
+        ${GovBB.summaryRow('Is emergency contact?', GovBB.D['guardian-is-emergency'] || '', 'guardian-name')}
+        ${GovBB.summaryRow('Address', [GovBB.D['address-line1'], GovBB.D['address-line2'], GovBB.D['address-parish'], GovBB.D['address-postal']].filter(Boolean).join(', ') || '', 'guardian-contact')}
+        ${GovBB.summaryRow('Mobile', GovBB.D['phone-cell'] || '', 'guardian-contact')}
+        ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'] || '', 'guardian-contact')}
+        ${GovBB.summaryRow('Work phone', GovBB.D['phone-work'] || '', 'guardian-contact')}
+        ${GovBB.summaryRow('Email', GovBB.D['contact-email'] || '', 'guardian-contact')}
+        ${GovBB.summaryRow('Employer', GovBB.D['employer'] || '', 'guardian-contact')}
+      </dl>
 
-        <div>
-          <h2 class="font-bold text-[1.5rem] mb-4">Parent or guardian</h2>
-          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.summaryRow('Full name', guardianFullName(), 'guardian-name')}
-            ${GovBB.summaryRow('Relationship', GovBB.D['guardian-relationship'] === 'Other' ? (GovBB.D['guardian-relationship-other'] || 'Other') : (GovBB.D['guardian-relationship'] || ''), 'guardian-name')}
-            ${GovBB.summaryRow('Is emergency contact?', GovBB.D['guardian-is-emergency'] || '', 'guardian-name')}
-            ${GovBB.summaryRow('Address', [GovBB.D['address-line1'], GovBB.D['address-line2'], GovBB.D['address-parish'], GovBB.D['address-postal']].filter(Boolean).join(', ') || '', 'guardian-contact')}
-            ${GovBB.summaryRow('Mobile', GovBB.D['phone-cell'] || '', 'guardian-contact')}
-            ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'] || '', 'guardian-contact')}
-            ${GovBB.summaryRow('Work phone', GovBB.D['phone-work'] || '', 'guardian-contact')}
-            ${GovBB.summaryRow('Email', GovBB.D['contact-email'] || '', 'guardian-contact')}
-            ${GovBB.summaryRow('Employer', GovBB.D['employer'] || '', 'guardian-contact')}
-          </dl>
-        </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Emergency contact</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.D['guardian-is-emergency'] === 'Yes'
+          ? GovBB.summaryRow('Emergency contact', guardianFullName() + ' (parent / guardian)', 'guardian-name')
+          : `${GovBB.summaryRow('Emergency contact', emergencyFullName(), 'emergency-contact')}
+             ${GovBB.summaryRow('Relationship', GovBB.D['emerg-relationship'] === 'Other' ? (GovBB.D['emerg-relationship-other'] || 'Other') : (GovBB.D['emerg-relationship'] || ''), 'emergency-contact')}
+             ${GovBB.summaryRow('Emergency phone', GovBB.D['emerg-phone'] || '', 'emergency-contact')}`}
+      </dl>
 
-        <div>
-          <h2 class="font-bold text-[1.5rem] mb-4">Emergency contact</h2>
-          <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-            ${GovBB.D['guardian-is-emergency'] === 'Yes'
-              ? GovBB.summaryRow('Emergency contact', guardianFullName() + ' (parent / guardian)', 'guardian-name')
-              : `${GovBB.summaryRow('Emergency contact', emergencyFullName(), 'emergency-contact')}
-                 ${GovBB.summaryRow('Relationship', GovBB.D['emerg-relationship'] === 'Other' ? (GovBB.D['emerg-relationship-other'] || 'Other') : (GovBB.D['emerg-relationship'] || ''), 'emergency-contact')}
-                 ${GovBB.summaryRow('Emergency phone', GovBB.D['emerg-phone'] || '', 'emergency-contact')}`}
-          </dl>
-        </div>
-
-      </div>
-
-      <div class="mt-10">
-        <p class="text-[1.25rem] leading-normal mb-6">By sending this form you confirm that the information you have given is correct and that you agree to the camper conduct agreement.</p>
-        ${btnGroup('Send registration')}
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By sending this form you confirm that the information you have given is correct and that you agree to the camper conduct agreement.</p>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Send registration</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </div>`,
 
   /* ── Confirmation ── */
   'confirmation': () => `
-    <div class="space-y-8">
-      <div class="bg-bb-teal-00 text-bb-white-00 p-8 rounded-sm space-y-4">
-        <h1 class="font-bold text-[3.5rem] leading-[1.15]">Registration sent</h1>
-        <p class="text-[1.25rem]">Your reference number</p>
-        <p class="text-[2rem] font-bold">${window.__refNumber || 'NSCP-' + Math.random().toString(36).substring(2,8).toUpperCase()}</p>
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Registration sent</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber || 'NSCP-' + Math.random().toString(36).substring(2,8).toUpperCase()}</p>
       </div>
 
-      <h2 class="font-bold text-[1.5rem]">What happens next</h2>
-      <ul class="list-disc pl-6 space-y-3 text-[1.25rem] leading-normal">
-        <li>We will review your child's registration and contact you to confirm their place at camp.</li>
-        <li>If your child needs to take medication at camp, a <strong>Medication Authorisation Form</strong> must be completed before camp starts. Camp staff cannot give any medication without written permission.</li>
-        <li>If you do not hear from us within 5 working days, call <strong>+1 (246) 535-3835</strong> or email <a href="mailto:mysce.youthprojects@barbados.gov.bb" class="underline text-bb-teal-00">mysce.youthprojects@barbados.gov.bb</a>.</li>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We will review your child's registration and contact you to confirm their place at camp.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If your child needs to take medication at camp, a <strong>Medication Authorisation Form</strong> must be completed before camp starts. Camp staff cannot give any medication without written permission.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you do not hear from us within 5 working days, call <strong>+1 (246) 535-3835</strong> or email <a href="mailto:mysce.youthprojects@barbados.gov.bb" class="govbb-link">mysce.youthprojects@barbados.gov.bb</a>.</li>
       </ul>
-
-      <p class="text-[1.25rem] leading-normal">You will be contacted with the camp dates once your registration is confirmed.</p>
+      <p class="govbb-text-body">You will be contacted with the camp dates once your registration is confirmed.</p>
     </div>`
 
 };
-
-/* ───────── Previous + Continue button group ───────── */
-const PREV_BTN_CLS = 'relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-grey-00 text-bb-black-00 hover:bg-[#c8cdd4] active:bg-[#b0b5bc] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100 focus-visible:rounded-sm';
-
-function btnGroup(continueLabel) {
-  return `<div class="mt-8 flex gap-4 items-center flex-wrap">
-    <button type="button" onclick="back()" class="${PREV_BTN_CLS}">Previous</button>
-    <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">${continueLabel || 'Continue'}</button>
-  </div>`;
-}
 
 /* ───────── Validation ───────── */
 function validate(pageId) {
@@ -656,23 +924,23 @@ function validate(pageId) {
       }
     }
     if (!D['nid'] || !D['nid'].trim())  errors.push({ id: 'nid', msg: 'Enter your child\'s National ID Number' });
-    if (!D['gender'])                   errors.push({ id: 'gender', msg: 'Select your child\'s gender' });
+    if (!D['gender'])                   errors.push({ id: 'gender-male', msg: 'Select your child\'s gender' });
     if (!D['religion'])                 errors.push({ id: 'religion', msg: 'Select your child\'s religion' });
     if (D['religion'] === 'Other' && (!D['religion-other'] || !D['religion-other'].trim()))
       errors.push({ id: 'religion-other', msg: 'Religion – Describe your child\'s religion' });
   }
 
   if (pageId === 'camper-health') {
-    if (!D['illness'])  errors.push({ id: 'illness', msg: 'Select yes or no – Does your child have any illness?' });
+    if (!D['illness'])  errors.push({ id: 'illness-yes', msg: 'Select yes or no – Does your child have any illness?' });
     if (D['illness'] === 'Yes' && (!D['illness-details'] || !D['illness-details'].trim()))
       errors.push({ id: 'illness-details', msg: 'Illness details – Describe the illness or illnesses' });
-    if (!D['medication'])  errors.push({ id: 'medication', msg: 'Select yes or no – Is your child on any medication?' });
+    if (!D['medication'])  errors.push({ id: 'medication-yes', msg: 'Select yes or no – Is your child on any medication?' });
     if (D['medication'] === 'Yes' && (!D['medication-details'] || !D['medication-details'].trim()))
       errors.push({ id: 'medication-details', msg: 'Medication details – Enter the name and dosage' });
-    if (!D['disability'])  errors.push({ id: 'disability', msg: 'Select yes or no – Does your child have a disability?' });
+    if (!D['disability'])  errors.push({ id: 'disability-yes', msg: 'Select yes or no – Does your child have a disability?' });
     if (D['disability'] === 'Yes' && (!D['disability-details'] || !D['disability-details'].trim()))
       errors.push({ id: 'disability-details', msg: 'Disability details – Describe the disability' });
-    if (!D['allergies'])  errors.push({ id: 'allergies', msg: 'Select yes or no – Does your child have any allergies?' });
+    if (!D['allergies'])  errors.push({ id: 'allergies-yes', msg: 'Select yes or no – Does your child have any allergies?' });
     if (D['allergies'] === 'Yes' && (!D['allergies-details'] || !D['allergies-details'].trim()))
       errors.push({ id: 'allergies-details', msg: 'Allergy details – Describe the allergies' });
     if (!D['doctor-name'] || !D['doctor-name'].trim())
@@ -687,11 +955,11 @@ function validate(pageId) {
     if (!anyTopic) errors.push({ id: 'curriculum-arts', msg: 'Choose at least one topic that interests your child' });
     if (!D['activity-exemptions'] || !D['activity-exemptions'].trim())
       errors.push({ id: 'activity-exemptions', msg: 'Enter any activity exemptions, or write "None"' });
-    if (!D['photo-permission']) errors.push({ id: 'photo-permission', msg: 'Select yes or no for photo and video permission' });
+    if (!D['photo-permission']) errors.push({ id: 'photo-permission-yes', msg: 'Select yes or no for photo and video permission' });
   }
 
   if (pageId === 'nutrition') {
-    if (!D['meals-provided'])  errors.push({ id: 'meals-provided', msg: 'Select yes or no for camp meals' });
+    if (!D['meals-provided'])  errors.push({ id: 'meals-provided-yes', msg: 'Select yes or no for camp meals' });
     if (!D['dietary'])          errors.push({ id: 'dietary', msg: 'Select a dietary option' });
     if (D['dietary'] === 'Other' && (!D['dietary-other'] || !D['dietary-other'].trim()))
       errors.push({ id: 'dietary-other', msg: 'Dietary restrictions – Describe the dietary restriction' });
@@ -702,7 +970,7 @@ function validate(pageId) {
     if (!D['guardian-relationship']) errors.push({ id: 'guardian-relationship', msg: 'Select your relationship to the camper' });
     if (D['guardian-relationship'] === 'Other' && (!D['guardian-relationship-other'] || !D['guardian-relationship-other'].trim()))
       errors.push({ id: 'guardian-relationship-other', msg: 'Describe your relationship to the camper' });
-    if (!D['guardian-is-emergency']) errors.push({ id: 'guardian-is-emergency', msg: 'Select yes or no: are you the emergency contact?' });
+    if (!D['guardian-is-emergency']) errors.push({ id: 'guardian-is-emergency-yes', msg: 'Select yes or no: are you the emergency contact?' });
   }
 
   if (pageId === 'guardian-contact') {
@@ -714,7 +982,6 @@ function validate(pageId) {
     if (!D['employer'] || !D['employer'].trim())           errors.push({ id: 'employer', msg: 'Enter your employer or business name' });
   }
 
-
   if (pageId === 'emergency-contact') {
     if (!D['emerg-fullname'] || !D['emerg-fullname'].trim()) errors.push({ id: 'emerg-fullname', msg: 'Enter the emergency contact\'s full name' });
     if (!D['emerg-relationship']) errors.push({ id: 'emerg-relationship', msg: 'Select the emergency contact\'s relationship to the camper' });
@@ -722,7 +989,6 @@ function validate(pageId) {
       errors.push({ id: 'emerg-relationship-other', msg: 'Describe their relationship to the camper' });
     if (!D['emerg-phone'] || !D['emerg-phone'].trim()) errors.push({ id: 'emerg-phone', msg: 'Enter an emergency phone number' });
   }
-
 
   if (pageId === 'conduct') {
     if (!conductAllChecked())

@@ -4,59 +4,88 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NIS Online Social Security Service Registration Form – National Insurance Scheme</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="../assets/govbb-tailwind-config.js"></script>
-  <link rel="stylesheet" href="../assets/govbb-base.css">
+  <link rel="stylesheet" href="../dist/styles.css">
 </head>
-<body>
+<body class="govbb-page">
 
-<!-- Top bar -->
-<div class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container flex items-center gap-2 py-2 text-[0.875rem]">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Coat_of_arms_of_Barbados_%282%29.svg/1280px-Coat_of_arms_of_Barbados_%282%29.svg.png" alt="Barbados coat of arms" style="height:20px;width:auto;">
-    Official website of the Government of Barbados
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
   </div>
 </div>
 
-<!-- Header -->
-<header class="bg-bb-yellow-100">
-  <div class="container py-s">
-    <div class="text-bb-black-00" style="width:276px;height:27px;">
-      <svg width="100%" viewBox="0 0 276 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img"><g><path d="M39.079 21.527C37.5026 21.527 36.103 21.1903 34.8802 20.5168C33.6721 19.8286 32.7219 18.8916 32.0294 17.7057C31.337 16.5051 30.9908 15.1288 30.9908 13.5769C30.9908 12.0249 31.337 10.6559 32.0294 9.47001C32.7219 8.26943 33.6721 7.3324 34.8802 6.65891C36.103 5.97077 37.5026 5.6267 39.079 5.6267C40.0219 5.6267 40.8911 5.7658 41.6867 6.04398C42.4823 6.32216 43.1821 6.71015 43.7861 7.20795C44.4049 7.69111 44.9205 8.24747 45.3331 8.87704L42.858 10.4144C42.6075 10.0191 42.276 9.66767 41.8635 9.3602C41.4657 9.05274 41.0237 8.81116 40.5376 8.63547C40.0514 8.45977 39.5652 8.37192 39.079 8.37192C38.1067 8.37192 37.2448 8.59886 36.4934 9.05274C35.7421 9.49197 35.1527 10.0996 34.7255 10.8756C34.2982 11.6515 34.0846 12.552 34.0846 13.5769C34.0846 14.5871 34.2909 15.4875 34.7034 16.2782C35.1307 17.0688 35.7273 17.691 36.4934 18.1449C37.2595 18.5841 38.1435 18.8038 39.1453 18.8038C39.8967 18.8038 40.567 18.6647 41.1563 18.3865C41.7456 18.0937 42.2171 17.691 42.5707 17.1786C42.9243 16.6661 43.1231 16.0659 43.1673 15.3777H39.5873V13.0278H46.0844V14.8946C46.055 16.3001 45.7382 17.5007 45.1342 18.4963C44.5301 19.4773 43.7051 20.2313 42.6591 20.7584C41.613 21.2708 40.4197 21.527 39.079 21.527Z"></path><path d="M52.8353 21.527C51.7156 21.527 50.7138 21.2854 49.8298 20.8023C48.9606 20.3045 48.2755 19.6237 47.7746 18.7598C47.2884 17.896 47.0453 16.9004 47.0453 15.773C47.0453 14.6457 47.2884 13.6501 47.7746 12.7862C48.2608 11.9224 48.9385 11.2489 49.8077 10.7658C50.677 10.268 51.6714 10.0191 52.7911 10.0191C53.9255 10.0191 54.9273 10.268 55.7966 10.7658C56.6658 11.2489 57.3435 11.9224 57.8297 12.7862C58.3159 13.6501 58.559 14.6457 58.559 15.773C58.559 16.9004 58.3159 17.896 57.8297 18.7598C57.3435 19.6237 56.6658 20.3045 55.7966 20.8023C54.9421 21.2854 53.955 21.527 52.8353 21.527ZM52.8353 18.8477C53.3804 18.8477 53.8592 18.7159 54.2717 18.4524C54.6843 18.1888 55.001 17.8301 55.222 17.3763C55.4577 16.9077 55.5756 16.3733 55.5756 15.773C55.5756 15.1728 55.4577 14.6457 55.222 14.1918C54.9863 13.7233 54.6548 13.3572 54.2275 13.0937C53.815 12.8302 53.3362 12.6984 52.7911 12.6984C52.2607 12.6984 51.7819 12.8302 51.3547 13.0937C50.9421 13.3572 50.618 13.7233 50.3823 14.1918C50.1466 14.6457 50.0287 15.1728 50.0287 15.773C50.0287 16.3733 50.1466 16.9077 50.3823 17.3763C50.618 17.8301 50.9495 18.1888 51.3768 18.4524C51.804 18.7159 52.2902 18.8477 52.8353 18.8477Z"></path><path d="M62.8109 21.2635L58.2806 10.2826H61.2861L64.2694 17.9472L67.2528 10.2826H70.2583L65.728 21.2635H62.8109Z"></path><path d="M12.5786 0C11.6253 2.46943 10.6536 5.03986 8.57466 7.00774C9.21998 6.80573 10.3493 6.62461 11.0753 6.64203V17.0283L7.988 17.4636C7.878 17.4532 7.84133 17.2895 7.84133 17.0666C7.54434 13.8413 6.74135 11.1316 5.81736 8.32779C5.75136 7.94466 4.58171 6.48181 5.4837 6.73955C5.5937 6.75348 6.80002 7.2202 6.60935 6.99729C4.96671 5.38119 2.56508 4.21788 0.233112 3.87306C0.0277812 3.8243 -0.0932171 3.92183 0.0901136 4.14822C3.18474 8.6726 5.77336 14.012 5.75136 20.3475C6.95401 20.3475 9.86897 19.6718 11.0753 19.6718V27H12.5969L12.9453 6.53406L12.5786 0Z"></path><path d="M12.5786 0C13.5319 2.46943 14.5036 5.03986 16.5825 7.00774C15.9372 6.80573 14.8079 6.62461 14.0819 6.64203V17.0283L17.1692 17.4636C17.2792 17.4532 17.3159 17.2895 17.3159 17.0666C17.6129 13.8413 18.4158 11.1316 19.3398 8.32779C19.4058 7.94466 20.5755 6.48181 19.6735 6.73955C19.5635 6.75348 18.3572 7.2202 18.5478 6.99729C20.1905 5.38119 22.5921 4.21788 24.9241 3.87306C25.1294 3.8243 25.2504 3.92183 25.0671 4.14822C21.9725 8.6726 19.3838 14.012 19.4058 20.3475C18.2032 20.3475 15.2882 19.6718 14.0819 19.6718V27H12.5603L12.2119 6.53406L12.5786 0Z"></path></g></svg>
-    </div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
   </div>
 </header>
 
-<!-- Alpha banner -->
-<div class="bg-bb-blue-10">
-  <div class="container py-xs text-[1rem]">
-    This page is in <a href="#" class="inline-flex outline-none underline-offset-2 underline hover:no-underline active:bg-bb-yellow-100 active:no-underline focus-visible:bg-bb-yellow-100 focus-visible:no-underline active:text-bb-black-00 focus-visible:text-bb-black-00 text-bb-teal-00 hover:text-bb-black-00 hover:bg-bb-teal-10">Alpha</a>. Your feedback helps us improve.
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
   </div>
-</div>
-
-<!-- Main -->
-<main>
-  <div class="container py-l max-w-3xl" id="app"></div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
 </main>
 
-<!-- Footer -->
-<footer class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container py-l text-[1rem]">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <p>&copy; 2026 Government of Barbados. All rights reserved.</p>
-      <div class="flex gap-4">
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Privacy</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Terms</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Accessibility</a>
-      </div>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
     </div>
   </div>
 </footer>
 
 <script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  document.getElementById('app').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) group.appendChild(msg);
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
 <script>
 /* ───────── Form-specific configuration ───────── */
 const FORM_NAME = 'NIS Online Social Security Service Registration Form';
@@ -72,13 +101,44 @@ function getFlow() {
 /* ───────── Mailing address fields helper ───────── */
 function mailingAddressFields() {
   return `
-    <div class="space-y-6 border-l-4 border-bb-blue-40 pl-s mt-4">
-      <p class="font-bold text-[1.25rem]">Mailing address</p>
-      ${GovBB.textField('mailing-street', 'Street address')}
-      ${GovBB.textField('mailing-city', 'City or district', { hint: 'Optional' })}
-      ${GovBB.selectField('mailing-parish', 'Parish', GovBB.PARISHES)}
-      ${GovBB.textField('mailing-postal', 'Postal code', { hint: 'For example, BB11000', placeholder: 'BB11000' })}
-      ${GovBB.textField('mailing-country', 'Country')}
+    <div style="border-left:4px solid var(--color-blue-40);padding-left:var(--spacing-s);margin-top:var(--spacing-m);">
+      <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-s);">Mailing address</p>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="mailing-street">Street address</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="mailing-street" name="mailing-street" data-field="mailing-street" value="${GovBB.D['mailing-street']||''}" />
+        </div>
+      </div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="mailing-city">City or district</label>
+        <p class="govbb-hint">Optional</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="mailing-city" name="mailing-city" data-field="mailing-city" value="${GovBB.D['mailing-city']||''}" />
+        </div>
+      </div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="mailing-parish">Parish</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="mailing-parish" name="mailing-parish" data-field="mailing-parish">
+            <option value="">Select one</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['mailing-parish']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="mailing-postal">Postal code</label>
+        <p class="govbb-hint">For example, BB11000</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="mailing-postal" name="mailing-postal" data-field="mailing-postal" placeholder="BB11000" value="${GovBB.D['mailing-postal']||''}" />
+        </div>
+      </div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="mailing-country">Country</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="mailing-country" name="mailing-country" data-field="mailing-country" value="${GovBB.D['mailing-country']||''}" />
+        </div>
+      </div>
     </div>`;
 }
 
@@ -87,20 +147,67 @@ function idFields() {
   const idType = GovBB.D['id-type'];
   if (idType === 'Barbados National ID Card') {
     return `
-      <div class="space-y-6 border-l-4 border-bb-blue-40 pl-s">
-        ${GovBB.textField('nrn', 'National Registration Number (NRN)', {
-          hint: 'Your National Registration Number. For example, 870315-1234',
-          placeholder: '870315-1234'
-        })}
+      <div style="border-left:4px solid var(--color-blue-40);padding-left:var(--spacing-s);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="nrn">National Registration Number (NRN)</label>
+          <p class="govbb-hint">Your National Registration Number. For example, 870315-1234</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="nrn" name="nrn" data-field="nrn" placeholder="870315-1234" value="${GovBB.D['nrn']||''}" />
+          </div>
+        </div>
       </div>`;
   }
   if (idType === 'Passport') {
     return `
-      <div class="space-y-6 border-l-4 border-bb-blue-40 pl-s">
-        ${GovBB.textField('passport-number', 'Passport number')}
-        ${GovBB.dateField('passport-issued', 'Date issued', 'For example, 27 03 2007')}
-        ${GovBB.dateField('passport-expired', 'Date expires', 'For example, 27 03 2030')}
-        ${GovBB.textField('passport-country', 'Country of issue')}
+      <div style="border-left:4px solid var(--color-blue-40);padding-left:var(--spacing-s);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="passport-number">Passport number</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="passport-number" name="passport-number" data-field="passport-number" value="${GovBB.D['passport-number']||''}" />
+          </div>
+        </div>
+        <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+          <legend class="govbb-fieldset__legend">Date issued</legend>
+          <p class="govbb-hint">For example, 27 03 2007</p>
+          <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-issued-day">Day</label>
+              <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="passport-issued-day" name="passport-issued-day" data-field="passport-issued-day" inputmode="numeric" value="${GovBB.D['passport-issued-day']||''}" /></div>
+            </div>
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-issued-month">Month</label>
+              <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="passport-issued-month" name="passport-issued-month" data-field="passport-issued-month" inputmode="numeric" value="${GovBB.D['passport-issued-month']||''}" /></div>
+            </div>
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-issued-year">Year</label>
+              <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="passport-issued-year" name="passport-issued-year" data-field="passport-issued-year" inputmode="numeric" value="${GovBB.D['passport-issued-year']||''}" /></div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+          <legend class="govbb-fieldset__legend">Date expires</legend>
+          <p class="govbb-hint">For example, 27 03 2030</p>
+          <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-expired-day">Day</label>
+              <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="passport-expired-day" name="passport-expired-day" data-field="passport-expired-day" inputmode="numeric" value="${GovBB.D['passport-expired-day']||''}" /></div>
+            </div>
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-expired-month">Month</label>
+              <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="passport-expired-month" name="passport-expired-month" data-field="passport-expired-month" inputmode="numeric" value="${GovBB.D['passport-expired-month']||''}" /></div>
+            </div>
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-expired-year">Year</label>
+              <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="passport-expired-year" name="passport-expired-year" data-field="passport-expired-year" inputmode="numeric" value="${GovBB.D['passport-expired-year']||''}" /></div>
+            </div>
+          </div>
+        </fieldset>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="passport-country">Country of issue</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="passport-country" name="passport-country" data-field="passport-country" value="${GovBB.D['passport-country']||''}" />
+          </div>
+        </div>
       </div>`;
   }
   return '';
@@ -128,9 +235,9 @@ function summarySection(title, rows) {
   const visibleRows = rows.filter(r => r !== null);
   if (!visibleRows.length) return '';
   return `
-    <div class="space-y-4">
-      <h2 class="font-bold text-[1.5rem] mt-8">${title}</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-b border-bb-grey-00">
+    <div style="margin-bottom:var(--spacing-m);">
+      <h2 class="govbb-text-h2" style="margin-top:var(--spacing-m);margin-bottom:var(--spacing-s);">${title}</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);border-bottom:1px solid var(--color-grey-00);">
         ${visibleRows.join('')}
       </dl>
     </div>`;
@@ -141,219 +248,315 @@ const PAGES = {
 
   /* ── Start ── */
   'start': () => `
-    <div class="space-y-8">
-      <h1 class="font-bold text-[3.5rem] leading-[1.15]">Register for the NIS Online Social Security Service</h1>
-      <p class="text-[1.25rem] text-bb-mid-grey-00">Last updated: 24 March 2026</p>
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Register for the NIS Online Social Security Service</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated: 24 March 2026</p>
 
-      <p class="text-[1.25rem]">
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">
         Use this form to register for online access to your NIS account. Once registered, you can check your contributions, apply for benefits, and manage your details online — without visiting an NIS office.
       </p>
-      <p class="text-[1.25rem]">
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">
         You must already have an NIS number to register. If you do not have one, you will need to visit an NIS office first.
       </p>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[2rem]">Who can use this form</h2>
-        <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
-          <li>Barbados residents with a valid NIS number</li>
-          <li>Overseas applicants with a valid NIS number (your form must be witnessed by a Notary Public)</li>
-        </ul>
-      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Who can use this form</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Barbados residents with a valid NIS number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Overseas applicants with a valid NIS number (your form must be witnessed by a Notary Public)</li>
+      </ul>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[2rem]">What you will need</h2>
-        <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
-          <li>Your NIS number (6 digits — found on your NIS card or correspondence)</li>
-          <li>Your Barbados National ID Card <strong>or</strong> valid passport</li>
-          <li>Your home address</li>
-          <li>Your email address (we will send your login details here)</li>
-          <li>If you live overseas: details of a Notary Public who will witness your application</li>
-        </ul>
-      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you will need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your NIS number (6 digits — found on your NIS card or correspondence)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your Barbados National ID Card <strong>or</strong> valid passport</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your home address</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your email address (we will send your login details here)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you live overseas: details of a Notary Public who will witness your application</li>
+      </ul>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[2rem]">How to apply</h2>
-        <p class="text-[1.25rem]">Fill in this form online. It takes about 10 minutes.</p>
-        ${GovBB.startBtn('Complete the online form')}
-      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">How to apply</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Fill in this form online. It takes about 10 minutes.</p>
+      <div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Complete the online form</button></div>
     </div>`,
 
   /* ── Residency gate ── */
   'residency-gate': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Before you start</h1>
-      <div class="space-y-8">
-        ${GovBB.radioGroup('residency', 'Where do you currently live?', [
-          { value: 'In Barbados', label: 'In Barbados' },
-          { value: 'Overseas', label: 'Overseas' }
-        ])}
-        ${GovBB.radioGroup('id-type', 'What type of ID do you have?', [
-          { value: 'Barbados National ID Card', label: 'Barbados National ID Card' },
-          { value: 'Passport', label: 'Passport' }
-        ])}
-        ${GovBB.continueBtn()}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Before you start</h1>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Where do you currently live?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="residency-in-barbados" name="residency" data-field="residency" value="In Barbados"${GovBB.D['residency']==='In Barbados'?' checked':''} />
+            <label class="govbb-radio-item__label" for="residency-in-barbados">In Barbados</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="residency-overseas" name="residency" data-field="residency" value="Overseas"${GovBB.D['residency']==='Overseas'?' checked':''} />
+            <label class="govbb-radio-item__label" for="residency-overseas">Overseas</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">What type of ID do you have?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="id-type-nid" name="id-type" data-field="id-type" value="Barbados National ID Card"${GovBB.D['id-type']==='Barbados National ID Card'?' checked':''} />
+            <label class="govbb-radio-item__label" for="id-type-nid">Barbados National ID Card</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="id-type-passport" name="id-type" data-field="id-type" value="Passport"${GovBB.D['id-type']==='Passport'?' checked':''} />
+            <label class="govbb-radio-item__label" for="id-type-passport">Passport</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Applicant details ── */
   'applicant-details': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your details</h1>
-      <div class="space-y-8">
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your details</h1>
 
-        <fieldset class="space-y-6">
-          <legend class="font-bold text-[1.5rem] mb-4">Your name</legend>
-          ${GovBB.textField('last-name', 'Last name')}
-          ${GovBB.textField('first-name', 'First name')}
-          ${GovBB.textField('middle-name', 'Middle name(s)', { hint: 'Optional — leave blank if you do not have a middle name' })}
-        </fieldset>
-
-        <div class="space-y-6">
-          ${GovBB.textField('nis-number', 'NIS number', {
-            hint: 'Your 6-digit National Insurance Number. For example, 123456',
-            placeholder: '123456',
-            inputmode: 'numeric',
-            maxlength: '6'
-          })}
-        </div>
-
-        <div id="id-fields-container" class="space-y-6">
-          ${idFields()}
-        </div>
-
-        <fieldset class="space-y-6">
-          <legend class="font-bold text-[1.5rem] mb-4">Your home address</legend>
-          ${GovBB.textField('street-address', 'Street address')}
-          ${GovBB.textField('city-district', 'City or district', { hint: 'Optional' })}
-          ${GovBB.selectField('parish', 'Parish', GovBB.PARISHES)}
-          ${GovBB.textField('postal-code', 'Postal code', { hint: 'For example, BB11000', placeholder: 'BB11000' })}
-          ${GovBB.textField('country', 'Country', { placeholder: 'Barbados' })}
-        </fieldset>
-
-        <fieldset class="space-y-4">
-          <legend class="font-bold text-[1.5rem] mb-4">Mailing address</legend>
-          <div class="flex items-start gap-4">
-            <div class="relative inline-flex size-12 shrink-0 items-center justify-center bg-bb-white-00 border-2 border-bb-black-00 rounded-sm transition-all hover:cursor-pointer hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100"
-                 onclick="GovBB.toggleCheckbox('mailing-same'); GovBB.render();">
-              <input type="checkbox" id="mailing-same" name="mailing-same"
-                     class="sr-only"
-                     ${GovBB.D['mailing-same'] ? 'checked' : ''}>
-              ${GovBB.D['mailing-same'] ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>` : ''}
-            </div>
-            <label for="mailing-same" class="text-[1.25rem] leading-normal text-bb-black-00 cursor-pointer pt-2">
-              My mailing address is the same as my home address
-            </label>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your name</legend>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="last-name">Last name</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="last-name" name="last-name" data-field="last-name" value="${GovBB.D['last-name']||''}" />
           </div>
-          ${!GovBB.D['mailing-same'] ? mailingAddressFields() : ''}
-        </fieldset>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="first-name">First name</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="first-name" name="first-name" data-field="first-name" value="${GovBB.D['first-name']||''}" />
+          </div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="middle-name">Middle name(s)</label>
+          <p class="govbb-hint">Optional — leave blank if you do not have a middle name</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="middle-name" name="middle-name" data-field="middle-name" value="${GovBB.D['middle-name']||''}" />
+          </div>
+        </div>
+      </fieldset>
 
-        <fieldset class="space-y-6">
-          <legend class="font-bold text-[1.5rem] mb-4">Contact details</legend>
-          ${GovBB.telField('phone-home', 'Home phone number', { hint: 'Optional', placeholder: '246-555-1234' })}
-          ${GovBB.telField('phone-mobile', 'Mobile number', { placeholder: '246-555-1234' })}
-          ${GovBB.telField('phone-work', 'Work phone number', { hint: 'Optional', placeholder: '246-555-1234' })}
-          ${GovBB.emailField('email', 'Email address', { hint: 'We will send your login details to this address' })}
-          ${GovBB.emailField('email-confirm', 'Confirm email address')}
-        </fieldset>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nis-number">NIS number</label>
+        <p class="govbb-hint">Your 6-digit National Insurance Number. For example, 123456</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="nis-number" name="nis-number" data-field="nis-number" placeholder="123456" inputmode="numeric" maxlength="6" value="${GovBB.D['nis-number']||''}" />
+        </div>
+      </div>
 
-        ${GovBB.continueBtn()}
+      <div id="id-fields-container" style="margin-bottom:var(--spacing-m);">
+        ${idFields()}
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your home address</legend>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="street-address">Street address</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="street-address" name="street-address" data-field="street-address" value="${GovBB.D['street-address']||''}" />
+          </div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="city-district">City or district</label>
+          <p class="govbb-hint">Optional</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="city-district" name="city-district" data-field="city-district" value="${GovBB.D['city-district']||''}" />
+          </div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="parish">Parish</label>
+          <div class="govbb-select-wrapper">
+            <select class="govbb-select" id="parish" name="parish" data-field="parish">
+              <option value="">Select one</option>
+              ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['parish']===o?' selected':''}>` + o + '</option>').join('')}
+            </select>
+            <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+          </div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="postal-code">Postal code</label>
+          <p class="govbb-hint">For example, BB11000</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="postal-code" name="postal-code" data-field="postal-code" placeholder="BB11000" value="${GovBB.D['postal-code']||''}" />
+          </div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="country">Country</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="country" name="country" data-field="country" placeholder="Barbados" value="${GovBB.D['country']||''}" />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="margin-bottom:var(--spacing-s);">Mailing address</legend>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="mailing-same" name="mailing-same" data-field="mailing-same"${GovBB.D['mailing-same']?' checked':''} onclick="GovBB.toggleCheckbox('mailing-same'); GovBB.render();" />
+          <label class="govbb-checkbox-item__label" for="mailing-same">My mailing address is the same as my home address</label>
+        </div>
+        ${!GovBB.D['mailing-same'] ? mailingAddressFields() : ''}
+      </fieldset>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact details</legend>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="phone-home">Home phone number</label>
+          <p class="govbb-hint">Optional</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="tel" id="phone-home" name="phone-home" data-field="phone-home" placeholder="246-555-1234" value="${GovBB.D['phone-home']||''}" />
+          </div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="phone-mobile">Mobile number</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="tel" id="phone-mobile" name="phone-mobile" data-field="phone-mobile" placeholder="246-555-1234" value="${GovBB.D['phone-mobile']||''}" />
+          </div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="phone-work">Work phone number</label>
+          <p class="govbb-hint">Optional</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="tel" id="phone-work" name="phone-work" data-field="phone-work" placeholder="246-555-1234" value="${GovBB.D['phone-work']||''}" />
+          </div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="email">Email address</label>
+          <p class="govbb-hint">We will send your login details to this address</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="email" autocomplete="email" id="email" name="email" data-field="email" value="${GovBB.D['email']||''}" />
+          </div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="email-confirm">Confirm email address</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="email" autocomplete="email" id="email-confirm" name="email-confirm" data-field="email-confirm" value="${GovBB.D['email-confirm']||''}" />
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Overseas notarial ── */
   'overseas-notarial': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Notary Public details</h1>
-      <p class="text-[1.25rem] mb-8">Because you live overseas, a Notary Public must witness your application. Ask your Notary Public to complete this section.</p>
-      <div class="space-y-8">
-        ${GovBB.textField('notary-name', 'Notary Public name')}
-        ${GovBB.textField('jurisdiction', 'Jurisdiction', { hint: 'The country or territory where the notarisation took place' })}
-        ${GovBB.dateField('notarial-date', 'Date of notarisation', 'For example, 27 03 2026')}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Notary Public details</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Because you live overseas, a Notary Public must witness your application. Ask your Notary Public to complete this section.</p>
 
-        <div class="space-y-4">
-          <p class="font-bold text-[1.25rem]">Notary Public seal or stamp</p>
-          <p class="text-[1.25rem] text-bb-mid-grey-00">Upload an image of the notary seal or stamp. Accepted formats: JPG, PNG, PDF. Maximum size: 5MB.</p>
-          <label for="notary-seal-upload" class="block text-[1.25rem] font-bold text-bb-black-00">Upload notary seal or stamp image</label>
-          <p class="text-[1.25rem] text-bb-mid-grey-00">Upload a JPG, PNG or PDF file under 5MB</p>
-          <div class="relative inline-flex w-full max-w-sm rounded-sm border-2 border-bb-black-00 items-center transition-all bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
-            <input type="file" id="notary-seal-upload" name="notary-seal-upload"
-              accept=".jpg,.jpeg,.png,.pdf"
-              class="w-full min-w-0 p-s outline-none rounded-[inherit]"
-              onchange="GovBB.D['notary-seal-filename'] = this.files[0] ? this.files[0].name : ''">
-          </div>
-          ${GovBB.D['notary-seal-filename'] ? `<p class="text-[1.25rem] text-bb-mid-grey-00">Uploaded: ${GovBB.D['notary-seal-filename']}</p>` : ''}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="notary-name">Notary Public name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="notary-name" name="notary-name" data-field="notary-name" value="${GovBB.D['notary-name']||''}" />
         </div>
+      </div>
 
-        <div class="flex items-start gap-4">
-          <div class="relative inline-flex size-12 shrink-0 items-center justify-center bg-bb-white-00 border-2 border-bb-black-00 rounded-sm transition-all hover:cursor-pointer hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100"
-               onclick="GovBB.toggleCheckbox('notarial-certified'); GovBB.render();">
-            <input type="checkbox" id="notarial-certified" name="notarial-certified"
-                   class="sr-only"
-                   ${GovBB.D['notarial-certified'] ? 'checked' : ''}>
-            ${GovBB.D['notarial-certified'] ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>` : ''}
-          </div>
-          <label for="notarial-certified" class="text-[1.25rem] leading-normal text-bb-black-00 cursor-pointer pt-2">
-            I certify that the applicant's identity and signature have been verified
-          </label>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="jurisdiction">Jurisdiction</label>
+        <p class="govbb-hint">The country or territory where the notarisation took place</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="jurisdiction" name="jurisdiction" data-field="jurisdiction" value="${GovBB.D['jurisdiction']||''}" />
         </div>
-        <p id="notarial-certified-error" class="text-bb-red-00 text-[1.25rem] hidden">Certification – You must certify that the applicant's identity has been verified</p>
+      </div>
 
-        ${GovBB.continueBtn()}
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Date of notarisation</legend>
+        <p class="govbb-hint">For example, 27 03 2026</p>
+        <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="notarial-date-day">Day</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="notarial-date-day" name="notarial-date-day" data-field="notarial-date-day" inputmode="numeric" value="${GovBB.D['notarial-date-day']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="notarial-date-month">Month</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="notarial-date-month" name="notarial-date-month" data-field="notarial-date-month" inputmode="numeric" value="${GovBB.D['notarial-date-month']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="notarial-date-year">Year</label>
+            <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="notarial-date-year" name="notarial-date-year" data-field="notarial-date-year" inputmode="numeric" value="${GovBB.D['notarial-date-year']||''}" /></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div style="margin-bottom:var(--spacing-m);">
+        <p class="govbb-label" style="margin-bottom:var(--spacing-xs);">Upload notary seal or stamp image</p>
+        <p class="govbb-hint">Upload a JPG, PNG or PDF file under 5MB.</p>
+        <input type="file" id="notary-seal-upload" name="notary-seal-upload" accept=".jpg,.jpeg,.png,.pdf"
+          style="display:block;width:100%;font-size:var(--font-size-body);"
+          onchange="GovBB.D['notary-seal-filename'] = this.files[0] ? this.files[0].name : ''">
+        ${GovBB.D['notary-seal-filename'] ? `<p class="govbb-hint" style="margin-top:var(--spacing-xs);">Uploaded: ${GovBB.D['notary-seal-filename']}</p>` : ''}
+      </div>
+
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="notarial-certified" name="notarial-certified" data-field="notarial-certified"${GovBB.D['notarial-certified']?' checked':''} onclick="GovBB.toggleCheckbox('notarial-certified'); GovBB.render();" />
+        <label class="govbb-checkbox-item__label" for="notarial-certified">I certify that the applicant's identity and signature have been verified</label>
+      </div>
+      <p id="notarial-certified-error" class="govbb-error-message" style="display:none;">Certification – You must certify that the applicant's identity has been verified</p>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Declaration ── */
   'declaration': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Declaration</h1>
-      <div class="space-y-8">
-        <div class="space-y-2 mb-6">
-          <p class="text-[1.25rem]"><span class="font-bold">Applicant's name:</span> ${[GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['last-name']].filter(Boolean).join(' ') || '—'}</p>
-          <p class="text-[1.25rem]"><span class="font-bold">Date:</span> ${(function(){ var d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })()}</p>
-        </div>
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
 
-        <div class="bg-bb-blue-10 border-l-4 border-bb-blue-40 p-s space-y-3">
-          <p class="text-[1.25rem]">
-            I declare that the information I have given in this form is true and correct to the best of my knowledge and belief.
-          </p>
-          <p class="text-[1.25rem]">
-            I give NIS permission to use my email address to send me notifications about my NIS account.
-          </p>
-        </div>
+      <div style="margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Applicant's name:</strong> ${[GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['last-name']].filter(Boolean).join(' ') || '—'}</p>
+        <p class="govbb-text-body"><strong>Date:</strong> ${(function(){ var d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })()}</p>
+      </div>
 
-        <div class="flex items-start gap-4">
-          <div class="relative inline-flex size-12 shrink-0 items-center justify-center bg-bb-white-00 border-2 border-bb-black-00 rounded-sm transition-all hover:cursor-pointer hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100"
-               onclick="GovBB.toggleCheckbox('email-consent'); GovBB.render();">
-            <input type="checkbox" id="email-consent" name="email-consent"
-                   class="sr-only"
-                   ${GovBB.D['email-consent'] ? 'checked' : ''}>
-            ${GovBB.D['email-consent'] ? `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>` : ''}
-          </div>
-          <label for="email-consent" class="text-[1.25rem] leading-normal text-bb-black-00 cursor-pointer pt-2">
-            I agree to receive email notifications from NIS
-          </label>
-        </div>
-        <p id="email-consent-error" class="text-bb-red-00 text-[1.25rem] hidden">Email consent – You must agree to receive email notifications to continue</p>
+      <div style="background:var(--color-blue-10);border-left:4px solid var(--color-blue-40);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">
+          I declare that the information I have given in this form is true and correct to the best of my knowledge and belief.
+        </p>
+        <p class="govbb-text-body">
+          I give NIS permission to use my email address to send me notifications about my NIS account.
+        </p>
+      </div>
 
-        <div class="bg-bb-red-10 border-l-4 border-bb-red-00 p-s">
-          <p class="text-[1.25rem] text-bb-red-00 font-bold">Warning</p>
-          <p class="text-[1.25rem]">Giving false information may result in prosecution.</p>
-        </div>
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="email-consent" name="email-consent" data-field="email-consent"${GovBB.D['email-consent']?' checked':''} onclick="GovBB.toggleCheckbox('email-consent'); GovBB.render();" />
+        <label class="govbb-checkbox-item__label" for="email-consent">I agree to receive email notifications from NIS</label>
+      </div>
+      <p id="email-consent-error" class="govbb-error-message" style="display:none;">Email consent – You must agree to receive email notifications to continue</p>
 
-        ${GovBB.checkboxItem('declaration-agree', 'I confirm that the information I have given is true and complete to the best of my knowledge.')}
+      <div style="background:var(--color-red-10);border-left:4px solid var(--color-red-00);padding:var(--spacing-m);margin-top:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="color:var(--color-red-00);font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Warning</p>
+        <p class="govbb-text-body">Giving false information may result in prosecution.</p>
+      </div>
 
-        <div class="mt-8 flex gap-4">
-          <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-colors duration-200 outline-none bg-bb-grey-00 text-bb-black-00 hover:bg-[#c5ccd4] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
-          <button type="button" onclick="next()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-teal-00 text-bb-white-00 hover:bg-[#1a777d] hover:shadow-[inset_0_0_0_4px_rgba(222,245,246,0.10)] active:bg-[#0a4549] active:shadow-[inset_0_0_0_3px_rgba(0,0,0,0.20)] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Submit registration</button>
-        </div>
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="declaration-agree" name="declaration-agree" data-field="declaration-agree"${GovBB.D['declaration-agree']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="declaration-agree">I confirm that the information I have given is true and complete to the best of my knowledge.</label>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Submit registration</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -365,7 +568,7 @@ const PAGES = {
     const mailingSame = D['mailing-same'];
 
     function row(label, val, page) {
-      const display = val || '<span class="text-bb-mid-grey-00">Not provided</span>';
+      const display = val || '<span style="color:var(--color-mid-grey-00);">Not provided</span>';
       return GovBB.summaryRow(label, display, page);
     }
 
@@ -419,49 +622,42 @@ const PAGES = {
     ] : [];
 
     return `
-      ${GovBB.backLink()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Check your answers before sending your registration</h1>
-      <div class="space-y-8">
-        ${summarySection('Registration details', registrationRows)}
-        ${summarySection('Personal details', personalRows)}
-        ${summarySection('Home address', homeAddressRows)}
-        ${summarySection('Mailing address', mailingRows)}
-        ${summarySection('Contact details', contactRows)}
-        ${isOverSeas ? summarySection('Overseas notarial details', notarialRows) : ''}
-        <div class="pt-4">
-          <p class="text-[1.25rem] mb-6">By sending this registration you confirm that the information you have given is correct and complete.</p>
-          ${GovBB.continueBtn('Submit registration')}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before sending your registration</h1>
+
+      ${summarySection('Registration details', registrationRows)}
+      ${summarySection('Personal details', personalRows)}
+      ${summarySection('Home address', homeAddressRows)}
+      ${summarySection('Mailing address', mailingRows)}
+      ${summarySection('Contact details', contactRows)}
+      ${isOverSeas ? summarySection('Overseas notarial details', notarialRows) : ''}
+
+      <div style="padding-top:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By sending this registration you confirm that the information you have given is correct and complete.</p>
+        <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+          <button type="button" class="govbb-btn" onclick="next()">Submit registration</button>
+          <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
         </div>
       </div>`;
   },
 
   /* ── Confirmation ── */
   'confirmation': () => `
-    <div class="space-y-8">
-      <div class="bg-bb-teal-00 text-bb-white-00 p-8 rounded-sm space-y-4">
-        <h1 class="font-bold text-[3.5rem] leading-[1.15]">Registration submitted</h1>
-        <p class="text-[1.5rem]">Your reference number</p>
-        <p class="text-[2rem] font-bold">${window.__refNumber || 'OSS-' + Math.random().toString(36).substring(2, 8).toUpperCase()}</p>
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Registration submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference: <strong>${window.__refNumber || 'OSS-' + Math.random().toString(36).substring(2, 8).toUpperCase()}</strong></p>
       </div>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[2rem]">What happens next</h2>
-        <p class="text-[1.25rem]">We will review your registration and set up your online account.</p>
-        <p class="text-[1.25rem]">We will send your login details to <strong>${GovBB.D['email'] || 'your email address'}</strong> within 5 working days.</p>
-        <p class="text-[1.25rem]">If we need more information, we will contact you by email or phone.</p>
-      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">We will review your registration and set up your online account.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">We will send your login details to <strong>${GovBB.D['email'] || 'your email address'}</strong> within 5 working days.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If we need more information, we will contact you by email or phone.</p>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[2rem]">Save your reference number</h2>
-        <p class="text-[1.25rem]">Keep your reference number safe. You will need it if you contact us about your registration.</p>
-      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Save your reference number</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Keep your reference number safe. You will need it if you contact us about your registration.</p>
 
-      <div class="space-y-2">
-        <a href="#" onclick="GovBB.nav('start'); return false;"
-          class="inline-flex outline-none underline-offset-2 underline hover:no-underline active:bg-bb-yellow-100 focus-visible:bg-bb-yellow-100 text-bb-teal-00 hover:text-bb-black-00 hover:bg-bb-teal-10">
-          Go back to the start
-        </a>
-      </div>
+      <p class="govbb-text-body"><a href="#" onclick="GovBB.nav('start'); return false;" class="govbb-link">Go back to the start</a></p>
     </div>`
 };
 
@@ -528,7 +724,7 @@ function validate(pageId) {
       // Show the inline error too
       setTimeout(() => {
         const el = document.getElementById('notarial-certified-error');
-        if (el) el.classList.remove('hidden');
+        if (el) el.style.display = '';
       }, 50);
     }
   }
@@ -538,7 +734,7 @@ function validate(pageId) {
       errors.push({ id: 'email-consent-error', msg: 'Email consent – You must agree to receive email notifications to continue' });
       setTimeout(() => {
         const el = document.getElementById('email-consent-error');
-        if (el) el.classList.remove('hidden');
+        if (el) el.style.display = '';
       }, 50);
     }
     if (!D['declaration-agree']) errors.push({ id: 'declaration-agree', msg: 'Declaration – You must confirm the declaration to continue' });

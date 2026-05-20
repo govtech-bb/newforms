@@ -4,59 +4,95 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>National Insurance Contributions Certificate (D.P. 10) – National Insurance Scheme</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="../assets/govbb-tailwind-config.js"></script>
-  <link rel="stylesheet" href="../assets/govbb-base.css">
+  <link rel="stylesheet" href="../dist/styles.css">
+  <style>
+    .earnings-table { width: 100%; border-collapse: collapse; }
+    .earnings-table th { text-align: left; padding: var(--spacing-xs) var(--spacing-s); background: var(--color-blue-10); font-size: var(--font-size-body); font-weight: var(--font-weight-bold); border-bottom: 2px solid var(--color-blue-40); }
+    .earnings-table td { padding: var(--spacing-xs) var(--spacing-s); vertical-align: top; border-bottom: 1px solid var(--color-grey-00); }
+    .earnings-table tfoot td { font-weight: var(--font-weight-bold); border-top: 2px solid var(--color-grey-00); border-bottom: none; }
+    .warning-banner { background: var(--color-yellow-10); border-left: 4px solid var(--color-yellow-00); padding: var(--spacing-m); margin-bottom: var(--spacing-m); }
+  </style>
 </head>
-<body>
+<body class="govbb-page">
 
-<!-- Top bar -->
-<div class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container flex items-center gap-2 py-2 text-[0.875rem]">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-    Official website of the Government of Barbados
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
   </div>
 </div>
 
-<!-- Header -->
-<header class="bg-bb-yellow-100">
-  <div class="container py-s">
-    <div class="text-bb-black-00" style="width: 276px; height: 27px;">
-      <svg width="100%" viewBox="0 0 276 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img"><g><path d="M39.079 21.527C37.5026 21.527 36.103 21.1903 34.8802 20.5168C33.6721 19.8286 32.7219 18.8916 32.0294 17.7057C31.337 16.5051 30.9908 15.1288 30.9908 13.5769C30.9908 12.0249 31.337 10.6559 32.0294 9.47001C32.7219 8.26943 33.6721 7.3324 34.8802 6.65891C36.103 5.97077 37.5026 5.6267 39.079 5.6267C40.0219 5.6267 40.8911 5.7658 41.6867 6.04398C42.4823 6.32216 43.1821 6.71015 43.7861 7.20795C44.4049 7.69111 44.9205 8.24747 45.3331 8.87704L42.858 10.4144C42.6075 10.0191 42.276 9.66767 41.8635 9.3602C41.4657 9.05274 41.0237 8.81116 40.5376 8.63547C40.0514 8.45977 39.5652 8.37192 39.079 8.37192C38.1067 8.37192 37.2448 8.59886 36.4934 9.05274C35.7421 9.49197 35.1527 10.0996 34.7255 10.8756C34.2982 11.6515 34.0846 12.552 34.0846 13.5769C34.0846 14.5871 34.2909 15.4875 34.7034 16.2782C35.1307 17.0688 35.7273 17.691 36.4934 18.1449C37.2595 18.5841 38.1435 18.8038 39.1453 18.8038C39.8967 18.8038 40.567 18.6647 41.1563 18.3865C41.7456 18.0937 42.2171 17.691 42.5707 17.1786C42.9243 16.6661 43.1231 16.0659 43.1673 15.3777H39.5873V13.0278H46.0844V14.8946C46.055 16.3001 45.7382 17.5007 45.1342 18.4963C44.5301 19.4773 43.7051 20.2313 42.6591 20.7584C41.613 21.2708 40.4197 21.527 39.079 21.527Z"></path><path d="M52.8353 21.527C51.7156 21.527 50.7138 21.2854 49.8298 20.8023C48.9606 20.3045 48.2755 19.6237 47.7746 18.7598C47.2884 17.896 47.0453 16.9004 47.0453 15.773C47.0453 14.6457 47.2884 13.6501 47.7746 12.7862C48.2608 11.9224 48.9385 11.2489 49.8077 10.7658C50.677 10.268 51.6714 10.0191 52.7911 10.0191C53.9255 10.0191 54.9273 10.268 55.7966 10.7658C56.6658 11.2489 57.3435 11.9224 57.8297 12.7862C58.3159 13.6501 58.559 14.6457 58.559 15.773C58.559 16.9004 58.3159 17.896 57.8297 18.7598C57.3435 19.6237 56.6658 20.3045 55.7966 20.8023C54.9421 21.2854 53.955 21.527 52.8353 21.527ZM52.8353 18.8477C53.3804 18.8477 53.8592 18.7159 54.2717 18.4524C54.6843 18.1888 55.001 17.8301 55.222 17.3763C55.4577 16.9077 55.5756 16.3733 55.5756 15.773C55.5756 15.1728 55.4577 14.6457 55.222 14.1918C54.9863 13.7233 54.6548 13.3572 54.2275 13.0937C53.815 12.8302 53.3362 12.6984 52.7911 12.6984C52.2607 12.6984 51.7819 12.8302 51.3547 13.0937C50.9421 13.3572 50.618 13.7233 50.3823 14.1918C50.1466 14.6457 50.0287 15.1728 50.0287 15.773C50.0287 16.3733 50.1466 16.9077 50.3823 17.3763C50.618 17.8301 50.9495 18.1888 51.3768 18.4524C51.804 18.7159 52.2902 18.8477 52.8353 18.8477Z"></path><path d="M186.422 21.2635V5.89025H191.66C192.72 5.89025 193.649 6.0513 194.444 6.37341C195.24 6.69551 195.859 7.18599 196.3 7.84485C196.742 8.48906 196.963 9.29432 196.963 10.2606C196.963 10.8609 196.809 11.4173 196.499 11.9297C196.205 12.4275 195.785 12.8594 195.24 13.2255C195.962 13.5915 196.514 14.082 196.897 14.6969C197.295 15.2972 197.494 16.8711 197.494 16.8711C197.494 16.8711 197.28 18.6061 196.853 19.265C196.426 19.9238 195.829 20.4216 195.063 20.7584C194.297 21.0951 193.398 21.2635 192.367 21.2635H186.422ZM189.383 18.6061H192.08C192.801 18.6061 193.369 18.4304 193.781 18.079C194.194 17.713 194.4 17.2298 194.4 16.6296C194.4 16 194.172 15.5095 193.715 15.1581C193.258 14.7921 192.632 14.6091 191.836 14.6091H189.383V18.6061ZM189.383 12.1494H191.726C192.389 12.1494 192.912 11.981 193.295 11.6442C193.678 11.3075 193.87 10.8316 193.87 10.2167C193.87 9.60179 193.656 9.12595 193.229 8.7892C192.801 8.45245 192.22 8.28408 191.483 8.28408H189.383V12.1494Z"></path><path d="M12.5786 0C11.6253 2.46943 10.6536 5.03986 8.57466 7.00774C9.21998 6.80573 10.3493 6.62461 11.0753 6.64203V17.0283L7.988 17.4636C7.878 17.4532 7.84133 17.2895 7.84133 17.0666C7.54434 13.8413 6.74135 11.1316 5.81736 8.32779C5.75136 7.94466 4.58171 6.48181 5.4837 6.73955C5.5937 6.75348 6.80002 7.2202 6.60935 6.99729C4.96671 5.38119 2.56508 4.21788 0.233112 3.87306C0.0277812 3.8243 -0.0932171 3.92183 0.0901136 4.14822C3.18474 8.6726 5.77336 14.012 5.75136 20.3475C6.95401 20.3475 9.86897 19.6718 11.0753 19.6718V27H12.5969L12.9453 6.53406L12.5786 0Z"></path><path d="M12.5786 0C13.5319 2.46943 14.5036 5.03986 16.5825 7.00774C15.9372 6.80573 14.8079 6.62461 14.0819 6.64203V17.0283L17.1692 17.4636C17.2792 17.4532 17.3159 17.2895 17.3159 17.0666C17.6129 13.8413 18.4158 11.1316 19.3398 8.32779C19.4058 7.94466 20.5755 6.48181 19.6735 6.73955C19.5635 6.75348 18.3572 7.2202 18.5478 6.99729C20.1905 5.38119 22.5921 4.21788 24.9241 3.87306C25.1294 3.8243 25.2504 3.92183 25.0671 4.14822C21.9725 8.6726 19.3838 14.012 19.4058 20.3475C18.2032 20.3475 15.2882 19.6718 14.0819 19.6718V27H12.5603L12.2119 6.53406L12.5786 0Z"></path></g></svg>
-    </div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
   </div>
 </header>
 
-<!-- Alpha banner -->
-<div class="bg-bb-blue-10">
-  <div class="container py-xs text-[1rem]">
-    This page is in <a href="#" class="inline-flex outline-none underline-offset-2 underline hover:no-underline active:bg-bb-yellow-100 active:no-underline focus-visible:bg-bb-yellow-100 focus-visible:no-underline active:text-bb-black-00 focus-visible:text-bb-black-00 text-bb-teal-00 hover:text-bb-black-00 hover:bg-bb-teal-10">Alpha</a>. Your feedback helps us improve.
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
   </div>
-</div>
-
-<!-- Main -->
-<main>
-  <div class="container py-l max-w-3xl" id="app"></div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
 </main>
 
-<!-- Footer -->
-<footer class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container py-l text-[1rem]">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <p>&copy; 2024 Government of Barbados. All rights reserved.</p>
-      <div class="flex gap-4">
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Privacy</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Terms</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Accessibility</a>
-      </div>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
     </div>
   </div>
 </footer>
 
 <script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  document.getElementById('app').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) group.appendChild(msg);
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
 <script>
 const FORM_NAME = 'National Insurance Contributions Certificate (D.P. 10)';
 
@@ -106,26 +142,29 @@ function renderEarningsGrid() {
     }).join('');
     return `<tr>
       <td class="p-2">
-        <select onchange="updateERow(${i},'type',this.value)" class="w-full border-2 border-bb-black-00 rounded-sm p-2 text-[1rem] outline-none focus:ring-4 focus:ring-bb-teal-100">
-          <option value="">Select</option>${typeOpts}
-        </select>
-        ${row.type === 'Other' ? `<input type="text" placeholder="Describe..." class="mt-1 w-full border border-bb-grey-00 rounded-sm p-1 text-[0.875rem]" value="${row.typeOther||''}" oninput="updateERow(${i},'typeOther',this.value)">` : ''}
+        <div class="govbb-select-wrapper">
+          <select onchange="updateERow(${i},'type',this.value)" class="govbb-select">
+            <option value="">Select</option>${typeOpts}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+        ${row.type === 'Other' ? `<div class="govbb-input-wrapper" style="margin-top:var(--spacing-xs);"><input type="text" class="govbb-input" placeholder="Describe..." value="${row.typeOther||''}" oninput="updateERow(${i},'typeOther',this.value)"></div>` : ''}
       </td>
-      <td class="p-2"><input type="number" min="0" value="${row.employees||''}" oninput="updateERow(${i},'employees',this.value)" class="w-full border-2 border-bb-black-00 rounded-sm p-2 text-[1rem] outline-none focus:ring-4 focus:ring-bb-teal-100"></td>
+      <td class="p-2"><div class="govbb-input-wrapper"><input type="number" min="0" value="${row.employees||''}" oninput="updateERow(${i},'employees',this.value)" class="govbb-input"></div></td>
       <td class="p-2">
-        <div class="flex items-center border-2 border-bb-black-00 rounded-sm">
-          <span class="pl-2 text-bb-mid-grey-00">$</span>
-          <input type="number" min="0" step="0.01" value="${row.earnings||''}" oninput="updateERow(${i},'earnings',this.value)" class="w-full p-2 text-[1rem] outline-none bg-transparent">
+        <div class="govbb-input-wrapper" style="display:flex;align-items:center;">
+          <span style="padding-left:var(--spacing-xs);color:var(--color-mid-grey-00);">$</span>
+          <input type="number" min="0" step="0.01" value="${row.earnings||''}" oninput="updateERow(${i},'earnings',this.value)" class="govbb-input" style="border:none;box-shadow:none;flex:1;">
         </div>
       </td>
-      <td class="p-2"><input type="number" min="0" step="0.1" value="${row.rate||'11.1'}" oninput="updateERow(${i},'rate',this.value)" class="w-full border-2 border-bb-black-00 rounded-sm p-2 text-[1rem] outline-none focus:ring-4 focus:ring-bb-teal-100" style="width:5rem"></td>
-      <td class="p-2 font-bold text-bb-teal-00">$${row.contributions||'0.00'}</td>
-      <td class="p-2">${rows.length > 1 ? `<button type="button" onclick="removeERow(${i})" class="text-bb-red-00 underline text-[1rem] hover:text-bb-black-00">Remove</button>` : ''}</td>
+      <td class="p-2"><div class="govbb-input-wrapper"><input type="number" min="0" step="0.1" value="${row.rate||'11.1'}" oninput="updateERow(${i},'rate',this.value)" class="govbb-input" style="width:5rem;"></div></td>
+      <td class="p-2" style="font-weight:var(--font-weight-bold);color:var(--color-teal-00);">$${row.contributions||'0.00'}</td>
+      <td class="p-2">${rows.length > 1 ? `<button type="button" onclick="removeERow(${i})" class="govbb-btn--link">Remove</button>` : ''}</td>
     </tr>`;
   }).join('');
   var total = getTotalContributions();
   return `<div>
-    <table class="earnings-table mb-4">
+    <table class="earnings-table" style="margin-bottom:var(--spacing-m);">
       <thead>
         <tr>
           <th>Earnings Type</th><th>No. of Employees</th><th>Insurable Earnings (BDS$)</th><th>Rate %</th><th>Contributions Payable</th><th></th>
@@ -133,14 +172,14 @@ function renderEarningsGrid() {
       </thead>
       <tbody>${rowsHtml}</tbody>
       <tfoot>
-        <tr class="total-row">
-          <td class="p-2 font-bold" colspan="4">Total Contributions Payable</td>
-          <td class="p-2 font-bold text-bb-teal-00">$${total.toFixed(2)}</td>
+        <tr>
+          <td colspan="4" style="font-weight:var(--font-weight-bold);">Total Contributions Payable</td>
+          <td style="font-weight:var(--font-weight-bold);color:var(--color-teal-00);">$${total.toFixed(2)}</td>
           <td></td>
         </tr>
       </tfoot>
     </table>
-    <button type="button" onclick="addERow()" class="inline-flex items-center gap-2 text-[1.25rem] text-bb-teal-00 underline hover:text-bb-black-00 hover:no-underline">+ Add row</button>
+    <button type="button" onclick="addERow()" class="govbb-link" style="display:inline-block;font-size:var(--font-size-body);">+ Add row</button>
   </div>`;
 }
 
@@ -168,38 +207,81 @@ function updateERow(i, field, value) {
 
 const PAGES = {
   'start': () => `
-    <div class="space-y-8">
-      <h1 class="font-bold text-[3.5rem] leading-[1.15]">Submit your monthly NIS contributions certificate (D.P. 10)</h1>
-      <p class="text-[1.25rem]">Every employer must submit a D.P. 10 certificate each month showing NIS contributions for all employees.</p>
-      <div class="bg-bb-red-10 border-l-4 border-bb-red-00 p-4">
-        <p class="font-bold">Payment deadline: 15th of the following month</p>
-        <p>If you pay late, interest of 1% per month will be added to the amount you owe.</p>
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Submit your monthly NIS contributions certificate (D.P. 10)</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Every employer must submit a D.P. 10 certificate each month showing NIS contributions for all employees.</p>
+      <div style="background:var(--color-red-10);border-left:4px solid var(--color-red-00);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Payment deadline: 15th of the following month</p>
+        <p class="govbb-text-body">If you pay late, interest of 1% per month will be added to the amount you owe.</p>
       </div>
-      <div>
-        <h2 class="font-bold text-[1.5rem] mb-4">What you will need</h2>
-        <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
-          <li>Your employer registration number</li>
-          <li>The contribution month and year</li>
-          <li>Insurable earnings for each earnings type</li>
-          <li>Number of employees for each earnings type</li>
-        </ul>
-      </div>
-      ${GovBB.startBtn()}
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you will need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-l);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your employer registration number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The contribution month and year</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Insurable earnings for each earnings type</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Number of employees for each earnings type</li>
+      </ul>
+      <div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start</button></div>
     </div>`,
 
   'employer-details': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your business details</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('employer-reg', 'Employer registration number', { hint: 'Your NIS employer registration number' })}
-        ${GovBB.textField('business-name', 'Business name')}
-        ${GovBB.textField('employer-street', 'Street address')}
-        ${GovBB.textField('employer-district', 'District', { hint: 'Optional' })}
-        ${GovBB.selectField('employer-parish', 'Parish', GovBB.PARISHES)}
-        ${GovBB.textField('employer-postal', 'Postal code', { hint: 'For example, BB11000' })}
-        ${GovBB.continueBtn()}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your business details</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="employer-reg">Employer registration number</label>
+        <p class="govbb-hint">Your NIS employer registration number</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="employer-reg" name="employer-reg" data-field="employer-reg" value="${GovBB.D['employer-reg']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="business-name">Business name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="business-name" name="business-name" data-field="business-name" value="${GovBB.D['business-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="employer-street">Street address</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="employer-street" name="employer-street" data-field="employer-street" value="${GovBB.D['employer-street']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="employer-district">District</label>
+        <p class="govbb-hint">Optional</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="employer-district" name="employer-district" data-field="employer-district" value="${GovBB.D['employer-district']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="employer-parish">Parish</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="employer-parish" name="employer-parish" data-field="employer-parish">
+            <option value="">Select one</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['employer-parish']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="employer-postal">Postal code</label>
+        <p class="govbb-hint">For example, BB11000</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="employer-postal" name="employer-postal" data-field="employer-postal" value="${GovBB.D['employer-postal']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -211,31 +293,54 @@ const PAGES = {
     });
     return `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Which month are you submitting for?</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('contrib-year', 'Contribution year', { hint: 'For example, 2025', inputmode: 'numeric', maxlength: '4', width: '10rem' })}
-        ${GovBB.selectField('contrib-month', 'Contribution month', monthOpts)}
-        ${dueDate ? `<div class="bg-bb-blue-10 border-l-4 border-bb-blue-40 p-4">
-          <p class="font-bold">Payment due date</p>
-          <p>${dueDate}</p>
-        </div>` : ''}
-        ${late ? `<div class="warning-banner"><p class="font-bold">This submission is late</p><p>Interest of 1% per month will be added to the total amount payable.</p></div>` : ''}
-        ${GovBB.continueBtn()}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Which month are you submitting for?</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="contrib-year">Contribution year</label>
+        <p class="govbb-hint">For example, 2025</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="contrib-year" name="contrib-year" data-field="contrib-year" inputmode="numeric" maxlength="4" value="${GovBB.D['contrib-year']||''}" style="max-width:10rem;" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="contrib-month">Contribution month</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="contrib-month" name="contrib-month" data-field="contrib-month">
+            <option value="">Select one</option>
+            ${monthOpts.map(o=>`<option value="${o.value}"${GovBB.D['contrib-month']===o.value?' selected':''}>` + o.label + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      ${dueDate ? `<div style="background:var(--color-blue-10);border-left:4px solid var(--color-blue-40);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Payment due date</p>
+        <p class="govbb-text-body">${dueDate}</p>
+      </div>` : ''}
+      ${late ? `<div class="warning-banner"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">This submission is late</p><p class="govbb-text-body">Interest of 1% per month will be added to the total amount payable.</p></div>` : ''}
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`;
   },
 
   'earnings-grid': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Enter insurable earnings</h1>
-      <p class="text-[1.25rem] text-bb-mid-grey-00 mb-8">Enter earnings for each type. Contributions are calculated automatically at the rate you enter (default 11.1%).</p>
-      <div class="space-y-8">
-        ${renderEarningsGrid()}
-        ${GovBB.continueBtn()}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Enter insurable earnings</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Enter earnings for each type. Contributions are calculated automatically at the rate you enter (default 11.1%).</p>
+
+      ${renderEarningsGrid()}
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -247,19 +352,37 @@ const PAGES = {
     GovBB.D['final-total'] = finalTotal;
     return `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Adjust for previous payments</h1>
-      <div class="space-y-8">
-        <div class="bg-bb-blue-10 p-4 rounded-md">
-          <p class="font-bold">Total contributions from earnings: <span class="text-bb-teal-00">BDS$ ${total.toFixed(2)}</span></p>
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Adjust for previous payments</h1>
+
+      <div style="background:var(--color-blue-10);padding:var(--spacing-m);border-radius:4px;margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Total contributions from earnings:</strong> <span style="color:var(--color-teal-00);">BDS$ ${total.toFixed(2)}</span></p>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="prev-overpayment">Less: previous overpayment (BDS$)</label>
+        <p class="govbb-hint">Enter 0 if there is none</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="prev-overpayment" name="prev-overpayment" data-field="prev-overpayment" inputmode="decimal" value="${GovBB.D['prev-overpayment']||''}" />
         </div>
-        ${GovBB.textField('prev-overpayment', 'Less: previous overpayment (BDS$)', { hint: 'Enter 0 if there is none', inputmode: 'decimal' })}
-        ${GovBB.textField('prev-shortpayment', 'Add: previous shortpayment (BDS$)', { hint: 'Enter 0 if there is none', inputmode: 'decimal' })}
-        <div class="bg-bb-teal-10 border-2 border-bb-teal-00 rounded-md p-6">
-          <p class="font-bold text-[1.25rem]">Total amount payable: <span class="text-bb-teal-00">BDS$ ${finalTotal}</span></p>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="prev-shortpayment">Add: previous shortpayment (BDS$)</label>
+        <p class="govbb-hint">Enter 0 if there is none</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="prev-shortpayment" name="prev-shortpayment" data-field="prev-shortpayment" inputmode="decimal" value="${GovBB.D['prev-shortpayment']||''}" />
         </div>
-        ${GovBB.continueBtn()}
+      </div>
+
+      <div style="background:var(--color-teal-10);border:2px solid var(--color-teal-00);border-radius:4px;padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Total amount payable:</strong> <span style="color:var(--color-teal-00);">BDS$ ${finalTotal}</span></p>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`;
   },
@@ -268,26 +391,55 @@ const PAGES = {
     var late = isLate();
     return `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Declaration</h1>
-      <div class="space-y-8">
-        <div class="space-y-2 mb-6">
-          <p class="text-[1.25rem]"><span class="font-bold">Authorised signatory:</span> ${GovBB.D['signatory-name'] || GovBB.D['business-name'] || '—'}</p>
-          <p class="text-[1.25rem]"><span class="font-bold">Date:</span> ${(function(){ var d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })()}</p>
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+
+      <div style="margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Authorised signatory:</strong> ${GovBB.D['signatory-name'] || GovBB.D['business-name'] || '—'}</p>
+        <p class="govbb-text-body"><strong>Date:</strong> ${(function(){ var d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })()}</p>
+      </div>
+
+      ${late ? `<div class="warning-banner" style="margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Late submission warning</p><p class="govbb-text-body">This certificate is being submitted after the payment deadline. Interest of 1% per month applies to the outstanding amount.</p></div>` : ''}
+
+      <div style="background:var(--color-blue-10);border-left:4px solid var(--color-blue-40);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body">I declare that the information in this certificate is true and correct. I understand that providing false information may result in prosecution.</p>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="signatory-name">Authorised signatory name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="signatory-name" name="signatory-name" data-field="signatory-name" value="${GovBB.D['signatory-name']||''}" />
         </div>
-        ${late ? `<div class="warning-banner"><p class="font-bold">Late submission warning</p><p>This certificate is being submitted after the payment deadline. Interest of 1% per month applies to the outstanding amount.</p></div>` : ''}
-        <div class="bg-bb-blue-10 border-l-4 border-bb-blue-40 p-6">
-          <p class="text-[1.25rem]">I declare that the information in this certificate is true and correct. I understand that providing false information may result in prosecution.</p>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="signatory-role">Role or title</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="signatory-role" name="signatory-role" data-field="signatory-role" data-trigger-render="1">
+            <option value="">Select one</option>
+            ${ROLE_OPTIONS.map(o=>`<option value="${o}"${GovBB.D['signatory-role']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
         </div>
-        ${GovBB.textField('signatory-name', 'Authorised signatory name')}
-        ${GovBB.selectField('signatory-role', 'Role or title', ROLE_OPTIONS)}
-        ${GovBB.D['signatory-role'] === 'Other' ? GovBB.textField('signatory-role-other', 'Please describe your role') : ''}
-        ${GovBB.checkboxItem('declaration-agree', 'I confirm that the information I have given is true and complete to the best of my knowledge.')}
-        <div class="mt-8 flex gap-4">
-          <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-colors duration-200 outline-none bg-bb-grey-00 text-bb-black-00 hover:bg-[#c5ccd4] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
-          <button type="button" onclick="next()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-teal-00 text-bb-white-00 hover:bg-[#1a777d] hover:shadow-[inset_0_0_0_4px_rgba(222,245,246,0.10)] active:bg-[#0a4549] active:shadow-[inset_0_0_0_3px_rgba(0,0,0,0.20)] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Submit certificate</button>
+      </div>
+
+      ${GovBB.D['signatory-role'] === 'Other' ? `
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="signatory-role-other">Please describe your role</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="signatory-role-other" name="signatory-role-other" data-field="signatory-role-other" value="${GovBB.D['signatory-role-other']||''}" />
         </div>
+      </div>` : ''}
+
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="declaration-agree" name="declaration-agree" data-field="declaration-agree"${GovBB.D['declaration-agree']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="declaration-agree">I confirm that the information I have given is true and complete to the best of my knowledge.</label>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Submit certificate</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`;
   },
@@ -302,51 +454,58 @@ const PAGES = {
       );
     }).join('');
     return `
-    ${GovBB.backLink()}
-    <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Check your answers</h1>
-    <div class="space-y-8">
-      <h2 class="font-bold text-[1.5rem]">Employer details</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-        ${GovBB.summaryRow('Registration number', GovBB.D['employer-reg'], 'employer-details')}
-        ${GovBB.summaryRow('Business name', GovBB.D['business-name'], 'employer-details')}
-        ${GovBB.summaryRow('Address', [GovBB.D['employer-street'], GovBB.D['employer-parish'], GovBB.D['employer-postal']].filter(Boolean).join(', '), 'employer-details')}
-      </dl>
-      <h2 class="font-bold text-[1.5rem]">Contribution period</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-        ${GovBB.summaryRow('Year', GovBB.D['contrib-year'], 'contributions-period')}
-        ${GovBB.summaryRow('Month', MONTHS[(parseInt(GovBB.D['contrib-month']) || 1) - 1], 'contributions-period')}
-        ${GovBB.summaryRow('Payment due', getDueDate(), 'contributions-period')}
-      </dl>
-      <h2 class="font-bold text-[1.5rem]">Earnings</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">${earningsHtml}</dl>
-      <h2 class="font-bold text-[1.5rem]">Adjustments</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-        ${GovBB.summaryRow('Previous overpayment', 'BDS$ ' + (GovBB.D['prev-overpayment'] || '0'), 'discrepancies')}
-        ${GovBB.summaryRow('Previous shortpayment', 'BDS$ ' + (GovBB.D['prev-shortpayment'] || '0'), 'discrepancies')}
-        ${GovBB.summaryRow('Total amount payable', 'BDS$ ' + (GovBB.D['final-total'] || '0.00'), 'discrepancies')}
-      </dl>
-      ${GovBB.continueBtn('Submit Certificate')}
+    <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+    <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+    <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Employer details</h2>
+    <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+      ${GovBB.summaryRow('Registration number', GovBB.D['employer-reg'], 'employer-details')}
+      ${GovBB.summaryRow('Business name', GovBB.D['business-name'], 'employer-details')}
+      ${GovBB.summaryRow('Address', [GovBB.D['employer-street'], GovBB.D['employer-parish'], GovBB.D['employer-postal']].filter(Boolean).join(', '), 'employer-details')}
+    </dl>
+
+    <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contribution period</h2>
+    <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+      ${GovBB.summaryRow('Year', GovBB.D['contrib-year'], 'contributions-period')}
+      ${GovBB.summaryRow('Month', MONTHS[(parseInt(GovBB.D['contrib-month']) || 1) - 1], 'contributions-period')}
+      ${GovBB.summaryRow('Payment due', getDueDate(), 'contributions-period')}
+    </dl>
+
+    <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Earnings</h2>
+    <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">${earningsHtml}</dl>
+
+    <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Adjustments</h2>
+    <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+      ${GovBB.summaryRow('Previous overpayment', 'BDS$ ' + (GovBB.D['prev-overpayment'] || '0'), 'discrepancies')}
+      ${GovBB.summaryRow('Previous shortpayment', 'BDS$ ' + (GovBB.D['prev-shortpayment'] || '0'), 'discrepancies')}
+      ${GovBB.summaryRow('Total amount payable', 'BDS$ ' + (GovBB.D['final-total'] || '0.00'), 'discrepancies')}
+    </dl>
+
+    <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+      <button type="button" class="govbb-btn" onclick="next()">Submit Certificate</button>
+      <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
     </div>`;
   },
 
   'confirmation': () => `
-    <div class="space-y-8">
-      <div class="bg-bb-teal-00 text-bb-white-00 p-8 rounded-sm space-y-4">
-        <h1 class="font-bold text-[3.5rem] leading-[1.15]">Certificate submitted</h1>
-        <p class="text-[1.5rem]">Your reference number</p>
-        <p class="text-[2rem] font-bold">${window.__refNumber || 'DP10-' + Math.random().toString(36).substring(2, 8).toUpperCase()}</p>
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Certificate submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference: <strong>${window.__refNumber || 'DP10-' + Math.random().toString(36).substring(2, 8).toUpperCase()}</strong></p>
       </div>
-      <div class="bg-bb-blue-10 p-6 rounded-md">
-        <p class="font-bold text-[1.25rem]">Total amount due: BDS$ ${GovBB.D['final-total'] || '0.00'}</p>
-        <p class="text-[1.25rem]">Payment deadline: ${getDueDate()}</p>
+
+      <div style="background:var(--color-blue-10);padding:var(--spacing-m);border-radius:4px;margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Total amount due: BDS$ ${GovBB.D['final-total'] || '0.00'}</p>
+        <p class="govbb-text-body">Payment deadline: ${getDueDate()}</p>
       </div>
-      <h2 class="font-bold text-[1.5rem]">What happens next</h2>
-      <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
-        <li>Pay the total amount shown above by the deadline to avoid interest charges.</li>
-        <li>Payment can be made at any NIS office or via bank transfer.</li>
-        <li>Keep this reference number for your records.</li>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Pay the total amount shown above by the deadline to avoid interest charges.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Payment can be made at any NIS office or via bank transfer.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep this reference number for your records.</li>
       </ul>
-      <p class="text-[1.25rem]"><a href="#" onclick="GovBB.nav('start')" class="${GovBB.LINK_CLS}">Return to start</a></p>
+      <p class="govbb-text-body"><a href="#" onclick="GovBB.nav('start')" class="govbb-link">Return to start</a></p>
     </div>`
 };
 

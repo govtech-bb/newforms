@@ -4,59 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contributions Payment Certificate — Self-employed Persons – National Insurance Scheme</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="../assets/govbb-tailwind-config.js"></script>
-  <link rel="stylesheet" href="../assets/govbb-base.css">
+  <link rel="stylesheet" href="../dist/styles.css">
 </head>
-<body>
+<body class="govbb-page">
 
-<!-- Top bar -->
-<div class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container flex items-center gap-2 py-2 text-[0.875rem]">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-    Official website of the Government of Barbados
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
   </div>
 </div>
 
-<!-- Header -->
-<header class="bg-bb-yellow-100">
-  <div class="container py-s">
-    <div class="text-bb-black-00" style="width: 276px; height: 27px;">
-      <svg width="100%" viewBox="0 0 276 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img"><g><path d="M39.079 21.527C37.5026 21.527 36.103 21.1903 34.8802 20.5168C33.6721 19.8286 32.7219 18.8916 32.0294 17.7057C31.337 16.5051 30.9908 15.1288 30.9908 13.5769C30.9908 12.0249 31.337 10.6559 32.0294 9.47001C32.7219 8.26943 33.6721 7.3324 34.8802 6.65891C36.103 5.97077 37.5026 5.6267 39.079 5.6267C40.0219 5.6267 40.8911 5.7658 41.6867 6.04398C42.4823 6.32216 43.1821 6.71015 43.7861 7.20795C44.4049 7.69111 44.9205 8.24747 45.3331 8.87704L42.858 10.4144C42.6075 10.0191 42.276 9.66767 41.8635 9.3602C41.4657 9.05274 41.0237 8.81116 40.5376 8.63547C40.0514 8.45977 39.5652 8.37192 39.079 8.37192C38.1067 8.37192 37.2448 8.59886 36.4934 9.05274C35.7421 9.49197 35.1527 10.0996 34.7255 10.8756C34.2982 11.6515 34.0846 12.552 34.0846 13.5769C34.0846 14.5871 34.2909 15.4875 34.7034 16.2782C35.1307 17.0688 35.7273 17.691 36.4934 18.1449C37.2595 18.5841 38.1435 18.8038 39.1453 18.8038C39.8967 18.8038 40.567 18.6647 41.1563 18.3865C41.7456 18.0937 42.2171 17.691 42.5707 17.1786C42.9243 16.6661 43.1231 16.0659 43.1673 15.3777H39.5873V13.0278H46.0844V14.8946C46.055 16.3001 45.7382 17.5007 45.1342 18.4963C44.5301 19.4773 43.7051 20.2313 42.6591 20.7584C41.613 21.2708 40.4197 21.527 39.079 21.527Z"></path><path d="M52.8353 21.527C51.7156 21.527 50.7138 21.2854 49.8298 20.8023C48.9606 20.3045 48.2755 19.6237 47.7746 18.7598C47.2884 17.896 47.0453 16.9004 47.0453 15.773C47.0453 14.6457 47.2884 13.6501 47.7746 12.7862C48.2608 11.9224 48.9385 11.2489 49.8077 10.7658C50.677 10.268 51.6714 10.0191 52.7911 10.0191C53.9255 10.0191 54.9273 10.268 55.7966 10.7658C56.6658 11.2489 57.3435 11.9224 57.8297 12.7862C58.3159 13.6501 58.559 14.6457 58.559 15.773C58.559 16.9004 58.3159 17.896 57.8297 18.7598C57.3435 19.6237 56.6658 20.3045 55.7966 20.8023C54.9421 21.2854 53.955 21.527 52.8353 21.527ZM52.8353 18.8477C53.3804 18.8477 53.8592 18.7159 54.2717 18.4524C54.6843 18.1888 55.001 17.8301 55.222 17.3763C55.4577 16.9077 55.5756 16.3733 55.5756 15.773C55.5756 15.1728 55.4577 14.6457 55.222 14.1918C54.9863 13.7233 54.6548 13.3572 54.2275 13.0937C53.815 12.8302 53.3362 12.6984 52.7911 12.6984C52.2607 12.6984 51.7819 12.8302 51.3547 13.0937C50.9421 13.3572 50.618 13.7233 50.3823 14.1918C50.1466 14.6457 50.0287 15.1728 50.0287 15.773C50.0287 16.3733 50.1466 16.9077 50.3823 17.3763C50.618 17.8301 50.9495 18.1888 51.3768 18.4524C51.804 18.7159 52.2902 18.8477 52.8353 18.8477Z"></path><path d="M62.8109 21.2635L58.2806 10.2826H61.2861L64.2694 17.9472L67.2528 10.2826H70.2583L65.728 21.2635H62.8109Z"></path><path d="M186.422 21.2635V5.89025H191.66C192.72 5.89025 193.649 6.0513 194.444 6.37341C195.24 6.69551 195.859 7.18599 196.3 7.84485C196.742 8.48906 196.963 9.29432 196.963 10.2606C196.963 10.8609 196.809 11.4173 196.499 11.9297C196.205 12.4275 195.785 12.8594 195.24 13.2255C195.962 13.5915 196.514 14.082 196.897 14.6969C197.295 15.2972 197.494 16.8711 197.494 16.8711C197.494 16.8711 197.28 18.6061 196.853 19.265C196.426 19.9238 195.829 20.4216 195.063 20.7584C194.297 21.0951 193.398 21.2635 192.367 21.2635H186.422ZM189.383 18.6061H192.08C192.801 18.6061 193.369 18.4304 193.781 18.079C194.194 17.713 194.4 17.2298 194.4 16.6296C194.4 16 194.172 15.5095 193.715 15.1581C193.258 14.7921 192.632 14.6091 191.836 14.6091H189.383V18.6061ZM189.383 12.1494H191.726C192.389 12.1494 192.912 11.981 193.295 11.6442C193.678 11.3075 193.87 10.8316 193.87 10.2167C193.87 9.60179 193.656 9.12595 193.229 8.7892C192.801 8.45245 192.22 8.28408 191.483 8.28408H189.383V12.1494Z"></path><path d="M12.5786 0C11.6253 2.46943 10.6536 5.03986 8.57466 7.00774C9.21998 6.80573 10.3493 6.62461 11.0753 6.64203V17.0283L7.988 17.4636C7.878 17.4532 7.84133 17.2895 7.84133 17.0666C7.54434 13.8413 6.74135 11.1316 5.81736 8.32779C5.75136 7.94466 4.58171 6.48181 5.4837 6.73955C5.5937 6.75348 6.80002 7.2202 6.60935 6.99729C4.96671 5.38119 2.56508 4.21788 0.233112 3.87306C0.0277812 3.8243 -0.0932171 3.92183 0.0901136 4.14822C3.18474 8.6726 5.77336 14.012 5.75136 20.3475C6.95401 20.3475 9.86897 19.6718 11.0753 19.6718V27H12.5969L12.9453 6.53406L12.5786 0Z"></path><path d="M12.5786 0C13.5319 2.46943 14.5036 5.03986 16.5825 7.00774C15.9372 6.80573 14.8079 6.62461 14.0819 6.64203V17.0283L17.1692 17.4636C17.2792 17.4532 17.3159 17.2895 17.3159 17.0666C17.6129 13.8413 18.4158 11.1316 19.3398 8.32779C19.4058 7.94466 20.5755 6.48181 19.6735 6.73955C19.5635 6.75348 18.3572 7.2202 18.5478 6.99729C20.1905 5.38119 22.5921 4.21788 24.9241 3.87306C25.1294 3.8243 25.2504 3.92183 25.0671 4.14822C21.9725 8.6726 19.3838 14.012 19.4058 20.3475C18.2032 20.3475 15.2882 19.6718 14.0819 19.6718V27H12.5603L12.2119 6.53406L12.5786 0Z"></path></g></svg>
-    </div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
   </div>
 </header>
 
-<!-- Alpha banner -->
-<div class="bg-bb-blue-10">
-  <div class="container py-xs text-[1rem]">
-    This page is in <a href="#" class="inline-flex outline-none underline-offset-2 underline hover:no-underline active:bg-bb-yellow-100 active:no-underline focus-visible:bg-bb-yellow-100 focus-visible:no-underline active:text-bb-black-00 focus-visible:text-bb-black-00 text-bb-teal-00 hover:text-bb-black-00 hover:bg-bb-teal-10">Alpha</a>. Your feedback helps us improve.
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
   </div>
-</div>
-
-<!-- Main -->
-<main>
-  <div class="container py-l max-w-3xl" id="app"></div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
 </main>
 
-<!-- Footer -->
-<footer class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container py-l text-[1rem]">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <p>&copy; 2024 Government of Barbados. All rights reserved.</p>
-      <div class="flex gap-4">
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Privacy</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Terms</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Accessibility</a>
-      </div>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
     </div>
   </div>
 </footer>
 
 <script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary'); if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors(); if (!errors||!errors.length) return;
+  var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>';});
+  html+='</ul></div>';
+  document.getElementById('app').insertAdjacentHTML('afterbegin',html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el=document.getElementById(e.id); if(!el)return;
+    var errId='err-'+e.id; el.setAttribute('aria-invalid','true'); el.setAttribute('aria-describedby',errId);
+    var msg=document.createElement('p'); msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if(group)group.appendChild(msg);
+  });
+  if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;
+};
+GovBB.summaryRow = function(label,value,changeTo){
+  var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
 <script>
 const FORM_NAME = 'Contributions Payment Certificate — Self-employed Persons';
 const DEADLINE_MONTH = 0; // January
@@ -103,25 +124,26 @@ function renderContribGrid() {
     total += amt;
     totalInterest += interest;
     return `
-      <tr class="${late ? 'bg-bb-red-10' : ''}">
-        <td class="p-2">
-          <input type="text" inputmode="numeric" maxlength="4" placeholder="YYYY"
-            class="w-full border-2 border-bb-black-00 rounded-sm p-2 text-[1rem] outline-none focus:ring-4 focus:ring-bb-teal-100"
-            value="${row.year || ''}"
-            oninput="updateRow(${i}, 'year', this.value)">
+      <tr style="${late ? 'background:var(--color-red-10);' : ''}">
+        <td style="padding:var(--spacing-xs);">
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" inputmode="numeric" maxlength="4" placeholder="YYYY"
+              value="${row.year || ''}"
+              oninput="updateRow(${i}, 'year', this.value)">
+          </div>
         </td>
-        <td class="p-2">
-          <div class="relative flex items-center border-2 border-bb-black-00 rounded-sm">
-            <span class="pl-2 text-bb-mid-grey-00">$</span>
-            <input type="number" min="0" step="0.01" placeholder="0.00"
-              class="w-full p-2 text-[1rem] outline-none bg-transparent"
+        <td style="padding:var(--spacing-xs);">
+          <div class="govbb-input-wrapper" style="display:flex;align-items:center;">
+            <span style="padding-left:var(--spacing-xs);color:var(--color-mid-grey-00);">$</span>
+            <input class="govbb-input" type="number" min="0" step="0.01" placeholder="0.00"
+              style="border:none;flex:1;"
               value="${row.amount || ''}"
               oninput="updateRow(${i}, 'amount', this.value)">
           </div>
         </td>
-        ${late ? `<td class="p-2 text-bb-red-00 font-bold text-[1rem]">$${interest.toFixed(2)}<br><span class="text-[0.75rem] font-normal">Late fee</span></td>` : '<td class="p-2 text-bb-mid-grey-00 text-[1rem]">—</td>'}
-        <td class="p-2">
-          ${rows.length > 1 ? `<button type="button" onclick="removeRow(${i})" class="text-bb-red-00 underline text-[1rem] hover:text-bb-black-00">Remove</button>` : ''}
+        ${late ? `<td style="padding:var(--spacing-xs);color:var(--color-red-00);font-weight:var(--font-weight-bold);">$${interest.toFixed(2)}<br><span style="font-size:var(--font-size-caption);font-weight:normal;">Late fee</span></td>` : '<td style="padding:var(--spacing-xs);color:var(--color-mid-grey-00);">—</td>'}
+        <td style="padding:var(--spacing-xs);">
+          ${rows.length > 1 ? `<button type="button" onclick="removeRow(${i})" class="govbb-btn--link" style="color:var(--color-red-00);">Remove</button>` : ''}
         </td>
       </tr>`;
   }).join('');
@@ -130,32 +152,29 @@ function renderContribGrid() {
 
   return `
     <div>
-      <p class="font-bold text-[1.25rem] mb-2">Contribution years</p>
-      ${anyLate ? `<div class="warning-banner mb-4"><p class="font-bold">Some years are past the payment deadline</p><p>A late interest fee of 5% per year applies to contributions paid after 15 January following the contribution year.</p></div>` : ''}
-      <table class="earnings-table mb-4">
+      <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-s);">Contribution years</p>
+      ${anyLate ? `<div style="border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);background:var(--color-yellow-10);margin-bottom:var(--spacing-m);"><p style="font-weight:var(--font-weight-bold);">Some years are past the payment deadline</p><p>A late interest fee of 5% per year applies to contributions paid after 15 January following the contribution year.</p></div>` : ''}
+      <table style="width:100%;border-collapse:collapse;margin-bottom:var(--spacing-m);">
         <thead>
-          <tr>
-            <th>Year</th>
-            <th>Contributions Payable (BDS$)</th>
-            <th>Late Interest</th>
+          <tr style="border-bottom:2px solid var(--color-grey-00);">
+            <th style="text-align:left;padding:var(--spacing-xs);">Year</th>
+            <th style="text-align:left;padding:var(--spacing-xs);">Contributions Payable (BDS$)</th>
+            <th style="text-align:left;padding:var(--spacing-xs);">Late Interest</th>
             <th></th>
           </tr>
         </thead>
         <tbody id="contrib-rows">${rowsHtml}</tbody>
         <tfoot>
-          <tr class="total-row">
-            <td class="p-2 font-bold" colspan="1">Total</td>
-            <td class="p-2 font-bold">$${total.toFixed(2)}</td>
-            <td class="p-2 font-bold text-bb-red-00">${anyLate ? '$' + totalInterest.toFixed(2) : '—'}</td>
+          <tr style="border-top:2px solid var(--color-grey-00);font-weight:var(--font-weight-bold);">
+            <td style="padding:var(--spacing-xs);" colspan="1">Total</td>
+            <td style="padding:var(--spacing-xs);">$${total.toFixed(2)}</td>
+            <td style="padding:var(--spacing-xs);color:var(--color-red-00);">${anyLate ? '$' + totalInterest.toFixed(2) : '—'}</td>
             <td></td>
           </tr>
-          ${anyLate ? `<tr class="bg-bb-teal-10"><td class="p-2 font-bold" colspan="2">Total Amount Payable (incl. interest)</td><td class="p-2 font-bold text-bb-teal-00 text-[1.25rem]">$${grandTotal.toFixed(2)}</td><td></td></tr>` : ''}
+          ${anyLate ? `<tr style="background:var(--color-teal-10);"><td style="padding:var(--spacing-xs);font-weight:var(--font-weight-bold);" colspan="2">Total Amount Payable (incl. interest)</td><td style="padding:var(--spacing-xs);font-weight:var(--font-weight-bold);color:var(--color-teal-00);">$${grandTotal.toFixed(2)}</td><td></td></tr>` : ''}
         </tfoot>
       </table>
-      <button type="button" onclick="addRow()"
-        class="inline-flex items-center gap-2 text-[1.25rem] text-bb-teal-00 underline hover:text-bb-black-00 hover:no-underline">
-        + Add another year
-      </button>
+      <button type="button" onclick="addRow()" class="govbb-link" style="display:inline-block;">+ Add another year</button>
     </div>`;
 }
 
@@ -177,12 +196,6 @@ function updateRow(i, field, value) {
   const rows = getRows();
   rows[i][field] = value;
   saveRows(rows);
-  // Re-render table totals only
-  const tbody = document.getElementById('contrib-rows');
-  if (tbody) {
-    // Refresh totals without full page re-render for smooth UX
-    // Full re-render on blur instead
-  }
 }
 
 function getTotalPayable() {
@@ -201,48 +214,61 @@ function hasAnyLate() {
 
 const PAGES = {
   'start': () => `
-    <div class="space-y-8">
-      <h1 class="font-bold text-[3.5rem] leading-[1.15]">Pay your annual NIS contributions as a self-employed person</h1>
-      <p class="text-[1.25rem]">If you are self-employed, you must pay your NIS contributions every year. Use this form to submit your payment certificate.</p>
-      <div class="bg-bb-red-10 border-l-4 border-bb-red-00 p-4">
-        <p class="font-bold">Payment deadline: 15 January each year</p>
-        <p>If you pay after 15 January, a late interest fee of 5% per year will be added to your contributions.</p>
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Pay your annual NIS contributions as a self-employed person</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If you are self-employed, you must pay your NIS contributions every year. Use this form to submit your payment certificate.</p>
+      <div style="border-left:4px solid var(--color-red-00);padding:var(--spacing-s);background:var(--color-red-10);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Payment deadline: 15 January each year</p>
+        <p class="govbb-text-body" style="margin:0;">If you pay after 15 January, a late interest fee of 5% per year will be added to your contributions.</p>
       </div>
-      <div>
-        <h2 class="font-bold text-[1.5rem] mb-4">What you will need</h2>
-        <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
-          <li>Your self-employed NIS number</li>
-          <li>The contribution years you are paying for</li>
-          <li>The amount of contributions payable for each year</li>
-        </ul>
-      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you will need</h2>
+      <ul style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your self-employed NIS number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The contribution years you are paying for</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The amount of contributions payable for each year</li>
+      </ul>
       ${GovBB.startBtn()}
     </div>`,
 
   'identity': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your NIS details</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('se-nis-number', 'Self-employed NIS number', { hint: 'Your 6-digit NIS number as registered under self-employment', inputmode: 'numeric', maxlength: '6' })}
-        ${GovBB.textField('se-name', 'Your name as registered with NIS', { hint: 'Enter your name exactly as it appears on your NIS records.' })}
-        ${GovBB.continueBtn()}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your NIS details</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="se-nis-number">Self-employed NIS number</label>
+        <p class="govbb-hint">Your 6-digit NIS number as registered under self-employment</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="se-nis-number" name="se-nis-number" data-field="se-nis-number" inputmode="numeric" maxlength="6" value="${GovBB.D['se-nis-number']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="se-name">Your name as registered with NIS</label>
+        <p class="govbb-hint">Enter your name exactly as it appears on your NIS records.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="se-name" name="se-name" data-field="se-name" value="${GovBB.D['se-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
       </div>
     </form>`,
 
   'contributions-grid': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your contributions</h1>
-      <div class="space-y-8">
-        <p class="text-[1.25rem] text-bb-mid-grey-00">Enter the year and the amount of contributions you owe for each year. You can add multiple years.</p>
-        ${renderContribGrid()}
-        <div class="bg-bb-teal-10 border-2 border-bb-teal-00 rounded-md p-6">
-          <p class="font-bold text-[1.25rem]">Total amount payable: <span class="text-bb-teal-00">BDS$ ${getTotalPayable().toFixed(2)}</span></p>
-        </div>
-        ${GovBB.continueBtn()}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your contributions</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Enter the year and the amount of contributions you owe for each year. You can add multiple years.</p>
+      ${renderContribGrid()}
+      <div style="border:2px solid var(--color-teal-00);padding:var(--spacing-m);background:var(--color-teal-10);margin-top:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Total amount payable: <span style="color:var(--color-teal-00);">BDS$ ${getTotalPayable().toFixed(2)}</span></p>
+      </div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
       </div>
     </form>`,
 
@@ -250,26 +276,33 @@ const PAGES = {
     const anyLate = hasAnyLate();
     return `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Declaration</h1>
-      <div class="space-y-8">
-        <div class="space-y-2 mb-6">
-          <p class="text-[1.25rem]"><span class="font-bold">Applicant's name:</span> ${GovBB.D['se-name'] || '—'}</p>
-          <p class="text-[1.25rem]"><span class="font-bold">Date:</span> ${(function(){ var d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })()}</p>
-        </div>
-        <div class="bg-bb-blue-10 border-l-4 border-bb-blue-40 p-6">
-          <p class="text-[1.25rem]">I declare that the contributions stated in this certificate are due and payable by me as a self-employed person registered with the National Insurance Scheme. I understand that providing false information may result in prosecution.</p>
-        </div>
-        ${anyLate ? `
-        <div>
-          ${GovBB.checkboxItem('late-interest-consent', 'I understand that late interest fees apply to contributions paid after the 15 January deadline and I agree to pay the total amount including interest.')}
-        </div>` : ''}
-        ${GovBB.checkboxItem('declaration-agree', 'I confirm that the information I have given is true and complete to the best of my knowledge.')}
-        <div class="mt-8 flex gap-4">
-          <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-colors duration-200 outline-none bg-bb-grey-00 text-bb-black-00 hover:bg-[#c5ccd4] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
-          <button type="button" onclick="next()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-teal-00 text-bb-white-00 hover:bg-[#1a777d] hover:shadow-[inset_0_0_0_4px_rgba(222,245,246,0.10)] active:bg-[#0a4549] active:shadow-[inset_0_0_0_3px_rgba(0,0,0,0.20)] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Submit certificate and pay</button>
-        </div>
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+
+      <div style="margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><span style="font-weight:var(--font-weight-bold);">Applicant's name:</span> ${GovBB.D['se-name'] || '—'}</p>
+        <p class="govbb-text-body"><span style="font-weight:var(--font-weight-bold);">Date:</span> ${(function(){ var d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })()}</p>
+      </div>
+
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body">I declare that the contributions stated in this certificate are due and payable by me as a self-employed person registered with the National Insurance Scheme. I understand that providing false information may result in prosecution.</p>
+      </div>
+
+      ${anyLate ? `
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="late-interest-consent" name="late-interest-consent" data-field="late-interest-consent"${GovBB.D['late-interest-consent']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="late-interest-consent">I understand that late interest fees apply to contributions paid after the 15 January deadline and I agree to pay the total amount including interest.</label>
+      </div>` : ''}
+
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="declaration-agree" name="declaration-agree" data-field="declaration-agree"${GovBB.D['declaration-agree']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="declaration-agree">I confirm that the information I have given is true and complete to the best of my knowledge.</label>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Submit certificate and pay</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`;
   },
@@ -279,41 +312,48 @@ const PAGES = {
     const rowsHtml = rows.map(row => {
       const interest = calcLateInterest(row.year, row.amount);
       const late = isRowLate(row.year);
-      return `<div class="summary-row"><dt>${row.year || 'Year not set'}</dt><dd>BDS$ ${parseFloat(row.amount || 0).toFixed(2)}${late ? ` + $${interest.toFixed(2)} interest` : ''}</dd><dd><a href="#" onclick="GovBB.nav('contributions-grid')" class="${GovBB.LINK_CLS}">Change</a></dd></div>`;
+      return GovBB.summaryRow(row.year || 'Year not set', 'BDS$ ' + parseFloat(row.amount || 0).toFixed(2) + (late ? ` + $${interest.toFixed(2)} interest` : ''), 'contributions-grid');
     }).join('');
     return `
-    ${GovBB.backLink()}
-    <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Check your answers</h1>
-    <div class="space-y-8">
-      <h2 class="font-bold text-[1.5rem]">Your NIS details</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
+    <div>
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your NIS details</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
         ${GovBB.summaryRow('NIS number', GovBB.D['se-nis-number'], 'identity')}
         ${GovBB.summaryRow('Name', GovBB.D['se-name'], 'identity')}
       </dl>
-      <h2 class="font-bold text-[1.5rem]">Contributions</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">${rowsHtml}</dl>
-      <div class="bg-bb-teal-10 border-2 border-bb-teal-00 rounded-md p-6">
-        <p class="font-bold text-[1.25rem]">Total amount payable: <span class="text-bb-teal-00">BDS$ ${getTotalPayable().toFixed(2)}</span></p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contributions</h2>
+      <dl style="margin-bottom:var(--spacing-m);">${rowsHtml}</dl>
+
+      <div style="border:2px solid var(--color-teal-00);padding:var(--spacing-m);background:var(--color-teal-10);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Total amount payable: <span style="color:var(--color-teal-00);">BDS$ ${getTotalPayable().toFixed(2)}</span></p>
       </div>
-      ${GovBB.continueBtn('Submit Certificate and Pay')}
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Submit Certificate and Pay</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      </div>
     </div>`;
   },
 
   'confirmation': () => `
-    <div class="space-y-8">
-      <div class="bg-bb-teal-00 text-bb-white-00 p-8 rounded-sm space-y-4">
-        <h1 class="font-bold text-[3.5rem] leading-[1.15]">Certificate submitted</h1>
-        <p class="text-[1.5rem]">Your reference number</p>
-        <p class="text-[2rem] font-bold">${window.__refNumber || 'SECP-' + Math.random().toString(36).substring(2,8).toUpperCase()}</p>
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Certificate submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Reference: <strong>${window.__refNumber || 'SECP-' + Math.random().toString(36).substring(2,8).toUpperCase()}</strong></p>
       </div>
-      <h2 class="font-bold text-[1.5rem]">What happens next</h2>
-      <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
-        <li>Your contributions payment certificate has been recorded.</li>
-        <li>You will receive a receipt at your registered email address.</li>
-        <li>Your next contribution deadline is 15 January ${new Date().getFullYear() + 1}.</li>
-        <li>Keep your reference number safe.</li>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your contributions payment certificate has been recorded.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You will receive a receipt at your registered email address.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your next contribution deadline is 15 January ${new Date().getFullYear() + 1}.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number safe.</li>
       </ul>
-      <p class="text-[1.25rem]"><a href="#" onclick="GovBB.nav('start')" class="${GovBB.LINK_CLS}">Return to start</a></p>
+      <p class="govbb-text-body"><a href="#" onclick="GovBB.nav('start')" class="govbb-link">Return to start</a></p>
     </div>`
 };
 
@@ -327,11 +367,10 @@ function validate(pageId) {
   if (pageId === 'contributions-grid') {
     const rows = getRows();
     const currentYear = new Date().getFullYear();
-    let hasError = false;
     rows.forEach((row, i) => {
-      if (!row.year) { errors.push({ id: 'contrib-rows', msg: `Row ${i+1} – Enter the contribution year` }); hasError = true; }
-      else if (parseInt(row.year) > currentYear) { errors.push({ id: 'contrib-rows', msg: `Row ${i+1} – Year cannot be in the future` }); hasError = true; }
-      if (!row.amount || parseFloat(row.amount) <= 0) { errors.push({ id: 'contrib-rows', msg: `Row ${i+1} – Enter a valid contribution amount` }); hasError = true; }
+      if (!row.year) { errors.push({ id: 'contrib-rows', msg: `Row ${i+1} – Enter the contribution year` }); }
+      else if (parseInt(row.year) > currentYear) { errors.push({ id: 'contrib-rows', msg: `Row ${i+1} – Year cannot be in the future` }); }
+      if (!row.amount || parseFloat(row.amount) <= 0) { errors.push({ id: 'contrib-rows', msg: `Row ${i+1} – Enter a valid contribution amount` }); }
     });
   }
   if (pageId === 'declaration') {

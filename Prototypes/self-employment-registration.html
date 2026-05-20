@@ -4,59 +4,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Self-Employment Registration – NIS Barbados</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="../assets/govbb-tailwind-config.js"></script>
-  <link rel="stylesheet" href="../assets/govbb-base.css">
+  <link rel="stylesheet" href="../dist/styles.css">
 </head>
-<body>
+<body class="govbb-page">
 
-<!-- Top bar -->
-<div class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container flex items-center gap-2 py-2 text-[0.875rem]">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Coat_of_arms_of_Barbados_%282%29.svg/1280px-Coat_of_arms_of_Barbados_%282%29.svg.png" alt="" class="h-5 w-auto">
-    Official website of the Government of Barbados
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
   </div>
 </div>
 
-<!-- Header -->
-<header class="bg-bb-yellow-100">
-  <div class="container py-s">
-    <div class="text-bb-black-00" style="width:276px;height:27px;">
-      <svg width="100%" viewBox="0 0 276 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img"><g><path d="M39.079 21.527C37.5026 21.527 36.103 21.1903 34.8802 20.5168C33.6721 19.8286 32.7219 18.8916 32.0294 17.7057C31.337 16.5051 30.9908 15.1288 30.9908 13.5769C30.9908 12.0249 31.337 10.6559 32.0294 9.47001C32.7219 8.26943 33.6721 7.3324 34.8802 6.65891C36.103 5.97077 37.5026 5.6267 39.079 5.6267C40.0219 5.6267 40.8911 5.7658 41.6867 6.04398C42.4823 6.32216 43.1821 6.71015 43.7861 7.20795C44.4049 7.69111 44.9205 8.24747 45.3331 8.87704L42.858 10.4144C42.6075 10.0191 42.276 9.66767 41.8635 9.3602C41.4657 9.05274 41.0237 8.81116 40.5376 8.63547C40.0514 8.45977 39.5652 8.37192 39.079 8.37192C38.1067 8.37192 37.2448 8.59886 36.4934 9.05274C35.7421 9.49197 35.1527 10.0996 34.7255 10.8756C34.2982 11.6515 34.0846 12.552 34.0846 13.5769C34.0846 14.5871 34.2909 15.4875 34.7034 16.2782C35.1307 17.0688 35.7273 17.691 36.4934 18.1449C37.2595 18.5841 38.1435 18.8038 39.1453 18.8038C39.8967 18.8038 40.567 18.6647 41.1563 18.3865C41.7456 18.0937 42.2171 17.691 42.5707 17.1786C42.9243 16.6661 43.1231 16.0659 43.1673 15.3777H39.5873V13.0278H46.0844V14.8946C46.055 16.3001 45.7382 17.5007 45.1342 18.4963C44.5301 19.4773 43.7051 20.2313 42.6591 20.7584C41.613 21.2708 40.4197 21.527 39.079 21.527Z"/><path d="M52.8353 21.527C51.7156 21.527 50.7138 21.2854 49.8298 20.8023C48.9606 20.3045 48.2755 19.6237 47.7746 18.7598C47.2884 17.896 47.0453 16.9004 47.0453 15.773C47.0453 14.6457 47.2884 13.6501 47.7746 12.7862C48.2608 11.9224 48.9385 11.2489 49.8077 10.7658C50.677 10.268 51.6714 10.0191 52.7911 10.0191C53.9255 10.0191 54.9273 10.268 55.7966 10.7658C56.6658 11.2489 57.3435 11.9224 57.8297 12.7862C58.3159 13.6501 58.559 14.6457 58.559 15.773C58.559 16.9004 58.3159 17.896 57.8297 18.7598C57.3435 19.6237 56.6658 20.3045 55.7966 20.8023C54.9421 21.2854 53.955 21.527 52.8353 21.527ZM52.8353 18.8477C53.3804 18.8477 53.8592 18.7159 54.2717 18.4524C54.6843 18.1888 55.001 17.8301 55.222 17.3763C55.4577 16.9077 55.5756 16.3733 55.5756 15.773C55.5756 15.1728 55.4577 14.6457 55.222 14.1918C54.9863 13.7233 54.6548 13.3572 54.2275 13.0937C53.815 12.8302 53.3362 12.6984 52.7911 12.6984C52.2607 12.6984 51.7819 12.8302 51.3547 13.0937C50.9421 13.3572 50.618 13.7233 50.3823 14.1918C50.1466 14.6457 50.0287 15.1728 50.0287 15.773C50.0287 16.3733 50.1466 16.9077 50.3823 17.3763C50.618 17.8301 50.9495 18.1888 51.3768 18.4524C51.804 18.7159 52.2902 18.8477 52.8353 18.8477Z"/><path d="M12.5786 0C11.6253 2.46943 10.6536 5.03986 8.57466 7.00774C9.21998 6.80573 10.3493 6.62461 11.0753 6.64203V17.0283L7.988 17.4636C7.878 17.4532 7.84133 17.2895 7.84133 17.0666C7.54434 13.8413 6.74135 11.1316 5.81736 8.32779C5.75136 7.94466 4.58171 6.48181 5.4837 6.73955C5.5937 6.75348 6.80002 7.2202 6.60935 6.99729C4.96671 5.38119 2.56508 4.21788 0.233112 3.87306C0.0277812 3.8243 -0.0932171 3.92183 0.0901136 4.14822C3.18474 8.6726 5.77336 14.012 5.75136 20.3475C6.95401 20.3475 9.86897 19.6718 11.0753 19.6718V27H12.5969L12.9453 6.53406L12.5786 0Z"/><path d="M12.5786 0C13.5319 2.46943 14.5036 5.03986 16.5825 7.00774C15.9372 6.80573 14.8079 6.62461 14.0819 6.64203V17.0283L17.1692 17.4636C17.2792 17.4532 17.3159 17.2895 17.3159 17.0666C17.6129 13.8413 18.4158 11.1316 19.3398 8.32779C19.4058 7.94466 20.5755 6.48181 19.6735 6.73955C19.5635 6.75348 18.3572 7.2202 18.5478 6.99729C20.1905 5.38119 22.5921 4.21788 24.9241 3.87306C25.1294 3.8243 25.2504 3.92183 25.0671 4.14822C21.9725 8.6726 19.3838 14.012 19.4058 20.3475C18.2032 20.3475 15.2882 19.6718 14.0819 19.6718V27H12.5603L12.2119 6.53406L12.5786 0Z"/></g></svg>
-    </div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
   </div>
 </header>
 
-<!-- Alpha banner -->
-<div class="bg-bb-blue-10">
-  <div class="container py-xs text-[1rem]">
-    This page is in <a href="#" class="inline-flex outline-none underline-offset-2 underline hover:no-underline text-bb-teal-00 hover:text-bb-black-00">Alpha</a>. Your feedback helps us improve.
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
   </div>
-</div>
-
-<!-- Main -->
-<main>
-  <div class="container py-l max-w-3xl" id="app"></div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
 </main>
 
-<!-- Footer -->
-<footer class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container py-l text-[1rem]">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <p>&copy; 2024 Government of Barbados. All rights reserved.</p>
-      <div class="flex gap-4">
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Privacy</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Terms</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Accessibility</a>
-      </div>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
     </div>
   </div>
 </footer>
 
 <script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary'); if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors(); if (!errors||!errors.length) return;
+  var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>';});
+  html+='</ul></div>';
+  document.getElementById('app').insertAdjacentHTML('afterbegin',html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el=document.getElementById(e.id); if(!el)return;
+    var errId='err-'+e.id; el.setAttribute('aria-invalid','true'); el.setAttribute('aria-describedby',errId);
+    var msg=document.createElement('p'); msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if(group)group.appendChild(msg);
+  });
+  if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;
+};
+GovBB.summaryRow = function(label,value,changeTo){
+  var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
 <script>
 const FORM_NAME = 'Self-Employment Registration';
 const COUNTRIES = ['Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan','Bahamas','Bahrain','Bangladesh','Barbados','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi','Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Costa Rica','Croatia','Cuba','Cyprus','Czech Republic','Denmark','Djibouti','Dominica','Dominican Republic','Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia','Fiji','Finland','France','Gabon','Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana','Haiti','Honduras','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica','Japan','Jordan','Kazakhstan','Kenya','Kiribati','Kuwait','Kyrgyzstan','Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg','Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar','Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Korea','North Macedonia','Norway','Oman','Pakistan','Palau','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Rwanda','Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Korea','South Sudan','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria','Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu','Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan','Vanuatu','Vatican City','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe'];
@@ -65,102 +86,354 @@ const FLOW = ['start','personal-details','business-details','declaration','check
 
 const PAGES = {
   'start': () => `
-    <div class="space-y-8">
-      <h1 class="font-bold text-[3.5rem] leading-[1.15]">Register as a Self-Employed Person with NIS</h1>
-      <p class="text-[1.25rem]">If you work for yourself in Barbados, use this service to register with the National Insurance and Social Security (NIS). Once registered, you can make contributions and access NIS benefits.</p>
-      <div class="space-y-4">
-        <h2 class="font-bold text-[1.5rem]">What you will need</h2>
-        <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
-          <li>Your National Registration Number or Passport</li>
-          <li>Your National Insurance Number</li>
-          <li>Your business name and what your business does</li>
-          <li>The date your business started</li>
-          <li>Your email address and mobile number</li>
-          <li>Your estimated monthly income</li>
-        </ul>
-      </div>
-      <p class="text-[1.25rem] text-bb-mid-grey-00">It should take no longer than 10 minutes to complete this form.</p>
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Register as a Self-Employed Person with NIS</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If you work for yourself in Barbados, use this service to register with the National Insurance and Social Security (NIS). Once registered, you can make contributions and access NIS benefits.</p>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you will need</h2>
+      <ul style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National Registration Number or Passport</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National Insurance Number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your business name and what your business does</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The date your business started</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your email address and mobile number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your estimated monthly income</li>
+      </ul>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">It should take no longer than 10 minutes to complete this form.</p>
       ${GovBB.startBtn()}
     </div>`,
 
   'personal-details': () => {
     const idType = GovBB.D['id-type'] || '';
     const marital = GovBB.D['marital-status'] || '';
+
     const passportFields = idType === 'Passport' ? `
-      <div class="space-y-6 mt-4 p-4 bg-bb-blue-10 rounded-sm">
-        ${GovBB.textField('passport-number','Passport Number')}
-        ${GovBB.dateField('passport-issued','Date Issued','For example, 01 06 2015')}
-        ${GovBB.dateField('passport-expiry','Date Expired','For example, 01 06 2025')}
-        ${GovBB.selectField('passport-country','Country Issued',COUNTRIES)}
+      <div style="border-left:4px solid var(--color-blue-40);padding-left:var(--spacing-s);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="passport-number">Passport Number</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="passport-number" name="passport-number" data-field="passport-number" value="${GovBB.D['passport-number']||''}" />
+          </div>
+        </div>
+        <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+          <legend class="govbb-fieldset__legend">Date Issued</legend>
+          <p class="govbb-hint">For example, 01 06 2015</p>
+          <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-issued-day">Day</label>
+              <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="passport-issued-day" name="passport-issued-day" data-field="passport-issued-day" inputmode="numeric" value="${GovBB.D['passport-issued-day']||''}" /></div>
+            </div>
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-issued-month">Month</label>
+              <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="passport-issued-month" name="passport-issued-month" data-field="passport-issued-month" inputmode="numeric" value="${GovBB.D['passport-issued-month']||''}" /></div>
+            </div>
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-issued-year">Year</label>
+              <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="passport-issued-year" name="passport-issued-year" data-field="passport-issued-year" inputmode="numeric" value="${GovBB.D['passport-issued-year']||''}" /></div>
+            </div>
+          </div>
+        </fieldset>
+        <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+          <legend class="govbb-fieldset__legend">Date Expired</legend>
+          <p class="govbb-hint">For example, 01 06 2025</p>
+          <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-expiry-day">Day</label>
+              <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="passport-expiry-day" name="passport-expiry-day" data-field="passport-expiry-day" inputmode="numeric" value="${GovBB.D['passport-expiry-day']||''}" /></div>
+            </div>
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-expiry-month">Month</label>
+              <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="passport-expiry-month" name="passport-expiry-month" data-field="passport-expiry-month" inputmode="numeric" value="${GovBB.D['passport-expiry-month']||''}" /></div>
+            </div>
+            <div class="govbb-date-input__part">
+              <label class="govbb-date-input__label" for="passport-expiry-year">Year</label>
+              <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="passport-expiry-year" name="passport-expiry-year" data-field="passport-expiry-year" inputmode="numeric" value="${GovBB.D['passport-expiry-year']||''}" /></div>
+            </div>
+          </div>
+        </fieldset>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="passport-country">Country Issued</label>
+          <div class="govbb-select-wrapper">
+            <select class="govbb-select" id="passport-country" name="passport-country" data-field="passport-country">
+              <option value="">Select one</option>
+              ${COUNTRIES.map(c=>`<option value="${c}"${GovBB.D['passport-country']===c?' selected':''}>` + c + '</option>').join('')}
+            </select>
+            <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+          </div>
+        </div>
       </div>` : '';
+
     const nrnField = (idType === '' || idType === 'National Registration Number') ? `
-      ${GovBB.textField('nrn','National Registration Number',{hint:'Find this on your National ID card. Format: YYMMDD-XXXX',placeholder:'870315-1234'})}` : '';
-    const maidenField = marital === 'Married' ? GovBB.textField('maiden-name','Maiden Name',{hint:'If your surname changed when you got married, enter your name before the change.'}) : '';
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nrn">National Registration Number</label>
+        <p class="govbb-hint">Find this on your National ID card. Format: YYMMDD-XXXX</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="nrn" name="nrn" data-field="nrn" placeholder="870315-1234" value="${GovBB.D['nrn']||''}" />
+        </div>
+      </div>` : '';
+
+    const maidenField = marital === 'Married' ? `
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="maiden-name">Maiden Name</label>
+        <p class="govbb-hint">If your surname changed when you got married, enter your name before the change.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="maiden-name" name="maiden-name" data-field="maiden-name" value="${GovBB.D['maiden-name']||''}" />
+        </div>
+      </div>` : '';
 
     return `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your personal details</h1>
-      <div class="space-y-8">
-        ${GovBB.selectField('title','Title (optional)',['Mr','Mrs','Miss','Ms','Professor','Doctor','Sir','Dame'])}
-        ${GovBB.textField('first-name','First name')}
-        ${GovBB.textField('middle-name','Middle name(s)',{hint:'Optional. Include all middle names.'})}
-        ${GovBB.textField('last-name','Last name')}
-        ${GovBB.radioGroup('marital-status','What is your marital status?',['Single','Married','Divorced','Separated','Widowed'])}
-        ${maidenField}
-        ${GovBB.radioGroup('gender','What is your gender?',['Male','Female'])}
-        ${GovBB.dateField('dob','Date of birth','For example, 27 03 1985')}
-        ${GovBB.textField('nis-number','National Insurance Number',{hint:'Find this on your NIS card or payslip.'})}
-        <div class="space-y-4">
-          ${GovBB.selectField('id-type','What identification do you have?',['National Registration Number','Passport'],{hint:'Select the document you will use to prove your identity.'})}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your personal details</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="title">Title (optional)</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="title" name="title" data-field="title">
+            <option value="">Select one</option>
+            ${['Mr','Mrs','Miss','Ms','Professor','Doctor','Sir','Dame'].map(o=>`<option value="${o}"${GovBB.D['title']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
         </div>
-        ${nrnField}
-        ${passportFields}
-        ${GovBB.textField('street-address','Street address')}
-        ${GovBB.textField('district','District',{hint:'Village or district name. For example, Brittons Hill.'})}
-        ${GovBB.selectField('parish','Parish',GovBB.PARISHES)}
-        ${GovBB.emailField('email','Email address',{hint:'We will use this to contact you about your registration.'})}
-        ${GovBB.telField('mobile','Mobile number',{hint:'For example, 246-555-1234',placeholder:'246-555-1234'})}
-        ${GovBB.continueBtn()}
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="first-name">First name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="first-name" name="first-name" data-field="first-name" value="${GovBB.D['first-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="middle-name">Middle name(s)</label>
+        <p class="govbb-hint">Optional. Include all middle names.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="middle-name" name="middle-name" data-field="middle-name" value="${GovBB.D['middle-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="last-name">Last name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="last-name" name="last-name" data-field="last-name" value="${GovBB.D['last-name']||''}" />
+        </div>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">What is your marital status?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${['Single','Married','Divorced','Separated','Widowed'].map(o=>`
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="marital-status-${o.toLowerCase()}" name="marital-status" data-field="marital-status" value="${o}"${GovBB.D['marital-status']===o?' checked':''} />
+            <label class="govbb-radio-item__label" for="marital-status-${o.toLowerCase()}">${o}</label>
+          </div>`).join('')}
+        </div>
+      </fieldset>
+
+      ${maidenField}
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">What is your gender?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="gender-male" name="gender" data-field="gender" value="Male"${GovBB.D['gender']==='Male'?' checked':''} />
+            <label class="govbb-radio-item__label" for="gender-male">Male</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="gender-female" name="gender" data-field="gender" value="Female"${GovBB.D['gender']==='Female'?' checked':''} />
+            <label class="govbb-radio-item__label" for="gender-female">Female</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Date of birth</legend>
+        <p class="govbb-hint">For example, 27 03 1985</p>
+        <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-day">Day</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="dob-day" name="dob-day" data-field="dob-day" inputmode="numeric" value="${GovBB.D['dob-day']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-month">Month</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="dob-month" name="dob-month" data-field="dob-month" inputmode="numeric" value="${GovBB.D['dob-month']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-year">Year</label>
+            <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="dob-year" name="dob-year" data-field="dob-year" inputmode="numeric" value="${GovBB.D['dob-year']||''}" /></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nis-number">National Insurance Number</label>
+        <p class="govbb-hint">Find this on your NIS card or payslip.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="nis-number" name="nis-number" data-field="nis-number" value="${GovBB.D['nis-number']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="id-type">What identification do you have?</label>
+        <p class="govbb-hint">Select the document you will use to prove your identity.</p>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="id-type" name="id-type" data-field="id-type" data-trigger-render>
+            <option value="">Select one</option>
+            ${['National Registration Number','Passport'].map(o=>`<option value="${o}"${GovBB.D['id-type']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      ${nrnField}
+      ${passportFields}
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="street-address">Street address</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="street-address" name="street-address" data-field="street-address" value="${GovBB.D['street-address']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="district">District</label>
+        <p class="govbb-hint">Village or district name. For example, Brittons Hill.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="district" name="district" data-field="district" value="${GovBB.D['district']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parish">Parish</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="parish" name="parish" data-field="parish">
+            <option value="">Select one</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['parish']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="email">Email address</label>
+        <p class="govbb-hint">We will use this to contact you about your registration.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="email" id="email" name="email" data-field="email" value="${GovBB.D['email']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="mobile">Mobile number</label>
+        <p class="govbb-hint">For example, 246-555-1234</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="mobile" name="mobile" data-field="mobile" placeholder="246-555-1234" value="${GovBB.D['mobile']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
       </div>
     </form>`;
   },
 
   'business-details': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your business details</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('business-name','Name of your business')}
-        ${GovBB.textareaField('business-nature','What does your business do?',{hint:'Describe the main activity or service your business provides. For example, plumbing repairs, catering, freelance design.',rows:4})}
-        ${GovBB.dateField('business-start','Date your business started','For example, 01 01 2020')}
-        ${GovBB.textField('monthly-salary','Estimated monthly income (BDS$)',{hint:'NIS uses this to work out your contribution amount. Enter the amount you expect to earn each month.',inputmode:'numeric',placeholder:'2000'})}
-        ${GovBB.continueBtn()}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your business details</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="business-name">Name of your business</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="business-name" name="business-name" data-field="business-name" value="${GovBB.D['business-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="business-nature">What does your business do?</label>
+        <p class="govbb-hint">Describe the main activity or service your business provides. For example, plumbing repairs, catering, freelance design.</p>
+        <textarea class="govbb-textarea" id="business-nature" name="business-nature" data-field="business-nature" rows="4" style="width:100%;">${GovBB.D['business-nature']||''}</textarea>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Date your business started</legend>
+        <p class="govbb-hint">For example, 01 01 2020</p>
+        <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="business-start-day">Day</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="business-start-day" name="business-start-day" data-field="business-start-day" inputmode="numeric" value="${GovBB.D['business-start-day']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="business-start-month">Month</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="business-start-month" name="business-start-month" data-field="business-start-month" inputmode="numeric" value="${GovBB.D['business-start-month']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="business-start-year">Year</label>
+            <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="business-start-year" name="business-start-year" data-field="business-start-year" inputmode="numeric" value="${GovBB.D['business-start-year']||''}" /></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="monthly-salary">Estimated monthly income (BDS$)</label>
+        <p class="govbb-hint">NIS uses this to work out your contribution amount. Enter the amount you expect to earn each month.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="monthly-salary" name="monthly-salary" data-field="monthly-salary" inputmode="numeric" placeholder="2000" value="${GovBB.D['monthly-salary']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   'declaration': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Declaration</h1>
-      <div class="space-y-8">
-        <div class="space-y-2 mb-6">
-          <p class="text-[1.25rem]"><span class="font-bold">Applicant's name:</span> ${[GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['last-name']].filter(Boolean).join(' ') || '—'}</p>
-          <p class="text-[1.25rem]"><span class="font-bold">Date:</span> ${(function(){ var d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })()}</p>
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+
+      <div style="margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><span style="font-weight:var(--font-weight-bold);">Applicant's name:</span> ${[GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['last-name']].filter(Boolean).join(' ') || '—'}</p>
+        <p class="govbb-text-body"><span style="font-weight:var(--font-weight-bold);">Date:</span> ${(function(){ var d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })()}</p>
+      </div>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">I declare that the information I have given is true to the best of my knowledge and belief.</p>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Did an NIS Field Officer help you fill in this form?</legend>
+        <p class="govbb-hint">If a Field Officer helped you, we need to record their code.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="field-officer-no" name="field-officer" data-field="field-officer" value="No"${GovBB.D['field-officer']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="field-officer-no">No</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="field-officer-yes" name="field-officer" data-field="field-officer" value="Yes"${GovBB.D['field-officer']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="field-officer-yes">Yes</label>
+          </div>
         </div>
-        <p class="text-[1.25rem]">I declare that the information I have given is true to the best of my knowledge and belief.</p>
-        ${GovBB.radioGroup('field-officer','Did an NIS Field Officer help you fill in this form?',['No','Yes'],{hint:'If a Field Officer helped you, we need to record their code.'})}
-        <div id="officer-code-wrap" style="display:none">
-          ${GovBB.textField('officer-code','Field Officer code number',{hint:'Enter the code number of the NIS Field Officer (up to 2 digits).',inputmode:'numeric',maxlength:'2',width:'8rem'})}
+      </fieldset>
+
+      <div id="officer-code-wrap" style="display:${GovBB.D['field-officer']==='Yes'?'block':'none'};">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="officer-code">Field Officer code number</label>
+          <p class="govbb-hint">Enter the code number of the NIS Field Officer (up to 2 digits).</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="officer-code" name="officer-code" data-field="officer-code" inputmode="numeric" maxlength="2" style="width:8rem;" value="${GovBB.D['officer-code']||''}" />
+          </div>
         </div>
-        ${GovBB.checkboxItem('declaration-agree', 'I confirm that the information I have given is true and complete to the best of my knowledge.')}
-        <div class="mt-8 flex gap-4">
-          <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-colors duration-200 outline-none bg-bb-grey-00 text-bb-black-00 hover:bg-[#c5ccd4] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
-          <button type="button" onclick="next()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-teal-00 text-bb-white-00 hover:bg-[#1a777d] hover:shadow-[inset_0_0_0_4px_rgba(222,245,246,0.10)] active:bg-[#0a4549] active:shadow-[inset_0_0_0_3px_rgba(0,0,0,0.20)] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Submit application</button>
-        </div>
+      </div>
+
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="declaration-agree" name="declaration-agree" data-field="declaration-agree"${GovBB.D['declaration-agree']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="declaration-agree">I confirm that the information I have given is true and complete to the best of my knowledge.</label>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -171,57 +444,63 @@ const PAGES = {
       : GovBB.D['nrn'];
     return `
     <div>
-      ${GovBB.backLink()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Check your answers before sending your application</h1>
-      <div class="space-y-8">
-        <h2 class="font-bold text-[1.5rem]">Personal details</h2>
-        <dl>
-          ${GovBB.summaryRow('Title', GovBB.D['title'], 'personal-details')}
-          ${GovBB.summaryRow('First name', GovBB.D['first-name'], 'personal-details')}
-          ${GovBB.summaryRow('Middle name(s)', GovBB.D['middle-name'], 'personal-details')}
-          ${GovBB.summaryRow('Last name', GovBB.D['last-name'], 'personal-details')}
-          ${GovBB.summaryRow('Marital status', GovBB.D['marital-status'], 'personal-details')}
-          ${GovBB.D['marital-status']==='Married' ? GovBB.summaryRow('Maiden name', GovBB.D['maiden-name'], 'personal-details') : ''}
-          ${GovBB.summaryRow('Gender', GovBB.D['gender'], 'personal-details')}
-          ${GovBB.summaryRow('Date of birth', [GovBB.D['dob-day'],GovBB.D['dob-month'],GovBB.D['dob-year']].filter(Boolean).join(' / '), 'personal-details')}
-          ${GovBB.summaryRow('National Insurance Number', GovBB.D['nis-number'], 'personal-details')}
-          ${GovBB.summaryRow('Identification type', idType, 'personal-details')}
-          ${GovBB.summaryRow(idType === 'Passport' ? 'Passport number' : 'National Registration Number', idValue, 'personal-details')}
-        </dl>
-        <h2 class="font-bold text-[1.5rem]">Address and contact</h2>
-        <dl>
-          ${GovBB.summaryRow('Street address', GovBB.D['street-address'], 'personal-details')}
-          ${GovBB.summaryRow('District', GovBB.D['district'], 'personal-details')}
-          ${GovBB.summaryRow('Parish', GovBB.D['parish'], 'personal-details')}
-          ${GovBB.summaryRow('Email address', GovBB.D['email'], 'personal-details')}
-          ${GovBB.summaryRow('Mobile number', GovBB.D['mobile'], 'personal-details')}
-        </dl>
-        <h2 class="font-bold text-[1.5rem]">Business details</h2>
-        <dl>
-          ${GovBB.summaryRow('Business name', GovBB.D['business-name'], 'business-details')}
-          ${GovBB.summaryRow('Nature of business', GovBB.D['business-nature'], 'business-details')}
-          ${GovBB.summaryRow('Date business started', [GovBB.D['business-start-day'],GovBB.D['business-start-month'],GovBB.D['business-start-year']].filter(Boolean).join(' / '), 'business-details')}
-          ${GovBB.summaryRow('Estimated monthly income', GovBB.D['monthly-salary'] ? 'BDS$ ' + GovBB.D['monthly-salary'] : '', 'business-details')}
-        </dl>
-        ${GovBB.continueBtn('Submit application')}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before sending your application</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Personal details</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Title', GovBB.D['title'], 'personal-details')}
+        ${GovBB.summaryRow('First name', GovBB.D['first-name'], 'personal-details')}
+        ${GovBB.summaryRow('Middle name(s)', GovBB.D['middle-name'], 'personal-details')}
+        ${GovBB.summaryRow('Last name', GovBB.D['last-name'], 'personal-details')}
+        ${GovBB.summaryRow('Marital status', GovBB.D['marital-status'], 'personal-details')}
+        ${GovBB.D['marital-status']==='Married' ? GovBB.summaryRow('Maiden name', GovBB.D['maiden-name'], 'personal-details') : ''}
+        ${GovBB.summaryRow('Gender', GovBB.D['gender'], 'personal-details')}
+        ${GovBB.summaryRow('Date of birth', [GovBB.D['dob-day'],GovBB.D['dob-month'],GovBB.D['dob-year']].filter(Boolean).join(' / '), 'personal-details')}
+        ${GovBB.summaryRow('National Insurance Number', GovBB.D['nis-number'], 'personal-details')}
+        ${GovBB.summaryRow('Identification type', idType, 'personal-details')}
+        ${GovBB.summaryRow(idType === 'Passport' ? 'Passport number' : 'National Registration Number', idValue, 'personal-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Address and contact</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Street address', GovBB.D['street-address'], 'personal-details')}
+        ${GovBB.summaryRow('District', GovBB.D['district'], 'personal-details')}
+        ${GovBB.summaryRow('Parish', GovBB.D['parish'], 'personal-details')}
+        ${GovBB.summaryRow('Email address', GovBB.D['email'], 'personal-details')}
+        ${GovBB.summaryRow('Mobile number', GovBB.D['mobile'], 'personal-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Business details</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Business name', GovBB.D['business-name'], 'business-details')}
+        ${GovBB.summaryRow('Nature of business', GovBB.D['business-nature'], 'business-details')}
+        ${GovBB.summaryRow('Date business started', [GovBB.D['business-start-day'],GovBB.D['business-start-month'],GovBB.D['business-start-year']].filter(Boolean).join(' / '), 'business-details')}
+        ${GovBB.summaryRow('Estimated monthly income', GovBB.D['monthly-salary'] ? 'BDS$ ' + GovBB.D['monthly-salary'] : '', 'business-details')}
+      </dl>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </div>`;
   },
 
   'confirmation': () => `
-    <div class="space-y-8">
-      <div class="confirmation-panel">
-        <h1 class="font-bold text-[2rem] leading-[1.15] mb-4">Application submitted</h1>
-        <p class="text-[1.25rem]">Your reference number</p>
-        <p class="text-[2rem] font-bold">${window.__refNumber || 'SE-' + Math.random().toString(36).substring(2,8).toUpperCase()}</p>
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Application submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Reference: <strong>${window.__refNumber || 'SE-' + Math.random().toString(36).substring(2,8).toUpperCase()}</strong></p>
       </div>
-      <h2 class="font-bold text-[1.5rem]">What happens next</h2>
-      <p class="text-[1.25rem]">We got your application. NIS will review it and may contact you for more information.</p>
-      <p class="text-[1.25rem]">Once your registration is confirmed, you will receive details about your contribution schedule and how to pay.</p>
-      <h2 class="font-bold text-[1.5rem]">Contact NIS</h2>
-      <p class="text-[1.25rem]">Phone: (246) 431-7400 or (246) 467-4647</p>
-      <p class="text-[1.25rem]">Email: customer.service@bginis.gov.bb</p>
-      <p class="text-[1.25rem]">Address: Frank Walcott Building, Culloden Road, St. Michael, Barbados</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">We got your application. NIS will review it and may contact you for more information.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Once your registration is confirmed, you will receive details about your contribution schedule and how to pay.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact NIS</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Phone: (246) 431-7400 or (246) 467-4647</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Email: customer.service@bginis.gov.bb</p>
+      <p class="govbb-text-body">Address: Frank Walcott Building, Culloden Road, St. Michael, Barbados</p>
     </div>`
 };
 
@@ -265,7 +544,6 @@ GovBB.init({
     }
   }
 });
-
 </script>
 </body>
 </html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Co-Design Workshop – Team Presentation</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      grid-template-rows: none;
+    }
+
+    .slide-deck {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 4rem;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    .slide-inner {
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    [contenteditable] {
+      outline: none;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    [contenteditable]:hover {
+      background: var(--color-yellow-10);
+    }
+    [contenteditable]:focus {
+      background: var(--color-yellow-10);
+      box-shadow: 0 0 0 3px var(--color-teal-100);
+    }
+
+    .placeholder-text {
+      color: var(--color-mid-grey-00);
+      font-style: italic;
+    }
+
+    .phase-tag {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+    }
+
+    .prompt-card {
+      background: var(--color-white-00);
+      border: 2px dashed var(--color-grey-00);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .prompt-card:focus-within {
+      border-color: var(--color-teal-100);
+      border-style: solid;
+    }
+
+    .prompt-label {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--color-teal-00);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+
+    .prompt-body {
+      font-size: var(--font-size-body);
+      line-height: 1.6;
+      min-height: 3rem;
+    }
+
+    .nav-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--color-grey-00);
+      background: var(--color-white-00);
+      color: var(--color-black-00);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 1.25rem;
+    }
+    .nav-btn:hover {
+      background: var(--color-teal-10);
+      border-color: var(--color-teal-00);
+    }
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--color-grey-00);
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--color-teal-00);
+      transition: width 0.4s ease;
+    }
+
+    .slide-title {
+      font-size: 3rem;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+    }
+
+    .slide-subtitle {
+      color: var(--color-mid-grey-00);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .slide-hero-title {
+      font-size: 4rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .slide-hero-sub {
+      font-size: 1.5rem;
+      color: var(--color-mid-grey-00);
+      max-width: 42rem;
+    }
+
+    .team-pill {
+      background: var(--color-blue-10);
+      border-radius: 99px;
+      padding: 0.25rem 1rem;
+      font-size: 1rem;
+    }
+
+    .slide-meta {
+      font-size: 1rem;
+      color: var(--color-mid-grey-00);
+      margin-top: 1rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      width: 100%;
+      max-width: 60rem;
+    }
+
+    .prompt-cards-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    @media print {
+      body { overflow: visible; }
+      .slide-deck { overflow: visible; position: static; }
+      .slide {
+        display: flex !important;
+        position: static;
+        page-break-after: always;
+        min-height: 100vh;
+        padding: 2rem;
+      }
+      .nav-bar, .progress-bar { display: none !important; }
+      [contenteditable]:hover, [contenteditable]:focus {
+        background: transparent;
+        box-shadow: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .slide { padding: 1.5rem; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner" style="display:flex;align-items:center;justify-content:space-between;">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+    <span style="font-size:0.875rem;font-weight:600;color:var(--color-black-00);">Co-Design Workshop</span>
+  </div>
+</header>
+
+<!-- Progress bar -->
+<div class="progress-bar">
+  <div class="progress-fill" id="progress" style="width: 11.1%"></div>
+</div>
+
+<!-- Slide deck -->
+<div class="slide-deck" id="deck">
+
+  <!-- SLIDE 1: Title -->
+  <div class="slide active" data-slide="0">
+    <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:1.5rem;">
+      <div class="phase-tag" style="background:var(--color-yellow-100);color:var(--color-black-00);">Co-Design Workshop</div>
+      <h1 class="slide-hero-title" contenteditable="true">
+        <span class="placeholder-text">Your Team Name</span>
+      </h1>
+      <p class="slide-hero-sub" contenteditable="true">
+        <span class="placeholder-text">Click to add the service area or problem space you worked on</span>
+      </p>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:0.75rem;margin-top:1rem;">
+        <div class="team-pill" contenteditable="true">
+          <span class="placeholder-text">Team Member 1</span>
+        </div>
+        <div class="team-pill" contenteditable="true">
+          <span class="placeholder-text">Team Member 2</span>
+        </div>
+        <div class="team-pill" contenteditable="true">
+          <span class="placeholder-text">Team Member 3</span>
+        </div>
+        <div class="team-pill" contenteditable="true">
+          <span class="placeholder-text">Team Member 4</span>
+        </div>
+      </div>
+      <p class="slide-meta">GovTech Barbados &middot; May 2026</p>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: The Problem -->
+  <div class="slide" data-slide="1">
+    <div class="slide-inner">
+      <div class="phase-tag" style="background:var(--color-red-10);color:var(--color-error);margin-bottom:1rem;">Phase 1</div>
+      <h1 class="slide-title">The Problem</h1>
+      <p class="slide-subtitle">What problem were you trying to solve?</p>
+      <div class="prompt-cards-stack">
+        <div class="prompt-card">
+          <p class="prompt-label">Problem statement</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">Describe the problem in one or two sentences. Who experiences it? What happens today?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">Who does it affect?</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">Who are the people impacted? Citizens, staff, both? How many people are affected?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">Why does it matter?</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What is the impact? Wasted time, confusion, cost, poor outcomes?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Problem Framing -->
+  <div class="slide" data-slide="2">
+    <div class="slide-inner">
+      <div class="phase-tag" style="background:var(--color-blue-10);color:var(--color-blue-100);margin-bottom:1rem;">Phase 2</div>
+      <h1 class="slide-title">Problem Framing</h1>
+      <p class="slide-subtitle">How did you define and scope the problem?</p>
+      <div class="prompt-cards-stack">
+        <div class="prompt-card">
+          <p class="prompt-label">How we framed the problem</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">How did you narrow down the problem? What "How Might We" question did you use?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">Assumptions we challenged</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What did you assume at the start? What turned out to be wrong or more complex than expected?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">Scope</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What did you decide to focus on? What did you leave out of scope and why?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Journey / Service Mapping -->
+  <div class="slide" data-slide="3">
+    <div class="slide-inner">
+      <div class="phase-tag" style="background:var(--color-blue-10);color:var(--color-blue-100);margin-bottom:1rem;">Phase 3</div>
+      <h1 class="slide-title">Journey / Service Mapping</h1>
+      <p class="slide-subtitle">What does the current experience look like?</p>
+      <div class="prompt-cards-stack">
+        <div class="prompt-card">
+          <p class="prompt-label">The current journey</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">Walk us through the steps someone goes through today. What does the current process look like from start to finish?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">Pain points we discovered</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">Where are the biggest frustrations? What takes too long, is confusing, or fails entirely?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">Key insight</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What was the most surprising or important thing you learned from mapping the journey?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Ideation -->
+  <div class="slide" data-slide="4">
+    <div class="slide-inner">
+      <div class="phase-tag" style="background:var(--color-green-10);color:var(--color-green-00);margin-bottom:1rem;">Phase 4</div>
+      <h1 class="slide-title">Ideation</h1>
+      <p class="slide-subtitle">What ideas did you generate and how did you choose?</p>
+      <div class="prompt-cards-stack">
+        <div class="prompt-card">
+          <p class="prompt-label">Ideas we explored</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What ideas came up during brainstorming? List the main ones, even the wild ideas.</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">How we narrowed down</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">How did you decide which idea to take forward? What criteria did you use? (Feasibility, impact, user need?)</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">The idea we chose</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">Describe the idea you chose to prototype in a few sentences. Why this one?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: Rapid Prototyping -->
+  <div class="slide" data-slide="5">
+    <div class="slide-inner">
+      <div class="phase-tag" style="background:var(--color-teal-10);color:var(--color-teal-00);margin-bottom:1rem;">Phase 5</div>
+      <h1 class="slide-title">Rapid Prototyping</h1>
+      <p class="slide-subtitle">What did you build and what decisions did you make?</p>
+      <div class="prompt-cards-stack">
+        <div class="prompt-card">
+          <p class="prompt-label">What we built</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">Describe your prototype. What form did it take? (Paper, digital, screens, role play?) What does it do?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">Key design decisions</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What were the most important choices you made? Why did you design it this way?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">What was hard</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What was the trickiest part of building the prototype? What trade-offs did you make?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: User Testing & Iteration -->
+  <div class="slide" data-slide="6">
+    <div class="slide-inner">
+      <div class="phase-tag" style="background:var(--color-yellow-10);color:var(--color-yellow-00);margin-bottom:1rem;">Phase 6</div>
+      <h1 class="slide-title">User Testing &amp; Iteration</h1>
+      <p class="slide-subtitle">What did you test, learn, and change?</p>
+      <div class="prompt-cards-stack">
+        <div class="prompt-card">
+          <p class="prompt-label">How we tested</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">Who did you test with? How did you run the test? What did you ask them to do?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">What we learned</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What worked well? What confused people? What surprised you?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">How we iterated</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What changes did you make based on testing? How is the final version different from the first?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: The Solution -->
+  <div class="slide" data-slide="7">
+    <div class="slide-inner">
+      <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:1.5rem;">
+        <div class="phase-tag" style="background:var(--color-teal-00);color:var(--color-white-00);margin-bottom:0.5rem;">Our Solution</div>
+        <h1 class="slide-hero-title" contenteditable="true">
+          <span class="placeholder-text">Name of your solution</span>
+        </h1>
+        <p class="slide-hero-sub" contenteditable="true">
+          <span class="placeholder-text">One sentence that explains what your solution does and for whom</span>
+        </p>
+        <div class="cards-grid" style="text-align:left;margin-top:1.5rem;">
+          <div class="prompt-card">
+            <p class="prompt-label">What it does</p>
+            <div contenteditable="true" style="font-size:1.1rem;line-height:1.6;min-height:4rem;">
+              <span class="placeholder-text">How does it work? What does the user experience?</span>
+            </div>
+          </div>
+          <div class="prompt-card">
+            <p class="prompt-label">How it helps</p>
+            <div contenteditable="true" style="font-size:1.1rem;line-height:1.6;min-height:4rem;">
+              <span class="placeholder-text">How does it solve the problem? What improves for the user?</span>
+            </div>
+          </div>
+          <div class="prompt-card">
+            <p class="prompt-label">What makes it different</p>
+            <div contenteditable="true" style="font-size:1.1rem;line-height:1.6;min-height:4rem;">
+              <span class="placeholder-text">What is new or different about this approach compared to today?</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9: Learnings & Next Steps -->
+  <div class="slide" data-slide="8">
+    <div class="slide-inner">
+      <div class="phase-tag" style="background:var(--color-green-10);color:var(--color-green-00);margin-bottom:1rem;">Reflections</div>
+      <h1 class="slide-title">What We Learned &amp; Next Steps</h1>
+      <p class="slide-subtitle">Key takeaways and what would come next</p>
+      <div class="prompt-cards-stack">
+        <div class="prompt-card">
+          <p class="prompt-label">Biggest takeaway</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What is the single most important thing your team learned through this process?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">What surprised us</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">What did you not expect? What changed your thinking?</span>
+          </div>
+        </div>
+        <div class="prompt-card">
+          <p class="prompt-label">Next steps</p>
+          <div contenteditable="true" class="prompt-body">
+            <span class="placeholder-text">If this project continued, what would you do next? More research, build a real version, test with more people?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation bar -->
+<div class="nav-bar" style="background:var(--color-white-00);border-top:1px solid var(--color-grey-00);padding:0.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;">
+  <button class="nav-btn" id="prevBtn" onclick="prevSlide()" disabled aria-label="Previous slide">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <div style="display:flex;align-items:center;gap:0.75rem;">
+    <span style="font-size:0.875rem;color:var(--color-mid-grey-00);" id="slideCounter">1 of 9</span>
+    <div style="display:flex;gap:0.375rem;" id="dots"></div>
+  </div>
+  <button class="nav-btn" id="nextBtn" onclick="nextSlide()" aria-label="Next slide">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<script>
+const TOTAL = 9;
+let current = 0;
+
+const slides = document.querySelectorAll('.slide');
+const progress = document.getElementById('progress');
+const counter = document.getElementById('slideCounter');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const dotsContainer = document.getElementById('dots');
+
+for (let i = 0; i < TOTAL; i++) {
+  const dot = document.createElement('button');
+  dot.style.cssText = 'width:10px;height:10px;border-radius:50%;border:none;cursor:pointer;transition:all 0.15s;background:' + (i === 0 ? 'var(--color-teal-00)' : 'var(--color-grey-00)') + ';transform:' + (i === 0 ? 'scale(1.25)' : 'scale(1)');
+  dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+  dot.onclick = () => goToSlide(i);
+  dotsContainer.appendChild(dot);
+}
+
+function goToSlide(n) {
+  if (n === current || n < 0 || n >= TOTAL) return;
+  slides.forEach((s, i) => {
+    s.classList.remove('active');
+    if (i === n) {
+      s.classList.add('active');
+    }
+  });
+  current = n;
+  updateUI();
+}
+
+function nextSlide() { goToSlide(current + 1); }
+function prevSlide() { goToSlide(current - 1); }
+
+function updateUI() {
+  progress.style.width = ((current + 1) / TOTAL * 100) + '%';
+  counter.textContent = (current + 1) + ' of ' + TOTAL;
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === TOTAL - 1;
+  const dots = dotsContainer.children;
+  for (let i = 0; i < dots.length; i++) {
+    dots[i].style.background = i === current ? 'var(--color-teal-00)' : 'var(--color-grey-00)';
+    dots[i].style.transform = i === current ? 'scale(1.25)' : 'scale(1)';
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.isContentEditable) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+});
+
+document.querySelectorAll('[contenteditable]').forEach(el => {
+  el.addEventListener('focus', function() {
+    const ph = this.querySelector('.placeholder-text');
+    if (ph) { ph.remove(); this.textContent = ''; }
+  });
+  el.addEventListener('blur', function() {
+    if (!this.textContent.trim()) {
+      this.innerHTML = '<span class="placeholder-text">' + (this.dataset.placeholder || 'Click to edit') + '</span>';
+    }
+  });
+  const ph = el.querySelector('.placeholder-text');
+  if (ph) el.dataset.placeholder = ph.textContent;
+});
+</script>
+</body>
+</html>

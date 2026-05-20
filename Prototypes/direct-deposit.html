@@ -4,59 +4,88 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Direct Deposit Form – National Insurance Scheme</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="../assets/govbb-tailwind-config.js"></script>
-  <link rel="stylesheet" href="../assets/govbb-base.css">
+  <link rel="stylesheet" href="../dist/styles.css">
 </head>
-<body>
+<body class="govbb-page">
 
-<!-- Top bar -->
-<div class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container flex items-center gap-2 py-2 text-[0.875rem]">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-    Official website of the Government of Barbados
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
   </div>
 </div>
 
-<!-- Header -->
-<header class="bg-bb-yellow-100">
-  <div class="container py-s">
-    <div class="text-bb-black-00" style="width: 276px; height: 27px;">
-      <svg width="100%" viewBox="0 0 276 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img"><g><path d="M39.079 21.527C37.5026 21.527 36.103 21.1903 34.8802 20.5168C33.6721 19.8286 32.7219 18.8916 32.0294 17.7057C31.337 16.5051 30.9908 15.1288 30.9908 13.5769C30.9908 12.0249 31.337 10.6559 32.0294 9.47001C32.7219 8.26943 33.6721 7.3324 34.8802 6.65891C36.103 5.97077 37.5026 5.6267 39.079 5.6267C40.0219 5.6267 40.8911 5.7658 41.6867 6.04398C42.4823 6.32216 43.1821 6.71015 43.7861 7.20795C44.4049 7.69111 44.9205 8.24747 45.3331 8.87704L42.858 10.4144C42.6075 10.0191 42.276 9.66767 41.8635 9.3602C41.4657 9.05274 41.0237 8.81116 40.5376 8.63547C40.0514 8.45977 39.5652 8.37192 39.079 8.37192C38.1067 8.37192 37.2448 8.59886 36.4934 9.05274C35.7421 9.49197 35.1527 10.0996 34.7255 10.8756C34.2982 11.6515 34.0846 12.552 34.0846 13.5769C34.0846 14.5871 34.2909 15.4875 34.7034 16.2782C35.1307 17.0688 35.7273 17.691 36.4934 18.1449C37.2595 18.5841 38.1435 18.8038 39.1453 18.8038C39.8967 18.8038 40.567 18.6647 41.1563 18.3865C41.7456 18.0937 42.2171 17.691 42.5707 17.1786C42.9243 16.6661 43.1231 16.0659 43.1673 15.3777H39.5873V13.0278H46.0844V14.8946C46.055 16.3001 45.7382 17.5007 45.1342 18.4963C44.5301 19.4773 43.7051 20.2313 42.6591 20.7584C41.613 21.2708 40.4197 21.527 39.079 21.527Z"></path><path d="M52.8353 21.527C51.7156 21.527 50.7138 21.2854 49.8298 20.8023C48.9606 20.3045 48.2755 19.6237 47.7746 18.7598C47.2884 17.896 47.0453 16.9004 47.0453 15.773C47.0453 14.6457 47.2884 13.6501 47.7746 12.7862C48.2608 11.9224 48.9385 11.2489 49.8077 10.7658C50.677 10.268 51.6714 10.0191 52.7911 10.0191C53.9255 10.0191 54.9273 10.268 55.7966 10.7658C56.6658 11.2489 57.3435 11.9224 57.8297 12.7862C58.3159 13.6501 58.559 14.6457 58.559 15.773C58.559 16.9004 58.3159 17.896 57.8297 18.7598C57.3435 19.6237 56.6658 20.3045 55.7966 20.8023C54.9421 21.2854 53.955 21.527 52.8353 21.527ZM52.8353 18.8477C53.3804 18.8477 53.8592 18.7159 54.2717 18.4524C54.6843 18.1888 55.001 17.8301 55.222 17.3763C55.4577 16.9077 55.5756 16.3733 55.5756 15.773C55.5756 15.1728 55.4577 14.6457 55.222 14.1918C54.9863 13.7233 54.6548 13.3572 54.2275 13.0937C53.815 12.8302 53.3362 12.6984 52.7911 12.6984C52.2607 12.6984 51.7819 12.8302 51.3547 13.0937C50.9421 13.3572 50.618 13.7233 50.3823 14.1918C50.1466 14.6457 50.0287 15.1728 50.0287 15.773C50.0287 16.3733 50.1466 16.9077 50.3823 17.3763C50.618 17.8301 50.9495 18.1888 51.3768 18.4524C51.804 18.7159 52.2902 18.8477 52.8353 18.8477Z"></path><path d="M62.8109 21.2635L58.2806 10.2826H61.2861L64.2694 17.9472L67.2528 10.2826H70.2583L65.728 21.2635H62.8109Z"></path><path d="M75.7678 21.527C74.6776 21.527 73.7126 21.2854 72.8729 20.8023C72.0331 20.3045 71.3701 19.6237 70.884 18.7598C70.4125 17.896 70.1768 16.9004 70.1768 15.773C70.1768 14.6457 70.4199 13.6501 70.906 12.7862C71.407 11.9224 72.0847 11.2489 72.9392 10.7658C73.8084 10.268 74.8029 10.0191 75.9225 10.0191C76.8949 10.0191 77.7862 10.2753 78.5965 10.7877C79.4216 11.2855 80.0772 12.0249 80.5633 13.0059C81.0643 13.9722 81.3147 15.1508 81.3147 16.5417H73.2265C73.3001 17.2738 73.6169 17.8594 74.1767 18.2986C74.7366 18.7232 75.3701 18.9355 76.0772 18.9355C76.6813 18.9355 77.1748 18.8111 77.5579 18.5622C77.9409 18.2986 78.2356 17.9619 78.4418 17.5519L81.0495 18.5622C80.7401 19.1771 80.335 19.7115 79.8341 20.1654C79.3479 20.6046 78.766 20.9414 78.0883 21.1756C77.4106 21.4099 76.6371 21.527 75.7678 21.527ZM73.3811 14.3894H78.1545C78.1103 13.9356 77.963 13.5695 77.7126 13.2914C77.4621 13.0132 77.1675 12.8082 76.8286 12.6764C76.4898 12.5447 76.1583 12.4788 75.8341 12.4788C75.5247 12.4788 75.1859 12.5447 74.8176 12.6764C74.464 12.7936 74.1472 12.9912 73.8673 13.2694C73.6021 13.5476 73.4401 13.9209 73.3811 14.3894Z"></path><path d="M186.422 21.2635V5.89025H191.66C192.72 5.89025 193.649 6.0513 194.444 6.37341C195.24 6.69551 195.859 7.18599 196.3 7.84485C196.742 8.48906 196.963 9.29432 196.963 10.2606C196.963 10.8609 196.809 11.4173 196.499 11.9297C196.205 12.4275 195.785 12.8594 195.24 13.2255C195.962 13.5915 196.514 14.082 196.897 14.6969C197.295 15.2972 197.494 16.8711 197.494 16.8711C197.494 16.8711 197.28 18.6061 196.853 19.265C196.426 19.9238 195.829 20.4216 195.063 20.7584C194.297 21.0951 193.398 21.2635 192.367 21.2635H186.422ZM189.383 18.6061H192.08C192.801 18.6061 193.369 18.4304 193.781 18.079C194.194 17.713 194.4 17.2298 194.4 16.6296C194.4 16 194.172 15.5095 193.715 15.1581C193.258 14.7921 192.632 14.6091 191.836 14.6091H189.383V18.6061ZM189.383 12.1494H191.726C192.389 12.1494 192.912 11.981 193.295 11.6442C193.678 11.3075 193.87 10.8316 193.87 10.2167C193.87 9.60179 193.656 9.12595 193.229 8.7892C192.801 8.45245 192.22 8.28408 191.483 8.28408H189.383V12.1494Z"></path><path d="M12.5786 0C11.6253 2.46943 10.6536 5.03986 8.57466 7.00774C9.21998 6.80573 10.3493 6.62461 11.0753 6.64203V17.0283L7.988 17.4636C7.878 17.4532 7.84133 17.2895 7.84133 17.0666C7.54434 13.8413 6.74135 11.1316 5.81736 8.32779C5.75136 7.94466 4.58171 6.48181 5.4837 6.73955C5.5937 6.75348 6.80002 7.2202 6.60935 6.99729C4.96671 5.38119 2.56508 4.21788 0.233112 3.87306C0.0277812 3.8243 -0.0932171 3.92183 0.0901136 4.14822C3.18474 8.6726 5.77336 14.012 5.75136 20.3475C6.95401 20.3475 9.86897 19.6718 11.0753 19.6718V27H12.5969L12.9453 6.53406L12.5786 0Z"></path><path d="M12.5786 0C13.5319 2.46943 14.5036 5.03986 16.5825 7.00774C15.9372 6.80573 14.8079 6.62461 14.0819 6.64203V17.0283L17.1692 17.4636C17.2792 17.4532 17.3159 17.2895 17.3159 17.0666C17.6129 13.8413 18.4158 11.1316 19.3398 8.32779C19.4058 7.94466 20.5755 6.48181 19.6735 6.73955C19.5635 6.75348 18.3572 7.2202 18.5478 6.99729C20.1905 5.38119 22.5921 4.21788 24.9241 3.87306C25.1294 3.8243 25.2504 3.92183 25.0671 4.14822C21.9725 8.6726 19.3838 14.012 19.4058 20.3475C18.2032 20.3475 15.2882 19.6718 14.0819 19.6718V27H12.5603L12.2119 6.53406L12.5786 0Z"></path></g></svg>
-    </div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
   </div>
 </header>
 
-<!-- Alpha banner -->
-<div class="bg-bb-blue-10">
-  <div class="container py-xs text-[1rem]">
-    This page is in <a href="#" class="inline-flex outline-none underline-offset-2 underline hover:no-underline active:bg-bb-yellow-100 active:no-underline focus-visible:bg-bb-yellow-100 focus-visible:no-underline active:text-bb-black-00 focus-visible:text-bb-black-00 text-bb-teal-00 hover:text-bb-black-00 hover:bg-bb-teal-10">Alpha</a>. Your feedback helps us improve.
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
   </div>
-</div>
-
-<!-- Main -->
-<main>
-  <div class="container py-l max-w-3xl" id="app"></div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
 </main>
 
-<!-- Footer -->
-<footer class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container py-l text-[1rem]">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <p>&copy; 2024 Government of Barbados. All rights reserved.</p>
-      <div class="flex gap-4">
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Privacy</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Terms</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Accessibility</a>
-      </div>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
     </div>
   </div>
 </footer>
 
 <script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  document.getElementById('app').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) group.appendChild(msg);
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
 <script>
 const FORM_NAME = 'Direct Deposit Form';
 
@@ -80,197 +109,485 @@ function getFlow() {
 
 const PAGES = {
   'start': () => `
-    <div class="space-y-8">
-      <h1 class="font-bold text-[3.5rem] leading-[1.15]">Set up direct deposit for your NIS benefit</h1>
-      <p class="text-[1.25rem]">Use this form to have your NIS benefit paid directly into your bank account. This is the fastest and safest way to receive your payments.</p>
-      <div class="bg-bb-yellow-10 border-l-4 border-bb-yellow-00 p-4">
-        <p class="font-bold">Before you start</p>
-        <p>You must already be receiving an NIS benefit to use this form.</p>
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Set up direct deposit for your NIS benefit</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Use this form to have your NIS benefit paid directly into your bank account. This is the fastest and safest way to receive your payments.</p>
+      <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Before you start</p>
+        <p class="govbb-text-body">You must already be receiving an NIS benefit to use this form.</p>
       </div>
-      <div>
-        <h2 class="font-bold text-[1.5rem] mb-4">What you will need</h2>
-        <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
-          <li>Your NIS number</li>
-          <li>Your National Registration Number (NRN)</li>
-          <li>Your bank account details (account number, branch name)</li>
-          <li>A recent bank statement header showing your name and account number</li>
-          <li>Details of any alternate payee (if you want someone else to receive payments on your behalf)</li>
-        </ul>
-      </div>
-      ${GovBB.startBtn()}
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you will need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-l);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your NIS number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National Registration Number (NRN)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your bank account details (account number, branch name)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A recent bank statement header showing your name and account number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Details of any alternate payee (if you want someone else to receive payments on your behalf)</li>
+      </ul>
+      <div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start</button></div>
     </div>`,
 
   'claimant-details': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your personal details</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('first-name', 'First name')}
-        ${GovBB.textField('middle-name', 'Middle name(s)', { hint: 'Optional' })}
-        ${GovBB.textField('last-name', 'Last name')}
-        ${GovBB.textField('nis-number', 'NIS number', { hint: 'Your 6-digit National Insurance number', inputmode: 'numeric', maxlength: '6' })}
-        ${GovBB.textField('nrn', 'National Registration Number (NRN)', { hint: 'For example, 870315-1234' })}
-        ${GovBB.textField('tamis-number', 'TAMIS number', { hint: 'Optional — only if you have one' })}
-        <h2 class="font-bold text-[1.5rem]">Your address</h2>
-        ${GovBB.textField('street-address', 'Street address')}
-        ${GovBB.textField('district', 'District', { hint: 'Optional' })}
-        ${GovBB.selectField('parish', 'Parish', GovBB.PARISHES)}
-        ${GovBB.textField('postal-code', 'Postal code', { hint: 'For example, BB11000' })}
-        <h2 class="font-bold text-[1.5rem]">Your contact details</h2>
-        ${GovBB.emailField('contact-email', 'Email address')}
-        ${GovBB.telField('telephone', 'Telephone number', { hint: 'Include area code. For example, 246-555-1234', placeholder: '246-555-1234' })}
-        ${GovBB.telField('cellular', 'Mobile number', { hint: 'Include area code. For example, 246-555-1234', placeholder: '246-555-1234' })}
-        ${GovBB.continueBtn()}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your personal details</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="first-name">First name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="first-name" name="first-name" data-field="first-name" value="${GovBB.D['first-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="middle-name">Middle name(s)</label>
+        <p class="govbb-hint">Optional</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="middle-name" name="middle-name" data-field="middle-name" value="${GovBB.D['middle-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="last-name">Last name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="last-name" name="last-name" data-field="last-name" value="${GovBB.D['last-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nis-number">NIS number</label>
+        <p class="govbb-hint">Your 6-digit National Insurance number</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="nis-number" name="nis-number" data-field="nis-number" inputmode="numeric" maxlength="6" value="${GovBB.D['nis-number']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nrn">National Registration Number (NRN)</label>
+        <p class="govbb-hint">For example, 870315-1234</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="nrn" name="nrn" data-field="nrn" value="${GovBB.D['nrn']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="tamis-number">TAMIS number</label>
+        <p class="govbb-hint">Optional — only if you have one</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="tamis-number" name="tamis-number" data-field="tamis-number" value="${GovBB.D['tamis-number']||''}" />
+        </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your address</h2>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="street-address">Street address</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="street-address" name="street-address" data-field="street-address" value="${GovBB.D['street-address']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="district">District</label>
+        <p class="govbb-hint">Optional</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="district" name="district" data-field="district" value="${GovBB.D['district']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parish">Parish</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="parish" name="parish" data-field="parish">
+            <option value="">Select one</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['parish']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="postal-code">Postal code</label>
+        <p class="govbb-hint">For example, BB11000</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="postal-code" name="postal-code" data-field="postal-code" value="${GovBB.D['postal-code']||''}" />
+        </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your contact details</h2>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="contact-email">Email address</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="email" autocomplete="email" id="contact-email" name="contact-email" data-field="contact-email" value="${GovBB.D['contact-email']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="telephone">Telephone number</label>
+        <p class="govbb-hint">Include area code. For example, 246-555-1234</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="telephone" name="telephone" data-field="telephone" placeholder="246-555-1234" value="${GovBB.D['telephone']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="cellular">Mobile number</label>
+        <p class="govbb-hint">Include area code. For example, 246-555-1234</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="cellular" name="cellular" data-field="cellular" placeholder="246-555-1234" value="${GovBB.D['cellular']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   'benefit-type': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your benefit details</h1>
-      <div class="space-y-8">
-        ${GovBB.selectField('benefit-type', 'What type of NIS benefit do you receive?', BENEFIT_OPTIONS)}
-        ${GovBB.D['benefit-type'] === 'Other' ? GovBB.textField('benefit-type-other', 'Please describe your benefit') : ''}
-        ${GovBB.radioGroup('alt-payee', 'Do you want someone else to receive payments on your behalf?', ['Yes', 'No'], { hint: 'This is called an alternate payee.' })}
-        ${GovBB.continueBtn()}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your benefit details</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="benefit-type">What type of NIS benefit do you receive?</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="benefit-type" name="benefit-type" data-field="benefit-type" data-trigger-render="1">
+            <option value="">Select one</option>
+            ${BENEFIT_OPTIONS.map(o=>`<option value="${o}"${GovBB.D['benefit-type']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      ${GovBB.D['benefit-type'] === 'Other' ? `
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="benefit-type-other">Please describe your benefit</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="benefit-type-other" name="benefit-type-other" data-field="benefit-type-other" value="${GovBB.D['benefit-type-other']||''}" />
+        </div>
+      </div>` : ''}
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Do you want someone else to receive payments on your behalf?</legend>
+        <p class="govbb-hint">This is called an alternate payee.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="alt-payee-yes" name="alt-payee" data-field="alt-payee" value="Yes"${GovBB.D['alt-payee']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="alt-payee-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="alt-payee-no" name="alt-payee" data-field="alt-payee" value="No"${GovBB.D['alt-payee']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="alt-payee-no">No</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   'alternate-payee': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Alternate payee details</h1>
-      <p class="text-[1.25rem] text-bb-mid-grey-00 mb-8">An alternate payee is someone who can receive your NIS benefit on your behalf.</p>
-      <div class="space-y-8">
-        <h2 class="font-bold text-[1.5rem]">Alternate payee's name</h2>
-        ${GovBB.textField('ap-first-name', 'First name')}
-        ${GovBB.textField('ap-middle-name', 'Middle name(s)', { hint: 'Optional' })}
-        ${GovBB.textField('ap-last-name', 'Last name')}
-        <h2 class="font-bold text-[1.5rem]">Alternate payee's personal details</h2>
-        ${GovBB.textField('ap-nis-number', 'NIS number', { hint: 'Their 6-digit National Insurance number', inputmode: 'numeric', maxlength: '6' })}
-        ${GovBB.textField('ap-nrn', 'National Registration Number (NRN)', { hint: 'For example, 870315-1234' })}
-        ${GovBB.textField('ap-tamis-number', 'TAMIS number', { hint: 'Optional' })}
-        <h2 class="font-bold text-[1.5rem]">Alternate payee's address</h2>
-        ${GovBB.textField('ap-street-address', 'Street address')}
-        ${GovBB.textField('ap-district', 'District', { hint: 'Optional' })}
-        ${GovBB.selectField('ap-parish', 'Parish', GovBB.PARISHES)}
-        ${GovBB.textField('ap-postal-code', 'Postal code', { hint: 'For example, BB11000' })}
-        <h2 class="font-bold text-[1.5rem]">Alternate payee's contact details</h2>
-        ${GovBB.telField('ap-telephone', 'Telephone number', { hint: 'Include area code', placeholder: '246-555-1234' })}
-        ${GovBB.telField('ap-cellular', 'Mobile number', { hint: 'Include area code', placeholder: '246-555-1234' })}
-        ${GovBB.radioGroup('ap-empowered', 'Are you legally empowered to act on behalf of this person?', ['Yes', 'No'], { hint: 'For example, you have a power of attorney.' })}
-        ${GovBB.D['ap-empowered'] === 'Yes' ? `
-          <div>
-            <p class="block text-[1.25rem] leading-normal font-bold text-bb-black-00 mb-2">Upload proof of empowerment</p>
-            <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00 mb-2">Upload a JPG, PNG or PDF file under 5MB.</p>
-            <input type="file" id="ap-proof-file" accept=".jpg,.jpeg,.png,.pdf" class="block w-full text-[1.25rem] file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-2 file:border-bb-black-00 file:text-sm file:font-semibold file:bg-bb-white-00 file:text-bb-black-00 hover:file:bg-bb-blue-10 cursor-pointer">
-          </div>` : ''}
-        ${GovBB.continueBtn()}
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Alternate payee details</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">An alternate payee is someone who can receive your NIS benefit on your behalf.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Alternate payee's name</h2>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-first-name">First name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="ap-first-name" name="ap-first-name" data-field="ap-first-name" value="${GovBB.D['ap-first-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-middle-name">Middle name(s)</label>
+        <p class="govbb-hint">Optional</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="ap-middle-name" name="ap-middle-name" data-field="ap-middle-name" value="${GovBB.D['ap-middle-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-last-name">Last name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="ap-last-name" name="ap-last-name" data-field="ap-last-name" value="${GovBB.D['ap-last-name']||''}" />
+        </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Alternate payee's personal details</h2>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-nis-number">NIS number</label>
+        <p class="govbb-hint">Their 6-digit National Insurance number</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="ap-nis-number" name="ap-nis-number" data-field="ap-nis-number" inputmode="numeric" maxlength="6" value="${GovBB.D['ap-nis-number']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-nrn">National Registration Number (NRN)</label>
+        <p class="govbb-hint">For example, 870315-1234</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="ap-nrn" name="ap-nrn" data-field="ap-nrn" value="${GovBB.D['ap-nrn']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-tamis-number">TAMIS number</label>
+        <p class="govbb-hint">Optional</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="ap-tamis-number" name="ap-tamis-number" data-field="ap-tamis-number" value="${GovBB.D['ap-tamis-number']||''}" />
+        </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Alternate payee's address</h2>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-street-address">Street address</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="ap-street-address" name="ap-street-address" data-field="ap-street-address" value="${GovBB.D['ap-street-address']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-district">District</label>
+        <p class="govbb-hint">Optional</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="ap-district" name="ap-district" data-field="ap-district" value="${GovBB.D['ap-district']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-parish">Parish</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="ap-parish" name="ap-parish" data-field="ap-parish">
+            <option value="">Select one</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['ap-parish']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-postal-code">Postal code</label>
+        <p class="govbb-hint">For example, BB11000</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="ap-postal-code" name="ap-postal-code" data-field="ap-postal-code" value="${GovBB.D['ap-postal-code']||''}" />
+        </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Alternate payee's contact details</h2>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-telephone">Telephone number</label>
+        <p class="govbb-hint">Include area code</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="ap-telephone" name="ap-telephone" data-field="ap-telephone" placeholder="246-555-1234" value="${GovBB.D['ap-telephone']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="ap-cellular">Mobile number</label>
+        <p class="govbb-hint">Include area code</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="ap-cellular" name="ap-cellular" data-field="ap-cellular" placeholder="246-555-1234" value="${GovBB.D['ap-cellular']||''}" />
+        </div>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Are you legally empowered to act on behalf of this person?</legend>
+        <p class="govbb-hint">For example, you have a power of attorney.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="ap-empowered-yes" name="ap-empowered" data-field="ap-empowered" value="Yes"${GovBB.D['ap-empowered']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="ap-empowered-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item__conditional" style="display:${GovBB.D['ap-empowered']==='Yes'?'block':'none'};padding-left:var(--spacing-m);">
+            <div>
+              <p class="govbb-label" style="margin-bottom:var(--spacing-xs);">Upload proof of empowerment</p>
+              <p class="govbb-hint">Upload a JPG, PNG or PDF file under 5MB.</p>
+              <input type="file" id="ap-proof-file" accept=".jpg,.jpeg,.png,.pdf" style="display:block;width:100%;font-size:var(--font-size-body);">
+            </div>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="ap-empowered-no" name="ap-empowered" data-field="ap-empowered" value="No"${GovBB.D['ap-empowered']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="ap-empowered-no">No</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   'financial-institution': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your bank account details</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('account-holder-name', 'Name(s) on the account', { hint: 'Enter the name(s) exactly as they appear on your bank statement.' })}
-        ${GovBB.selectField('financial-institution', 'Financial institution', INSTITUTION_OPTIONS)}
-        ${GovBB.D['financial-institution'] === 'Other' ? GovBB.textField('institution-other', 'Name of financial institution') : ''}
-        ${GovBB.textField('account-number', 'Account number', { inputmode: 'numeric' })}
-        ${GovBB.textField('branch-name', 'Branch name', { hint: 'For example, Bridgetown Branch' })}
-        ${GovBB.textField('branch-transit', 'Branch or transit number', { hint: 'Optional — you can find this on your bank statement.' })}
-        <div>
-          <p class="block text-[1.25rem] leading-normal font-bold text-bb-black-00 mb-2">Upload bank statement header</p>
-          <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00 mb-2">Upload a copy of the top section of a recent bank statement showing your name and account number. Accepted formats: JPG, PNG or PDF under 5MB.</p>
-          <input type="file" id="bank-statement-file" accept=".jpg,.jpeg,.png,.pdf" class="block w-full text-[1.25rem] file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-2 file:border-bb-black-00 file:text-sm file:font-semibold file:bg-bb-white-00 file:text-bb-black-00 hover:file:bg-bb-blue-10 cursor-pointer">
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your bank account details</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="account-holder-name">Name(s) on the account</label>
+        <p class="govbb-hint">Enter the name(s) exactly as they appear on your bank statement.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="account-holder-name" name="account-holder-name" data-field="account-holder-name" value="${GovBB.D['account-holder-name']||''}" />
         </div>
-        ${GovBB.continueBtn()}
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="financial-institution">Financial institution</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="financial-institution" name="financial-institution" data-field="financial-institution" data-trigger-render="1">
+            <option value="">Select one</option>
+            ${INSTITUTION_OPTIONS.map(o=>`<option value="${o}"${GovBB.D['financial-institution']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      ${GovBB.D['financial-institution'] === 'Other' ? `
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="institution-other">Name of financial institution</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="institution-other" name="institution-other" data-field="institution-other" value="${GovBB.D['institution-other']||''}" />
+        </div>
+      </div>` : ''}
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="account-number">Account number</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="account-number" name="account-number" data-field="account-number" inputmode="numeric" value="${GovBB.D['account-number']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="branch-name">Branch name</label>
+        <p class="govbb-hint">For example, Bridgetown Branch</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="branch-name" name="branch-name" data-field="branch-name" value="${GovBB.D['branch-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="branch-transit">Branch or transit number</label>
+        <p class="govbb-hint">Optional — you can find this on your bank statement.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="branch-transit" name="branch-transit" data-field="branch-transit" value="${GovBB.D['branch-transit']||''}" />
+        </div>
+      </div>
+
+      <div style="margin-bottom:var(--spacing-m);">
+        <p class="govbb-label" style="margin-bottom:var(--spacing-xs);">Upload bank statement header</p>
+        <p class="govbb-hint">Upload a copy of the top section of a recent bank statement showing your name and account number. Accepted formats: JPG, PNG or PDF under 5MB.</p>
+        <input type="file" id="bank-statement-file" accept=".jpg,.jpeg,.png,.pdf" style="display:block;width:100%;font-size:var(--font-size-body);">
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   'declaration': () => `
     <form novalidate>
-      ${GovBB.backLink()}
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Declaration</h1>
-      <div class="space-y-8">
-        <div class="space-y-2 mb-6">
-          <p class="text-[1.25rem]"><span class="font-bold">Applicant's name:</span> ${[GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['last-name']].filter(Boolean).join(' ') || '—'}</p>
-          <p class="text-[1.25rem]"><span class="font-bold">Date:</span> ${(function(){ var d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })()}</p>
-        </div>
-        <div class="bg-bb-blue-10 border-l-4 border-bb-blue-40 p-6">
-          <p class="text-[1.25rem]">I, <strong>${[GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['last-name']].filter(Boolean).join(' ') || 'the claimant'}</strong>, authorise the National Insurance Office to pay my NIS benefit directly into the bank account stated in this form. I understand that I must notify NIS immediately if my bank details change.</p>
-          <p class="text-[1.25rem] mt-4">I declare that the information provided is true and correct to the best of my knowledge.</p>
-        </div>
-        ${GovBB.checkboxItem('declaration-agree', 'I confirm that the information I have given is true and complete to the best of my knowledge.')}
-        <div class="mt-8 flex gap-4">
-          <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-colors duration-200 outline-none bg-bb-grey-00 text-bb-black-00 hover:bg-[#c5ccd4] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
-          <button type="button" onclick="next()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-teal-00 text-bb-white-00 hover:bg-[#1a777d] hover:shadow-[inset_0_0_0_4px_rgba(222,245,246,0.10)] active:bg-[#0a4549] active:shadow-[inset_0_0_0_3px_rgba(0,0,0,0.20)] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Submit authorisation</button>
-        </div>
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+
+      <div style="margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Applicant's name:</strong> ${[GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['last-name']].filter(Boolean).join(' ') || '—'}</p>
+        <p class="govbb-text-body"><strong>Date:</strong> ${(function(){ var d=new Date(); return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear(); })()}</p>
+      </div>
+
+      <div style="background:var(--color-blue-10);border-left:4px solid var(--color-blue-40);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">I, <strong>${[GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['last-name']].filter(Boolean).join(' ') || 'the claimant'}</strong>, authorise the National Insurance Office to pay my NIS benefit directly into the bank account stated in this form. I understand that I must notify NIS immediately if my bank details change.</p>
+        <p class="govbb-text-body">I declare that the information provided is true and correct to the best of my knowledge.</p>
+      </div>
+
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+        <input class="govbb-checkbox" type="checkbox" id="declaration-agree" name="declaration-agree" data-field="declaration-agree"${GovBB.D['declaration-agree']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="declaration-agree">I confirm that the information I have given is true and complete to the best of my knowledge.</label>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Submit authorisation</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   'check': () => {
     const hasAltPayee = GovBB.D['alt-payee'] === 'Yes';
     return `
-    ${GovBB.backLink()}
-    <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Check your answers</h1>
-    <div class="space-y-8">
-      <h2 class="font-bold text-[1.5rem]">Your details</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-        ${GovBB.summaryRow('First name', GovBB.D['first-name'], 'claimant-details')}
-        ${GovBB.summaryRow('Middle name(s)', GovBB.D['middle-name'] || 'Not provided', 'claimant-details')}
-        ${GovBB.summaryRow('Last name', GovBB.D['last-name'], 'claimant-details')}
-        ${GovBB.summaryRow('NIS number', GovBB.D['nis-number'], 'claimant-details')}
-        ${GovBB.summaryRow('NRN', GovBB.D['nrn'], 'claimant-details')}
-        ${GovBB.summaryRow('Address', [GovBB.D['street-address'], GovBB.D['parish'], GovBB.D['postal-code']].filter(Boolean).join(', '), 'claimant-details')}
-        ${GovBB.summaryRow('Email', GovBB.D['contact-email'], 'claimant-details')}
-        ${GovBB.summaryRow('Telephone', GovBB.D['telephone'], 'claimant-details')}
-      </dl>
-      <h2 class="font-bold text-[1.5rem]">Benefit details</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-        ${GovBB.summaryRow('Benefit type', GovBB.D['benefit-type'] === 'Other' ? GovBB.D['benefit-type-other'] : GovBB.D['benefit-type'], 'benefit-type')}
-        ${GovBB.summaryRow('Alternate payee', GovBB.D['alt-payee'], 'benefit-type')}
-      </dl>
-      ${hasAltPayee ? `
-      <h2 class="font-bold text-[1.5rem]">Alternate payee details</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-        ${GovBB.summaryRow('Name', [GovBB.D['ap-first-name'], GovBB.D['ap-last-name']].filter(Boolean).join(' '), 'alternate-payee')}
-        ${GovBB.summaryRow('NIS number', GovBB.D['ap-nis-number'], 'alternate-payee')}
-        ${GovBB.summaryRow('Address', [GovBB.D['ap-street-address'], GovBB.D['ap-parish']].filter(Boolean).join(', '), 'alternate-payee')}
-        ${GovBB.summaryRow('Legally empowered', GovBB.D['ap-empowered'], 'alternate-payee')}
-      </dl>` : ''}
-      <h2 class="font-bold text-[1.5rem]">Bank account details</h2>
-      <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
-        ${GovBB.summaryRow('Account holder name', GovBB.D['account-holder-name'], 'financial-institution')}
-        ${GovBB.summaryRow('Financial institution', GovBB.D['financial-institution'] === 'Other' ? GovBB.D['institution-other'] : GovBB.D['financial-institution'], 'financial-institution')}
-        ${GovBB.summaryRow('Account number', GovBB.D['account-number'], 'financial-institution')}
-        ${GovBB.summaryRow('Branch name', GovBB.D['branch-name'], 'financial-institution')}
-      </dl>
-      ${GovBB.continueBtn('Submit Authorisation')}
+    <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
+    <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+    <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your details</h2>
+    <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+      ${GovBB.summaryRow('First name', GovBB.D['first-name'], 'claimant-details')}
+      ${GovBB.summaryRow('Middle name(s)', GovBB.D['middle-name'] || 'Not provided', 'claimant-details')}
+      ${GovBB.summaryRow('Last name', GovBB.D['last-name'], 'claimant-details')}
+      ${GovBB.summaryRow('NIS number', GovBB.D['nis-number'], 'claimant-details')}
+      ${GovBB.summaryRow('NRN', GovBB.D['nrn'], 'claimant-details')}
+      ${GovBB.summaryRow('Address', [GovBB.D['street-address'], GovBB.D['parish'], GovBB.D['postal-code']].filter(Boolean).join(', '), 'claimant-details')}
+      ${GovBB.summaryRow('Email', GovBB.D['contact-email'], 'claimant-details')}
+      ${GovBB.summaryRow('Telephone', GovBB.D['telephone'], 'claimant-details')}
+    </dl>
+
+    <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Benefit details</h2>
+    <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+      ${GovBB.summaryRow('Benefit type', GovBB.D['benefit-type'] === 'Other' ? GovBB.D['benefit-type-other'] : GovBB.D['benefit-type'], 'benefit-type')}
+      ${GovBB.summaryRow('Alternate payee', GovBB.D['alt-payee'], 'benefit-type')}
+    </dl>
+
+    ${hasAltPayee ? `
+    <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Alternate payee details</h2>
+    <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+      ${GovBB.summaryRow('Name', [GovBB.D['ap-first-name'], GovBB.D['ap-last-name']].filter(Boolean).join(' '), 'alternate-payee')}
+      ${GovBB.summaryRow('NIS number', GovBB.D['ap-nis-number'], 'alternate-payee')}
+      ${GovBB.summaryRow('Address', [GovBB.D['ap-street-address'], GovBB.D['ap-parish']].filter(Boolean).join(', '), 'alternate-payee')}
+      ${GovBB.summaryRow('Legally empowered', GovBB.D['ap-empowered'], 'alternate-payee')}
+    </dl>` : ''}
+
+    <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Bank account details</h2>
+    <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+      ${GovBB.summaryRow('Account holder name', GovBB.D['account-holder-name'], 'financial-institution')}
+      ${GovBB.summaryRow('Financial institution', GovBB.D['financial-institution'] === 'Other' ? GovBB.D['institution-other'] : GovBB.D['financial-institution'], 'financial-institution')}
+      ${GovBB.summaryRow('Account number', GovBB.D['account-number'], 'financial-institution')}
+      ${GovBB.summaryRow('Branch name', GovBB.D['branch-name'], 'financial-institution')}
+    </dl>
+
+    <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+      <button type="button" class="govbb-btn" onclick="next()">Submit Authorisation</button>
+      <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
     </div>`;
   },
 
   'confirmation': () => `
-    <div class="space-y-8">
-      <div class="bg-bb-teal-00 text-bb-white-00 p-8 rounded-sm space-y-4">
-        <h1 class="font-bold text-[3.5rem] leading-[1.15]">Direct deposit set up</h1>
-        <p class="text-[1.5rem]">Your reference number</p>
-        <p class="text-[2rem] font-bold">${window.__refNumber || 'DD-' + Math.random().toString(36).substring(2,8).toUpperCase()}</p>
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Direct deposit set up</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference: <strong>${window.__refNumber || 'DD-' + Math.random().toString(36).substring(2,8).toUpperCase()}</strong></p>
       </div>
-      <h2 class="font-bold text-[1.5rem]">What happens next</h2>
-      <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
-        <li>We will process your direct deposit request within 10 working days.</li>
-        <li>Your next benefit payment will be paid into your bank account.</li>
-        <li>If you change your bank account, contact NIS straight away.</li>
-        <li>Keep your reference number safe in case you need to contact us.</li>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We will process your direct deposit request within 10 working days.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your next benefit payment will be paid into your bank account.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you change your bank account, contact NIS straight away.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number safe in case you need to contact us.</li>
       </ul>
-      <p class="text-[1.25rem]"><a href="#" onclick="GovBB.nav('start')" class="${GovBB.LINK_CLS}">Return to start</a></p>
+      <p class="govbb-text-body"><a href="#" onclick="GovBB.nav('start')" class="govbb-link">Return to start</a></p>
     </div>`
 };
 

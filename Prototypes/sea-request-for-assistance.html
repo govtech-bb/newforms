@@ -4,61 +4,84 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Request for Assistance or Transportation – Social Empowerment Agency</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300..900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="../assets/govbb-tailwind-config.js"></script>
-  <link rel="stylesheet" href="../assets/govbb-base.css">
+  <link rel="stylesheet" href="../dist/styles.css">
 </head>
-<body>
+<body class="govbb-page">
 
-<!-- Top bar -->
-<div class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container flex items-center gap-2 py-2 text-[0.875rem]">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Coat_of_arms_of_Barbados_%282%29.svg/1280px-Coat_of_arms_of_Barbados_%282%29.svg.png" alt="Barbados coat of arms" style="height:20px;width:auto;">
-    Official website of the Government of Barbados
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
   </div>
 </div>
 
-<!-- Header -->
-<header class="bg-bb-yellow-100">
-  <div class="container py-s">
-    <div class="text-bb-black-00" style="width:276px;height:27px;">
-      <svg width="100%" viewBox="0 0 276 27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" role="img"><g><path d="M39.079 21.527C37.5026 21.527 36.103 21.1903 34.8802 20.5168C33.6721 19.8286 32.7219 18.8916 32.0294 17.7057C31.337 16.5051 30.9908 15.1288 30.9908 13.5769C30.9908 12.0249 31.337 10.6559 32.0294 9.47001C32.7219 8.26943 33.6721 7.3324 34.8802 6.65891C36.103 5.97077 37.5026 5.6267 39.079 5.6267C40.0219 5.6267 40.8911 5.7658 41.6867 6.04398C42.4823 6.32216 43.1821 6.71015 43.7861 7.20795C44.4049 7.69111 44.9205 8.24747 45.3331 8.87704L42.858 10.4144C42.6075 10.0191 42.276 9.66767 41.8635 9.3602C41.4657 9.05274 41.0237 8.81116 40.5376 8.63547C40.0514 8.45977 39.5652 8.37192 39.079 8.37192C38.1067 8.37192 37.2448 8.59886 36.4934 9.05274C35.7421 9.49197 35.1527 10.0996 34.7255 10.8756C34.2982 11.6515 34.0846 12.552 34.0846 13.5769C34.0846 14.5871 34.2909 15.4875 34.7034 16.2782C35.1307 17.0688 35.7273 17.691 36.4934 18.1449C37.2595 18.5841 38.1435 18.8038 39.1453 18.8038C39.8967 18.8038 40.567 18.6647 41.1563 18.3865C41.7456 18.0937 42.2171 17.691 42.5707 17.1786C42.9243 16.6661 43.1231 16.0659 43.1673 15.3777H39.5873V13.0278H46.0844V14.8946C46.055 16.3001 45.7382 17.5007 45.1342 18.4963C44.5301 19.4773 43.7051 20.2313 42.6591 20.7584C41.613 21.2708 40.4197 21.527 39.079 21.527Z"></path><path d="M52.8353 21.527C51.7156 21.527 50.7138 21.2854 49.8298 20.8023C48.9606 20.3045 48.2755 19.6237 47.7746 18.7598C47.2884 17.896 47.0453 16.9004 47.0453 15.773C47.0453 14.6457 47.2884 13.6501 47.7746 12.7862C48.2608 11.9224 48.9385 11.2489 49.8077 10.7658C50.677 10.268 51.6714 10.0191 52.7911 10.0191C53.9255 10.0191 54.9273 10.268 55.7966 10.7658C56.6658 11.2489 57.3435 11.9224 57.8297 12.7862C58.3159 13.6501 58.559 14.6457 58.559 15.773C58.559 16.9004 58.3159 17.896 57.8297 18.7598C57.3435 19.6237 56.6658 20.3045 55.7966 20.8023C54.9421 21.2854 53.955 21.527 52.8353 21.527ZM52.8353 18.8477C53.3804 18.8477 53.8592 18.7159 54.2717 18.4524C54.6843 18.1888 55.001 17.8301 55.222 17.3763C55.4577 16.9077 55.5756 16.3733 55.5756 15.773C55.5756 15.1728 55.4577 14.6457 55.222 14.1918C54.9863 13.7233 54.6548 13.3572 54.2275 13.0937C53.815 12.8302 53.3362 12.6984 52.7911 12.6984C52.2607 12.6984 51.7819 12.8302 51.3547 13.0937C50.9421 13.3572 50.618 13.7233 50.3823 14.1918C50.1466 14.6457 50.0287 15.1728 50.0287 15.773C50.0287 16.3733 50.1466 16.9077 50.3823 17.3763C50.618 17.8301 50.9495 18.1888 51.3768 18.4524C51.804 18.7159 52.2902 18.8477 52.8353 18.8477Z"></path><path d="M62.8109 21.2635L58.2806 10.2826H61.2861L64.2694 17.9472L67.2528 10.2826H70.2583L65.728 21.2635H62.8109Z"></path><path d="M12.5786 0C11.6253 2.46943 10.6536 5.03986 8.57466 7.00774C9.21998 6.80573 10.3493 6.62461 11.0753 6.64203V17.0283L7.988 17.4636C7.878 17.4532 7.84133 17.2895 7.84133 17.0666C7.54434 13.8413 6.74135 11.1316 5.81736 8.32779C5.75136 7.94466 4.58171 6.48181 5.4837 6.73955C5.5937 6.75348 6.80002 7.2202 6.60935 6.99729C4.96671 5.38119 2.56508 4.21788 0.233112 3.87306C0.0277812 3.8243 -0.0932171 3.92183 0.0901136 4.14822C3.18474 8.6726 5.77336 14.012 5.75136 20.3475C6.95401 20.3475 9.86897 19.6718 11.0753 19.6718V27H12.5969L12.9453 6.53406L12.5786 0Z"></path><path d="M12.5786 0C13.5319 2.46943 14.5036 5.03986 16.5825 7.00774C15.9372 6.80573 14.8079 6.62461 14.0819 6.64203V17.0283L17.1692 17.4636C17.2792 17.4532 17.3159 17.2895 17.3159 17.0666C17.6129 13.8413 18.4158 11.1316 19.3398 8.32779C19.4058 7.94466 20.5755 6.48181 19.6735 6.73955C19.5635 6.75348 18.3572 7.2202 18.5478 6.99729C20.1905 5.38119 22.5921 4.21788 24.9241 3.87306C25.1294 3.8243 25.2504 3.92183 25.0671 4.14822C21.9725 8.6726 19.3838 14.012 19.4058 20.3475C18.2032 20.3475 15.2882 19.6718 14.0819 19.6718V27H12.5603L12.2119 6.53406L12.5786 0Z"></path></g></svg>
-    </div>
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
   </div>
 </header>
 
-<!-- Alpha banner -->
-<div class="bg-bb-blue-10">
-  <div class="container py-xs text-[1rem]">
-    This page is in <a href="#" class="inline-flex outline-none underline-offset-2 underline hover:no-underline active:bg-bb-yellow-100 active:no-underline focus-visible:bg-bb-yellow-100 focus-visible:no-underline active:text-bb-black-00 focus-visible:text-bb-black-00 text-bb-teal-00 hover:text-bb-black-00 hover:bg-bb-teal-10">Alpha</a>. Your feedback helps us improve.
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
   </div>
-</div>
-
-<!-- Main -->
-<main>
-  <div class="container py-l">
-    <div class="max-w-3xl" id="app"></div>
-  </div>
+  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
 </main>
 
-<!-- Footer -->
-<footer class="bg-bb-blue-100 text-bb-white-00">
-  <div class="container py-l text-[1rem]">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-      <p>&copy; 2025 Government of Barbados. All rights reserved.</p>
-      <div class="flex gap-4">
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Privacy</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Terms</a>
-        <a href="#" class="underline underline-offset-2 hover:no-underline text-bb-white-00">Accessibility</a>
-      </div>
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">&copy; 2025 Government of Barbados</p>
     </div>
   </div>
 </footer>
 
 <script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  document.getElementById('app').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) group.appendChild(msg);
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+</script>
 <script>
 /* ───────── Form configuration ───────── */
 const FORM_NAME = 'Request for Assistance or Transportation – Social Empowerment Agency';
@@ -77,47 +100,6 @@ const BASE_FLOW = [
   'confirmation'
 ];
 
-/* ───────── Custom styled select (matches design system) ───────── */
-function styledSelect(id, label, options, opts) {
-  opts = opts || {};
-  const val = GovBB.D[id] || '';
-  const hint = opts.hint
-    ? `<p class="text-[1.25rem] leading-normal text-bb-mid-grey-00">${opts.hint}</p>`
-    : '';
-  const triggerAttr = opts.triggerRender ? ' data-trigger-render="1"' : '';
-  const placeholder = opts.placeholder || 'Select one';
-  let ops = `<option value="">${placeholder}</option>`;
-  options.forEach(o => {
-    const v = typeof o === 'object' ? o.value : o;
-    const l = typeof o === 'object' ? o.label : o;
-    ops += `<option value="${v}"${val === v ? ' selected' : ''}>${l}</option>`;
-  });
-  return `
-    <div class="field-group flex flex-col gap-xs w-full items-start">
-      <label for="${id}" class="block text-[1.25rem] leading-normal font-bold text-bb-black-00">${label}</label>
-      ${hint}
-      <div class="relative flex w-full rounded-sm border-2 border-bb-black-00 bg-bb-white-00 overflow-hidden hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
-        <select id="${id}" name="${id}" data-field="${id}"${triggerAttr}
-          class="w-full min-w-0 p-s outline-none bg-transparent appearance-none cursor-pointer text-[1.25rem] leading-normal">
-          ${ops}
-        </select>
-        <div class="flex items-center justify-center w-14 shrink-0 bg-[#f0f0f0] border-l-2 border-bb-black-00 pointer-events-none" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
-        </div>
-      </div>
-    </div>`;
-}
-
-/* ───────── Previous + Continue button group ───────── */
-const PREV_BTN_CLS = 'relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-grey-00 text-bb-black-00 hover:bg-[#c8cdd4] active:bg-[#b0b5bc] px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100 focus-visible:rounded-sm';
-
-function btnGroup(continueLabel) {
-  return `<div class="mt-8 flex gap-4 items-center flex-wrap">
-    <button type="button" onclick="back()" class="${PREV_BTN_CLS}">Previous</button>
-    <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">${continueLabel || 'Continue'}</button>
-  </div>`;
-}
-
 /* ───────── Helper: format date fields ───────── */
 function fmtDate(prefix) {
   const d = GovBB.D[prefix + '-day'];
@@ -133,187 +115,411 @@ function needsTransport() {
   return rt === 'Transportation to a medical appointment' || rt === 'Both assistance and transportation';
 }
 
+/* ───────── Summary row override ───────── */
+GovBB.summaryRow = function(label, value, changeTo) {
+  var changeLink = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+changeLink+'</div></div>';
+};
+
 /* ───────── Pages ───────── */
 const PAGES = {
 
   /* ── Start ── */
   'start': () => `
-    <div class="space-y-6">
-      <p class="border-bb-blue-40 border-l-4 py-xs pl-s text-bb-mid-grey-00">${SEA_CAPTION}</p>
-      <h1 class="font-bold text-[3.5rem] leading-[1.15]">Request for Assistance or Transportation</h1>
-      <hr class="border-bb-grey-00">
+    <div>
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">${SEA_CAPTION}</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Request for Assistance or Transportation</h1>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
 
-      <p class="text-[1.25rem] leading-normal">Use this form to request assistance or transportation if you are a person with a disability.</p>
-      <p class="text-[1.25rem] leading-normal">Most people finish this form in about <strong>10 minutes</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this form to request assistance or transportation if you are a person with a disability.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Most people finish this form in about <strong>10 minutes</strong>.</p>
 
-      <div class="space-y-3">
-        <h2 class="font-bold text-[1.5rem]">What you'll need</h2>
-        <ul class="list-disc pl-6 space-y-2 text-[1.25rem] leading-normal">
-          <li>Your National ID number</li>
-          <li>Details of your disability and health condition</li>
-          <li>Next of kin contact details</li>
-        </ul>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul class="govbb-text-body" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);list-style:disc;">
+        <li style="margin-bottom:var(--spacing-xs);">Your National ID number</li>
+        <li style="margin-bottom:var(--spacing-xs);">Details of your disability and health condition</li>
+        <li style="margin-bottom:var(--spacing-xs);">Next of kin contact details</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">Call <strong>+1 (246) 467-5100</strong> if you need help completing this form.</p>
+
+      <div style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Start request</button>
       </div>
-
-      <div class="space-y-3">
-        <h2 class="font-bold text-[1.5rem]">Contact us</h2>
-        <p class="text-[1.25rem] leading-normal">Call <strong>+1 (246) 467-5100</strong> if you need help completing this form.</p>
-      </div>
-
-      ${GovBB.startBtn('Start request')}
     </div>`,
 
   /* ── Request type ── */
   'request-type': () => `
     <form novalidate>
-      ${GovBB.caption(SEA_CAPTION)}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">What are you applying for?</h1>
-      <div class="space-y-8">
-        ${GovBB.radioGroup('request-type', 'What type of support are you requesting?', [
-          'Assistance only',
-          'Transportation to a medical appointment',
-          'Both assistance and transportation'
-        ])}
-        ${GovBB.continueBtn()}
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">${SEA_CAPTION}</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">What are you applying for?</h1>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">What type of support are you requesting?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${['Assistance only','Transportation to a medical appointment','Both assistance and transportation'].map((o,i) => `
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="request-type-${i}" name="request-type" data-field="request-type" value="${o}"${GovBB.D['request-type']===o?' checked':''} />
+            <label class="govbb-radio-item__label" for="request-type-${i}">${o}</label>
+          </div>`).join('')}
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Personal details ── */
   'personal-details': () => `
     <form novalidate>
-      ${GovBB.caption(SEA_CAPTION)}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">About you</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('firstname', 'First name')}
-        ${GovBB.textField('middlename', 'Middle name (optional)')}
-        ${GovBB.textField('surname', 'Surname')}
-        ${GovBB.dateField('dob', 'Date of birth')}
-        ${GovBB.textField('id-number', 'National ID Number', {
-          hint: 'Your national registration number, for example 110915-0048.'
-        })}
-        ${GovBB.emailField('email', 'Email address (optional)')}
-        ${GovBB.continueBtn()}
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">${SEA_CAPTION}</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="firstname">First name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="firstname" name="firstname" data-field="firstname" value="${GovBB.D['firstname']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="middlename">Middle name (optional)</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="middlename" name="middlename" data-field="middlename" value="${GovBB.D['middlename']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="surname">Surname</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="surname" name="surname" data-field="surname" value="${GovBB.D['surname']||''}" />
+        </div>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Date of birth</legend>
+        <p class="govbb-hint">For example, 27 03 1985</p>
+        <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-day">Day</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="dob-day" name="dob-day" data-field="dob-day" inputmode="numeric" value="${GovBB.D['dob-day']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-month">Month</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="dob-month" name="dob-month" data-field="dob-month" inputmode="numeric" value="${GovBB.D['dob-month']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="dob-year">Year</label>
+            <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="dob-year" name="dob-year" data-field="dob-year" inputmode="numeric" value="${GovBB.D['dob-year']||''}" /></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="id-number">National ID Number</label>
+        <p class="govbb-hint">Your national registration number, for example 110915-0048.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="id-number" name="id-number" data-field="id-number" value="${GovBB.D['id-number']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="email">Email address (optional)</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="email" id="email" name="email" data-field="email" autocomplete="email" value="${GovBB.D['email']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Contact details ── */
   'contact': () => `
     <form novalidate>
-      ${GovBB.caption(SEA_CAPTION)}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your contact details</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('address', 'Home address')}
-        ${styledSelect('parish', 'Parish', GovBB.PARISHES)}
-        ${GovBB.telField('phone-home', 'Home phone number (optional)', { hint: '246 249-1234.' })}
-        ${GovBB.telField('phone-cell', 'Mobile number', { hint: '246 249-1234.' })}
-        ${GovBB.telField('phone-work', 'Work phone number (optional)')}
-        ${GovBB.continueBtn()}
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">${SEA_CAPTION}</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your contact details</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address">Home address</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="address" name="address" data-field="address" value="${GovBB.D['address']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parish">Parish</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="parish" name="parish" data-field="parish">
+            <option value="">Select a parish</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['parish']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="phone-home">Home phone number (optional)</label>
+        <p class="govbb-hint">246 249-1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="phone-home" name="phone-home" data-field="phone-home" value="${GovBB.D['phone-home']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="phone-cell">Mobile number</label>
+        <p class="govbb-hint">246 249-1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="phone-cell" name="phone-cell" data-field="phone-cell" value="${GovBB.D['phone-cell']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="phone-work">Work phone number (optional)</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="phone-work" name="phone-work" data-field="phone-work" value="${GovBB.D['phone-work']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Next of kin ── */
   'next-of-kin': () => `
     <form novalidate>
-      ${GovBB.caption(SEA_CAPTION)}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Next of kin</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('kin-name', 'Full name')}
-        ${styledSelect('kin-relationship', 'Relationship to you', [
-          'Mother', 'Father', 'Spouse', 'Partner', 'Son', 'Daughter',
-          'Sibling', 'Aunt', 'Uncle', 'Friend', 'Carer', 'Other'
-        ], { triggerRender: true })}
-        <div data-show-when-name="kin-relationship" data-show-when-value="Other" style="display:${GovBB.D['kin-relationship'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-          ${GovBB.textField('kin-relationship-other', 'Describe your relationship')}
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">${SEA_CAPTION}</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Next of kin</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="kin-name">Full name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="kin-name" name="kin-name" data-field="kin-name" value="${GovBB.D['kin-name']||''}" />
         </div>
-        ${GovBB.telField('kin-phone', 'Phone number', { hint: '246 249-1234.' })}
-        ${GovBB.continueBtn()}
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="kin-relationship">Relationship to you</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="kin-relationship" name="kin-relationship" data-field="kin-relationship" data-trigger-render="1">
+            <option value="">Select one</option>
+            ${['Mother','Father','Spouse','Partner','Son','Daughter','Sibling','Aunt','Uncle','Friend','Carer','Other'].map(o=>`<option value="${o}"${GovBB.D['kin-relationship']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div data-show-when-name="kin-relationship" data-show-when-value="Other" style="display:${GovBB.D['kin-relationship']==='Other'?'block':'none'};padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="kin-relationship-other">Describe your relationship</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="kin-relationship-other" name="kin-relationship-other" data-field="kin-relationship-other" value="${GovBB.D['kin-relationship-other']||''}" />
+          </div>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="kin-phone">Phone number</label>
+        <p class="govbb-hint">246 249-1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="kin-phone" name="kin-phone" data-field="kin-phone" value="${GovBB.D['kin-phone']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Disability and health info ── */
   'disability-info': () => `
     <form novalidate>
-      ${GovBB.caption(SEA_CAPTION)}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">About your disability and health</h1>
-      <div class="space-y-8">
-        ${GovBB.textareaField('assistive-device', 'Do you use an assistive device?', {
-          hint: "For example: wheelchair, walking frame, hearing aid, white cane. If none, write 'None'.",
-          rows: 2
-        })}
-        ${GovBB.textareaField('nature-of-disability', 'Nature of disability', {
-          hint: 'Describe your disability or disabilities.',
-          rows: 3
-        })}
-        ${GovBB.textareaField('health-condition', 'Health condition', {
-          hint: 'Describe any health conditions related to your request.',
-          rows: 3
-        })}
-        ${GovBB.textareaField('nature-of-request', 'What assistance do you need?', {
-          hint: 'Describe specifically what you are requesting help with.',
-          rows: 3
-        })}
-        ${GovBB.continueBtn()}
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">${SEA_CAPTION}</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About your disability and health</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="assistive-device">Do you use an assistive device?</label>
+        <p class="govbb-hint">For example: wheelchair, walking frame, hearing aid, white cane. If none, write 'None'.</p>
+        <textarea class="govbb-textarea" id="assistive-device" name="assistive-device" data-field="assistive-device" rows="2" style="width:100%;">${GovBB.D['assistive-device']||''}</textarea>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nature-of-disability">Nature of disability</label>
+        <p class="govbb-hint">Describe your disability or disabilities.</p>
+        <textarea class="govbb-textarea" id="nature-of-disability" name="nature-of-disability" data-field="nature-of-disability" rows="3" style="width:100%;">${GovBB.D['nature-of-disability']||''}</textarea>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="health-condition">Health condition</label>
+        <p class="govbb-hint">Describe any health conditions related to your request.</p>
+        <textarea class="govbb-textarea" id="health-condition" name="health-condition" data-field="health-condition" rows="3" style="width:100%;">${GovBB.D['health-condition']||''}</textarea>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nature-of-request">What assistance do you need?</label>
+        <p class="govbb-hint">Describe specifically what you are requesting help with.</p>
+        <textarea class="govbb-textarea" id="nature-of-request" name="nature-of-request" data-field="nature-of-request" rows="3" style="width:100%;">${GovBB.D['nature-of-request']||''}</textarea>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Household ── */
   'household': () => `
     <form novalidate>
-      ${GovBB.caption(SEA_CAPTION)}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Your household</h1>
-      <div class="space-y-8">
-        ${GovBB.textField('household-number', 'How many people live in your household?', {
-          hint: 'Include yourself.',
-          inputmode: 'numeric'
-        })}
-        ${GovBB.radioGroup('evacuation-needed', 'In the event of an emergency or natural disaster, would you need evacuation from your home?', ['Yes', 'No'])}
-        ${GovBB.radioGroup('vehicle-access', 'Can your home be accessed by vehicle?', ['Yes', 'No'])}
-        ${GovBB.continueBtn()}
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">${SEA_CAPTION}</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your household</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="household-number">How many people live in your household?</label>
+        <p class="govbb-hint">Include yourself.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="household-number" name="household-number" data-field="household-number" inputmode="numeric" value="${GovBB.D['household-number']||''}" />
+        </div>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">In the event of an emergency or natural disaster, would you need evacuation from your home?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="evacuation-needed-yes" name="evacuation-needed" data-field="evacuation-needed" value="Yes"${GovBB.D['evacuation-needed']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="evacuation-needed-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="evacuation-needed-no" name="evacuation-needed" data-field="evacuation-needed" value="No"${GovBB.D['evacuation-needed']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="evacuation-needed-no">No</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Can your home be accessed by vehicle?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="vehicle-access-yes" name="vehicle-access" data-field="vehicle-access" value="Yes"${GovBB.D['vehicle-access']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="vehicle-access-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="vehicle-access-no" name="vehicle-access" data-field="vehicle-access" value="No"${GovBB.D['vehicle-access']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="vehicle-access-no">No</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Employment ── */
   'employment': () => `
     <form novalidate>
-      ${GovBB.caption(SEA_CAPTION)}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Employment</h1>
-      <div class="space-y-8">
-        ${styledSelect('employment-status', 'What is your current employment status?', [
-          'Employed full-time',
-          'Employed part-time',
-          'Self-employed',
-          'Unemployed',
-          'Unable to work due to disability',
-          'Retired',
-          'Student',
-          'Other'
-        ], { triggerRender: true })}
-        <div data-show-when-name="employment-status" data-show-when-value="Other" style="display:${GovBB.D['employment-status'] === 'Other' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-          ${GovBB.textField('employment-status-other', 'Please describe your employment status')}
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">${SEA_CAPTION}</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Employment</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="employment-status">What is your current employment status?</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="employment-status" name="employment-status" data-field="employment-status" data-trigger-render="1">
+            <option value="">Select one</option>
+            ${['Employed full-time','Employed part-time','Self-employed','Unemployed','Unable to work due to disability','Retired','Student','Other'].map(o=>`<option value="${o}"${GovBB.D['employment-status']===o?' selected':''}>` + o + '</option>').join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
         </div>
-        ${GovBB.radioGroup('seeking-employment', 'Are you seeking employment?', ['Yes', 'No'])}
-        <div data-show-when-name="seeking-employment" data-show-when-value="Yes" style="display:${GovBB.D['seeking-employment'] === 'Yes' ? '' : 'none'}; padding-left: 1rem; border-left: 4px solid var(--color-blue-40);">
-          ${GovBB.textareaField('job-interests', 'What are your job interests or skills?', { rows: 3 })}
+      </div>
+
+      <div data-show-when-name="employment-status" data-show-when-value="Other" style="display:${GovBB.D['employment-status']==='Other'?'block':'none'};padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="employment-status-other">Please describe your employment status</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="employment-status-other" name="employment-status-other" data-field="employment-status-other" value="${GovBB.D['employment-status-other']||''}" />
+          </div>
         </div>
-        ${GovBB.continueBtn()}
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Are you seeking employment?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="seeking-employment-yes" name="seeking-employment" data-field="seeking-employment" value="Yes"${GovBB.D['seeking-employment']==='Yes'?' checked':''} />
+            <label class="govbb-radio-item__label" for="seeking-employment-yes">Yes</label>
+          </div>
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="seeking-employment-no" name="seeking-employment" data-field="seeking-employment" value="No"${GovBB.D['seeking-employment']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="seeking-employment-no">No</label>
+          </div>
+        </div>
+        <div data-show-when-name="seeking-employment" data-show-when-value="Yes" style="display:${GovBB.D['seeking-employment']==='Yes'?'block':'none'};padding-left:var(--spacing-m);margin-top:var(--spacing-s);">
+          <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+            <label class="govbb-label" for="job-interests">What are your job interests or skills?</label>
+            <textarea class="govbb-textarea" id="job-interests" name="job-interests" data-field="job-interests" rows="3" style="width:100%;">${GovBB.D['job-interests']||''}</textarea>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
   /* ── Transportation details (conditional) ── */
   'transportation': () => `
     <form novalidate>
-      ${GovBB.caption(SEA_CAPTION)}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-4">Transportation details</h1>
-      <p class="text-[1.25rem] leading-normal text-bb-mid-grey-00 mb-8">Complete this section if you need transportation to a medical appointment.</p>
-      <div class="space-y-8">
-        ${GovBB.dateField('appt-date', 'Appointment date')}
-        ${GovBB.textField('pickup-time', 'Pickup time', {
-          hint: 'For example: 9:00 AM.'
-        })}
-        ${GovBB.textField('destination', 'Destination', {
-          hint: 'For example: Queen Elizabeth Hospital, Bridgetown.'
-        })}
-        ${GovBB.continueBtn()}
+      <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">${SEA_CAPTION}</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Transportation details</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Complete this section if you need transportation to a medical appointment.</p>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Appointment date</legend>
+        <p class="govbb-hint">For example, 27 03 2025</p>
+        <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="appt-date-day">Day</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="appt-date-day" name="appt-date-day" data-field="appt-date-day" inputmode="numeric" value="${GovBB.D['appt-date-day']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="appt-date-month">Month</label>
+            <div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="appt-date-month" name="appt-date-month" data-field="appt-date-month" inputmode="numeric" value="${GovBB.D['appt-date-month']||''}" /></div>
+          </div>
+          <div class="govbb-date-input__part">
+            <label class="govbb-date-input__label" for="appt-date-year">Year</label>
+            <div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="appt-date-year" name="appt-date-year" data-field="appt-date-year" inputmode="numeric" value="${GovBB.D['appt-date-year']||''}" /></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="pickup-time">Pickup time</label>
+        <p class="govbb-hint">For example: 9:00 AM.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="pickup-time" name="pickup-time" data-field="pickup-time" value="${GovBB.D['pickup-time']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="destination">Destination</label>
+        <p class="govbb-hint">For example: Queen Elizabeth Hospital, Bridgetown.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="destination" name="destination" data-field="destination" value="${GovBB.D['destination']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -325,75 +531,75 @@ const PAGES = {
     let transportSection = '';
     if (needsTransport()) {
       transportSection = `
-        <div class="space-y-4">
-          <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-2">Transportation details</h2>
+        <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Transportation details</h2>
+        <dl style="margin-bottom:var(--spacing-l);">
           ${GovBB.summaryRow('Appointment date', fmtDate('appt-date'), 'transportation')}
           ${GovBB.summaryRow('Pickup time', D['pickup-time'], 'transportation')}
           ${GovBB.summaryRow('Destination', D['destination'], 'transportation')}
-        </div>`;
+        </dl>`;
     }
 
     return `
-    <div class="space-y-10">
-      ${GovBB.backLink()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15]">Check your answers</h1>
+    <div>
+      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">&#8592; Back</a>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-2">Type of request</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Type of request</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Type of support', D['request-type'], 'request-type')}
-      </div>
+      </dl>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-2">About you</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About you</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Full name', fullName, 'personal-details')}
         ${GovBB.summaryRow('Date of birth', fmtDate('dob'), 'personal-details')}
         ${GovBB.summaryRow('National ID Number', D['id-number'], 'personal-details')}
         ${GovBB.summaryRow('Email address', D['email'], 'personal-details')}
-      </div>
+      </dl>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-2">Contact details</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact details</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Home address', D['address'], 'contact')}
         ${GovBB.summaryRow('Parish', D['parish'], 'contact')}
         ${GovBB.summaryRow('Home phone', D['phone-home'], 'contact')}
         ${GovBB.summaryRow('Mobile number', D['phone-cell'], 'contact')}
         ${GovBB.summaryRow('Work phone', D['phone-work'], 'contact')}
-      </div>
+      </dl>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-2">Next of kin</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Next of kin</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Full name', D['kin-name'], 'next-of-kin')}
         ${GovBB.summaryRow('Relationship', D['kin-relationship'] === 'Other' ? D['kin-relationship-other'] : D['kin-relationship'], 'next-of-kin')}
         ${GovBB.summaryRow('Phone number', D['kin-phone'], 'next-of-kin')}
-      </div>
+      </dl>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-2">Disability and health</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Disability and health</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Assistive device', D['assistive-device'], 'disability-info')}
         ${GovBB.summaryRow('Nature of disability', D['nature-of-disability'], 'disability-info')}
         ${GovBB.summaryRow('Health condition', D['health-condition'], 'disability-info')}
         ${GovBB.summaryRow('Assistance needed', D['nature-of-request'], 'disability-info')}
-      </div>
+      </dl>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-2">Household</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Household</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Number of people in household', D['household-number'], 'household')}
         ${GovBB.summaryRow('Needs evacuation in emergency', D['evacuation-needed'], 'household')}
         ${GovBB.summaryRow('Home accessible by vehicle', D['vehicle-access'], 'household')}
-      </div>
+      </dl>
 
-      <div class="space-y-4">
-        <h2 class="font-bold text-[1.5rem] border-b border-bb-grey-00 pb-2">Employment</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Employment</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Employment status', D['employment-status'] === 'Other' ? D['employment-status-other'] : D['employment-status'], 'employment')}
         ${GovBB.summaryRow('Seeking employment', D['seeking-employment'], 'employment')}
         ${D['seeking-employment'] === 'Yes' ? GovBB.summaryRow('Job interests or skills', D['job-interests'], 'employment') : ''}
-      </div>
+      </dl>
 
       ${transportSection}
 
-      <div class="mt-8 flex gap-4 items-center flex-wrap">
-        <button type="button" onclick="back()" class="${PREV_BTN_CLS}">Previous</button>
-        <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">Submit request</button>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="next()">Submit request</button>
+        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </div>`;
   },
@@ -403,21 +609,17 @@ const PAGES = {
     const refNumber = window.__refNumber || ('SEA-RA-' + Math.random().toString(36).substring(2, 8).toUpperCase());
     window.__refNumber = refNumber;
     return `
-    <div class="space-y-8">
-      <div style="border-left: 4px solid #00703c; padding-left: 1.5rem;">
-        <h1 class="font-bold text-[3.5rem] leading-[1.15]">Request submitted</h1>
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Request submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number: <strong>${refNumber}</strong></p>
       </div>
 
-      <div class="bg-bb-grey-10 p-8 rounded-sm space-y-2">
-        <p class="text-[1.25rem]">Your reference number</p>
-        <p class="text-[2rem] font-bold">${refNumber}</p>
-      </div>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">We will review your request and contact you within <strong>5 working days</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call <strong>+1 (246) 467-5100</strong> if you need to speak to someone sooner.</p>
 
-      <p class="text-[1.25rem] leading-normal">We will review your request and contact you within <strong>5 working days</strong>.</p>
-      <p class="text-[1.25rem] leading-normal">Call <strong>+1 (246) 467-5100</strong> if you need to speak to someone sooner.</p>
-
-      <div>
-        <button type="button" onclick="window.print()" class="${PREV_BTN_CLS}">Print this page</button>
+      <div style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn" onclick="window.print()">Print this page</button>
       </div>
     </div>`;
   }
@@ -469,7 +671,7 @@ function validate(pageId) {
   }
 
   if (pageId === 'disability-info') {
-    if (!D['assistive-device'] || !D['assistive-device'].trim()) errors.push({ id: 'assistive-device', msg: 'Enter your assistive device, or write None' });
+    if (!D['assistive-device'] || !D['assistive-device'].trim()) errors.push({ id: 'assistive-device', msg: "Enter your assistive device, or write None" });
     if (!D['nature-of-disability'] || !D['nature-of-disability'].trim()) errors.push({ id: 'nature-of-disability', msg: 'Describe the nature of your disability' });
     if (!D['health-condition'] || !D['health-condition'].trim()) errors.push({ id: 'health-condition', msg: 'Describe your health condition' });
     if (!D['nature-of-request'] || !D['nature-of-request'].trim()) errors.push({ id: 'nature-of-request', msg: 'Describe the assistance you need' });
