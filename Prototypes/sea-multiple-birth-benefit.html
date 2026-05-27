@@ -92,6 +92,33 @@ function next() { GovBB.next(); }
 function back() { GovBB.back(); }
 function nav(p)  { GovBB.nav(p); }
 
+/* ───────── Document upload handlers ───────── */
+function handleUpload(key, input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    alert('File is larger than 10 MB. Please choose a smaller file.');
+    input.value = '';
+    return;
+  }
+  GovBB.D['upload-' + key] = { name: file.name, size: file.size, type: file.type };
+  GovBB.render();
+}
+function removeUpload(key) {
+  delete GovBB.D['upload-' + key];
+  GovBB.render();
+}
+function formatBytes(n) {
+  if (n < 1024) return n + ' B';
+  if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB';
+  return (n / (1024 * 1024)).toFixed(1) + ' MB';
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
 /* ───────── Constants ───────── */
 var CAPTION = 'Social Empowerment Agency';
 
@@ -228,16 +255,25 @@ var PAGES = {
 
   /* ── START ── */
   'start': function () {
-    return seaCaption() +
-      '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Multiple Birth Benefit Application</h1>' +
+    return '<nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">' +
+        '<ol class="govbb-breadcrumbs__list">' +
+          '<li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>' +
+          '<li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Family, birth and relationships</a></li>' +
+        '</ol>' +
+      '</nav>' +
+      '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Multiple Birth Benefit Application</h1>' +
+      '<p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on November 14th, 2025</p>' +
+      '<hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">' +
       '<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply for the one-time Multiple Birth Benefit if you are the parent or guardian of twins or triplets born in Barbados.</p>' +
-      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">This benefit is paid directly to your bank account or credit union account.</p>' +
+      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply online. This benefit is free to claim and takes about 10 minutes.</p>' +
+
+      '<div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>' +
+
+      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">The benefit is paid directly to your bank or credit union account.</p>' +
 
       '<div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);">' +
         '<p class="govbb-text-body"><strong>This is a one-time benefit. You can only apply once per multiple birth.</strong></p>' +
       '</div>' +
-
-      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);"><strong>Time to complete:</strong> About 10 minutes.</p>' +
 
       '<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you will need</h2>' +
       '<ul style="padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">' +
@@ -247,6 +283,9 @@ var PAGES = {
         '<li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Nursery or school details for each child</li>' +
       '</ul>' +
 
+      '<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>' +
+      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">We will review your application and verify the documents you provide. We will contact you within <strong>15 working days</strong>. If approved, the benefit will be paid directly to your bank or credit union account.</p>' +
+
       '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);"><strong>Need help?</strong> Call the Social Empowerment Agency at <a href="tel:+12464675100" class="govbb-link">+1 (246) 467-5100</a>.</p>' +
 
       '<div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>';
@@ -254,8 +293,7 @@ var PAGES = {
 
   /* ── APPLICANT DETAILS ── */
   'applicant-details': function () {
-    return '<a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>' +
-      seaCaption() +
+    return seaCaption() +
       '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you</h1>' +
 
       '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">' +
@@ -312,15 +350,14 @@ var PAGES = {
       '</div>' +
 
       '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);">' +
+        '<button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>' +
         '<button type="button" class="govbb-btn" onclick="next()">Continue</button>' +
-        '<button type="button" class="govbb-btn--link" onclick="back()">Back</button>' +
       '</div>';
   },
 
   /* ── APPLICANT CONTACT ── */
   'applicant-contact': function () {
-    return '<a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>' +
-      seaCaption() +
+    return seaCaption() +
       '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your contact details</h1>' +
 
       '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">' +
@@ -365,15 +402,14 @@ var PAGES = {
       '</div>' +
 
       '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);">' +
+        '<button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>' +
         '<button type="button" class="govbb-btn" onclick="next()">Continue</button>' +
-        '<button type="button" class="govbb-btn--link" onclick="back()">Back</button>' +
       '</div>';
   },
 
   /* ── CHILDREN INFO ── */
   'children-info': function () {
-    return '<a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>' +
-      seaCaption() +
+    return seaCaption() +
       '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About the children</h1>' +
 
       '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">' +
@@ -409,8 +445,8 @@ var PAGES = {
       '</fieldset>' +
 
       '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);">' +
+        '<button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>' +
         '<button type="button" class="govbb-btn" onclick="next()">Continue</button>' +
-        '<button type="button" class="govbb-btn--link" onclick="back()">Back</button>' +
       '</div>';
   },
 
@@ -421,14 +457,13 @@ var PAGES = {
     for (var i = 1; i <= count; i++) {
       blocks += renderChildBlock(i);
     }
-    return '<a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>' +
-      seaCaption() +
+    return seaCaption() +
       '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Children\'s details</h1>' +
       '<p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">Enter the details for each child.</p>' +
       blocks +
       '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);">' +
+        '<button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>' +
         '<button type="button" class="govbb-btn" onclick="next()">Continue</button>' +
-        '<button type="button" class="govbb-btn--link" onclick="back()">Back</button>' +
       '</div>';
   },
 
@@ -436,8 +471,7 @@ var PAGES = {
   'banking': function () {
     var bankVal = GovBB.D['bank-name'] || '';
     var showOther = bankVal === 'Other';
-    return '<a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>' +
-      seaCaption() +
+    return seaCaption() +
       '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Banking details</h1>' +
       '<p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">The benefit will be paid directly into your account.</p>' +
 
@@ -477,76 +511,68 @@ var PAGES = {
       '</div>' +
 
       '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);">' +
+        '<button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>' +
         '<button type="button" class="govbb-btn" onclick="next()">Continue</button>' +
-        '<button type="button" class="govbb-btn--link" onclick="back()">Back</button>' +
       '</div>';
   },
 
   /* ── DOCUMENTS ── */
   'documents': function () {
-    var docsVal = GovBB.D['docs-ready'] || '';
-    var showNoNote = docsVal === 'No, I need more time';
-    return '<a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>' +
-      seaCaption() +
-      '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Documents you must provide</h1>' +
+    var DOCS = [
+      { key: 'parent-id',  label: "Parent's or guardian's National Registration Card" },
+      { key: 'birth-cert', label: 'Birth certificate for each child' },
+      { key: 'child-id',   label: "Child's National Registration Card (if issued)" },
+      { key: 'banking',    label: 'Banking details — bank statement or letter from your bank' }
+    ];
+
+    var uploadedCount = DOCS.filter(function (d) { return !!GovBB.D['upload-' + d.key]; }).length;
+
+    function uploadRow(doc) {
+      var file = GovBB.D['upload-' + doc.key];
+      var inputId = 'upload-' + doc.key;
+      if (file) {
+        return '<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);border-left:4px solid var(--color-green-00);background:var(--color-white-00);margin-bottom:var(--spacing-s);">' +
+          '<div style="min-width:0;">' +
+            '<p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">' + doc.label + '</p>' +
+            '<p class="govbb-text-body" style="margin:0;font-size:var(--font-size-caption);color:var(--color-mid-grey-00);word-break:break-all;">' +
+              '<span aria-hidden="true">✓ </span>' + escapeHtml(file.name) + ' (' + formatBytes(file.size) + ')' +
+            '</p>' +
+          '</div>' +
+          '<button type="button" class="govbb-btn--link" style="flex-shrink:0;" onclick="removeUpload(\'' + doc.key + '\')">Remove<span class="govbb-visually-hidden"> ' + doc.label + '</span></button>' +
+        '</div>';
+      }
+      return '<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);background:var(--color-white-00);margin-bottom:var(--spacing-s);">' +
+        '<p class="govbb-text-body" style="margin:0;flex:1;min-width:0;">' + doc.label + '</p>' +
+        '<label for="' + inputId + '" class="govbb-btn--secondary" style="flex-shrink:0;cursor:pointer;margin:0;">Upload file</label>' +
+        '<input type="file" id="' + inputId + '" accept=".pdf,.jpg,.jpeg,.png" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" onchange="handleUpload(\'' + doc.key + '\', this)" />' +
+      '</div>';
+    }
+
+    return seaCaption() +
+      '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Upload your documents</h1>' +
 
       '<div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">' +
         '<p class="govbb-text-body"><strong>Your application will not be processed without all required documents.</strong></p>' +
       '</div>' +
 
-      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">When you submit this form, you must bring or send certified copies of the following:</p>' +
+      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Upload clear scans or photos of each document. Accepted formats: PDF, JPG, PNG. Maximum size: 10 MB per file.</p>' +
+      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Documents must be certified copies. Certified copies can be obtained from a Justice of the Peace, Commissioner of Oaths, or Notary Public.</p>' +
 
-      '<div style="margin-bottom:var(--spacing-m);">' +
-        '<div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">' +
-          '<input class="govbb-checkbox" type="checkbox" id="doc-parent-id" name="doc-parent-id" data-field="doc-parent-id"' + (GovBB.D['doc-parent-id'] ? ' checked' : '') + ' />' +
-          '<label class="govbb-checkbox-item__label" for="doc-parent-id">Parent\'s or guardian\'s National Registration Card</label>' +
-        '</div>' +
-        '<div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">' +
-          '<input class="govbb-checkbox" type="checkbox" id="doc-birth-cert" name="doc-birth-cert" data-field="doc-birth-cert"' + (GovBB.D['doc-birth-cert'] ? ' checked' : '') + ' />' +
-          '<label class="govbb-checkbox-item__label" for="doc-birth-cert">Birth certificate for each child</label>' +
-        '</div>' +
-        '<div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">' +
-          '<input class="govbb-checkbox" type="checkbox" id="doc-child-id" name="doc-child-id" data-field="doc-child-id"' + (GovBB.D['doc-child-id'] ? ' checked' : '') + ' />' +
-          '<label class="govbb-checkbox-item__label" for="doc-child-id">National Registration Card for each child</label>' +
-        '</div>' +
-        '<div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">' +
-          '<input class="govbb-checkbox" type="checkbox" id="doc-banking" name="doc-banking" data-field="doc-banking"' + (GovBB.D['doc-banking'] ? ' checked' : '') + ' />' +
-          '<label class="govbb-checkbox-item__label" for="doc-banking">Banking details confirmation — bank statement or letter from your bank</label>' +
-        '</div>' +
+      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);" aria-live="polite"><strong>' + uploadedCount + ' of ' + DOCS.length + ' documents uploaded.</strong></p>' +
+
+      '<div style="margin-bottom:var(--spacing-l);">' +
+        DOCS.map(uploadRow).join('') +
       '</div>' +
 
-      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">Certified copies can be obtained from a Justice of the Peace, Commissioner of Oaths, or Notary Public.</p>' +
-
-      '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">' +
-        '<legend class="govbb-fieldset__legend">Do you have certified copies of all required documents ready?</legend>' +
-        '<div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">' +
-          '<div class="govbb-radio-item">' +
-            '<input class="govbb-radio" type="radio" id="docs-ready-yes" name="docs-ready" data-field="docs-ready" value="Yes"' + (docsVal === 'Yes' ? ' checked' : '') + ' data-trigger-render="1" />' +
-            '<label class="govbb-radio-item__label" for="docs-ready-yes">Yes</label>' +
-          '</div>' +
-          '<div class="govbb-radio-item">' +
-            '<input class="govbb-radio" type="radio" id="docs-ready-no" name="docs-ready" data-field="docs-ready" value="No, I need more time"' + (docsVal === 'No, I need more time' ? ' checked' : '') + ' data-trigger-render="1" />' +
-            '<label class="govbb-radio-item__label" for="docs-ready-no">No, I need more time</label>' +
-          '</div>' +
-        '</div>' +
-      '</fieldset>' +
-
-      (showNoNote ?
-        '<div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);">' +
-          '<p class="govbb-text-body">You can save and return to complete this application. However, your application will not be processed until all documents are received.</p>' +
-        '</div>'
-      : '') +
-
       '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);">' +
+        '<button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>' +
         '<button type="button" class="govbb-btn" onclick="next()">Continue</button>' +
-        '<button type="button" class="govbb-btn--link" onclick="back()">Back</button>' +
       '</div>';
   },
 
   /* ── DECLARATION ── */
   'declaration': function () {
-    return '<a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>' +
-      seaCaption() +
+    return seaCaption() +
       '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Declaration</h1>' +
       '<p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">By submitting this application, you confirm the following.</p>' +
 
@@ -566,8 +592,8 @@ var PAGES = {
       '</div>' +
 
       '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);">' +
+        '<button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>' +
         '<button type="button" class="govbb-btn" onclick="next()">Submit application</button>' +
-        '<button type="button" class="govbb-btn--link" onclick="back()">Back</button>' +
       '</div>';
   },
 
@@ -584,8 +610,7 @@ var PAGES = {
         '</dl>';
     }
 
-    return '<a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>' +
-      seaCaption() +
+    return seaCaption() +
       '<h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-l);">Check your answers</h1>' +
 
       '<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About you</h2>' +
@@ -621,9 +646,26 @@ var PAGES = {
         GovBB.summaryRow('Account number', GovBB.D['bank-account'], 'banking') +
       '</dl>' +
 
+      '<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Documents</h2>' +
+      '<dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">' +
+        (function () {
+          var docs = [
+            { key: 'parent-id',  label: "Parent's or guardian's National Registration Card" },
+            { key: 'birth-cert', label: 'Birth certificate' },
+            { key: 'child-id',   label: "Child's National Registration Card" },
+            { key: 'banking',    label: 'Banking details document' }
+          ];
+          return docs.map(function (d) {
+            var f = GovBB.D['upload-' + d.key];
+            var v = f ? escapeHtml(f.name) + ' (' + formatBytes(f.size) + ')' : 'Not uploaded';
+            return GovBB.summaryRow(d.label, v, 'documents');
+          }).join('');
+        })() +
+      '</dl>' +
+
       '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);">' +
+        '<button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>' +
         '<button type="button" class="govbb-btn" onclick="next()">Submit application</button>' +
-        '<button type="button" class="govbb-btn--link" onclick="back()">Back</button>' +
       '</div>';
   },
 
@@ -659,7 +701,7 @@ GovBB.init({
   pages: PAGES,
   appElementId: 'app',
   onRadioChange: function (name, value) {
-    if (name === 'birth-type' || name === 'docs-ready') {
+    if (name === 'birth-type') {
       GovBB.render();
     }
   },
@@ -670,23 +712,69 @@ GovBB.init({
         errors.push({ id: id, msg: label + ' is required.' });
       }
     }
-    function reqDate(prefix, label) {
-      if (!GovBB.D[prefix + '-day'] || !GovBB.D[prefix + '-month'] || !GovBB.D[prefix + '-year']) {
-        errors.push({ id: prefix + '-day', msg: label + ' must be a complete date.' });
+    function parseDate(prefix) {
+      var d = parseInt(GovBB.D[prefix + '-day'], 10);
+      var m = parseInt(GovBB.D[prefix + '-month'], 10);
+      var y = parseInt(GovBB.D[prefix + '-year'], 10);
+      if (!d || !m || !y) return null;
+      if (d < 1 || d > 31 || m < 1 || m > 12 || y < 1900 || y > 2100) return false;
+      var dt = new Date(y, m - 1, d);
+      if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) return false;
+      return dt;
+    }
+    function reqDate(prefix, label, opts) {
+      opts = opts || {};
+      var dayId = prefix + '-day';
+      var dayV = GovBB.D[prefix + '-day'];
+      var monV = GovBB.D[prefix + '-month'];
+      var yrV  = GovBB.D[prefix + '-year'];
+      if (!dayV || !monV || !yrV) {
+        errors.push({ id: dayId, msg: label + ' must be a complete date.' });
+        return;
+      }
+      var dt = parseDate(prefix);
+      if (dt === false) {
+        errors.push({ id: dayId, msg: label + ' must be a real date — for example, 27 3 1985.' });
+        return;
+      }
+      if (opts.notFuture && dt > new Date()) {
+        errors.push({ id: dayId, msg: label + ' must be in the past.' });
+      }
+      if (opts.minYear && dt.getFullYear() < opts.minYear) {
+        errors.push({ id: dayId, msg: label + ' year looks too far in the past — check the year.' });
+      }
+    }
+    function reqIdNumber(id, label) {
+      var v = (GovBB.D[id] || '').trim();
+      if (!v) { errors.push({ id: id, msg: label + ' is required.' }); return; }
+      if (!/^\d{6}-\d{4}$/.test(v)) {
+        errors.push({ id: id, msg: label + ' must be in the format 110915-0048.' });
+      }
+    }
+    function reqPhone(id, label, required) {
+      var v = (GovBB.D[id] || '').trim();
+      if (!v) {
+        if (required) errors.push({ id: id, msg: label + ' is required.' });
+        return;
+      }
+      var digits = v.replace(/[\s\-()+]/g, '');
+      if (!/^\d{7,15}$/.test(digits)) {
+        errors.push({ id: id, msg: label + ' must contain 7 to 15 digits — for example, 246 249-1234.' });
       }
     }
 
     if (pageId === 'applicant-details') {
       req('fullname', 'Full name');
-      reqDate('dob', 'Date of birth');
+      reqDate('dob', 'Date of birth', { notFuture: true, minYear: 1900 });
       req('sex', 'Sex');
-      req('id-number', 'National ID Number');
+      reqIdNumber('id-number', 'National ID Number');
     }
 
     if (pageId === 'applicant-contact') {
       req('address', 'Home address');
       req('parish', 'Parish');
-      req('phone', 'Telephone number');
+      reqPhone('phone', 'Telephone number', true);
+      reqPhone('phone-alt', 'Alternative telephone number', false);
     }
 
     if (pageId === 'children-info') {
@@ -698,9 +786,15 @@ GovBB.init({
       var count = childCount();
       for (var i = 1; i <= count; i++) {
         req('child-' + i + '-name', 'Child ' + i + ' full name');
-        reqDate('child-' + i + '-dob', 'Child ' + i + ' date of birth');
+        reqDate('child-' + i + '-dob', 'Child ' + i + ' date of birth', { notFuture: true, minYear: 1990 });
         req('child-' + i + '-sex', 'Child ' + i + ' sex');
         req('child-' + i + '-school', 'Child ' + i + ' nursery or school');
+        if (GovBB.D['child-' + i + '-id']) {
+          var cid = String(GovBB.D['child-' + i + '-id']).trim();
+          if (cid && !/^\d{6}-\d{4}$/.test(cid)) {
+            errors.push({ id: 'child-' + i + '-id', msg: 'Child ' + i + ' National ID Number must be in the format 110915-0048.' });
+          }
+        }
       }
     }
 
@@ -710,7 +804,29 @@ GovBB.init({
         req('bank-name-other', 'Name of bank or credit union');
       }
       req('bank-branch', 'Branch');
-      req('bank-account', 'Account number');
+      var acct = (GovBB.D['bank-account'] || '').trim();
+      if (!acct) {
+        errors.push({ id: 'bank-account', msg: 'Account number is required.' });
+      } else {
+        var acctDigits = acct.replace(/[\s\-]/g, '');
+        if (!/^\d{6,16}$/.test(acctDigits)) {
+          errors.push({ id: 'bank-account', msg: 'Account number must be 6 to 16 digits.' });
+        }
+      }
+    }
+
+    if (pageId === 'documents') {
+      var requiredDocs = [
+        { key: 'parent-id',  label: "Parent's or guardian's National Registration Card" },
+        { key: 'birth-cert', label: 'Birth certificate for each child' },
+        { key: 'child-id',   label: "Child's National Registration Card" },
+        { key: 'banking',    label: 'Banking details document' }
+      ];
+      requiredDocs.forEach(function (d) {
+        if (!GovBB.D['upload-' + d.key]) {
+          errors.push({ id: 'upload-' + d.key, msg: 'Upload your ' + d.label + '.' });
+        }
+      });
     }
 
     if (pageId === 'declaration') {

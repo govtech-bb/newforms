@@ -162,13 +162,22 @@ const PAGES = {
   /* ── Start ── */
   'start': () => `
     <div>
-      ${seaCaption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Apply for a National Assistance Grant</h1>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Benefits and financial support</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Apply for a National Assistance Grant</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on November 14th, 2025</p>
       <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
 
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply for a grant if you are facing financial hardship and need help with essential costs.</p>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">This is a one-time or short-term grant. A caseworker will assess your application.</p>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Most people finish this form in about <strong>10 minutes</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply online. This service is free and takes about <strong>10 minutes</strong>.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">This is a one-time or short-term grant. A caseworker will assess your application.</p>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
       <ul style="padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
@@ -177,6 +186,9 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Details of your household and current circumstances</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Details of what you need help with</li>
       </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">A caseworker will review your application and contact you within <strong>10 working days</strong>. They may ask for more information or arrange a meeting. If approved, you may receive a one-time grant or short-term support.</p>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call <strong>+1 (246) 467-5100</strong> if you need help completing this form or if your situation is urgent.</p>
@@ -236,8 +248,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -303,8 +315,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -351,8 +363,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -405,8 +417,8 @@ const PAGES = {
       </fieldset>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -463,8 +475,8 @@ const PAGES = {
       </div>` : ''}
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -487,8 +499,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -515,8 +527,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -571,8 +583,8 @@ const PAGES = {
       </dl>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </div>`,
 
