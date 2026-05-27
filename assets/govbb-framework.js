@@ -52,11 +52,66 @@
     var fn = _pages[pageId];
     if (!fn) { el.innerHTML = '<p>Page not found: ' + pageId + '</p>'; return; }
     el.innerHTML = fn();
+    _injectProgressIndicator(pageId, flow);
+    _hidePreviousOnFirstStep(pageId, flow);
     _bindInputs();
     _bindRadios();
     _bindCheckboxes();
     _initSignaturePads();
     window.scrollTo(0, 0);
+  };
+
+  /* Pages that are not counted as form steps for the progress indicator. */
+  var _NON_FORM_PAGES = ['start', 'confirmation'];
+
+  function _isFormStep(pageId) {
+    return _NON_FORM_PAGES.indexOf(pageId) === -1;
+  }
+
+  function _formStepInfo(pageId, flow) {
+    var stepFlow = flow.filter(_isFormStep);
+    var idx = stepFlow.indexOf(pageId);
+    if (idx === -1) return null;
+    return { current: idx + 1, total: stepFlow.length };
+  }
+
+  function _injectProgressIndicator(pageId, flow) {
+    var info = _formStepInfo(pageId, flow);
+    if (!info) return;
+    var el = document.getElementById(_appEl);
+    if (!el) return;
+    /* Don't double-inject if the page already declares a progress indicator. */
+    if (el.querySelector('[data-progress-indicator]')) return;
+    var html =
+      '<p data-progress-indicator class="govbb-text-caption" ' +
+      'style="color:var(--color-mid-grey-00);font-size:var(--font-size-caption);margin-bottom:var(--spacing-s);">' +
+      'Step ' + info.current + ' of ' + info.total +
+      '</p>';
+    el.insertAdjacentHTML('afterbegin', html);
+  }
+
+  function _hidePreviousOnFirstStep(pageId, flow) {
+    var info = _formStepInfo(pageId, flow);
+    if (!info || info.current !== 1) return;
+    var el = document.getElementById(_appEl);
+    if (!el) return;
+    var prevBtn = el.querySelector('.govbb-btn--secondary[onclick*="back()"]');
+    if (prevBtn) prevBtn.style.display = 'none';
+  }
+
+  /**
+   * Focus the form field associated with an error-summary link.
+   * Called from showErrors anchors. Handles inputs, selects, textareas,
+   * radio groups (focuses the first radio sharing the name), and falls
+   * back to scrolling the element into view.
+   */
+  GovBB.focusError = function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ block: 'center' });
+    if (typeof el.focus === 'function') {
+      try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
+    }
   };
 
   GovBB.getFlow = function () {

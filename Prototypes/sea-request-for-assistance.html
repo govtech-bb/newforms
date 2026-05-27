@@ -64,7 +64,7 @@ GovBB.showErrors = function(errors) {
   GovBB.clearErrors();
   if (!errors||!errors.length) return;
   var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
-  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'" onclick="GovBB.focusError(\''+e.id+'\');event.preventDefault();">'+e.msg+'</a></li>'; });
   html += '</ul></div>';
   document.getElementById('app').insertAdjacentHTML('afterbegin', html);
   document.getElementById('error-summary').focus();
@@ -215,7 +215,7 @@ const PAGES = {
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
         <legend class="govbb-fieldset__legend">Date of birth</legend>
-        <p class="govbb-hint">For example, 27 03 1985</p>
+        <p class="govbb-hint">For example, 27 3 1985</p>
         <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
           <div class="govbb-date-input__part">
             <label class="govbb-date-input__label" for="dob-day">Day</label>
@@ -498,7 +498,7 @@ const PAGES = {
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
         <legend class="govbb-fieldset__legend">Appointment date</legend>
-        <p class="govbb-hint">For example, 27 03 2025</p>
+        <p class="govbb-hint">For example, 27 3 2026</p>
         <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
           <div class="govbb-date-input__part">
             <label class="govbb-date-input__label" for="appt-date-day">Day</label>
@@ -662,16 +662,31 @@ function validate(pageId) {
         errors.push({ id: 'dob-day', msg: 'Date of birth – The date of birth must be in the past' });
       }
     }
-    if (!D['id-number'] || !D['id-number'].trim()) errors.push({ id: 'id-number', msg: 'Enter your National ID Number' });
+    const idVal = (D['id-number'] || '').trim();
+    if (!idVal) {
+      errors.push({ id: 'id-number', msg: 'Enter your National ID Number' });
+    } else if (!/^\d{6}-\d{4}$/.test(idVal)) {
+      errors.push({ id: 'id-number', msg: 'National ID Number must be in the format 110915-0048' });
+    }
     if (D['email'] && D['email'].trim() && !D['email'].includes('@')) {
       errors.push({ id: 'email', msg: 'Email address – Enter a valid email address' });
+    }
+  }
+
+  function reqPhone(id, missingMsg, label, required) {
+    const v = (D[id] || '').trim();
+    if (!v) { if (required) errors.push({ id, msg: missingMsg }); return; }
+    const digits = v.replace(/[\s\-()+]/g, '');
+    if (!/^\d{7,15}$/.test(digits)) {
+      errors.push({ id, msg: label + ' must contain 7 to 15 digits — for example, 246 249-1234' });
     }
   }
 
   if (pageId === 'contact') {
     if (!D['address'] || !D['address'].trim()) errors.push({ id: 'address', msg: 'Enter your home address' });
     if (!D['parish']) errors.push({ id: 'parish', msg: 'Select your parish' });
-    if (!D['phone-cell'] || !D['phone-cell'].trim()) errors.push({ id: 'phone-cell', msg: 'Enter a mobile number' });
+    reqPhone('phone-cell', 'Enter a mobile number',           'Mobile number', true);
+    reqPhone('phone-home', 'Enter a home telephone number',   'Home telephone number', false);
   }
 
   if (pageId === 'next-of-kin') {
@@ -680,7 +695,7 @@ function validate(pageId) {
     if (D['kin-relationship'] === 'Other' && (!D['kin-relationship-other'] || !D['kin-relationship-other'].trim())) {
       errors.push({ id: 'kin-relationship-other', msg: 'Describe the relationship of your next of kin to you' });
     }
-    if (!D['kin-phone'] || !D['kin-phone'].trim()) errors.push({ id: 'kin-phone', msg: 'Enter a phone number for your next of kin' });
+    reqPhone('kin-phone', 'Enter a phone number for your next of kin', 'Next of kin phone number', true);
   }
 
   if (pageId === 'disability-info') {
@@ -710,6 +725,17 @@ function validate(pageId) {
   if (pageId === 'transportation') {
     if (!D['appt-date-day'] || !D['appt-date-month'] || !D['appt-date-year']) {
       errors.push({ id: 'appt-date-day', msg: 'Appointment date – Enter a complete appointment date' });
+    } else {
+      const ad = parseInt(D['appt-date-day'], 10), am = parseInt(D['appt-date-month'], 10), ay = parseInt(D['appt-date-year'], 10);
+      const ap = new Date(ay, am - 1, ad);
+      if (ap.getFullYear() !== ay || ap.getMonth() !== am - 1 || ap.getDate() !== ad) {
+        errors.push({ id: 'appt-date-day', msg: 'Appointment date – Enter a real date, for example 15 6 2026' });
+      } else {
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        if (ap < today) {
+          errors.push({ id: 'appt-date-day', msg: 'Appointment date must be today or in the future' });
+        }
+      }
     }
     if (!D['pickup-time'] || !D['pickup-time'].trim()) errors.push({ id: 'pickup-time', msg: 'Enter the pickup time' });
     if (!D['destination'] || !D['destination'].trim()) errors.push({ id: 'destination', msg: 'Enter the destination' });

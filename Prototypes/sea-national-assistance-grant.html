@@ -64,7 +64,7 @@ GovBB.showErrors = function(errors) {
   GovBB.clearErrors();
   if (!errors||!errors.length) return;
   var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
-  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'" onclick="GovBB.focusError(\''+e.id+'\');event.preventDefault();">'+e.msg+'</a></li>'; });
   html += '</ul></div>';
   document.getElementById('app').insertAdjacentHTML('afterbegin', html);
   document.getElementById('error-summary').focus();
@@ -211,7 +211,7 @@ const PAGES = {
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
         <legend class="govbb-fieldset__legend">Date of birth</legend>
-        <p class="govbb-hint">For example, 27 03 1985</p>
+        <p class="govbb-hint">For example, 27 3 1985</p>
         <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
           <div class="govbb-date-input__part">
             <label class="govbb-date-input__label" for="dob-day">Day</label>
@@ -230,6 +230,7 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
         <label class="govbb-label" for="sex">Sex</label>
+        <p class="govbb-hint">As recorded on your National Registration Card.</p>
         <div class="govbb-select-wrapper">
           <select class="govbb-select" id="sex" name="sex" data-field="sex">
             <option value="">Select one</option>
@@ -611,16 +612,64 @@ const PAGES = {
 };
 
 /* ───────── Validation ───────── */
+function parseDate(prefix) {
+  const d = parseInt(GovBB.D[prefix + '-day'], 10);
+  const m = parseInt(GovBB.D[prefix + '-month'], 10);
+  const y = parseInt(GovBB.D[prefix + '-year'], 10);
+  if (!d || !m || !y) return null;
+  if (d < 1 || d > 31 || m < 1 || m > 12 || y < 1900 || y > 2100) return false;
+  const dt = new Date(y, m - 1, d);
+  if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) return false;
+  return dt;
+}
+
 function validate(pageId) {
   const errs = [];
+  function reqDate(prefix, label, opts) {
+    opts = opts || {};
+    const dayV = GovBB.D[prefix + '-day'];
+    const monV = GovBB.D[prefix + '-month'];
+    const yrV  = GovBB.D[prefix + '-year'];
+    const dayId = prefix + '-day';
+    if (!dayV || !monV || !yrV) {
+      errs.push({ id: dayId, msg: label + ' must be a complete date.' });
+      return;
+    }
+    const dt = parseDate(prefix);
+    if (dt === false) {
+      errs.push({ id: dayId, msg: label + ' must be a real date — for example, 27 3 1985.' });
+      return;
+    }
+    if (opts.notFuture && dt > new Date()) {
+      errs.push({ id: dayId, msg: label + ' must be in the past.' });
+    }
+  }
+  function reqIdNumber(id, label) {
+    const v = (GovBB.D[id] || '').trim();
+    if (!v) { errs.push({ id, msg: 'Enter your ' + label }); return; }
+    if (!/^\d{6}-\d{4}$/.test(v)) {
+      errs.push({ id, msg: label + ' must be in the format 110915-0048.' });
+    }
+  }
+  function reqPhone(id, label, required) {
+    const v = (GovBB.D[id] || '').trim();
+    if (!v) { if (required) errs.push({ id, msg: 'Enter your ' + label }); return; }
+    const digits = v.replace(/[\s\-()+]/g, '');
+    if (!/^\d{7,15}$/.test(digits)) {
+      errs.push({ id, msg: label + ' must contain 7 to 15 digits — for example, 246 249-1234.' });
+    }
+  }
+
   if (pageId === 'personal-details') {
     if (!GovBB.D['fullname'])   errs.push({ id: 'fullname',   msg: 'Enter your full name' });
-    if (!GovBB.D['id-number'])  errs.push({ id: 'id-number',  msg: 'Enter your National Identification Number' });
+    reqDate('dob', 'Date of birth', { notFuture: true });
+    reqIdNumber('id-number', 'National Identification Number');
   }
   if (pageId === 'contact') {
     if (!GovBB.D['address-line1']) errs.push({ id: 'address-line1', msg: 'Enter your address' });
     if (!GovBB.D['parish'])        errs.push({ id: 'parish',        msg: 'Select your parish' });
-    if (!GovBB.D['phone'])         errs.push({ id: 'phone',         msg: 'Enter your telephone number' });
+    reqPhone('phone', 'telephone number', true);
+    reqPhone('phone-alt', 'alternative telephone number', false);
   }
   if (pageId === 'household') {
     if (!GovBB.D['household-size']) errs.push({ id: 'household-size', msg: 'Enter the number of people in your household' });
