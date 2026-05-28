@@ -33,7 +33,9 @@
       <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
     </div>
   </div>
-  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
 </main>
 
 <footer class="govbb-footer">
@@ -66,7 +68,16 @@ GovBB.showErrors = function(errors) {
   var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
   errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
   html += '</ul></div>';
-  document.getElementById('app').insertAdjacentHTML('afterbegin', html);
+  /* Insert the error summary directly under the page title (H1) so it sits
+     between the heading and the form fields. If no H1 yet (e.g. start
+     page only), fall back to the top of #app. */
+  var app = document.getElementById('app');
+  var h1 = app.querySelector('h1');
+  if (h1) {
+    h1.insertAdjacentHTML('afterend', html);
+  } else {
+    app.insertAdjacentHTML('afterbegin', html);
+  }
   document.getElementById('error-summary').focus();
   errors.forEach(function(e){
     var el = document.getElementById(e.id);
@@ -262,12 +273,12 @@ const PAGES = {
           <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Children and young people</a></li>
         </ol>
       </nav>
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">National Summer Camp Programme</h1>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Register your child for the National Summer Camp Programme</h1>
       <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on May 2025</p>
       <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
 
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Register your child for the National Summer Camp Programme. The camp is open to children aged <strong>4 to 15 years</strong>.</p>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply online. The camp is free and takes about <strong>10 minutes</strong> to register.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to register your child for the National Summer Camp Programme. The camp is open to children aged <strong>4 to 15 years</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply online. The camp is free and registration takes about <strong>10 minutes</strong>.</p>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start registration</button></div>
 
@@ -284,10 +295,10 @@ const PAGES = {
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">We will review your registration and contact you within <strong>5 working days</strong> to confirm your child's place at camp. You will be told the camp dates once your registration is confirmed.</p>
 
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start registration</button></div>
+
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call <strong>+1 (246) 535-3835</strong> or email <a href="mailto:mysce.youthprojects@barbados.gov.bb" class="govbb-link">mysce.youthprojects@barbados.gov.bb</a> if you need help.</p>
-
-      <div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start registration</button></div>
     </div>`,
 
   /* ── Tell us about your child ── */
@@ -383,11 +394,11 @@ const PAGES = {
         <p class="govbb-hint">For example: blood clotting, respiratory conditions, heart conditions, frequent infections, diabetes, fainting.</p>
         <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
           <div class="govbb-radio-item">
-            <input class="govbb-radio" type="radio" id="illness-yes" name="illness" data-field="illness" value="Yes"${GovBB.D['illness']==='Yes'?' checked':''} />
+            <input class="govbb-radio" type="radio" id="illness-yes" name="illness" data-field="illness" value="Yes"${GovBB.D['illness']==='Yes'?' checked':''} data-trigger-render="1" />
             <label class="govbb-radio-item__label" for="illness-yes">Yes</label>
           </div>
           <div class="govbb-radio-item">
-            <input class="govbb-radio" type="radio" id="illness-no" name="illness" data-field="illness" value="No"${GovBB.D['illness']==='No'?' checked':''} />
+            <input class="govbb-radio" type="radio" id="illness-no" name="illness" data-field="illness" value="No"${GovBB.D['illness']==='No'?' checked':''} data-trigger-render="1" />
             <label class="govbb-radio-item__label" for="illness-no">No</label>
           </div>
         </div>
@@ -403,11 +414,11 @@ const PAGES = {
         <legend class="govbb-fieldset__legend">Is your child on any medication?</legend>
         <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
           <div class="govbb-radio-item">
-            <input class="govbb-radio" type="radio" id="medication-yes" name="medication" data-field="medication" value="Yes"${GovBB.D['medication']==='Yes'?' checked':''} />
+            <input class="govbb-radio" type="radio" id="medication-yes" name="medication" data-field="medication" value="Yes"${GovBB.D['medication']==='Yes'?' checked':''} data-trigger-render="1" />
             <label class="govbb-radio-item__label" for="medication-yes">Yes</label>
           </div>
           <div class="govbb-radio-item">
-            <input class="govbb-radio" type="radio" id="medication-no" name="medication" data-field="medication" value="No"${GovBB.D['medication']==='No'?' checked':''} />
+            <input class="govbb-radio" type="radio" id="medication-no" name="medication" data-field="medication" value="No"${GovBB.D['medication']==='No'?' checked':''} data-trigger-render="1" />
             <label class="govbb-radio-item__label" for="medication-no">No</label>
           </div>
         </div>
@@ -446,11 +457,11 @@ const PAGES = {
         <legend class="govbb-fieldset__legend">Does your child have a disability?</legend>
         <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
           <div class="govbb-radio-item">
-            <input class="govbb-radio" type="radio" id="disability-yes" name="disability" data-field="disability" value="Yes"${GovBB.D['disability']==='Yes'?' checked':''} />
+            <input class="govbb-radio" type="radio" id="disability-yes" name="disability" data-field="disability" value="Yes"${GovBB.D['disability']==='Yes'?' checked':''} data-trigger-render="1" />
             <label class="govbb-radio-item__label" for="disability-yes">Yes</label>
           </div>
           <div class="govbb-radio-item">
-            <input class="govbb-radio" type="radio" id="disability-no" name="disability" data-field="disability" value="No"${GovBB.D['disability']==='No'?' checked':''} />
+            <input class="govbb-radio" type="radio" id="disability-no" name="disability" data-field="disability" value="No"${GovBB.D['disability']==='No'?' checked':''} data-trigger-render="1" />
             <label class="govbb-radio-item__label" for="disability-no">No</label>
           </div>
         </div>
@@ -466,11 +477,11 @@ const PAGES = {
         <legend class="govbb-fieldset__legend">Does your child have any allergies?</legend>
         <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
           <div class="govbb-radio-item">
-            <input class="govbb-radio" type="radio" id="allergies-yes" name="allergies" data-field="allergies" value="Yes"${GovBB.D['allergies']==='Yes'?' checked':''} />
+            <input class="govbb-radio" type="radio" id="allergies-yes" name="allergies" data-field="allergies" value="Yes"${GovBB.D['allergies']==='Yes'?' checked':''} data-trigger-render="1" />
             <label class="govbb-radio-item__label" for="allergies-yes">Yes</label>
           </div>
           <div class="govbb-radio-item">
-            <input class="govbb-radio" type="radio" id="allergies-no" name="allergies" data-field="allergies" value="No"${GovBB.D['allergies']==='No'?' checked':''} />
+            <input class="govbb-radio" type="radio" id="allergies-no" name="allergies" data-field="allergies" value="No"${GovBB.D['allergies']==='No'?' checked':''} data-trigger-render="1" />
             <label class="govbb-radio-item__label" for="allergies-no">No</label>
           </div>
         </div>
@@ -536,37 +547,39 @@ const PAGES = {
       </div>
       ${venueDropdown}
 
-      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Topics that interest your child</h2>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);color:var(--color-mid-grey-00);">Choose all that apply.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);width:100%;">Topics that interest your child</legend>
+        <p class="govbb-hint">Choose all that apply.</p>
 
-      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
-        <input class="govbb-checkbox" type="checkbox" id="curriculum-arts" name="curriculum-arts" data-field="curriculum-arts"${GovBB.D['curriculum-arts']?' checked':''} />
-        <label class="govbb-checkbox-item__label" for="curriculum-arts">Arts &amp; Culture <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes visual &amp; performing arts)</span></label>
-      </div>
-      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
-        <input class="govbb-checkbox" type="checkbox" id="curriculum-innovation" name="curriculum-innovation" data-field="curriculum-innovation"${GovBB.D['curriculum-innovation']?' checked':''} />
-        <label class="govbb-checkbox-item__label" for="curriculum-innovation">Innovation <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes digital media, science &amp; technology)</span></label>
-      </div>
-      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
-        <input class="govbb-checkbox" type="checkbox" id="curriculum-youth" name="curriculum-youth" data-field="curriculum-youth"${GovBB.D['curriculum-youth']?' checked':''} />
-        <label class="govbb-checkbox-item__label" for="curriculum-youth">Youth Empowerment <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes entrepreneurship, career development, leadership, public speaking)</span></label>
-      </div>
-      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
-        <input class="govbb-checkbox" type="checkbox" id="curriculum-health" name="curriculum-health" data-field="curriculum-health"${GovBB.D['curriculum-health']?' checked':''} />
-        <label class="govbb-checkbox-item__label" for="curriculum-health">Health &amp; Fitness</label>
-      </div>
-      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
-        <input class="govbb-checkbox" type="checkbox" id="curriculum-self" name="curriculum-self" data-field="curriculum-self"${GovBB.D['curriculum-self']?' checked':''} />
-        <label class="govbb-checkbox-item__label" for="curriculum-self">Self-Management Tools <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes health &amp; wellness, self-care, religious knowledge, ethics, etiquette)</span></label>
-      </div>
-      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
-        <input class="govbb-checkbox" type="checkbox" id="curriculum-finance" name="curriculum-finance" data-field="curriculum-finance"${GovBB.D['curriculum-finance']?' checked':''} />
-        <label class="govbb-checkbox-item__label" for="curriculum-finance">Financial Literacy</label>
-      </div>
-      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-m);">
-        <input class="govbb-checkbox" type="checkbox" id="curriculum-agriculture" name="curriculum-agriculture" data-field="curriculum-agriculture"${GovBB.D['curriculum-agriculture']?' checked':''} />
-        <label class="govbb-checkbox-item__label" for="curriculum-agriculture">Agriculture</label>
-      </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="curriculum-arts" name="curriculum-arts" data-field="curriculum-arts"${GovBB.D['curriculum-arts']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="curriculum-arts">Arts &amp; Culture <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes visual &amp; performing arts)</span></label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="curriculum-innovation" name="curriculum-innovation" data-field="curriculum-innovation"${GovBB.D['curriculum-innovation']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="curriculum-innovation">Innovation <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes digital media, science &amp; technology)</span></label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="curriculum-youth" name="curriculum-youth" data-field="curriculum-youth"${GovBB.D['curriculum-youth']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="curriculum-youth">Youth Empowerment <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes entrepreneurship, career development, leadership, public speaking)</span></label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="curriculum-health" name="curriculum-health" data-field="curriculum-health"${GovBB.D['curriculum-health']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="curriculum-health">Health &amp; Fitness</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="curriculum-self" name="curriculum-self" data-field="curriculum-self"${GovBB.D['curriculum-self']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="curriculum-self">Self-Management Tools <span style="font-weight:normal;color:var(--color-mid-grey-00);">(includes health &amp; wellness, self-care, religious knowledge, ethics, etiquette)</span></label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="curriculum-finance" name="curriculum-finance" data-field="curriculum-finance"${GovBB.D['curriculum-finance']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="curriculum-finance">Financial Literacy</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="curriculum-agriculture" name="curriculum-agriculture" data-field="curriculum-agriculture"${GovBB.D['curriculum-agriculture']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="curriculum-agriculture">Agriculture</label>
+        </div>
+      </fieldset>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Activities</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);color:var(--color-mid-grey-00);">By registering, you give permission for trained camp staff to give first aid and seek emergency care for your child if we cannot reach you.</p>
@@ -853,35 +866,36 @@ const PAGES = {
     <form novalidate>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Ministry of Youth, Sports and Community Empowerment</p>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Camper conduct agreement</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">The National Summer Camp Programme gives campers a safe place to learn and grow together. Both you and your child must read and agree to these rules before your child attends camp.</p>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Check all six boxes below to agree on behalf of yourself and your child.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">The National Summer Camp Programme gives campers a safe place to learn and grow together. Please read these rules with your child and agree on their behalf before they attend camp.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Tick all six boxes to confirm you and your child agree.</p>
 
-      <div style="margin-bottom:var(--spacing-m);">
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Conduct agreement</legend>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
           <input class="govbb-checkbox" type="checkbox" id="conduct-1" name="conduct-1" data-field="conduct-1"${GovBB.D['conduct-1']?' checked':''} />
-          <label class="govbb-checkbox-item__label" for="conduct-1">I will treat everyone in the camp community with respect at all times, including their belongings, privacy and feelings.</label>
+          <label class="govbb-checkbox-item__label" for="conduct-1">I will make sure my child treats everyone in the camp community with respect at all times, including their belongings, privacy and feelings.</label>
         </div>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
           <input class="govbb-checkbox" type="checkbox" id="conduct-2" name="conduct-2" data-field="conduct-2"${GovBB.D['conduct-2']?' checked':''} />
-          <label class="govbb-checkbox-item__label" for="conduct-2">I understand that harassment based on colour, race, religion, creed, gender, age, sexual orientation or disability is not allowed.</label>
+          <label class="govbb-checkbox-item__label" for="conduct-2">I understand harassment of any kind — based on colour, race, religion, creed, gender, age, sexual orientation or disability — is not allowed, and I will make sure my child understands this too.</label>
         </div>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
           <input class="govbb-checkbox" type="checkbox" id="conduct-3" name="conduct-3" data-field="conduct-3"${GovBB.D['conduct-3']?' checked':''} />
-          <label class="govbb-checkbox-item__label" for="conduct-3">I will treat the camp facilities and equipment with respect and will not take or damage any camp property.</label>
+          <label class="govbb-checkbox-item__label" for="conduct-3">I will make sure my child treats the camp facilities and equipment with respect, and does not take or damage any camp property.</label>
         </div>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
           <input class="govbb-checkbox" type="checkbox" id="conduct-4" name="conduct-4" data-field="conduct-4"${GovBB.D['conduct-4']?' checked':''} />
-          <label class="govbb-checkbox-item__label" for="conduct-4">I will not use offensive language, play music with offensive content, or make reference to violent or offensive actions.</label>
+          <label class="govbb-checkbox-item__label" for="conduct-4">I will make sure my child does not use offensive language, play music with offensive content, or refer to violent or offensive actions.</label>
         </div>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
           <input class="govbb-checkbox" type="checkbox" id="conduct-5" name="conduct-5" data-field="conduct-5"${GovBB.D['conduct-5']?' checked':''} />
-          <label class="govbb-checkbox-item__label" for="conduct-5">I will not take part in any activity that puts myself, other campers, or staff at risk.</label>
+          <label class="govbb-checkbox-item__label" for="conduct-5">I will make sure my child does not take part in any activity that puts themselves, other campers, or staff at risk.</label>
         </div>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
           <input class="govbb-checkbox" type="checkbox" id="conduct-6" name="conduct-6" data-field="conduct-6"${GovBB.D['conduct-6']?' checked':''} />
-          <label class="govbb-checkbox-item__label" for="conduct-6">I agree to follow the rules of the camp and the directions given by camp staff at all times.</label>
+          <label class="govbb-checkbox-item__label" for="conduct-6">I agree my child will follow the rules of the camp and the directions given by camp staff at all times.</label>
         </div>
-      </div>
+      </fieldset>
 
       <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
         <p class="govbb-text-body"><strong>Important:</strong> If a camper breaks these rules, the parent or guardian will be contacted. Serious breaches may result in the camper being asked to leave camp immediately.</p>
@@ -1135,12 +1149,12 @@ function validate(pageId) {
 
   if (pageId === 'conduct') {
     const items = [
-      { id: 'conduct-1', label: 'treat everyone with respect' },
-      { id: 'conduct-2', label: 'understand harassment is not allowed' },
-      { id: 'conduct-3', label: 'treat camp facilities with respect' },
-      { id: 'conduct-4', label: 'not use offensive language' },
-      { id: 'conduct-5', label: 'not take part in risky activities' },
-      { id: 'conduct-6', label: 'follow camp rules and staff directions' }
+      { id: 'conduct-1', label: 'my child will treat everyone with respect' },
+      { id: 'conduct-2', label: 'I understand harassment is not allowed' },
+      { id: 'conduct-3', label: 'my child will treat camp facilities with respect' },
+      { id: 'conduct-4', label: 'my child will not use offensive language' },
+      { id: 'conduct-5', label: 'my child will not take part in risky activities' },
+      { id: 'conduct-6', label: 'my child will follow camp rules and staff directions' }
     ];
     items.forEach(item => {
       if (!D[item.id]) errors.push({ id: item.id, msg: 'Tick the box to agree: ' + item.label });
@@ -1162,7 +1176,15 @@ GovBB.init({
   pages: PAGES,
   validate: validate,
   onRadioChange: function(name) {
-    if (name === 'guardian-is-emergency' || name === 'has-activity-exemptions') GovBB.render();
+    const triggers = [
+      'guardian-is-emergency',
+      'has-activity-exemptions',
+      'illness',
+      'medication',
+      'disability',
+      'allergies'
+    ];
+    if (triggers.indexOf(name) !== -1) GovBB.render();
   }
 });
 </script>
