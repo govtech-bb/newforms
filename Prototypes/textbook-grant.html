@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for the $100 Textbook Grant – Ministry of Educational Transformation</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
+  </div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'" onclick="GovBB.focusError(\''+e.id+'\');return false;">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  /* Insert error summary directly under the page H1 (after the heading,
+     before the form fields). */
+  var app = document.getElementById('app');
+  var h1 = app.querySelector('h1');
+  if (h1) {
+    h1.insertAdjacentHTML('afterend', html);
+  } else {
+    app.insertAdjacentHTML('afterbegin', html);
+  }
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) group.appendChild(msg);
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+/* ───────── Global nav shortcuts ───────── */
+function next() { GovBB.next(); }
+function back() { GovBB.back(); }
+function nav(p)  { GovBB.nav(p); }
+
+/* ───────── Form configuration ───────── */
+const FORM_NAME = 'Application for the $100 Textbook Grant';
+const CAPTION = 'Ministry of Educational Transformation';
+
+const TITLES = ['Mr', 'Mrs', 'Miss', 'Ms', 'Dr', 'Rev'];
+
+const ACCOUNT_TYPES = ['Savings', 'Chequing', 'Other'];
+
+const RELATIONSHIPS = [
+  'Son', 'Daughter', 'Grandson', 'Granddaughter',
+  'Nephew', 'Niece', 'Stepson', 'Stepdaughter',
+  'Foster child', 'Ward', 'Other'
+];
+
+/* Common Barbados school class labels. */
+const CLASSES = [
+  'Reception',
+  'Infants A',
+  'Infants B',
+  'Class 1',
+  'Class 2',
+  'Class 3',
+  'Class 4',
+  'First Form',
+  'Second Form',
+  'Third Form',
+  'Fourth Form',
+  'Fifth Form',
+  'Lower Sixth',
+  'Upper Sixth'
+];
+
+const BANKS = [
+  'Republic Bank',
+  'First Caribbean International Bank',
+  'RBC Royal Bank',
+  'Scotiabank',
+  'Barbados National Bank',
+  'City of Bridgetown Credit Union',
+  'Barbados Public Workers Credit Union',
+  'Teachers Credit Union',
+  'Other'
+];
+
+/* ───────── Flow ───────── */
+const FLOW = [
+  'start',
+  'parent-details',
+  'parent-contact',
+  'banking',
+  'children-count',
+  'children-data',
+  'declaration',
+  'check',
+  'confirmation'
+];
+
+/* ───────── Helpers ───────── */
+function childCount() {
+  const n = parseInt(GovBB.D['children-count'], 10);
+  if (isNaN(n) || n < 1) return 1;
+  if (n > 5) return 5;
+  return n;
+}
+
+function caption() {
+  return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">' + CAPTION + '</p>';
+}
+
+function parentFullName() {
+  return [GovBB.D['parent-title'], GovBB.D['parent-firstname'], GovBB.D['parent-othernames'], GovBB.D['parent-lastname']]
+    .filter(Boolean).join(' ');
+}
+
+/* ───────── Pages ───────── */
+const PAGES = {
+
+  /* ── Start ── */
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Education and schooling</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Apply for the $100 Textbook Grant</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on 26 August 2025</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Parents and guardians of children in primary or secondary school in Barbados can claim a <strong>$100 grant per child</strong> to help with the cost of textbooks.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply online. The grant is free to claim and will be paid directly into your bank account. Filling in this form takes about <strong>10 minutes</strong>.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
+
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>One application can include up to 5 children.</strong> If you have more than 5 children to claim for, submit a second application. Do not submit more than one claim for the same child.</p>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National ID Number (for example, 110915-0048)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your TAMIS number, if you have one</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your contact details — address, phone, email</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your bank or credit union details — bank, branch, account number, account type</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">For each child: their full name, National ID Number, sex, school class, and relationship to you</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">We will verify each child's enrolment with their school. Once verified, the grant will be paid directly to the bank account you provide. Most applications are paid within <strong>4 to 6 weeks</strong>.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call the Ministry of Educational Transformation on <strong>+1 (246) 535-0700</strong> if you need help completing this form.</p>
+    </div>`,
+
+  /* ── Parent / guardian details ── */
+  'parent-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parent-title">Title</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="parent-title" name="parent-title" data-field="parent-title">
+            <option value="">Select a title</option>
+            ${TITLES.map(t=>`<option value="${t}"${GovBB.D['parent-title']===t?' selected':''}>${t}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parent-firstname">First name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="parent-firstname" name="parent-firstname" data-field="parent-firstname" autocomplete="given-name" value="${GovBB.D['parent-firstname']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parent-othernames">Other names (optional)</label>
+        <p class="govbb-hint">Middle names or initials, if any.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="parent-othernames" name="parent-othernames" data-field="parent-othernames" value="${GovBB.D['parent-othernames']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parent-lastname">Last name</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="parent-lastname" name="parent-lastname" data-field="parent-lastname" autocomplete="family-name" value="${GovBB.D['parent-lastname']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parent-nid">National ID Number</label>
+        <p class="govbb-hint">From your national ID card. For example, 110915-0048.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="parent-nid" name="parent-nid" data-field="parent-nid" value="${GovBB.D['parent-nid']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="tamis-no">TAMIS number (optional)</label>
+        <p class="govbb-hint">Your Tax Administration Management Information System number, if you have one. Leave blank if you don't.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="tamis-no" name="tamis-no" data-field="tamis-no" value="${GovBB.D['tamis-no']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  /* ── Parent / guardian contact ── */
+  'parent-contact': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">How to reach you</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Address</h2>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address">Home address</label>
+        <p class="govbb-hint">Street and house number, area or village.</p>
+        <textarea class="govbb-textarea" id="address" name="address" data-field="address" rows="3" style="width:100%;">${GovBB.D['address']||''}</textarea>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parish">Parish</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="parish" name="parish" data-field="parish">
+            <option value="">Select a parish</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['parish']===o?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Phone numbers</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);color:var(--color-mid-grey-00);">Give us at least one number we can reach you on.</p>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="cell-phone">Cell phone</label>
+        <p class="govbb-hint">For example, (246) 249 1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="cell-phone" name="cell-phone" data-field="cell-phone" inputmode="tel" autocomplete="tel" value="${GovBB.D['cell-phone']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="home-phone">Home phone (optional)</label>
+        <p class="govbb-hint">For example, (246) 433 1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="home-phone" name="home-phone" data-field="home-phone" inputmode="tel" value="${GovBB.D['home-phone']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="work-phone">Work phone (optional)</label>
+        <p class="govbb-hint">For example, (246) 535 1234.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="tel" id="work-phone" name="work-phone" data-field="work-phone" inputmode="tel" value="${GovBB.D['work-phone']||''}" />
+        </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Email</h2>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="email">Email address</label>
+        <p class="govbb-hint">We'll send a copy of your application here. For example, you@example.com.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="email" id="email" name="email" data-field="email" inputmode="email" autocomplete="email" value="${GovBB.D['email']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  /* ── Banking ── */
+  'banking': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your bank or credit union account</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">We need accurate banking details so the grant can be paid directly into your account. Delays in processing are usually caused by incorrect information here.</p>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="bank-name">Bank or credit union</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="bank-name" name="bank-name" data-field="bank-name" data-trigger-render="1">
+            <option value="">Select one</option>
+            ${BANKS.map(b=>`<option value="${b}"${GovBB.D['bank-name']===b?' selected':''}>${b}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      ${GovBB.D['bank-name'] === 'Other' ? `
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);">
+        <label class="govbb-label" for="bank-name-other">Name of bank or credit union</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="bank-name-other" name="bank-name-other" data-field="bank-name-other" value="${GovBB.D['bank-name-other']||''}" />
+        </div>
+      </div>` : ''}
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="bank-branch">Branch</label>
+        <p class="govbb-hint">For example, Broad Street, Warrens, Worthing.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="bank-branch" name="bank-branch" data-field="bank-branch" value="${GovBB.D['bank-branch']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="account-no">Account number</label>
+        <p class="govbb-hint">6 to 16 digits. Check your bank statement, cheque book, or online banking.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="account-no" name="account-no" data-field="account-no" inputmode="numeric" value="${GovBB.D['account-no']||''}" />
+        </div>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Account type</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${ACCOUNT_TYPES.map((t,i)=>`
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="account-type-${i}" name="account-type" data-field="account-type" value="${t}"${GovBB.D['account-type']===t?' checked':''} data-trigger-render="1" />
+            <label class="govbb-radio-item__label" for="account-type-${i}">${t}</label>
+          </div>`).join('')}
+        </div>
+      </fieldset>
+
+      ${GovBB.D['account-type'] === 'Other' ? `
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);">
+        <label class="govbb-label" for="account-type-other">Describe the account type</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="account-type-other" name="account-type-other" data-field="account-type-other" value="${GovBB.D['account-type-other']||''}" />
+        </div>
+      </div>` : ''}
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="account-name">Name on the account</label>
+        <p class="govbb-hint">The name exactly as it appears on the account. This must match the name on your national ID.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="account-name" name="account-name" data-field="account-name" value="${GovBB.D['account-name']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  /* ── How many children ── */
+  'children-count': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">How many children are you claiming for?</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You can claim for up to <strong>5 children</strong> on this application. If you have more than 5 children, you can submit a second application after this one.</p>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Number of children</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${[1,2,3,4,5].map(n=>`
+          <div class="govbb-radio-item">
+            <input class="govbb-radio" type="radio" id="children-count-${n}" name="children-count" data-field="children-count" value="${n}"${String(GovBB.D['children-count'])===String(n)?' checked':''} />
+            <label class="govbb-radio-item__label" for="children-count-${n}">${n} ${n===1?'child':'children'}</label>
+          </div>`).join('')}
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  /* ── Children data ── */
+  'children-data': () => {
+    const count = childCount();
+    let sections = '';
+    for (let i = 1; i <= count; i++) {
+      sections += `
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-l);border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="padding:0 var(--spacing-s);">Child ${i}</legend>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="child-${i}-name">Full name</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="child-${i}-name" name="child-${i}-name" data-field="child-${i}-name" value="${GovBB.D['child-'+i+'-name']||''}" />
+          </div>
+        </div>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="child-${i}-nid">National ID Number</label>
+          <p class="govbb-hint">For example, 110915-0048.</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="child-${i}-nid" name="child-${i}-nid" data-field="child-${i}-nid" value="${GovBB.D['child-'+i+'-nid']||''}" />
+          </div>
+        </div>
+
+        <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+          <legend class="govbb-fieldset__legend">Sex</legend>
+          <p class="govbb-hint">As recorded on the child's National Registration Card.</p>
+          <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+            <div class="govbb-radio-item">
+              <input class="govbb-radio" type="radio" id="child-${i}-sex-m" name="child-${i}-sex" data-field="child-${i}-sex" value="Male"${GovBB.D['child-'+i+'-sex']==='Male'?' checked':''} />
+              <label class="govbb-radio-item__label" for="child-${i}-sex-m">Male</label>
+            </div>
+            <div class="govbb-radio-item">
+              <input class="govbb-radio" type="radio" id="child-${i}-sex-f" name="child-${i}-sex" data-field="child-${i}-sex" value="Female"${GovBB.D['child-'+i+'-sex']==='Female'?' checked':''} />
+              <label class="govbb-radio-item__label" for="child-${i}-sex-f">Female</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="child-${i}-class">School class</label>
+          <div class="govbb-select-wrapper">
+            <select class="govbb-select" id="child-${i}-class" name="child-${i}-class" data-field="child-${i}-class">
+              <option value="">Select a class</option>
+              ${CLASSES.map(c=>`<option value="${c}"${GovBB.D['child-'+i+'-class']===c?' selected':''}>${c}</option>`).join('')}
+            </select>
+            <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+          </div>
+        </div>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="child-${i}-school">School name</label>
+          <p class="govbb-hint">The school your child currently attends.</p>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="child-${i}-school" name="child-${i}-school" data-field="child-${i}-school" value="${GovBB.D['child-'+i+'-school']||''}" />
+          </div>
+        </div>
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="child-${i}-relation">Relationship to you</label>
+          <div class="govbb-select-wrapper">
+            <select class="govbb-select" id="child-${i}-relation" name="child-${i}-relation" data-field="child-${i}-relation" data-trigger-render="1">
+              <option value="">Select a relationship</option>
+              ${RELATIONSHIPS.map(r=>`<option value="${r}"${GovBB.D['child-'+i+'-relation']===r?' selected':''}>${r}</option>`).join('')}
+            </select>
+            <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+          </div>
+        </div>
+
+        ${GovBB.D['child-'+i+'-relation'] === 'Other' ? `
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);">
+          <label class="govbb-label" for="child-${i}-relation-other">Describe your relationship to the child</label>
+          <div class="govbb-input-wrapper">
+            <input class="govbb-input" type="text" id="child-${i}-relation-other" name="child-${i}-relation-other" data-field="child-${i}-relation-other" value="${GovBB.D['child-'+i+'-relation-other']||''}" />
+          </div>
+        </div>` : ''}
+      </fieldset>`;
+    }
+
+    return `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">${count === 1 ? 'About the child' : 'About the children'}</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Fill in the details for ${count === 1 ? 'the child' : 'each of the ' + count + ' children'} you are claiming for.</p>
+
+      ${sections}
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`;
+  },
+
+  /* ── Declaration ── */
+  'declaration': () => {
+    const count = childCount();
+    return `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You are about to submit a claim for the $100 Textbook Grant for <strong>${count} ${count === 1 ? 'child' : 'children'}</strong>.</p>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="decl-accurate" name="decl-accurate" data-field="decl-accurate"${GovBB.D['decl-accurate']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="decl-accurate">The information I have given on this form is true and correct to the best of my knowledge.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="decl-once" name="decl-once" data-field="decl-once"${GovBB.D['decl-once']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="decl-once">I confirm that I have not submitted, and will not submit, more than one claim for the same child for this grant period.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="decl-false" name="decl-false" data-field="decl-false"${GovBB.D['decl-false']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="decl-false">I understand that providing false or misleading information may result in my claim being refused and possible legal action.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="decl-verify" name="decl-verify" data-field="decl-verify"${GovBB.D['decl-verify']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="decl-verify">I agree that the Ministry may verify my child's enrolment with their school before paying the grant.</label>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue to review</button>
+      </div>
+    </form>`;
+  },
+
+  /* ── Check your answers ── */
+  'check': () => {
+    const count = childCount();
+    let childRows = '';
+    for (let i = 1; i <= count; i++) {
+      childRows += `
+        <h3 class="govbb-text-h3" style="margin-bottom:var(--spacing-s);">Child ${i}</h3>
+        <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+          ${GovBB.summaryRow('Full name', GovBB.D['child-'+i+'-name'], 'children-data')}
+          ${GovBB.summaryRow('National ID Number', GovBB.D['child-'+i+'-nid'], 'children-data')}
+          ${GovBB.summaryRow('Sex', GovBB.D['child-'+i+'-sex'], 'children-data')}
+          ${GovBB.summaryRow('Class', GovBB.D['child-'+i+'-class'], 'children-data')}
+          ${GovBB.summaryRow('School', GovBB.D['child-'+i+'-school'], 'children-data')}
+          ${GovBB.summaryRow('Relationship', GovBB.D['child-'+i+'-relation'] === 'Other' ? (GovBB.D['child-'+i+'-relation-other'] || 'Other') : GovBB.D['child-'+i+'-relation'], 'children-data')}
+        </dl>`;
+    }
+
+    return `
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before submitting</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About you</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Name', parentFullName(), 'parent-details')}
+        ${GovBB.summaryRow('National ID Number', GovBB.D['parent-nid'], 'parent-details')}
+        ${GovBB.summaryRow('TAMIS number', GovBB.D['tamis-no'] || 'Not provided', 'parent-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact details</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Address', GovBB.D['address'], 'parent-contact')}
+        ${GovBB.summaryRow('Parish', GovBB.D['parish'], 'parent-contact')}
+        ${GovBB.summaryRow('Cell phone', GovBB.D['cell-phone'], 'parent-contact')}
+        ${GovBB.summaryRow('Home phone', GovBB.D['home-phone'] || 'Not provided', 'parent-contact')}
+        ${GovBB.summaryRow('Work phone', GovBB.D['work-phone'] || 'Not provided', 'parent-contact')}
+        ${GovBB.summaryRow('Email', GovBB.D['email'], 'parent-contact')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Banking</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Bank or credit union', GovBB.D['bank-name'] === 'Other' ? (GovBB.D['bank-name-other'] || 'Other') : GovBB.D['bank-name'], 'banking')}
+        ${GovBB.summaryRow('Branch', GovBB.D['bank-branch'], 'banking')}
+        ${GovBB.summaryRow('Account number', GovBB.D['account-no'], 'banking')}
+        ${GovBB.summaryRow('Account type', GovBB.D['account-type'] === 'Other' ? (GovBB.D['account-type-other'] || 'Other') : GovBB.D['account-type'], 'banking')}
+        ${GovBB.summaryRow('Name on account', GovBB.D['account-name'], 'banking')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Claiming for ${count} ${count === 1 ? 'child' : 'children'}</h2>
+      ${childRows}
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By submitting this form you confirm that the information you have given is true and correct, and that you have not submitted more than one claim for the same child.</p>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
+      </div>
+    </div>`;
+  },
+
+  /* ── Confirmation ── */
+  'confirmation': () => {
+    window.__refNumber = window.__refNumber || ('TBG-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+    if (document.title.indexOf('Error: ') === 0) {
+      document.title = document.title.substring('Error: '.length);
+    }
+    const count = childCount();
+    const total = count * 100;
+    return `
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Application submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You have claimed for <strong>${count} ${count === 1 ? 'child' : 'children'}</strong>. If approved, the total grant of <strong>$${total}</strong> will be paid into the bank account you provided.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We will verify each child's enrolment with their school.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If approved, the grant will be paid into the bank account you provided within <strong>4 to 6 weeks</strong>.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A copy of your application has been sent to ${GovBB.D['email'] || 'the email you provided'}.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you do not hear from us within 6 weeks, call <strong>+1 (246) 535-0700</strong>.</li>
+      </ul>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Keep your reference number — you will need it to chase up your claim.</p>
+    </div>`;
+  }
+};
+
+/* ───────── Validation ───────── */
+function validate(pageId) {
+  const D = GovBB.D;
+  const errors = [];
+
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const NID_RE = /^\d{6}-\d{4}$/;
+
+  function req(id, msg) {
+    if (!D[id] || String(D[id]).trim() === '') errors.push({ id: id, msg: msg });
+  }
+  function reqNid(id, label, emptyMsg) {
+    const v = (D[id] || '').trim();
+    if (!v) { errors.push({ id: id, msg: emptyMsg }); return; }
+    if (!NID_RE.test(v)) errors.push({ id: id, msg: label + ' must be in the format 110915-0048' });
+  }
+  function reqPhone(id, label, required, emptyMsg) {
+    const v = (D[id] || '').trim();
+    if (!v) { if (required) errors.push({ id: id, msg: emptyMsg }); return; }
+    const digits = v.replace(/[\s\-()+]/g, '');
+    if (!/^\d{7,15}$/.test(digits)) errors.push({ id: id, msg: label + ' must contain 7 to 15 digits, for example (246) 249 1234' });
+  }
+  function reqEmail(id, label, emptyMsg) {
+    const v = (D[id] || '').trim();
+    if (!v) { errors.push({ id: id, msg: emptyMsg }); return; }
+    if (!EMAIL_RE.test(v)) errors.push({ id: id, msg: label + ' must be in the format you@example.com' });
+  }
+
+  if (pageId === 'parent-details') {
+    req('parent-title', 'Select a title');
+    req('parent-firstname', 'Enter your first name');
+    req('parent-lastname', 'Enter your last name');
+    reqNid('parent-nid', 'National ID Number', 'Enter your National ID Number');
+    /* tamis-no is optional. If provided, accept any value — TAMIS numbers vary in format. */
+  }
+
+  if (pageId === 'parent-contact') {
+    req('address', 'Enter your home address');
+    req('parish', 'Select your parish');
+    reqPhone('cell-phone', 'Cell phone', true, 'Enter your cell phone number');
+    reqPhone('home-phone', 'Home phone number', false);
+    reqPhone('work-phone', 'Work phone number', false);
+    reqEmail('email', 'Email address', 'Enter your email address');
+  }
+
+  if (pageId === 'banking') {
+    req('bank-name', 'Select your bank or credit union');
+    if (D['bank-name'] === 'Other') {
+      req('bank-name-other', 'Enter the name of your bank or credit union');
+    }
+    req('bank-branch', 'Enter the branch');
+    const acct = (D['account-no'] || '').trim();
+    if (!acct) {
+      errors.push({ id: 'account-no', msg: 'Enter your account number' });
+    } else if (!/^\d{6,16}$/.test(acct.replace(/[\s\-]/g, ''))) {
+      errors.push({ id: 'account-no', msg: 'Account number must be 6 to 16 digits' });
+    }
+    if (!D['account-type']) errors.push({ id: 'account-type-0', msg: 'Select an account type' });
+    if (D['account-type'] === 'Other') req('account-type-other', 'Describe your account type');
+    req('account-name', 'Enter the name on the account');
+  }
+
+  if (pageId === 'children-count') {
+    if (!D['children-count']) errors.push({ id: 'children-count-1', msg: 'Choose how many children you are claiming for' });
+  }
+
+  if (pageId === 'children-data') {
+    const count = childCount();
+    for (let i = 1; i <= count; i++) {
+      req('child-' + i + '-name', 'Child ' + i + ' — Enter the full name');
+      reqNid('child-' + i + '-nid', 'Child ' + i + ' National ID Number', 'Child ' + i + ' — Enter the National ID Number');
+      if (!D['child-' + i + '-sex']) errors.push({ id: 'child-' + i + '-sex-m', msg: 'Child ' + i + ' — Select the sex' });
+      req('child-' + i + '-class', 'Child ' + i + ' — Select the school class');
+      req('child-' + i + '-school', 'Child ' + i + ' — Enter the school name');
+      req('child-' + i + '-relation', 'Child ' + i + ' — Select your relationship to the child');
+      if (D['child-' + i + '-relation'] === 'Other' && (!D['child-' + i + '-relation-other'] || !D['child-' + i + '-relation-other'].trim())) {
+        errors.push({ id: 'child-' + i + '-relation-other', msg: 'Child ' + i + ' — Describe your relationship to the child' });
+      }
+    }
+  }
+
+  if (pageId === 'declaration') {
+    if (!D['decl-accurate']) errors.push({ id: 'decl-accurate', msg: 'Tick the box to confirm the information is true and correct' });
+    if (!D['decl-once']) errors.push({ id: 'decl-once', msg: 'Tick the box to confirm you have not submitted more than one claim per child' });
+    if (!D['decl-false']) errors.push({ id: 'decl-false', msg: 'Tick the box to confirm you understand the consequences of false information' });
+    if (!D['decl-verify']) errors.push({ id: 'decl-verify', msg: 'Tick the box to agree the Ministry may verify your child\'s school enrolment' });
+  }
+
+  return errors;
+}
+
+/* ───────── Init ───────── */
+GovBB.init({
+  formName: FORM_NAME,
+  flow: FLOW,
+  pages: PAGES,
+  validate: validate,
+  onRadioChange: function(name) {
+    /* Triggers re-render so conditional reveals (account-type Other,
+       child relationship Other) appear immediately. */
+    const triggers = ['account-type', 'children-count'];
+    if (triggers.indexOf(name) !== -1) GovBB.render();
+  }
+});
+</script>
+</body>
+</html>
