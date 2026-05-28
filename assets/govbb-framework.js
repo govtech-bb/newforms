@@ -53,7 +53,9 @@
     if (!fn) { el.innerHTML = '<p>Page not found: ' + pageId + '</p>'; return; }
     el.innerHTML = fn();
     _injectProgressIndicator(pageId, flow);
-    _hidePreviousOnFirstStep(pageId, flow);
+    /* Previous button is shown on every form step (including the first) so
+       users can navigate back to the start page if they want to re-read the
+       intro or eligibility. */
     _bindInputs();
     _bindRadios();
     _bindCheckboxes();
