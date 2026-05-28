@@ -189,11 +189,10 @@ const PAGES = {
         </ol>
       </nav>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Apply for the $100 Textbook Grant</h1>
-      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on 26 August 2025</p>
-      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Last updated on 26 August 2025</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
 
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Parents and guardians of children in primary or secondary school in Barbados can claim a <strong>$100 grant per child</strong> to help with the cost of textbooks.</p>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply online. The grant is free to claim and will be paid directly into your bank account. Filling in this form takes about <strong>10 minutes</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Claim <strong>$100 per child</strong> for textbook costs, for children in primary or secondary school in Barbados. Apply online in about <strong>10 minutes</strong> — the grant is free and paid into your bank account.</p>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
 
@@ -204,7 +203,7 @@ const PAGES = {
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National ID Number (for example, 110915-0048)</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your TAMIS number, if you have one</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your TAMIS number (your tax ID with the Barbados Revenue Authority), if you have one</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your contact details — address, phone, email</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your bank or credit union details — bank, branch, account number, account type</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">For each child: their full name, National ID Number, sex, school class, and relationship to you</li>
@@ -548,7 +547,10 @@ const PAGES = {
     <form novalidate>
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You are about to submit a claim for the $100 Textbook Grant for <strong>${count} ${count === 1 ? 'child' : 'children'}</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">${count === 1
+        ? 'You are about to submit a claim for <strong>1 child</strong>. The grant amount is <strong>$100</strong>.'
+        : `You are about to submit a claim for <strong>${count} children</strong>. At $100 per child, the total grant amount is <strong>$${count * 100}</strong>.`
+      }</p>
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
         <legend class="govbb-visually-hidden">Declaration</legend>
