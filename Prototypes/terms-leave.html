@@ -122,6 +122,29 @@ function applicantFullName() {
   return [GovBB.D['first-name'], GovBB.D['last-name']].filter(Boolean).join(' ');
 }
 
+function maskNid(nid) {
+  if (!nid) return '';
+  var v = String(nid).trim();
+  /* Format NNNNNN-NNNN -> ••••••-NNNN, last 4 visible. */
+  var m = v.match(/^(\d{6})-(\d{4})$/);
+  if (m) return '••••••-' + m[2];
+  return v;
+}
+
+function formatPhone(p) {
+  if (!p) return '';
+  var digits = String(p).replace(/[^\d]/g, '');
+  /* Barbados format: (246) NNN NNNN (3+4 digits after the country/area code). */
+  if (digits.length === 10 && digits.indexOf('246') === 0) {
+    return '(246) ' + digits.substring(3, 6) + ' ' + digits.substring(6);
+  }
+  if (digits.length === 11 && digits.indexOf('1246') === 0) {
+    return '+1 (246) ' + digits.substring(4, 7) + ' ' + digits.substring(7);
+  }
+  /* Fallback: just return the user's input as-is. */
+  return String(p).trim();
+}
+
 function fmtDate(prefix) {
   const d = GovBB.D[prefix + '-day'];
   const m = GovBB.D[prefix + '-month'];
@@ -185,7 +208,13 @@ const PAGES = {
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
 
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>This form is for term's leave only.</strong> If you need <strong>maternity</strong>, <strong>sick</strong>, or <strong>sabbatical</strong> leave, those are different processes — call the Ministry on +1 (246) 535-0700 to be directed to the right form.</p>
+      </div>
+
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Before you apply, read the <a href="#" class="govbb-link">Term's Leave Policy</a> for information on length of leave, salary, and what happens to your post while you are away. If you are not sure whether you qualify, call the Ministry on <strong>+1 (246) 535-0700</strong>.</p>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);"><strong>Note on dates:</strong> term's leave duration is calculated from your normal teaching days. Public holidays and school breaks within the leave period do not extend it.</p>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
@@ -287,6 +316,13 @@ const PAGES = {
   /* ── Leave details ── */
   'leave-details': () => {
     const previouslyYes = GovBB.D['previously-granted'] === 'Yes';
+    /* Clear any persisted previous-leave data if the user is no longer
+       answering "Yes", so it cannot leak into a submission. */
+    if (!previouslyYes) {
+      ['prev-start-day','prev-start-month','prev-start-year','prev-end-day','prev-end-month','prev-end-year'].forEach(function(k){
+        delete GovBB.D[k];
+      });
+    }
     return `
     <form novalidate>
       ${caption()}
@@ -390,13 +426,13 @@ const PAGES = {
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('School',             GovBB.D['school'],         'applicant-details')}
         ${GovBB.summaryRow('Name',               applicantFullName(),       'applicant-details')}
-        ${GovBB.summaryRow('National ID Number', GovBB.D['nid'],            'applicant-details')}
+        ${GovBB.summaryRow('National ID Number', maskNid(GovBB.D['nid']),   'applicant-details')}
         ${GovBB.summaryRow('Post',               GovBB.D['post'],           'applicant-details')}
       </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact details</h2>
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
-        ${GovBB.summaryRow('Contact number',     GovBB.D['contact-no'],     'applicant-contact')}
+        ${GovBB.summaryRow('Contact number',     formatPhone(GovBB.D['contact-no']), 'applicant-contact')}
         ${GovBB.summaryRow('Email',              GovBB.D['email'],          'applicant-contact')}
       </dl>
 
@@ -493,11 +529,24 @@ function validate(pageId) {
   }
 
   if (pageId === 'applicant-details') {
-    req('school', 'Enter the official name of your school');
+    /* School and post must contain at least a few letters — rejects pure
+       punctuation, numbers, or single-emoji entries that would break
+       downstream routing. */
+    var school = (D['school'] || '').trim();
+    if (!school) {
+      errors.push({ id: 'school', msg: 'Enter the official name of your school' });
+    } else if ((school.match(/[A-Za-z]/g) || []).length < 3) {
+      errors.push({ id: 'school', msg: 'Enter the official name of your school in letters (for example, "Combermere School")' });
+    }
     req('first-name', 'Enter your first name');
     req('last-name', 'Enter your last name');
     reqNid('nid', 'National ID Number', 'Enter your National ID Number');
-    req('post', 'Enter your post (job title or position)');
+    var post = (D['post'] || '').trim();
+    if (!post) {
+      errors.push({ id: 'post', msg: 'Enter your post (job title or position)' });
+    } else if ((post.match(/[A-Za-z]/g) || []).length < 2) {
+      errors.push({ id: 'post', msg: 'Enter your post in letters (for example, "Assistant Teacher")' });
+    }
   }
 
   if (pageId === 'applicant-contact') {
@@ -508,17 +557,34 @@ function validate(pageId) {
   if (pageId === 'leave-details') {
     const start = reqDate('start', 'Start date');
     const end   = reqDate('end',   'End date');
-    if (start && end && start > end) {
-      errors.push({ id: 'end-day', msg: 'End date must be on or after the start date.' });
+    if (start && end) {
+      if (start > end) {
+        errors.push({ id: 'end-day', msg: 'End date must be on or after the start date.' });
+      } else if (start.getTime() === end.getTime()) {
+        /* Term's leave is a multi-week category; a same-day claim almost
+           always means a date-entry error. */
+        errors.push({ id: 'end-day', msg: 'Term\'s leave must be for more than one day. Check your start and end dates.' });
+      } else {
+        /* Upper bound on duration: 365 days. Term's leave is typically one
+           or two terms (~13-26 weeks); anything over a year is almost
+           certainly a typo or the wrong form. */
+        const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+        if (days > 365) {
+          errors.push({ id: 'end-day', msg: 'Term\'s leave cannot be longer than one year. For longer absences, call the Ministry.' });
+        }
+      }
     }
     if (start) {
-      /* Allow leave starting today or in the future. Reject anything more
-         than 30 days in the past — common HR window for retroactive
-         applications. */
       const today = new Date(); today.setHours(0,0,0,0);
       const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
       if (start < thirtyDaysAgo) {
         errors.push({ id: 'start-day', msg: 'Start date cannot be more than 30 days in the past.' });
+      }
+      /* Cap how far ahead the leave can start. 18 months is generous — most
+         term's-leave applications are made for the next term or two. */
+      const eighteenMonthsAhead = new Date(today.getFullYear(), today.getMonth() + 18, today.getDate());
+      if (start > eighteenMonthsAhead) {
+        errors.push({ id: 'start-day', msg: 'Start date is too far in the future. Term\'s leave can only be requested up to 18 months ahead — check the year.' });
       }
     }
     if (!D['previously-granted']) {
@@ -537,7 +603,12 @@ function validate(pageId) {
   }
 
   if (pageId === 'reason') {
-    req('reason-text', 'Briefly explain why you are requesting term\'s leave');
+    var reason = (D['reason-text'] || '').trim();
+    if (!reason) {
+      errors.push({ id: 'reason-text', msg: 'Briefly explain why you are requesting term\'s leave' });
+    } else if (reason.length < 20) {
+      errors.push({ id: 'reason-text', msg: 'Add more detail — your Principal needs enough context to consider the application. Aim for at least one full sentence.' });
+    }
   }
 
   if (pageId === 'declaration') {
