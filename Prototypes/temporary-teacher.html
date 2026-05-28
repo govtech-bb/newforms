@@ -299,13 +299,16 @@ const PAGES = {
           <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Jobs and careers</a></li>
         </ol>
       </nav>
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Apply for the post of temporary teacher</h1>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Apply for a temporary teacher post</h1>
       <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Last updated on 16 March 2026</p>
       <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
 
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply for a temporary teaching post with the Ministry of Education Transformation. Apply online. Filling in the form takes about <strong>25 to 30 minutes</strong> once you have your information and documents ready — gather them first.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply for a temporary teaching post with the Ministry of Education Transformation.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. There is no application fee. This form has <strong>15 steps</strong> and takes about <strong>25 to 30 minutes</strong> — gather your information and documents first.</p>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Before applying, read the <a href="#" class="govbb-link">temporary teacher post description</a> for the duties, pay band, and probationary period.</p>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
         <p class="govbb-text-body"><strong>This form is for the temporary teacher post only.</strong> Permanent teaching posts, school administration posts, and supply teaching arrangements are recruited through different processes — call the Ministry on +1 (246) 535-0700 if you are not sure which to apply for.</p>
@@ -313,11 +316,11 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National ID Number, NIS number, date of birth, and contact details</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National ID Number, NIS number (if you have one), date of birth, and contact details</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your education history — institutions attended, with dates</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your qualifications — subjects, examining bodies, dates, and levels</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your work history — employers, positions, and dates</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Two referees — name, occupation, address, phone, and email for each</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Two referees — name, occupation, address, phone, and email for each. <strong>Avoid family members</strong> — choose people who know your work, such as a former employer, principal, or university tutor.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Documents to upload (PDF, JPG, or PNG — up to 10 MB each):
           <ul style="list-style:circle;padding-left:var(--spacing-m);margin-top:var(--spacing-xs);">
             <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A copy of your certificates, diplomas, or transcripts</li>
@@ -372,8 +375,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
-        <label class="govbb-label" for="nis-no">NIS number</label>
-        <p class="govbb-hint">Your National Insurance Scheme number. Usually 9 to 12 digits.</p>
+        <label class="govbb-label" for="nis-no">NIS number (optional)</label>
+        <p class="govbb-hint">Your National Insurance Scheme number — usually 8 to 12 digits. If you don't have one yet, leave this blank and contact the NIS office on +1 (246) 467-4500 to register before you start the post.</p>
         <div class="govbb-input-wrapper">
           <input class="govbb-input" type="text" id="nis-no" name="nis-no" data-field="nis-no" inputmode="numeric" value="${GovBB.D['nis-no']||''}" />
         </div>
@@ -1170,11 +1173,12 @@ function validate(pageId) {
     req('first-name', 'Enter your first name');
     req('last-name', 'Enter your last name');
     reqNid('nid', 'National ID Number', 'Enter your National ID Number');
+    /* NIS is optional. If entered, must be 8-12 digits. Applicants who
+       have not yet registered with NIS can leave this blank and follow
+       the start-page guidance to contact NIS first. */
     var nis = (D['nis-no'] || '').trim();
-    if (!nis) {
-      errors.push({ id: 'nis-no', msg: 'Enter your NIS number' });
-    } else if (!/^\d{8,12}$/.test(nis.replace(/[\s\-]/g, ''))) {
-      errors.push({ id: 'nis-no', msg: 'NIS number must be 8 to 12 digits' });
+    if (nis && !/^\d{8,12}$/.test(nis.replace(/[\s\-]/g, ''))) {
+      errors.push({ id: 'nis-no', msg: 'NIS number must be 8 to 12 digits, or leave it blank if you don\'t have one yet' });
     }
     const dob = reqDate('dob', 'Date of birth');
     if (dob) {
