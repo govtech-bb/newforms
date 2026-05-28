@@ -33,7 +33,9 @@
       <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
     </div>
   </div>
-  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
 </main>
 
 <footer class="govbb-footer">
@@ -292,9 +294,9 @@ var PAGES = {
       '<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>' +
       '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">We will review your application and verify the documents you provide. We will contact you within <strong>15 working days</strong>. If approved, the benefit will be paid directly to your bank or credit union account.</p>' +
 
-      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);"><strong>Need help?</strong> Call the Social Empowerment Agency at <a href="tel:+12464675100" class="govbb-link">+1 (246) 467-5100</a>.</p>' +
+      '<div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>' +
 
-      '<div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>';
+      '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);"><strong>Need help?</strong> Call the Social Empowerment Agency at <a href="tel:+12464675100" class="govbb-link">+1 (246) 467-5100</a>.</p>';
   },
 
   /* ── APPLICANT DETAILS ── */

@@ -33,7 +33,9 @@
       <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
     </div>
   </div>
-  <div class="govbb-container" id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
 </main>
 
 <footer class="govbb-footer">
@@ -190,10 +192,10 @@ const PAGES = {
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">A caseworker will review your application and contact you within <strong>10 working days</strong>. They may ask for more information or arrange a meeting. If approved, you may receive a one-time grant or short-term support.</p>
 
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
+
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call <strong>+1 (246) 467-5100</strong> if you need help completing this form or if your situation is urgent.</p>
-
-      <div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
     </div>`,
 
   /* ── Personal details ── */
