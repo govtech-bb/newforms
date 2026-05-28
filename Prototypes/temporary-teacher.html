@@ -135,6 +135,28 @@ const CITIZENSHIP_OPTIONS = [
   'Other'
 ];
 
+const BIRTH_COUNTRIES = [
+  'Barbados',
+  'Antigua and Barbuda',
+  'Bahamas',
+  'Belize',
+  'Dominica',
+  'Grenada',
+  'Guyana',
+  'Jamaica',
+  'Saint Kitts and Nevis',
+  'Saint Lucia',
+  'Saint Vincent and the Grenadines',
+  'Suriname',
+  'Trinidad and Tobago',
+  'Canada',
+  'India',
+  'Nigeria',
+  'United Kingdom',
+  'United States',
+  'Other'
+];
+
 /* Maximum row counts for each repeating section. Generous enough to cover
    realistic applicants without becoming unwieldy. */
 const MAX_EDUCATION = 6;
@@ -376,7 +398,7 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
         <label class="govbb-label" for="nis-no">NIS number (optional)</label>
-        <p class="govbb-hint">Your National Insurance Scheme number — usually 8 to 12 digits. If you don't have one yet, leave this blank and contact the NIS office on +1 (246) 467-4500 to register before you start the post.</p>
+        <p class="govbb-hint">Your National Insurance Scheme number — usually 8 to 12 digits. <strong>If you have one, please provide it</strong> — leaving it blank will delay your payroll set-up if you are appointed. If you don't have one yet, contact the NIS office on +1 (246) 467-4500 to register.</p>
         <div class="govbb-input-wrapper">
           <input class="govbb-input" type="text" id="nis-no" name="nis-no" data-field="nis-no" inputmode="numeric" value="${GovBB.D['nis-no']||''}" />
         </div>
@@ -485,13 +507,34 @@ const PAGES = {
         <p class="govbb-text-body"><strong>Your background information is confidential.</strong> It is shared only with the Ministry's recruitment team and used to assess eligibility for the post.</p>
       </div>
 
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Place of birth</h2>
+
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
-        <label class="govbb-label" for="place-of-birth">Place of birth</label>
-        <p class="govbb-hint">City and country. For example, "Bridgetown, Barbados".</p>
+        <label class="govbb-label" for="birth-city">City or town</label>
+        <p class="govbb-hint">For example, "Bridgetown".</p>
         <div class="govbb-input-wrapper">
-          <input class="govbb-input" type="text" id="place-of-birth" name="place-of-birth" data-field="place-of-birth" value="${GovBB.D['place-of-birth']||''}" />
+          <input class="govbb-input" type="text" id="birth-city" name="birth-city" data-field="birth-city" value="${GovBB.D['birth-city']||''}" />
         </div>
       </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="birth-country">Country</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="birth-country" name="birth-country" data-field="birth-country" data-trigger-render="1">
+            <option value="">Select a country</option>
+            ${BIRTH_COUNTRIES.map(c=>`<option value="${c}"${GovBB.D['birth-country']===c?' selected':''}>${c}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      ${GovBB.D['birth-country'] === 'Other' ? `
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);">
+        <label class="govbb-label" for="birth-country-other">Please specify the country</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="birth-country-other" name="birth-country-other" data-field="birth-country-other" value="${GovBB.D['birth-country-other']||''}" />
+        </div>
+      </div>` : ''}
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
         <label class="govbb-label" for="citizenship">Citizenship</label>
@@ -748,6 +791,17 @@ const PAGES = {
   'work-data': () => {
     const count = workCount();
     purgeRepeatable('work', WORK_FIELDS, count + 1, MAX_WORK);
+
+    /* Ghost "To" date cleanup: when "I am still in this role" is ticked,
+       any previously-typed To-date data is purged so it can't sneak into
+       a submission with both current:true and a stale to-year. */
+    for (let g = 1; g <= count; g++) {
+      if (GovBB.D['work-' + g + '-current']) {
+        ['to-day','to-month','to-year'].forEach(function(f){
+          delete GovBB.D['work-' + g + '-' + f];
+        });
+      }
+    }
 
     let sections = '';
     for (let i = 1; i <= count; i++) {
@@ -1048,7 +1102,7 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your background</h2>
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
-        ${GovBB.summaryRow('Place of birth',     GovBB.D['place-of-birth'],           'personal-background')}
+        ${GovBB.summaryRow('Place of birth',     [GovBB.D['birth-city'], GovBB.D['birth-country'] === 'Other' ? (GovBB.D['birth-country-other'] || 'Other') : GovBB.D['birth-country']].filter(Boolean).join(', '), 'personal-background')}
         ${GovBB.summaryRow('Citizenship',        GovBB.D['citizenship'] === 'Other' ? (GovBB.D['citizenship-other'] || 'Other') : GovBB.D['citizenship'], 'personal-background')}
         ${GovBB.summaryRow('Years in Barbados',  GovBB.D['years-in-barbados'],        'personal-background')}
         ${GovBB.summaryRow('Marital status',     GovBB.D['marital-status'] || 'Prefer not to say', 'personal-background')}
@@ -1209,7 +1263,9 @@ function validate(pageId) {
   }
 
   if (pageId === 'personal-background') {
-    req('place-of-birth', 'Enter your place of birth');
+    req('birth-city', 'Enter the city you were born in');
+    req('birth-country', 'Select the country you were born in');
+    if (D['birth-country'] === 'Other') req('birth-country-other', 'Specify the country');
     req('citizenship', 'Select your citizenship');
     if (D['citizenship'] === 'Other') req('citizenship-other', 'Specify your citizenship');
     var yrs = (D['years-in-barbados'] || '').trim();
@@ -1217,6 +1273,16 @@ function validate(pageId) {
       errors.push({ id: 'years-in-barbados', msg: 'Enter the number of years you have lived in Barbados (0 if abroad).' });
     } else if (!/^\d{1,3}$/.test(yrs) || parseInt(yrs, 10) > 120) {
       errors.push({ id: 'years-in-barbados', msg: 'Enter a whole number of years between 0 and 120.' });
+    } else {
+      /* Cross-field: years in Barbados cannot exceed the applicant's age. */
+      var dobParsed = parseDate('dob');
+      if (dobParsed) {
+        var today2 = new Date();
+        var ageNow = today2.getFullYear() - dobParsed.getFullYear() - ((today2.getMonth() < dobParsed.getMonth() || (today2.getMonth() === dobParsed.getMonth() && today2.getDate() < dobParsed.getDate())) ? 1 : 0);
+        if (parseInt(yrs, 10) > ageNow) {
+          errors.push({ id: 'years-in-barbados', msg: 'Years in Barbados (' + yrs + ') cannot be greater than your age (' + ageNow + '). Check the number.' });
+        }
+      }
     }
   }
 
@@ -1227,6 +1293,7 @@ function validate(pageId) {
   if (pageId === 'education-data') {
     const count = educationCount();
     const today = new Date();
+    const fiveYearsAhead = new Date(today.getFullYear() + 5, today.getMonth(), today.getDate());
     for (let i = 1; i <= count; i++) {
       reqMinLetters('edu-' + i + '-name',    'Institution ' + i + ' — enter the institution name in letters', 3);
       req('edu-' + i + '-country',  'Institution ' + i + ' — enter the country');
@@ -1235,12 +1302,15 @@ function validate(pageId) {
       if (start && end && start > end) {
         errors.push({ id: 'edu-' + i + '-end-day', msg: 'Institution ' + i + ' — end date must be on or after the start date.' });
       }
-      if (start && start > today) {
-        /* Future start dates allowed for "expected" — but cap at 5 years ahead. */
-        const fiveYearsAhead = new Date(today.getFullYear() + 5, today.getMonth(), today.getDate());
-        if (start > fiveYearsAhead) {
-          errors.push({ id: 'edu-' + i + '-start-day', msg: 'Institution ' + i + ' — start date is too far in the future.' });
-        }
+      /* Future start dates allowed for "expected" — but cap at 5 years
+         ahead to catch year typos. */
+      if (start && start > fiveYearsAhead) {
+        errors.push({ id: 'edu-' + i + '-start-day', msg: 'Institution ' + i + ' — start date is too far in the future.' });
+      }
+      /* End date can also be in the future (for in-progress education) but
+         must also stay within the 5-year window. */
+      if (end && end > fiveYearsAhead) {
+        errors.push({ id: 'edu-' + i + '-end-day', msg: 'Institution ' + i + ' — end date is too far in the future. Check the year.' });
       }
     }
   }
@@ -1275,15 +1345,24 @@ function validate(pageId) {
 
   if (pageId === 'work-data') {
     const count = workCount();
+    const todayW = new Date(); todayW.setHours(0,0,0,0);
     for (let i = 1; i <= count; i++) {
       reqMinLetters('work-' + i + '-employer', 'Role ' + i + ' — enter the employer name in letters', 2);
       reqMinLetters('work-' + i + '-position', 'Role ' + i + ' — enter the position in letters', 2);
       const from = reqDate('work-' + i + '-from', 'Role ' + i + ' start date');
+      /* From date cannot be in the future — a job that hasn't started yet
+         isn't work experience. */
+      if (from && from > todayW) {
+        errors.push({ id: 'work-' + i + '-from-day', msg: 'Role ' + i + ' — start date cannot be in the future. Check the year.' });
+      }
       let to = null;
       if (!D['work-' + i + '-current']) {
         to = reqDate('work-' + i + '-to', 'Role ' + i + ' end date');
         if (from && to && from > to) {
           errors.push({ id: 'work-' + i + '-to-day', msg: 'Role ' + i + ' — end date must be on or after the start date.' });
+        }
+        if (to && to > todayW) {
+          errors.push({ id: 'work-' + i + '-to-day', msg: 'Role ' + i + ' — end date cannot be in the future. If you are still in this role, tick "I am still in this role".' });
         }
       }
       var duties = (D['work-' + i + '-duties'] || '').trim();
@@ -1305,11 +1384,19 @@ function validate(pageId) {
       reqPhone('ref-' + i + '-phone', 'Referee ' + i + ' contact number', true, 'Referee ' + i + ' — enter a contact number');
       reqEmail('ref-' + i + '-email', 'Referee ' + i + ' email',          'Referee ' + i + ' — enter an email address');
     }
-    /* Referees must be different people */
+    /* Referees must be different people — check email AND phone. */
     var em1 = (D['ref-1-email'] || '').trim().toLowerCase();
     var em2 = (D['ref-2-email'] || '').trim().toLowerCase();
     if (em1 && em2 && em1 === em2) {
       errors.push({ id: 'ref-2-email', msg: 'Referee 2 must be a different person from Referee 1 — the email addresses are the same.' });
+    }
+    var ph1 = (D['ref-1-phone'] || '').replace(/[^\d]/g, '');
+    var ph2 = (D['ref-2-phone'] || '').replace(/[^\d]/g, '');
+    if (ph1 && ph2 && ph1 === ph2 && em1 !== em2) {
+      /* Phone match but different emails — could be a shared office line.
+         Soft warning via the error summary, but allow continuation by
+         flagging on ref-2 only (lets the user override by changing). */
+      errors.push({ id: 'ref-2-phone', msg: 'Referee 2 has the same phone number as Referee 1. If this is correct (a shared office line), check the phone number is right; otherwise enter a different number.' });
     }
   }
 
@@ -1319,6 +1406,14 @@ function validate(pageId) {
         errors.push({ id: 'upload-' + k, msg: 'Upload the ' + (k === 'certificates' ? 'certificates / diplomas / transcripts' : ('testimonial ' + k.slice(-1))) + '.' });
       }
     });
+    /* Same-file warning: testimonials should come from two different
+       people. If both testimonial files have the same name AND size,
+       almost always a user error. */
+    var t1 = D['upload-testimonial-1'];
+    var t2 = D['upload-testimonial-2'];
+    if (t1 && t2 && t1.name === t2.name && t1.size === t2.size) {
+      errors.push({ id: 'upload-testimonial-2', msg: 'Testimonial 1 and Testimonial 2 look like the same file. Testimonials should be from two different people — upload a second, different testimonial.' });
+    }
   }
 
   if (pageId === 'declaration') {

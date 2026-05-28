@@ -1045,6 +1045,31 @@
     color: var(--color-text);
     resize: vertical;
     min-height: 6rem;
+    /* Textareas in the prototypes are used without a .govbb-input-wrapper
+       parent, so the border, padding, and background that wrapper
+       normally provides are applied here directly. Matches the input
+       look. */
+    background: var(--color-background);
+    border: var(--border-width-form) solid var(--color-text);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-s);
+    width: 100%;
+    box-sizing: border-box;
+    transition: box-shadow .2s, border-color .2s;
+  }
+
+  .govbb-textarea:hover {
+    box-shadow: var(--shadow-form-hover);
+  }
+
+  .govbb-textarea:focus,
+  .govbb-textarea:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--color-teal-100);
+  }
+
+  .govbb-textarea[aria-invalid="true"] {
+    border-color: var(--color-error);
   }
 
   .govbb-select-wrapper {
