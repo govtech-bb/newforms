@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claim for duties performed during examinations – Ministry of Education Transformation</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner"><div class="govbb-container govbb-official-banner__inner"><div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div><div class="govbb-official-banner__text"><span>Official government website</span></div></div></div>
+
+<header class="govbb-header"><div class="govbb-container govbb-header__inner"><a href="/" aria-label="Go to the alpha.gov.bb homepage"><img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" /></a></div></header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite"><div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div></div>
+  <div class="govbb-container"><div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div></div>
+</main>
+
+<footer class="govbb-footer"><div class="govbb-container govbb-footer__inner"><nav class="govbb-footer__nav" aria-label="Footer"><a class="govbb-footer__link" href="#">Home</a><a class="govbb-footer__link" href="#">Privacy</a><a class="govbb-footer__link" href="#">Terms &amp; Conditions</a><a class="govbb-footer__link" href="#">Accessibility</a></nav><hr class="govbb-footer__divider" aria-hidden="true" /><div class="govbb-footer__end"><img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" /><p class="govbb-footer__copy">© 2025 Government of Barbados</p></div></div></footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors=function(){var s=document.getElementById('error-summary');if(s)s.remove();document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});};
+GovBB.showErrors=function(errors){GovBB.clearErrors();if(!errors||!errors.length)return;var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'" onclick="GovBB.focusError(\''+e.id+'\');return false;">'+e.msg+'</a></li>';});html+='</ul></div>';var app=document.getElementById('app');var h1=app.querySelector('h1');if(h1)h1.insertAdjacentHTML('afterend',html);else app.insertAdjacentHTML('afterbegin',html);document.getElementById('error-summary').focus();errors.forEach(function(e){var el=document.getElementById(e.id);if(!el)return;var errId='err-'+e.id;el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId);var msg=document.createElement('p');msg.className='govbb-error-message';msg.id=errId;msg.textContent=e.msg;var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;if(group)group.appendChild(msg);});if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;};
+GovBB.summaryRow=function(label,value,changeTo){var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';};
+</script>
+<script>
+function next(){GovBB.next();}function back(){GovBB.back();}function nav(p){GovBB.nav(p);}
+
+const FORM_NAME='Claim form for duties performed during examinations';
+const CAPTION='Ministry of Education Transformation';
+const MAX_ROWS=10;
+const EXAM_PERIODS=['2026-CXC-Jan','2026-CXC-May/June','2026-CAPE-May/June','2026-CSEC-May/June','2025-CXC-Jan','2025-CXC-May/June','Other'];
+const INVIGILATOR_ROLES=['Invigilator','Chief Invigilator','Supervisor','Examination Assessor','Door Marshal','Centre Clerk','Other'];
+const ACCOUNT_TYPES=['Savings','Chequing'];
+const BANKS=['Republic Bank','First Caribbean International Bank','RBC Royal Bank','Scotiabank','Barbados National Bank','Other'];
+
+const FLOW=['start','claimant-details','exam-period','section-b-yesno','section-b-count','section-b-data','section-c-yesno','section-c-count','section-c-data','section-d-yesno','section-d-count','section-d-data','payee','declaration','check','confirmation'];
+
+function caption(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+CAPTION+'</p>';}
+function maskNid(nid){if(!nid)return '';var m=String(nid).trim().match(/^(\d{6})-(\d{4})$/);return m?'••••••-'+m[2]:String(nid).trim();}
+function maskAccount(num){if(!num)return '';const digits=String(num).replace(/[\s\-]/g,'');if(digits.length<=4)return digits;return '••••••'+digits.slice(-4);}
+function formatPhone(p){if(!p)return '';var digits=String(p).replace(/[^\d]/g,'');if(digits.length===10&&digits.indexOf('246')===0)return '(246) '+digits.substring(3,6)+' '+digits.substring(6);return String(p).trim();}
+function countOf(key,max){const n=parseInt(GovBB.D[key],10);if(isNaN(n)||n<1)return 1;if(n>max)return max;return n;}
+function bCount(){return countOf('b-count',MAX_ROWS);}
+function cCount(){return countOf('c-count',MAX_ROWS);}
+function dCount(){return countOf('d-count',MAX_ROWS);}
+function num(v){const n=parseFloat(v);return isNaN(n)?0:n;}
+function fmtMoney(n){return '$'+num(n).toFixed(2);}
+function bSubtotal(i){return num(GovBB.D['b-'+i+'-rate'])+num(GovBB.D['b-'+i+'-overtime'])*num(GovBB.D['b-'+i+'-overtime-rate']||0);}
+function cSubtotal(i){return num(GovBB.D['c-'+i+'-candidates'])*num(GovBB.D['c-'+i+'-rate-per-candidate']||0);}
+function dSubtotal(i){return num(GovBB.D['d-'+i+'-hours'])*num(GovBB.D['d-'+i+'-rate']||0);}
+function totalB(){if(GovBB.D['has-b']!=='Yes')return 0;let t=0;for(let i=1;i<=bCount();i++)t+=bSubtotal(i);return t;}
+function totalC(){if(GovBB.D['has-c']!=='Yes')return 0;let t=0;for(let i=1;i<=cCount();i++)t+=cSubtotal(i);return t;}
+function totalD(){if(GovBB.D['has-d']!=='Yes')return 0;let t=0;for(let i=1;i<=dCount();i++)t+=dSubtotal(i);return t;}
+function grandTotal(){return totalB()+totalC()+totalD();}
+
+function parseDate(prefix){const d=parseInt(GovBB.D[prefix+'-day'],10),m=parseInt(GovBB.D[prefix+'-month'],10),y=parseInt(GovBB.D[prefix+'-year'],10);if(!d||!m||!y)return null;if(d<1||d>31||m<1||m>12||y<2000||y>2100)return false;const dt=new Date(y,m-1,d);if(dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d)return false;return dt;}
+function fmtDate(prefix){const d=GovBB.D[prefix+'-day'],m=GovBB.D[prefix+'-month'],y=GovBB.D[prefix+'-year'];if(!d&&!m&&!y)return '';return [d,m,y].filter(Boolean).join(' / ');}
+function dateField(prefix,legend,hint){return `<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">${legend}</legend>${hint?`<p class="govbb-hint">${hint}</p>`:''}<div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;"><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-day">Day</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-day" name="${prefix}-day" data-field="${prefix}-day" inputmode="numeric" value="${GovBB.D[prefix+'-day']||''}" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-month">Month</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-month" name="${prefix}-month" data-field="${prefix}-month" inputmode="numeric" value="${GovBB.D[prefix+'-month']||''}" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-year">Year</label><div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="${prefix}-year" name="${prefix}-year" data-field="${prefix}-year" inputmode="numeric" value="${GovBB.D[prefix+'-year']||''}" /></div></div></div></fieldset>`;}
+
+const PAGES = {
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Teachers and educators</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Claim payment for examination duties</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Last updated on 14 June 2025</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this form to claim payment for duties you performed during a recent examination period — as an invigilator, supervisor, examination assessor, practical exam setup, reader, writer, interpreter, model, moderator, or dictator.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. Filling in the form takes about <strong>15 minutes</strong> per claim, depending on how many duties you are claiming for.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start your claim</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National ID Number, NIS number, TAMIS number, and contact details</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The exam period and the date range you are claiming for</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The dates, centres, roles, and rates for each duty you performed</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your bank or credit union account details for payment</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Your supervisor will verify your claim. Once approved, payment is made directly into your account, typically within <strong>4 to 6 weeks</strong> of the exam period ending.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start your claim</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call the Ministry of Education Transformation Examinations Section on <strong>+1 (246) 535-0600</strong> if you need help completing this form.</p>
+    </div>`,
+
+  'claimant-details': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you (Section A)</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="first-name">First name</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="first-name" name="first-name" data-field="first-name" autocomplete="given-name" value="${GovBB.D['first-name']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="last-name">Last name</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="last-name" name="last-name" data-field="last-name" autocomplete="family-name" value="${GovBB.D['last-name']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="other-names">Other names (optional)</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="other-names" name="other-names" data-field="other-names" value="${GovBB.D['other-names']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nid">National ID Number</label>
+        <p class="govbb-hint">For example, 110915-0048.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="nid" name="nid" data-field="nid" value="${GovBB.D['nid']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address">Address</label>
+        <textarea class="govbb-textarea" id="address" name="address" data-field="address" rows="2">${GovBB.D['address']||''}</textarea>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parish">Parish</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="parish" name="parish" data-field="parish">
+            <option value="">Select a parish</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['parish']===o?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="telephone">Telephone</label>
+        <p class="govbb-hint">For example, (246) 249 1234.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="telephone" name="telephone" data-field="telephone" inputmode="tel" value="${GovBB.D['telephone']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="email">Email address</label>
+        <p class="govbb-hint">We'll send a copy of your claim here.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="email" id="email" name="email" data-field="email" inputmode="email" value="${GovBB.D['email']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="supervisor">Your supervisor</label>
+        <p class="govbb-hint">The name of the supervisor who will verify your claim.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="supervisor" name="supervisor" data-field="supervisor" value="${GovBB.D['supervisor']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="tamis-no">TAMIS number (optional)</label>
+        <p class="govbb-hint">Your tax ID with the Barbados Revenue Authority. If you have one, please provide it — leaving it blank will delay your payment.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="tamis-no" name="tamis-no" data-field="tamis-no" value="${GovBB.D['tamis-no']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="nis-no">NIS number</label>
+        <p class="govbb-hint">Your National Insurance Scheme number — usually 8 to 12 digits.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="nis-no" name="nis-no" data-field="nis-no" inputmode="numeric" value="${GovBB.D['nis-no']||''}" /></div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'exam-period': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Exam and claim period</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="exam-period">Exam period</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="exam-period" name="exam-period" data-field="exam-period" data-trigger-render="1">
+            <option value="">Select an exam period</option>
+            ${EXAM_PERIODS.map(p=>`<option value="${p}"${GovBB.D['exam-period']===p?' selected':''}>${p}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      ${GovBB.D['exam-period']==='Other'?`
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);">
+        <label class="govbb-label" for="exam-period-other">Describe the exam period</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="exam-period-other" name="exam-period-other" data-field="exam-period-other" value="${GovBB.D['exam-period-other']||''}" /></div>
+      </div>`:''}
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Claim date range</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);color:var(--color-mid-grey-00);">The first and last day you performed duties in this exam period.</p>
+      ${dateField('claim-start','From','For example, 6 1 2026.')}
+      ${dateField('claim-end','To','For example, 24 1 2026.')}
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'section-b-yesno': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Invigilation, supervision, or assessment? (Section B)</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">This section is for invigilators, chief invigilators, supervisors, examination assessors, and door marshals.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Did you perform any invigilation, supervision, or assessment duties?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="has-b-yes" name="has-b" data-field="has-b" value="Yes"${GovBB.D['has-b']==='Yes'?' checked':''} /><label class="govbb-radio-item__label" for="has-b-yes">Yes</label></div>
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="has-b-no" name="has-b" data-field="has-b" value="No"${GovBB.D['has-b']==='No'?' checked':''} /><label class="govbb-radio-item__label" for="has-b-no">No</label></div>
+        </div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'section-b-count': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">How many invigilation duties?</h1>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Number of duties to claim for (Section B)</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${Array.from({length:MAX_ROWS},(_,i)=>i+1).map(n=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="b-count-${n}" name="b-count" data-field="b-count" value="${n}"${String(GovBB.D['b-count'])===String(n)?' checked':''} /><label class="govbb-radio-item__label" for="b-count-${n}">${n}</label></div>`).join('')}
+        </div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'section-b-data': () => {
+    const count=bCount();
+    for(let i=count+1;i<=MAX_ROWS;i++){['date-day','date-month','date-year','centre','role','role-other','rate','overtime','overtime-rate'].forEach(f=>delete GovBB.D['b-'+i+'-'+f]);}
+    let sections='';
+    for(let i=1;i<=count;i++){
+      const roleOther=GovBB.D['b-'+i+'-role']==='Other';
+      sections+=`
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-l);border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="padding:0 var(--spacing-s);">Duty ${i}</legend>
+        ${dateField('b-'+i+'-date','Date','The date you performed this duty.')}
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="b-${i}-centre">Centre</label>
+          <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="b-${i}-centre" name="b-${i}-centre" data-field="b-${i}-centre" value="${GovBB.D['b-'+i+'-centre']||''}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="b-${i}-role">Role</label>
+          <div class="govbb-select-wrapper">
+            <select class="govbb-select" id="b-${i}-role" name="b-${i}-role" data-field="b-${i}-role" data-trigger-render="1">
+              <option value="">Select a role</option>
+              ${INVIGILATOR_ROLES.map(r=>`<option value="${r}"${GovBB.D['b-'+i+'-role']===r?' selected':''}>${r}</option>`).join('')}
+            </select>
+            <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+          </div>
+        </div>
+        ${roleOther?`
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);">
+          <label class="govbb-label" for="b-${i}-role-other">Describe the role</label>
+          <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="b-${i}-role-other" name="b-${i}-role-other" data-field="b-${i}-role-other" value="${GovBB.D['b-'+i+'-role-other']||''}" /></div>
+        </div>`:''}
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="b-${i}-rate">Rate ($)</label>
+          <p class="govbb-hint">The agreed rate for this duty. Whole dollars only.</p>
+          <div class="govbb-input-wrapper" style="max-width:12rem;"><input class="govbb-input" type="text" id="b-${i}-rate" name="b-${i}-rate" data-field="b-${i}-rate" inputmode="decimal" value="${GovBB.D['b-'+i+'-rate']||''}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="b-${i}-overtime">Overtime hours</label>
+          <p class="govbb-hint">Number of hours worked beyond the standard duty. Enter 0 if none.</p>
+          <div class="govbb-input-wrapper" style="max-width:8rem;"><input class="govbb-input" type="text" id="b-${i}-overtime" name="b-${i}-overtime" data-field="b-${i}-overtime" inputmode="decimal" value="${GovBB.D['b-'+i+'-overtime']||'0'}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="b-${i}-overtime-rate">Overtime rate per hour ($, optional)</label>
+          <div class="govbb-input-wrapper" style="max-width:12rem;"><input class="govbb-input" type="text" id="b-${i}-overtime-rate" name="b-${i}-overtime-rate" data-field="b-${i}-overtime-rate" inputmode="decimal" value="${GovBB.D['b-'+i+'-overtime-rate']||'0'}" /></div>
+        </div>
+        <p class="govbb-text-body" style="margin-bottom:0;"><strong>Subtotal: ${fmtMoney(bSubtotal(i))}</strong></p>
+      </fieldset>`;
+    }
+    return `<form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Section B — duty details</h1>
+      ${sections}
+      <p class="govbb-text-body" style="border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);"><strong>Section B total: ${fmtMoney(totalB())}</strong></p>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`;
+  },
+
+  'section-c-yesno': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Practical exam setup? (Section C)</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">This section is for individuals who set up practical examinations.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Did you set up any practical examinations?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="has-c-yes" name="has-c" data-field="has-c" value="Yes"${GovBB.D['has-c']==='Yes'?' checked':''} /><label class="govbb-radio-item__label" for="has-c-yes">Yes</label></div>
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="has-c-no" name="has-c" data-field="has-c" value="No"${GovBB.D['has-c']==='No'?' checked':''} /><label class="govbb-radio-item__label" for="has-c-no">No</label></div>
+        </div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'section-c-count': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">How many practical setups?</h1>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Number of practical exam setups to claim for</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${Array.from({length:MAX_ROWS},(_,i)=>i+1).map(n=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="c-count-${n}" name="c-count" data-field="c-count" value="${n}"${String(GovBB.D['c-count'])===String(n)?' checked':''} /><label class="govbb-radio-item__label" for="c-count-${n}">${n}</label></div>`).join('')}
+        </div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'section-c-data': () => {
+    const count=cCount();
+    for(let i=count+1;i<=MAX_ROWS;i++){['date-day','date-month','date-year','centre','subject','candidates','personnel','rate-per-candidate'].forEach(f=>delete GovBB.D['c-'+i+'-'+f]);}
+    let sections='';
+    for(let i=1;i<=count;i++){
+      sections+=`
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-l);border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="padding:0 var(--spacing-s);">Setup ${i}</legend>
+        ${dateField('c-'+i+'-date','Date','The date of the practical setup.')}
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="c-${i}-centre">Centre</label>
+          <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="c-${i}-centre" name="c-${i}-centre" data-field="c-${i}-centre" value="${GovBB.D['c-'+i+'-centre']||''}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="c-${i}-subject">Subject</label>
+          <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="c-${i}-subject" name="c-${i}-subject" data-field="c-${i}-subject" value="${GovBB.D['c-'+i+'-subject']||''}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="c-${i}-candidates">Total candidates</label>
+          <div class="govbb-input-wrapper" style="max-width:8rem;"><input class="govbb-input" type="text" id="c-${i}-candidates" name="c-${i}-candidates" data-field="c-${i}-candidates" inputmode="numeric" value="${GovBB.D['c-'+i+'-candidates']||''}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="c-${i}-personnel">Total personnel</label>
+          <p class="govbb-hint">Number of people involved in the setup.</p>
+          <div class="govbb-input-wrapper" style="max-width:8rem;"><input class="govbb-input" type="text" id="c-${i}-personnel" name="c-${i}-personnel" data-field="c-${i}-personnel" inputmode="numeric" value="${GovBB.D['c-'+i+'-personnel']||''}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="c-${i}-rate-per-candidate">Rate per candidate ($)</label>
+          <div class="govbb-input-wrapper" style="max-width:12rem;"><input class="govbb-input" type="text" id="c-${i}-rate-per-candidate" name="c-${i}-rate-per-candidate" data-field="c-${i}-rate-per-candidate" inputmode="decimal" value="${GovBB.D['c-'+i+'-rate-per-candidate']||''}" /></div>
+        </div>
+        <p class="govbb-text-body" style="margin-bottom:0;"><strong>Subtotal: ${fmtMoney(cSubtotal(i))}</strong></p>
+      </fieldset>`;
+    }
+    return `<form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Section C — practical setups</h1>
+      ${sections}
+      <p class="govbb-text-body" style="border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);"><strong>Section C total: ${fmtMoney(totalC())}</strong></p>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`;
+  },
+
+  'section-d-yesno': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Reader, writer, interpreter? (Section D)</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">This section is for individuals who performed duties as a Reader, Writer, Interpreter, Model, Moderator, or Dictator.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Did you perform any of these duties?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="has-d-yes" name="has-d" data-field="has-d" value="Yes"${GovBB.D['has-d']==='Yes'?' checked':''} /><label class="govbb-radio-item__label" for="has-d-yes">Yes</label></div>
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="has-d-no" name="has-d" data-field="has-d" value="No"${GovBB.D['has-d']==='No'?' checked':''} /><label class="govbb-radio-item__label" for="has-d-no">No</label></div>
+        </div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'section-d-count': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">How many sessions?</h1>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Number of sessions to claim for</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${Array.from({length:MAX_ROWS},(_,i)=>i+1).map(n=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="d-count-${n}" name="d-count" data-field="d-count" value="${n}"${String(GovBB.D['d-count'])===String(n)?' checked':''} /><label class="govbb-radio-item__label" for="d-count-${n}">${n}</label></div>`).join('')}
+        </div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'section-d-data': () => {
+    const count=dCount();
+    for(let i=count+1;i<=MAX_ROWS;i++){['date-day','date-month','date-year','centre','subject','duties','hours','rate'].forEach(f=>delete GovBB.D['d-'+i+'-'+f]);}
+    let sections='';
+    for(let i=1;i<=count;i++){
+      sections+=`
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-l);border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="padding:0 var(--spacing-s);">Session ${i}</legend>
+        ${dateField('d-'+i+'-date','Date','The date of the session.')}
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="d-${i}-centre">Centre</label>
+          <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="d-${i}-centre" name="d-${i}-centre" data-field="d-${i}-centre" value="${GovBB.D['d-'+i+'-centre']||''}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="d-${i}-subject">Subject</label>
+          <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="d-${i}-subject" name="d-${i}-subject" data-field="d-${i}-subject" value="${GovBB.D['d-'+i+'-subject']||''}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="d-${i}-duties">Duties performed</label>
+          <p class="govbb-hint">For example, "Reader", "Writer + Interpreter".</p>
+          <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="d-${i}-duties" name="d-${i}-duties" data-field="d-${i}-duties" value="${GovBB.D['d-'+i+'-duties']||''}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="d-${i}-hours">Number of hours / passages</label>
+          <div class="govbb-input-wrapper" style="max-width:8rem;"><input class="govbb-input" type="text" id="d-${i}-hours" name="d-${i}-hours" data-field="d-${i}-hours" inputmode="decimal" value="${GovBB.D['d-'+i+'-hours']||''}" /></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="d-${i}-rate">Rate per hour / passage ($)</label>
+          <div class="govbb-input-wrapper" style="max-width:12rem;"><input class="govbb-input" type="text" id="d-${i}-rate" name="d-${i}-rate" data-field="d-${i}-rate" inputmode="decimal" value="${GovBB.D['d-'+i+'-rate']||''}" /></div>
+        </div>
+        <p class="govbb-text-body" style="margin-bottom:0;"><strong>Subtotal: ${fmtMoney(dSubtotal(i))}</strong></p>
+      </fieldset>`;
+    }
+    return `<form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Section D — Reader / Writer sessions</h1>
+      ${sections}
+      <p class="govbb-text-body" style="border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);"><strong>Section D total: ${fmtMoney(totalD())}</strong></p>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`;
+  },
+
+  'payee': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Where to send payment (Section E)</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Payment will be deposited directly to the account below. If you are already paid by the government, your banking information may already be on file — providing it again helps the Ministry verify.</p>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="bank-name">Bank or credit union</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="bank-name" name="bank-name" data-field="bank-name" data-trigger-render="1">
+            <option value="">Select one</option>
+            ${BANKS.map(b=>`<option value="${b}"${GovBB.D['bank-name']===b?' selected':''}>${b}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      ${GovBB.D['bank-name']==='Other'?`
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);">
+        <label class="govbb-label" for="bank-name-other">Name of bank or credit union</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="bank-name-other" name="bank-name-other" data-field="bank-name-other" value="${GovBB.D['bank-name-other']||''}" /></div>
+      </div>`:''}
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="bank-branch">Branch</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="bank-branch" name="bank-branch" data-field="bank-branch" value="${GovBB.D['bank-branch']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="account-no">Account number</label>
+        <p class="govbb-hint">6 to 16 digits.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="account-no" name="account-no" data-field="account-no" inputmode="numeric" value="${GovBB.D['account-no']||''}" /></div>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Account type</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${ACCOUNT_TYPES.map((t,i)=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="account-type-${i}" name="account-type" data-field="account-type" value="${t}"${GovBB.D['account-type']===t?' checked':''} /><label class="govbb-radio-item__label" for="account-type-${i}">${t}</label></div>`).join('')}
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="account-name">Name on the account</label>
+        <p class="govbb-hint">As it appears on the account. Mismatches with your national ID may delay payment.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="account-name" name="account-name" data-field="account-name" value="${GovBB.D['account-name']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="bic-swift">BIC / SWIFT (optional)</label>
+        <p class="govbb-hint">Only needed for international transfers.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="bic-swift" name="bic-swift" data-field="bic-swift" value="${GovBB.D['bic-swift']||''}" /></div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'declaration': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Payment declaration (Section F)</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">I hereby claim the sum of <strong>${fmtMoney(grandTotal())}</strong> for services rendered during the examination period stated above.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-accurate" name="decl-accurate" data-field="decl-accurate"${GovBB.D['decl-accurate']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-accurate">All duties and amounts claimed above are accurate and were actually performed by me.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-supervisor" name="decl-supervisor" data-field="decl-supervisor"${GovBB.D['decl-supervisor']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-supervisor">I understand my supervisor will verify this claim before payment is made.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-false" name="decl-false" data-field="decl-false"${GovBB.D['decl-false']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-false">I understand that providing false or misleading information may result in my claim being refused and may have employment consequences.</label></div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue to review</button>
+      </div>
+    </form>`,
+
+  'check': () => {
+    function bRows(){if(GovBB.D['has-b']!=='Yes')return '<p class="govbb-text-body">No invigilation duties claimed.</p>';let h='';for(let i=1;i<=bCount();i++){h+=`<h3 class="govbb-text-h3" style="margin-bottom:var(--spacing-s);">Duty ${i}</h3><dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">${GovBB.summaryRow('Date',fmtDate('b-'+i+'-date'),'section-b-data')}${GovBB.summaryRow('Centre',GovBB.D['b-'+i+'-centre'],'section-b-data')}${GovBB.summaryRow('Role',GovBB.D['b-'+i+'-role']==='Other'?(GovBB.D['b-'+i+'-role-other']||'Other'):GovBB.D['b-'+i+'-role'],'section-b-data')}${GovBB.summaryRow('Rate',fmtMoney(GovBB.D['b-'+i+'-rate']),'section-b-data')}${GovBB.summaryRow('Overtime (hrs)',GovBB.D['b-'+i+'-overtime']||'0','section-b-data')}${GovBB.summaryRow('Subtotal',fmtMoney(bSubtotal(i)),'section-b-data')}</dl>`;}return h;}
+    function cRows(){if(GovBB.D['has-c']!=='Yes')return '<p class="govbb-text-body">No practical setups claimed.</p>';let h='';for(let i=1;i<=cCount();i++){h+=`<h3 class="govbb-text-h3" style="margin-bottom:var(--spacing-s);">Setup ${i}</h3><dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">${GovBB.summaryRow('Date',fmtDate('c-'+i+'-date'),'section-c-data')}${GovBB.summaryRow('Centre',GovBB.D['c-'+i+'-centre'],'section-c-data')}${GovBB.summaryRow('Subject',GovBB.D['c-'+i+'-subject'],'section-c-data')}${GovBB.summaryRow('Candidates',GovBB.D['c-'+i+'-candidates'],'section-c-data')}${GovBB.summaryRow('Personnel',GovBB.D['c-'+i+'-personnel'],'section-c-data')}${GovBB.summaryRow('Subtotal',fmtMoney(cSubtotal(i)),'section-c-data')}</dl>`;}return h;}
+    function dRows(){if(GovBB.D['has-d']!=='Yes')return '<p class="govbb-text-body">No Reader/Writer sessions claimed.</p>';let h='';for(let i=1;i<=dCount();i++){h+=`<h3 class="govbb-text-h3" style="margin-bottom:var(--spacing-s);">Session ${i}</h3><dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">${GovBB.summaryRow('Date',fmtDate('d-'+i+'-date'),'section-d-data')}${GovBB.summaryRow('Centre',GovBB.D['d-'+i+'-centre'],'section-d-data')}${GovBB.summaryRow('Subject',GovBB.D['d-'+i+'-subject'],'section-d-data')}${GovBB.summaryRow('Duties',GovBB.D['d-'+i+'-duties'],'section-d-data')}${GovBB.summaryRow('Hours/passages',GovBB.D['d-'+i+'-hours'],'section-d-data')}${GovBB.summaryRow('Subtotal',fmtMoney(dSubtotal(i)),'section-d-data')}</dl>`;}return h;}
+
+    return `<div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your claim before submitting</h1>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About you</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Name', [GovBB.D['first-name'],GovBB.D['other-names'],GovBB.D['last-name']].filter(Boolean).join(' '), 'claimant-details')}
+        ${GovBB.summaryRow('National ID Number', maskNid(GovBB.D['nid']), 'claimant-details')}
+        ${GovBB.summaryRow('Phone', formatPhone(GovBB.D['telephone']), 'claimant-details')}
+        ${GovBB.summaryRow('Email', GovBB.D['email'], 'claimant-details')}
+        ${GovBB.summaryRow('Supervisor', GovBB.D['supervisor'], 'claimant-details')}
+        ${GovBB.summaryRow('NIS', GovBB.D['nis-no']?'••••'+String(GovBB.D['nis-no']).slice(-4):'', 'claimant-details')}
+        ${GovBB.summaryRow('TAMIS', GovBB.D['tamis-no']||'Not provided', 'claimant-details')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Exam period</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Exam period', GovBB.D['exam-period']==='Other'?(GovBB.D['exam-period-other']||'Other'):GovBB.D['exam-period'], 'exam-period')}
+        ${GovBB.summaryRow('Claim from', fmtDate('claim-start'), 'exam-period')}
+        ${GovBB.summaryRow('Claim to', fmtDate('claim-end'), 'exam-period')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Section B — Invigilation / supervision (total ${fmtMoney(totalB())})</h2>
+      ${bRows()}
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Section C — Practical setups (total ${fmtMoney(totalC())})</h2>
+      ${cRows()}
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Section D — Reader / Writer / Interpreter (total ${fmtMoney(totalD())})</h2>
+      ${dRows()}
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Payment to</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Bank', GovBB.D['bank-name']==='Other'?(GovBB.D['bank-name-other']||'Other'):GovBB.D['bank-name'], 'payee')}
+        ${GovBB.summaryRow('Branch', GovBB.D['bank-branch'], 'payee')}
+        ${GovBB.summaryRow('Account number', maskAccount(GovBB.D['account-no']), 'payee')}
+        ${GovBB.summaryRow('Account type', GovBB.D['account-type'], 'payee')}
+        ${GovBB.summaryRow('Name on account', GovBB.D['account-name'], 'payee')}
+        ${GovBB.summaryRow('BIC / SWIFT', GovBB.D['bic-swift']||'Not provided', 'payee')}
+      </dl>
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-size:var(--font-size-h3);"><strong>Total claim: ${fmtMoney(grandTotal())}</strong></p>
+      </div>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By submitting this claim you confirm that all duties and amounts are accurate. Your supervisor will verify before payment.</p>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Submit claim</button>
+      </div>
+    </div>`;
+  },
+
+  'confirmation': () => {
+    window.__refNumber=window.__refNumber||('CL-'+Math.random().toString(36).substring(2,8).toUpperCase());
+    if(document.title.indexOf('Error: ')===0)document.title=document.title.substring('Error: '.length);
+    return `<div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Claim submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You are claiming a total of <strong>${fmtMoney(grandTotal())}</strong>.</p>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your supervisor, <strong>${GovBB.D['supervisor']||'your supervisor'}</strong>, will verify the claim.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Once verified, payment is processed by Accounts and the Examination Verifier.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Payment is typically deposited within <strong>4 to 6 weeks</strong> of the exam period ending.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We'll email a copy of your claim to ${GovBB.D['email']||'the address you provided'} once it has been processed.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you have not been paid within 6 weeks, call <strong>+1 (246) 535-0600</strong>.</li>
+      </ul>
+    </div>`;
+  }
+};
+
+function validate(pageId){
+  const D=GovBB.D,errors=[];
+  const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/,NID_RE=/^\d{6}-\d{4}$/;
+  function req(id,msg){if(!D[id]||String(D[id]).trim()==='')errors.push({id:id,msg:msg});}
+  function reqNid(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!NID_RE.test(v))errors.push({id:id,msg:label+' must be in the format 110915-0048'});}
+  function reqPhone(id,label,required,emptyMsg){var v=(D[id]||'').trim();if(!v){if(required)errors.push({id:id,msg:emptyMsg});return;}var digits=v.replace(/[\s\-()+]/g,'');if(!/^\d{7,15}$/.test(digits))errors.push({id:id,msg:label+' must contain 7 to 15 digits'});}
+  function reqEmail(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!EMAIL_RE.test(v))errors.push({id:id,msg:label+' must be in the format you@example.com'});}
+  function reqDate(prefix,label){const dayV=D[prefix+'-day'],monV=D[prefix+'-month'],yrV=D[prefix+'-year'];if(!dayV||!monV||!yrV){errors.push({id:prefix+'-day',msg:label+' — enter a complete date.'});return null;}const dt=parseDate(prefix);if(dt===false){errors.push({id:prefix+'-day',msg:label+' — enter a real date.'});return null;}return dt;}
+  function reqMoney(id,label,allowZero){var v=(D[id]||'').trim();if(!v){if(!allowZero)errors.push({id:id,msg:label+' — enter an amount'});return;}if(!/^\d+(\.\d{1,2})?$/.test(v))errors.push({id:id,msg:label+' — must be a number, for example 50 or 50.00'});}
+
+  if(pageId==='claimant-details'){
+    req('first-name','Enter your first name');req('last-name','Enter your last name');
+    reqNid('nid','National ID Number','Enter your National ID Number');
+    req('address','Enter your address');req('parish','Select your parish');
+    reqPhone('telephone','Telephone',true,'Enter a telephone number');
+    reqEmail('email','Email address','Enter your email address');
+    req('supervisor','Enter your supervisor\'s name');
+    var nis=(D['nis-no']||'').trim();if(!nis){errors.push({id:'nis-no',msg:'Enter your NIS number'});}else if(!/^\d{8,12}$/.test(nis.replace(/[\s\-]/g,''))){errors.push({id:'nis-no',msg:'NIS number must be 8 to 12 digits'});}
+  }
+  if(pageId==='exam-period'){
+    req('exam-period','Select the exam period');
+    if(D['exam-period']==='Other')req('exam-period-other','Describe the exam period');
+    const cs=reqDate('claim-start','Claim from');const ce=reqDate('claim-end','Claim to');
+    if(cs&&ce&&cs>ce)errors.push({id:'claim-end-day',msg:'Claim "to" date must be on or after the "from" date.'});
+  }
+  if(pageId==='section-b-yesno'){if(!D['has-b'])errors.push({id:'has-b-yes',msg:'Select yes or no'});}
+  if(pageId==='section-b-count'){if(!D['b-count'])errors.push({id:'b-count-1',msg:'Choose how many duties'});}
+  if(pageId==='section-b-data'){for(let i=1;i<=bCount();i++){reqDate('b-'+i+'-date','Duty '+i+' date');req('b-'+i+'-centre','Duty '+i+' — enter the centre');req('b-'+i+'-role','Duty '+i+' — select a role');if(D['b-'+i+'-role']==='Other')req('b-'+i+'-role-other','Duty '+i+' — describe the role');reqMoney('b-'+i+'-rate','Duty '+i+' rate',false);reqMoney('b-'+i+'-overtime','Duty '+i+' overtime hours',true);}}
+  if(pageId==='section-c-yesno'){if(!D['has-c'])errors.push({id:'has-c-yes',msg:'Select yes or no'});}
+  if(pageId==='section-c-count'){if(!D['c-count'])errors.push({id:'c-count-1',msg:'Choose how many setups'});}
+  if(pageId==='section-c-data'){for(let i=1;i<=cCount();i++){reqDate('c-'+i+'-date','Setup '+i+' date');req('c-'+i+'-centre','Setup '+i+' — enter the centre');req('c-'+i+'-subject','Setup '+i+' — enter the subject');reqMoney('c-'+i+'-candidates','Setup '+i+' candidates',false);reqMoney('c-'+i+'-personnel','Setup '+i+' personnel',false);}}
+  if(pageId==='section-d-yesno'){if(!D['has-d'])errors.push({id:'has-d-yes',msg:'Select yes or no'});}
+  if(pageId==='section-d-count'){if(!D['d-count'])errors.push({id:'d-count-1',msg:'Choose how many sessions'});}
+  if(pageId==='section-d-data'){for(let i=1;i<=dCount();i++){reqDate('d-'+i+'-date','Session '+i+' date');req('d-'+i+'-centre','Session '+i+' — enter the centre');req('d-'+i+'-subject','Session '+i+' — enter the subject');req('d-'+i+'-duties','Session '+i+' — enter the duties performed');reqMoney('d-'+i+'-hours','Session '+i+' hours',false);}}
+  if(pageId==='payee'){
+    req('bank-name','Select your bank or credit union');
+    if(D['bank-name']==='Other')req('bank-name-other','Enter the bank name');
+    req('bank-branch','Enter the branch');
+    var acct=(D['account-no']||'').trim();if(!acct){errors.push({id:'account-no',msg:'Enter your account number'});}else if(!/^\d{6,16}$/.test(acct.replace(/[\s\-]/g,''))){errors.push({id:'account-no',msg:'Account number must be 6 to 16 digits'});}
+    if(!D['account-type'])errors.push({id:'account-type-0',msg:'Select an account type'});
+    req('account-name','Enter the name on the account');
+  }
+  if(pageId==='declaration'){
+    if(!D['decl-accurate'])errors.push({id:'decl-accurate',msg:'Tick the box to confirm the claim is accurate'});
+    if(!D['decl-supervisor'])errors.push({id:'decl-supervisor',msg:'Tick the box to confirm you understand supervisor verification'});
+    if(!D['decl-false'])errors.push({id:'decl-false',msg:'Tick the box to confirm you understand the consequences'});
+  }
+  return errors;
+}
+
+GovBB.init({
+  formName:FORM_NAME,
+  /* Dynamic flow: skip the count + data pages for each section if the user
+     answered No, and purge any persisted data so it can't leak. */
+  getFlow:function(){
+    var flow=FLOW.slice();
+    function dropIfNo(prefix,fields){
+      if(GovBB.D['has-'+prefix]==='No'){
+        flow=flow.filter(function(p){return p!=='section-'+prefix+'-count'&&p!=='section-'+prefix+'-data';});
+        for(var i=1;i<=MAX_ROWS;i++)fields.forEach(function(f){delete GovBB.D[prefix+'-'+i+'-'+f];});
+        delete GovBB.D[prefix+'-count'];
+      }
+    }
+    dropIfNo('b',['date-day','date-month','date-year','centre','role','role-other','rate','overtime','overtime-rate']);
+    dropIfNo('c',['date-day','date-month','date-year','centre','subject','candidates','personnel','rate-per-candidate']);
+    dropIfNo('d',['date-day','date-month','date-year','centre','subject','duties','hours','rate']);
+    return flow;
+  },
+  pages:PAGES,validate:validate
+});
+</script>
+</body>
+</html>

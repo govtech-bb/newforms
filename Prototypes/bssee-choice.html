@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BSSEE Choice of School form – Ministry of Educational Transformation</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div>
+  </div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a><a class="govbb-footer__link" href="#">Privacy</a><a class="govbb-footer__link" href="#">Terms &amp; Conditions</a><a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary'); if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'" onclick="GovBB.focusError(\''+e.id+'\');return false;">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  var app = document.getElementById('app'); var h1 = app.querySelector('h1');
+  if (h1) h1.insertAdjacentHTML('afterend', html); else app.insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id); if (!el) return;
+    var errId = 'err-'+e.id; el.setAttribute('aria-invalid','true'); el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p'); msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) group.appendChild(msg);
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+function next(){GovBB.next();} function back(){GovBB.back();} function nav(p){GovBB.nav(p);}
+
+const FORM_NAME = 'BSSEE Choice of School form';
+const CAPTION = 'Ministry of Educational Transformation';
+const TITLES = ['Mr', 'Mrs', 'Miss', 'Ms', 'Dr', 'Rev'];
+const ZONES = ['1','2','3','4','5','6','7','8','9','10'];
+const SECONDARY_SCHOOLS = [
+  'Alexandra School','Alleyne School','Christ Church Foundation School','Coleridge & Parry School',
+  'Combermere School','Daryll Jordan Secondary School','Deighton Griffith Secondary School',
+  'Ellerslie Secondary School','Frederick Smith Secondary School','Garrison Secondary School',
+  'Graydon Sealy Secondary School','Grantley Adams Memorial Secondary School','Harrison College',
+  'Lester Vaughan School','Lodge School','Princess Margaret Secondary School','Queen\'s College',
+  'Springer Memorial School','St. George Secondary School','St. Leonard\'s Boys\' Secondary School',
+  'St. Michael School'
+];
+const BIRTH_COUNTRIES = ['Barbados','Antigua and Barbuda','Bahamas','Belize','Dominica','Grenada','Guyana','Jamaica','Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Suriname','Trinidad and Tobago','Canada','India','Nigeria','United Kingdom','United States','Other'];
+
+const FLOW = ['start','student-details','student-contact','guardian-details','school-choices','declaration','check','confirmation'];
+
+function caption(){ return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+CAPTION+'</p>'; }
+function fmtDate(prefix){ const d=GovBB.D[prefix+'-day'],m=GovBB.D[prefix+'-month'],y=GovBB.D[prefix+'-year']; if(!d&&!m&&!y) return ''; return [d,m,y].filter(Boolean).join(' / '); }
+function parseDate(prefix){ const d=parseInt(GovBB.D[prefix+'-day'],10),m=parseInt(GovBB.D[prefix+'-month'],10),y=parseInt(GovBB.D[prefix+'-year'],10); if(!d||!m||!y) return null; if(d<1||d>31||m<1||m>12||y<1990||y>2100) return false; const dt=new Date(y,m-1,d); if(dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d) return false; return dt; }
+function maskNid(nid){ if(!nid) return ''; var m=String(nid).trim().match(/^(\d{6})-(\d{4})$/); return m?'••••••-'+m[2]:String(nid).trim(); }
+function formatPhone(p){ if(!p) return ''; var digits=String(p).replace(/[^\d]/g,''); if(digits.length===10&&digits.indexOf('246')===0) return '(246) '+digits.substring(3,6)+' '+digits.substring(6); if(digits.length===11&&digits.indexOf('1246')===0) return '+1 (246) '+digits.substring(4,7)+' '+digits.substring(7); return String(p).trim(); }
+function studentName(){ return [GovBB.D['student-first'], GovBB.D['student-middle'], GovBB.D['student-last']].filter(Boolean).join(' '); }
+function guardianName(){ return [GovBB.D['guardian-title'], GovBB.D['guardian-first'], GovBB.D['guardian-last']].filter(Boolean).join(' '); }
+
+function dateField(prefix, legend, hint){
+  return `<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+    <legend class="govbb-fieldset__legend">${legend}</legend>${hint?`<p class="govbb-hint">${hint}</p>`:''}
+    <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
+      <div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-day">Day</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-day" name="${prefix}-day" data-field="${prefix}-day" inputmode="numeric" value="${GovBB.D[prefix+'-day']||''}" /></div></div>
+      <div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-month">Month</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-month" name="${prefix}-month" data-field="${prefix}-month" inputmode="numeric" value="${GovBB.D[prefix+'-month']||''}" /></div></div>
+      <div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-year">Year</label><div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="${prefix}-year" name="${prefix}-year" data-field="${prefix}-year" inputmode="numeric" value="${GovBB.D[prefix+'-year']||''}" /></div></div>
+    </div></fieldset>`;
+}
+
+const PAGES = {
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Education and schooling</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Choose secondary schools for the BSSEE</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Last updated on 14 June 2025</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If your child is sitting the Barbados Secondary School Entrance Examination (BSSEE), use this form to choose the secondary schools you would like them to attend, in order of preference.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. There is no application fee. Filling in the form takes about <strong>15 minutes</strong> — gather your information first.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
+
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>You choose 9 schools in total:</strong> 2 from any of the 21 secondary schools, plus 7 from your assigned zone. The order is your order of preference.</p>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your child's full name, date of birth, and National ID Number (NID)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your child's current primary school name</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your contact details — phone and email</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your assigned zone (you should have received this from your child's primary school)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A ranked list of the secondary schools you would like to choose</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">After the BSSEE results are released, the Ministry uses your choices and your child's results to allocate a place. You will be told the school assignment within <strong>4 to 6 weeks</strong> of results being released.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call the Ministry of Educational Transformation on <strong>+1 (246) 535-0700</strong> if you need help completing this form.</p>
+    </div>`,
+
+  'student-details': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About your child</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="student-school">Current primary school</label>
+        <p class="govbb-hint">Type the official name in full — for example, "St. Stephen's Primary School".</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="student-school" name="student-school" data-field="student-school" value="${GovBB.D['student-school']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="student-first">First name</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="student-first" name="student-first" data-field="student-first" value="${GovBB.D['student-first']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="student-middle">Middle name (optional)</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="student-middle" name="student-middle" data-field="student-middle" value="${GovBB.D['student-middle']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="student-last">Last name</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="student-last" name="student-last" data-field="student-last" value="${GovBB.D['student-last']||''}" /></div>
+      </div>
+
+      ${dateField('student-dob', 'Date of birth', 'For example, 15 6 2014.')}
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Sex</legend>
+        <p class="govbb-hint">As recorded on your child's National Registration Card.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="student-gender-m" name="student-gender" data-field="student-gender" value="Male"${GovBB.D['student-gender']==='Male'?' checked':''} /><label class="govbb-radio-item__label" for="student-gender-m">Male</label></div>
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="student-gender-f" name="student-gender" data-field="student-gender" value="Female"${GovBB.D['student-gender']==='Female'?' checked':''} /><label class="govbb-radio-item__label" for="student-gender-f">Female</label></div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="student-nid">National ID Number</label>
+        <p class="govbb-hint">From your child's national ID card. For example, 140615-0048.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="student-nid" name="student-nid" data-field="student-nid" value="${GovBB.D['student-nid']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="student-birth-country">Country of birth</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="student-birth-country" name="student-birth-country" data-field="student-birth-country">
+            <option value="">Select a country</option>
+            ${BIRTH_COUNTRIES.map(c=>`<option value="${c}"${GovBB.D['student-birth-country']===c?' selected':''}>${c}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'student-contact': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your child's address</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address-line1">Address line 1</label>
+        <p class="govbb-hint">House number and street name.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="address-line1" name="address-line1" data-field="address-line1" autocomplete="address-line1" value="${GovBB.D['address-line1']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="address-line2">Address line 2 (optional)</label>
+        <p class="govbb-hint">Area or village.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="address-line2" name="address-line2" data-field="address-line2" autocomplete="address-line2" value="${GovBB.D['address-line2']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="parish">Parish</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="parish" name="parish" data-field="parish">
+            <option value="">Select a parish</option>
+            ${GovBB.PARISHES.map(o=>`<option value="${o}"${GovBB.D['parish']===o?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="student-email">Email address (optional)</label>
+        <p class="govbb-hint">If your child has their own email address. Otherwise leave blank — we'll use your guardian email instead.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="email" id="student-email" name="student-email" data-field="student-email" inputmode="email" value="${GovBB.D['student-email']||''}" /></div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'guardian-details': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you (parent or guardian)</h1>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="guardian-title">Title</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="guardian-title" name="guardian-title" data-field="guardian-title">
+            <option value="">Select a title</option>
+            ${TITLES.map(t=>`<option value="${t}"${GovBB.D['guardian-title']===t?' selected':''}>${t}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="guardian-first">First name</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="guardian-first" name="guardian-first" data-field="guardian-first" autocomplete="given-name" value="${GovBB.D['guardian-first']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="guardian-last">Last name</label>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="guardian-last" name="guardian-last" data-field="guardian-last" autocomplete="family-name" value="${GovBB.D['guardian-last']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="guardian-nid">Your National ID Number</label>
+        <p class="govbb-hint">From your national ID card. For example, 110915-0048.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="guardian-nid" name="guardian-nid" data-field="guardian-nid" value="${GovBB.D['guardian-nid']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="guardian-phone">Phone number</label>
+        <p class="govbb-hint">For example, (246) 249 1234.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="guardian-phone" name="guardian-phone" data-field="guardian-phone" inputmode="tel" value="${GovBB.D['guardian-phone']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="guardian-email">Email address</label>
+        <p class="govbb-hint">We'll send updates here, including the school assignment.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="email" id="guardian-email" name="guardian-email" data-field="guardian-email" inputmode="email" value="${GovBB.D['guardian-email']||''}" /></div>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'school-choices': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">School choices</h1>
+
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Order matters.</strong> The Ministry will try to place your child in your highest-ranked school first. Be honest about your preferences.</p>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="zone">Your assigned zone</label>
+        <p class="govbb-hint">Your child's primary school should have told you this.</p>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="zone" name="zone" data-field="zone">
+            <option value="">Select a zone</option>
+            ${ZONES.map(z=>`<option value="${z}"${GovBB.D['zone']===z?' selected':''}>Zone ${z}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Open choices (from any of the 21 schools)</h2>
+      ${[1,2].map(i=>`
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="choice-${i}">Choice ${i}</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="choice-${i}" name="choice-${i}" data-field="choice-${i}">
+            <option value="">Select a school</option>
+            ${SECONDARY_SCHOOLS.map(s=>`<option value="${s}"${GovBB.D['choice-'+i]===s?' selected':''}>${s}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>`).join('')}
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Zone choices (from your assigned zone only)</h2>
+      ${[3,4,5,6,7,8,9].map(i=>`
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="choice-${i}">Choice ${i}</label>
+        <div class="govbb-select-wrapper">
+          <select class="govbb-select" id="choice-${i}" name="choice-${i}" data-field="choice-${i}">
+            <option value="">Select a school</option>
+            ${SECONDARY_SCHOOLS.map(s=>`<option value="${s}"${GovBB.D['choice-'+i]===s?' selected':''}>${s}</option>`).join('')}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>`).join('')}
+
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-m);margin-top:var(--spacing-l);">
+        <input class="govbb-checkbox" type="checkbox" id="willing-private" name="willing-private" data-field="willing-private"${GovBB.D['willing-private']?' checked':''} />
+        <label class="govbb-checkbox-item__label" for="willing-private">If a place is not available at any of these, we would also consider a private school placement.</label>
+      </div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
+      </div>
+    </form>`,
+
+  'declaration': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-accurate" name="decl-accurate" data-field="decl-accurate"${GovBB.D['decl-accurate']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-accurate">The information I have given on this form is true and correct to the best of my knowledge.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-once" name="decl-once" data-field="decl-once"${GovBB.D['decl-once']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-once">I am submitting only one Choice of School form for this child.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-allocation" name="decl-allocation" data-field="decl-allocation"${GovBB.D['decl-allocation']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-allocation">I understand that the final placement is decided by the Ministry based on my child's BSSEE results and these choices.</label></div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue to review</button>
+      </div>
+    </form>`,
+
+  'check': () => `
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before submitting</h1>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your child</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Current primary school', GovBB.D['student-school'], 'student-details')}
+        ${GovBB.summaryRow('Name', studentName(), 'student-details')}
+        ${GovBB.summaryRow('Date of birth', fmtDate('student-dob'), 'student-details')}
+        ${GovBB.summaryRow('Sex', GovBB.D['student-gender'], 'student-details')}
+        ${GovBB.summaryRow('National ID Number', maskNid(GovBB.D['student-nid']), 'student-details')}
+        ${GovBB.summaryRow('Country of birth', GovBB.D['student-birth-country'], 'student-details')}
+        ${GovBB.summaryRow('Address', [GovBB.D['address-line1'],GovBB.D['address-line2'],GovBB.D['parish']].filter(Boolean).join(', '), 'student-contact')}
+        ${GovBB.summaryRow('Email', GovBB.D['student-email']||'Not provided', 'student-contact')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parent or guardian</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Name', guardianName(), 'guardian-details')}
+        ${GovBB.summaryRow('National ID Number', maskNid(GovBB.D['guardian-nid']), 'guardian-details')}
+        ${GovBB.summaryRow('Phone', formatPhone(GovBB.D['guardian-phone']), 'guardian-details')}
+        ${GovBB.summaryRow('Email', GovBB.D['guardian-email'], 'guardian-details')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">School choices</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Zone', GovBB.D['zone']?'Zone '+GovBB.D['zone']:'', 'school-choices')}
+        ${[1,2,3,4,5,6,7,8,9].map(i=>GovBB.summaryRow('Choice '+i, GovBB.D['choice-'+i], 'school-choices')).join('')}
+        ${GovBB.summaryRow('Open to private placement', GovBB.D['willing-private']?'Yes':'No', 'school-choices')}
+      </dl>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By submitting this form you confirm that the information you have given is true and correct.</p>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
+      </div>
+    </div>`,
+
+  'confirmation': () => {
+    window.__refNumber = window.__refNumber || ('BSS-' + Math.random().toString(36).substring(2,8).toUpperCase());
+    if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    return `
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Application submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your choices are now on file with the Ministry.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">After the BSSEE results are released, the Ministry will use your choices and your child's results to allocate a place.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You will be told the school assignment within <strong>4 to 6 weeks</strong> of results.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We'll email a copy of your application to ${GovBB.D['guardian-email']||'the address you provided'} once it has been processed.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you do not hear from us, call <strong>+1 (246) 535-0700</strong>.</li>
+      </ul>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Keep your reference number — you will need it to follow up.</p>
+    </div>`;
+  }
+};
+
+function validate(pageId) {
+  const D = GovBB.D, errors = [];
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/, NID_RE = /^\d{6}-\d{4}$/;
+  function req(id, msg){ if(!D[id]||String(D[id]).trim()==='') errors.push({id:id,msg:msg}); }
+  function reqMinLetters(id, msg, min){ var v=(D[id]||'').trim(); if(!v){errors.push({id:id,msg:msg});return;} if((v.match(/[A-Za-z]/g)||[]).length<min) errors.push({id:id,msg:msg}); }
+  function reqNid(id, label, emptyMsg){ var v=(D[id]||'').trim(); if(!v){errors.push({id:id,msg:emptyMsg});return;} if(!NID_RE.test(v)) errors.push({id:id,msg:label+' must be in the format 110915-0048'}); }
+  function reqPhone(id, label, required, emptyMsg){ var v=(D[id]||'').trim(); if(!v){if(required) errors.push({id:id,msg:emptyMsg});return;} var digits=v.replace(/[\s\-()+]/g,''); if(!/^\d{7,15}$/.test(digits)) errors.push({id:id,msg:label+' must contain 7 to 15 digits, for example (246) 249 1234'}); }
+  function reqEmail(id, label, emptyMsg){ var v=(D[id]||'').trim(); if(!v){errors.push({id:id,msg:emptyMsg});return;} if(!EMAIL_RE.test(v)) errors.push({id:id,msg:label+' must be in the format you@example.com'}); }
+  function optEmail(id, label){ var v=(D[id]||'').trim(); if(!v) return; if(!EMAIL_RE.test(v)) errors.push({id:id,msg:label+' must be in the format you@example.com'}); }
+  function reqDate(prefix, label){ const dayV=D[prefix+'-day'],monV=D[prefix+'-month'],yrV=D[prefix+'-year']; if(!dayV||!monV||!yrV){errors.push({id:prefix+'-day',msg:label+' — enter a complete date.'});return null;} const dt=parseDate(prefix); if(dt===false){errors.push({id:prefix+'-day',msg:label+' — enter a real date, for example 15 6 2014.'});return null;} return dt; }
+
+  if (pageId === 'student-details') {
+    reqMinLetters('student-school', 'Enter your child\'s current primary school name', 3);
+    req('student-first', 'Enter your child\'s first name');
+    req('student-last', 'Enter your child\'s last name');
+    const dob = reqDate('student-dob', 'Date of birth');
+    if (dob) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      const age = today.getFullYear() - dob.getFullYear() - ((today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) ? 1 : 0);
+      if (dob >= today) errors.push({id:'student-dob-day',msg:'Date of birth must be in the past.'});
+      else if (age < 9 || age > 13) errors.push({id:'student-dob-day',msg:'Date of birth — children sitting the BSSEE are usually 9 to 13. Check the year.'});
+    }
+    if (!D['student-gender']) errors.push({id:'student-gender-m',msg:'Select your child\'s sex'});
+    reqNid('student-nid', 'National ID Number', 'Enter your child\'s National ID Number');
+    req('student-birth-country', 'Select your child\'s country of birth');
+  }
+
+  if (pageId === 'student-contact') {
+    req('address-line1', 'Enter your address');
+    req('parish', 'Select your parish');
+    optEmail('student-email', 'Email address');
+  }
+
+  if (pageId === 'guardian-details') {
+    req('guardian-title', 'Select a title');
+    req('guardian-first', 'Enter your first name');
+    req('guardian-last', 'Enter your last name');
+    reqNid('guardian-nid', 'National ID Number', 'Enter your National ID Number');
+    reqPhone('guardian-phone', 'Phone number', true, 'Enter a phone number');
+    reqEmail('guardian-email', 'Email address', 'Enter your email address');
+  }
+
+  if (pageId === 'school-choices') {
+    req('zone', 'Select your assigned zone');
+    for (let i = 1; i <= 9; i++) {
+      if (!D['choice-'+i]) errors.push({id:'choice-'+i, msg:'Choice '+i+' — select a school'});
+    }
+    /* No duplicate choices */
+    var seen = {};
+    for (let i = 1; i <= 9; i++) {
+      var v = D['choice-'+i];
+      if (v) {
+        if (seen[v]) {
+          errors.push({id:'choice-'+i, msg:'Choice '+i+' — same as Choice '+seen[v]+'. Each choice must be a different school.'});
+        } else seen[v] = i;
+      }
+    }
+  }
+
+  if (pageId === 'declaration') {
+    if (!D['decl-accurate']) errors.push({id:'decl-accurate',msg:'Tick the box to confirm the information is true and correct'});
+    if (!D['decl-once']) errors.push({id:'decl-once',msg:'Tick the box to confirm this is the only Choice of School form for this child'});
+    if (!D['decl-allocation']) errors.push({id:'decl-allocation',msg:'Tick the box to confirm you understand the placement process'});
+  }
+  return errors;
+}
+
+GovBB.init({ formName: FORM_NAME, flow: FLOW, pages: PAGES, validate: validate });
+</script>
+</body>
+</html>
