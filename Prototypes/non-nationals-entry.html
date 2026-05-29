@@ -52,7 +52,12 @@ const CAPTION='Ministry of Educational Transformation';
 const TITLES=['Mr','Mrs','Miss','Ms','Dr','Rev'];
 const CARICOM=['Antigua and Barbuda','Bahamas','Belize','Dominica','Grenada','Guyana','Haiti','Jamaica','Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Suriname','Trinidad and Tobago'];
 const OTHER_COUNTRIES=['Canada','China','India','Nigeria','Philippines','United Kingdom','United States','Venezuela','Other'];
-const BIRTH_COUNTRIES=['Barbados', ...CARICOM, ...OTHER_COUNTRIES];
+/* Barbados is intentionally excluded from the CHILD's country-of-birth
+   dropdown: this form is for non-nationals or children born outside
+   Barbados. Barbados-born children of Barbadian parents apply through
+   the main BSSEE process. */
+const CHILD_BIRTH_COUNTRIES=[...CARICOM, ...OTHER_COUNTRIES];
+const GUARDIAN_BIRTH_COUNTRIES=['Barbados', ...CARICOM, ...OTHER_COUNTRIES];
 const STATUS_OPTIONS=['Citizen','Permanent resident','Work permit holder','Student visa','Asylum / refugee status','Other'];
 
 const FLOW=['start','child-details','guardian-details','documents','declaration','check','confirmation'];
@@ -145,7 +150,7 @@ const PAGES = {
         <div class="govbb-select-wrapper">
           <select class="govbb-select" id="child-country" name="child-country" data-field="child-country" data-trigger-render="1">
             <option value="">Select a country</option>
-            ${BIRTH_COUNTRIES.map(c=>`<option value="${c}"${GovBB.D['child-country']===c?' selected':''}>${c}</option>`).join('')}
+            ${CHILD_BIRTH_COUNTRIES.map(c=>`<option value="${c}"${GovBB.D['child-country']===c?' selected':''}>${c}</option>`).join('')}
           </select>
           <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
         </div>
@@ -154,8 +159,14 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
         <label class="govbb-label" for="child-school">Name of present school</label>
-        <p class="govbb-hint">The school your child currently attends. Type the official name in full.</p>
+        <p class="govbb-hint">The school your child currently attends — in Barbados or abroad. Type the official name in full.</p>
         <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-school" name="child-school" data-field="child-school" value="${GovBB.D['child-school']||''}" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="target-school">Preferred secondary school in Barbados</label>
+        <p class="govbb-hint">Which Barbados government secondary school would you like your child to attend? If you can't upload the documents online, take physical copies to this school.</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="target-school" name="target-school" data-field="target-school" value="${GovBB.D['target-school']||''}" /></div>
       </div>
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
@@ -221,7 +232,7 @@ const PAGES = {
         <div class="govbb-select-wrapper">
           <select class="govbb-select" id="guardian-country" name="guardian-country" data-field="guardian-country">
             <option value="">Select a country</option>
-            ${BIRTH_COUNTRIES.map(c=>`<option value="${c}"${GovBB.D['guardian-country']===c?' selected':''}>${c}</option>`).join('')}
+            ${GUARDIAN_BIRTH_COUNTRIES.map(c=>`<option value="${c}"${GovBB.D['guardian-country']===c?' selected':''}>${c}</option>`).join('')}
           </select>
           <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
         </div>
@@ -310,6 +321,7 @@ const PAGES = {
         ${GovBB.summaryRow('Name', childName(), 'child-details')}
         ${GovBB.summaryRow('Country of birth', GovBB.D['child-country'], 'child-details')}
         ${GovBB.summaryRow('Present school', GovBB.D['child-school'], 'child-details')}
+        ${GovBB.summaryRow('Preferred secondary school', GovBB.D['target-school'], 'child-details')}
         ${GovBB.summaryRow('Sex', GovBB.D['child-gender'], 'child-details')}
         ${GovBB.summaryRow('Date of birth', fmtDate('child-dob'), 'child-details')}
       </dl>
@@ -367,6 +379,7 @@ function validate(pageId){
     req('child-surname','Enter the child\'s surname');
     req('child-country','Select the country of birth');
     req('child-school','Enter the present school name');
+    req('target-school','Enter the secondary school you would like your child to attend');
     if(!D['child-gender'])errors.push({id:'child-gender-m',msg:'Select the child\'s sex'});
     const dob=reqDate('child-dob','Date of birth');
     if(dob){const today=new Date();today.setHours(0,0,0,0);const age=today.getFullYear()-dob.getFullYear()-((today.getMonth()<dob.getMonth()||(today.getMonth()===dob.getMonth()&&today.getDate()<dob.getDate()))?1:0);if(dob>=today)errors.push({id:'child-dob-day',msg:'Date of birth must be in the past.'});else if(age<10||age>17)errors.push({id:'child-dob-day',msg:'Date of birth — secondary school children are usually 10 to 17. Check the year.'});}

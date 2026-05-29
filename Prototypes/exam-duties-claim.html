@@ -350,7 +350,7 @@ const PAGES = {
         </div>
         <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
           <label class="govbb-label" for="c-${i}-personnel">Total personnel</label>
-          <p class="govbb-hint">Number of people involved in the setup.</p>
+          <p class="govbb-hint">Number of staff involved in the setup. Recorded for administration only — does not affect your subtotal.</p>
           <div class="govbb-input-wrapper" style="max-width:8rem;"><input class="govbb-input" type="text" id="c-${i}-personnel" name="c-${i}-personnel" data-field="c-${i}-personnel" inputmode="numeric" value="${GovBB.D['c-'+i+'-personnel']||''}" /></div>
         </div>
         <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
@@ -600,7 +600,8 @@ function validate(pageId){
   function reqPhone(id,label,required,emptyMsg){var v=(D[id]||'').trim();if(!v){if(required)errors.push({id:id,msg:emptyMsg});return;}var digits=v.replace(/[\s\-()+]/g,'');if(!/^\d{7,15}$/.test(digits))errors.push({id:id,msg:label+' must contain 7 to 15 digits'});}
   function reqEmail(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!EMAIL_RE.test(v))errors.push({id:id,msg:label+' must be in the format you@example.com'});}
   function reqDate(prefix,label){const dayV=D[prefix+'-day'],monV=D[prefix+'-month'],yrV=D[prefix+'-year'];if(!dayV||!monV||!yrV){errors.push({id:prefix+'-day',msg:label+' — enter a complete date.'});return null;}const dt=parseDate(prefix);if(dt===false){errors.push({id:prefix+'-day',msg:label+' — enter a real date.'});return null;}return dt;}
-  function reqMoney(id,label,allowZero){var v=(D[id]||'').trim();if(!v){if(!allowZero)errors.push({id:id,msg:label+' — enter an amount'});return;}if(!/^\d+(\.\d{1,2})?$/.test(v))errors.push({id:id,msg:label+' — must be a number, for example 50 or 50.00'});}
+  function reqMoney(id,label,allowZero,max){var v=(D[id]||'').trim();if(!v){if(!allowZero)errors.push({id:id,msg:label+' — enter an amount'});return;}if(!/^\d+(\.\d{1,2})?$/.test(v)){errors.push({id:id,msg:label+' — must be a number, for example 50 or 50.00'});return;}var n=parseFloat(v);if(max&&n>max)errors.push({id:id,msg:label+' — looks unusually high ($'+n.toFixed(2)+'). Check the value, or call the Examinations Section if the rate really is this high.'});}
+  function reqInt(id,label,allowZero,max){var v=(D[id]||'').trim();if(!v){if(!allowZero)errors.push({id:id,msg:label+' — enter a whole number'});return;}if(!/^\d+$/.test(v)){errors.push({id:id,msg:label+' — must be a whole number (no decimals)'});return;}if(max&&parseInt(v,10)>max)errors.push({id:id,msg:label+' — looks unusually high. Check the value.'});}
 
   if(pageId==='claimant-details'){
     req('first-name','Enter your first name');req('last-name','Enter your last name');
@@ -623,13 +624,13 @@ function validate(pageId){
   }
   if(pageId==='section-b-yesno'){if(!D['has-b'])errors.push({id:'has-b-yes',msg:'Select yes or no'});}
   if(pageId==='section-b-count'){if(!D['b-count'])errors.push({id:'b-count-1',msg:'Choose how many duties'});}
-  if(pageId==='section-b-data'){for(let i=1;i<=bCount();i++){reqDate('b-'+i+'-date','Duty '+i+' date');req('b-'+i+'-centre','Duty '+i+' — enter the centre');req('b-'+i+'-role','Duty '+i+' — select a role');if(D['b-'+i+'-role']==='Other')req('b-'+i+'-role-other','Duty '+i+' — describe the role');reqMoney('b-'+i+'-rate','Duty '+i+' rate',false);reqMoney('b-'+i+'-overtime','Duty '+i+' overtime hours',true);}}
+  if(pageId==='section-b-data'){for(let i=1;i<=bCount();i++){reqDate('b-'+i+'-date','Duty '+i+' date');req('b-'+i+'-centre','Duty '+i+' — enter the centre');req('b-'+i+'-role','Duty '+i+' — select a role');if(D['b-'+i+'-role']==='Other')req('b-'+i+'-role-other','Duty '+i+' — describe the role');reqMoney('b-'+i+'-rate','Duty '+i+' rate',false,1000);reqInt('b-'+i+'-overtime','Duty '+i+' overtime hours',true,100);reqMoney('b-'+i+'-overtime-rate','Duty '+i+' overtime rate',true,500);}}
   if(pageId==='section-c-yesno'){if(!D['has-c'])errors.push({id:'has-c-yes',msg:'Select yes or no'});}
   if(pageId==='section-c-count'){if(!D['c-count'])errors.push({id:'c-count-1',msg:'Choose how many setups'});}
-  if(pageId==='section-c-data'){for(let i=1;i<=cCount();i++){reqDate('c-'+i+'-date','Setup '+i+' date');req('c-'+i+'-centre','Setup '+i+' — enter the centre');req('c-'+i+'-subject','Setup '+i+' — enter the subject');reqMoney('c-'+i+'-candidates','Setup '+i+' candidates',false);reqMoney('c-'+i+'-personnel','Setup '+i+' personnel',false);}}
+  if(pageId==='section-c-data'){for(let i=1;i<=cCount();i++){reqDate('c-'+i+'-date','Setup '+i+' date');req('c-'+i+'-centre','Setup '+i+' — enter the centre');req('c-'+i+'-subject','Setup '+i+' — enter the subject');reqInt('c-'+i+'-candidates','Setup '+i+' candidates',false,2000);reqInt('c-'+i+'-personnel','Setup '+i+' personnel',false,50);reqMoney('c-'+i+'-rate-per-candidate','Setup '+i+' rate per candidate',false,200);}}
   if(pageId==='section-d-yesno'){if(!D['has-d'])errors.push({id:'has-d-yes',msg:'Select yes or no'});}
   if(pageId==='section-d-count'){if(!D['d-count'])errors.push({id:'d-count-1',msg:'Choose how many sessions'});}
-  if(pageId==='section-d-data'){for(let i=1;i<=dCount();i++){reqDate('d-'+i+'-date','Session '+i+' date');req('d-'+i+'-centre','Session '+i+' — enter the centre');req('d-'+i+'-subject','Session '+i+' — enter the subject');req('d-'+i+'-duties','Session '+i+' — enter the duties performed');reqMoney('d-'+i+'-hours','Session '+i+' hours',false);}}
+  if(pageId==='section-d-data'){for(let i=1;i<=dCount();i++){reqDate('d-'+i+'-date','Session '+i+' date');req('d-'+i+'-centre','Session '+i+' — enter the centre');req('d-'+i+'-subject','Session '+i+' — enter the subject');req('d-'+i+'-duties','Session '+i+' — enter the duties performed');reqMoney('d-'+i+'-hours','Session '+i+' hours / passages',false,100);reqMoney('d-'+i+'-rate','Session '+i+' rate',false,500);}}
   if(pageId==='payee'){
     req('bank-name','Select your bank or credit union');
     if(D['bank-name']==='Other')req('bank-name-other','Enter the bank name');

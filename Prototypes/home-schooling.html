@@ -182,7 +182,15 @@ const PAGES = {
     </form>`;
   },
 
-  'previous-school': () => `
+  'previous-school': () => {
+    /* Ghost data cleanup: when "Previously in school?" is anything other
+       than Yes, purge any previously-entered school name/address so they
+       can't leak into the submission. */
+    if (GovBB.D['prev-school'] !== 'Yes') {
+      delete GovBB.D['prev-school-name'];
+      delete GovBB.D['prev-school-address'];
+    }
+    return `
     <form novalidate>${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Previous school</h1>
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
@@ -207,7 +215,8 @@ const PAGES = {
         <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
       </div>
-    </form>`,
+    </form>`;
+  },
 
   'tutors-count': () => `
     <form novalidate>${caption()}
@@ -278,7 +287,7 @@ const PAGES = {
     ];
     const tutorDocs = [];
     for (let i = 1; i <= tutorCount(); i++) {
-      tutorDocs.push({ key:'tutor-'+i+'-cert', label:'Tutor '+i+' — certified qualifications', hint:'Certified copy of the tutor\'s qualifications.', required:true });
+      tutorDocs.push({ key:'tutor-'+i+'-cert', label:'Tutor '+i+' — certified qualifications', hint:'Certified copy of the tutor\'s qualifications. If the tutor has multiple certificates, combine them into a single PDF before uploading. Certification is verified at the interview.', required:true });
     }
     const progressDocs = [];
     for (let i = 1; i <= childCount(); i++) {
