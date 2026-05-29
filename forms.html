@@ -3,14 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Form Prototypes</title>
+  <title>All Form Prototypes — grouped by MDA</title>
   <style>
+    :root {
+      --ink: #1a1a1a;
+      --muted: #555;
+      --soft: #777;
+      --rule: #e5e5e5;
+      --link: #0e5f64;
+      --link-bg: #f4fafa;
+      --chip-bg: #eef2f4;
+      --chip-ink: #4b5b62;
+    }
+    * { box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
       padding: 2rem 1.5rem 4rem;
-      color: #1a1a1a;
+      color: var(--ink);
       line-height: 1.5;
     }
     h1 {
@@ -18,78 +29,218 @@
       margin: 0 0 0.5rem;
     }
     p.lede {
-      color: #555;
+      color: var(--muted);
+      margin: 0 0 0.5rem;
+    }
+    p.lede a { color: var(--link); }
+    .intro { margin-bottom: 2rem; }
+
+    nav.toc {
+      background: var(--link-bg);
+      border-left: 4px solid var(--link);
+      padding: 0.75rem 1rem;
       margin: 0 0 2rem;
     }
-    ul {
+    nav.toc p {
+      margin: 0 0 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    nav.toc ul {
       list-style: none;
       padding: 0;
       margin: 0;
-      border-top: 1px solid #e5e5e5;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.75rem;
+      border: 0;
     }
-    li {
-      border-bottom: 1px solid #e5e5e5;
+    nav.toc li { border: 0; }
+    nav.toc a {
+      display: inline;
+      padding: 0;
+      color: var(--link);
+      font-size: 0.875rem;
     }
-    a {
+    nav.toc .count {
+      color: var(--soft);
+      font-variant-numeric: tabular-nums;
+    }
+
+    section.mda {
+      margin-bottom: 2rem;
+      scroll-margin-top: 1rem;
+    }
+    section.mda h2 {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 1.125rem;
+      margin: 0 0 0.5rem;
+      padding-top: 1.25rem;
+      border-top: 2px solid var(--ink);
+    }
+    section.mda .count-chip {
+      flex-shrink: 0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--chip-bg);
+      color: var(--chip-ink);
+      padding: 0.15rem 0.5rem;
+      border-radius: 1rem;
+      letter-spacing: 0.02em;
+    }
+
+    ul.forms {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 1px solid var(--rule);
+    }
+    ul.forms li {
+      border-bottom: 1px solid var(--rule);
+    }
+    ul.forms a {
       display: block;
-      padding: 0.9rem 0.25rem;
-      color: #0e5f64;
+      padding: 0.85rem 0.25rem;
+      color: var(--link);
       text-decoration: none;
       font-size: 1rem;
     }
-    a:hover, a:focus-visible {
-      background: #f4fafa;
+    ul.forms a:hover, ul.forms a:focus-visible {
+      background: var(--link-bg);
       text-decoration: underline;
       outline: none;
     }
-    .agency {
-      display: block;
+
+    .note {
       font-size: 0.8125rem;
-      color: #777;
-      margin-top: 0.15rem;
+      color: var(--soft);
+      margin: 0 0 0.75rem;
     }
   </style>
 </head>
 <body>
-  <h1>All Form Prototypes</h1>
-  <p class="lede">All 35 forms in the Prototypes folder. Click any form to open it.</p>
-  <p class="lede" style="margin-bottom:1rem;"><a href="service-map.html">→ View the proposed service map for Ministry of Educational Transformation forms</a></p>
-  <ul>
-    <li><a href="Prototypes/textbook-grant.html">Apply for the $100 Textbook Grant<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/uniform-grant.html">Apply for the $100 School Uniform Grant<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/examination-travel.html">Claim examination travel expenses<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/bssee-early-sitter.html">Apply for your child to sit the BSSEE early (Form A)<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/bssee-special-request.html">Request special accommodation for the BSSEE (Form C)<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/terms-leave.html">Apply for term's leave<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/temporary-teacher.html">Apply for the post of temporary teacher<span class="agency">Ministry of Education Transformation</span></a></li>
-    <li><a href="Prototypes/bssee-choice.html">Choose secondary schools for the BSSEE<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/non-nationals-entry.html">Apply for a non-national child to attend a government secondary school<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/home-schooling.html">Apply to home-school your child<span class="agency">Ministry of Education Transformation</span></a></li>
-    <li><a href="Prototypes/student-support-referral.html">Refer a student to the Student Support Services Unit<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/csec-private-registration.html">Register as a CSEC private candidate<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/cape-private-registration.html">Register as a CAPE private candidate<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/bssee-defer.html">Request to defer the BSSEE for an 11-year-old<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/special-ed-bursary.html">Apply for the Private Special Education Bursary<span class="agency">Ministry of Educational Transformation</span></a></li>
-    <li><a href="Prototypes/exam-duties-claim.html">Claim payment for examination duties<span class="agency">Ministry of Education Transformation</span></a></li>
-    <li><a href="Prototypes/direct-deposit.html">Direct Deposit Form<span class="agency">National Insurance Scheme</span></a></li>
-    <li><a href="Prototypes/dp10-contributions.html">National Insurance Contributions Certificate (D.P. 10)<span class="agency">National Insurance Scheme</span></a></li>
-    <li><a href="Prototypes/elder-care-companion.html">Elder Care Companion Application<span class="agency">Ministry of People Empowerment and Elder Affairs</span></a></li>
-    <li><a href="Prototypes/home-care-programme.html">Home Care Programme<span class="agency">Ministry of People Empowerment and Elder Affairs</span></a></li>
-    <li><a href="Prototypes/nis-online-registration.html">NIS Online Social Security Service Registration<span class="agency">National Insurance Scheme</span></a></li>
-    <li><a href="Prototypes/nscp-camper-registration.html">NSCP Camper Registration<span class="agency">Ministry of Youth, Sports and Community Empowerment</span></a></li>
-    <li><a href="Prototypes/pensioner-declaration.html">Declaration by Pensioners 60 Years and Over<span class="agency">Central Bank of Barbados</span></a></li>
-    <li><a href="Prototypes/permit-to-remove.html">Apply for a Permit to Move a Building, House or Boat<span class="agency">Barbados Licensing Authority</span></a></li>
-    <li><a href="Prototypes/presidential-visit-centenarian.html">Request a Presidential Visit for a Centenarian<span class="agency">Office of the President</span></a></li>
-    <li><a href="Prototypes/sea-multiple-birth-benefit.html">Multiple Birth Benefit Application<span class="agency">Social Empowerment Agency</span></a></li>
-    <li><a href="Prototypes/sea-national-assistance-grant.html">National Assistance Grant Application<span class="agency">Social Empowerment Agency</span></a></li>
-    <li><a href="Prototypes/sea-request-for-assistance.html">Request for Assistance or Transportation<span class="agency">Social Empowerment Agency</span></a></li>
-    <li><a href="Prototypes/self-employed-contributions.html">Contributions Payment Certificate — Self-employed Persons<span class="agency">National Insurance Scheme</span></a></li>
-    <li><a href="Prototypes/self-employment-registration.html">Self-Employment Registration<span class="agency">National Insurance Scheme</span></a></li>
-    <li><a href="Prototypes/seniors-recreational-activities.html">Seniors' Recreational Activities Programme<span class="agency">Ministry of People Empowerment and Elder Affairs</span></a></li>
-    <li><a href="Prototypes/storm-ready.html">StormReady Barbados<span class="agency">Department of Emergency Management</span></a></li>
-    <li><a href="Prototypes/termination-certificate.html">Termination of Services / Layoff Certificate<span class="agency">National Insurance Scheme</span></a></li>
-    <li><a href="Prototypes/unemployment-benefit.html">Claim for Unemployment Benefit<span class="agency">National Insurance Scheme</span></a></li>
-    <li><a href="Prototypes/workshop-presentation.html">Co-Design Workshop — Team Presentation<span class="agency">Internal</span></a></li>
-  </ul>
+  <div class="intro">
+    <h1>All Form Prototypes</h1>
+    <p class="lede">35 prototypes grouped by Ministry, Department, or Agency (MDA). Click any form to open it.</p>
+    <p class="lede"><a href="service-map.html">→ View the proposed service map for Ministry of Educational Transformation forms</a></p>
+  </div>
+
+  <nav class="toc" aria-label="Jump to MDA">
+    <p>Jump to MDA</p>
+    <ul>
+      <li><a href="#barbados-licensing-authority">Barbados Licensing Authority</a> <span class="count">(1)</span></li>
+      <li><a href="#central-bank-of-barbados">Central Bank of Barbados</a> <span class="count">(1)</span></li>
+      <li><a href="#department-of-emergency-management">Department of Emergency Management</a> <span class="count">(1)</span></li>
+      <li><a href="#ministry-of-educational-transformation">Ministry of Educational Transformation</a> <span class="count">(16)</span></li>
+      <li><a href="#ministry-of-people-empowerment-and-elder-affairs">Ministry of People Empowerment and Elder Affairs</a> <span class="count">(3)</span></li>
+      <li><a href="#ministry-of-youth-sports-and-community-empowerment">Ministry of Youth, Sports and Community Empowerment</a> <span class="count">(1)</span></li>
+      <li><a href="#national-insurance-scheme">National Insurance Scheme</a> <span class="count">(7)</span></li>
+      <li><a href="#office-of-the-president">Office of the President</a> <span class="count">(1)</span></li>
+      <li><a href="#social-empowerment-agency">Social Empowerment Agency</a> <span class="count">(3)</span></li>
+      <li><a href="#internal">Internal</a> <span class="count">(1)</span></li>
+    </ul>
+  </nav>
+
+  <section class="mda" id="barbados-licensing-authority">
+    <h2>Barbados Licensing Authority <span class="count-chip">1 form</span></h2>
+    <ul class="forms">
+      <li><a href="Prototypes/permit-to-remove.html">Apply for a Permit to Move a Building, House or Boat</a></li>
+    </ul>
+  </section>
+
+  <section class="mda" id="central-bank-of-barbados">
+    <h2>Central Bank of Barbados <span class="count-chip">1 form</span></h2>
+    <ul class="forms">
+      <li><a href="Prototypes/pensioner-declaration.html">Declaration by Pensioners 60 Years and Over</a></li>
+    </ul>
+  </section>
+
+  <section class="mda" id="department-of-emergency-management">
+    <h2>Department of Emergency Management <span class="count-chip">1 form</span></h2>
+    <ul class="forms">
+      <li><a href="Prototypes/storm-ready.html">StormReady Barbados</a></li>
+    </ul>
+  </section>
+
+  <section class="mda" id="ministry-of-educational-transformation">
+    <h2>Ministry of Educational Transformation <span class="count-chip">16 forms</span></h2>
+    <ul class="forms">
+      <li><a href="Prototypes/non-nationals-entry.html">Apply for a non-national child to attend a government secondary school</a></li>
+      <li><a href="Prototypes/uniform-grant.html">Apply for the $100 School Uniform Grant</a></li>
+      <li><a href="Prototypes/textbook-grant.html">Apply for the $100 Textbook Grant</a></li>
+      <li><a href="Prototypes/temporary-teacher.html">Apply for the post of temporary teacher</a></li>
+      <li><a href="Prototypes/special-ed-bursary.html">Apply for the Private Special Education Bursary</a></li>
+      <li><a href="Prototypes/terms-leave.html">Apply for term's leave</a></li>
+      <li><a href="Prototypes/bssee-early-sitter.html">Apply for your child to sit the BSSEE early (Form A)</a></li>
+      <li><a href="Prototypes/home-schooling.html">Apply to home-school your child</a></li>
+      <li><a href="Prototypes/bssee-choice.html">Choose secondary schools for the BSSEE</a></li>
+      <li><a href="Prototypes/examination-travel.html">Claim examination travel expenses</a></li>
+      <li><a href="Prototypes/exam-duties-claim.html">Claim payment for examination duties</a></li>
+      <li><a href="Prototypes/student-support-referral.html">Refer a student to the Student Support Services Unit</a></li>
+      <li><a href="Prototypes/cape-private-registration.html">Register as a CAPE private candidate</a></li>
+      <li><a href="Prototypes/csec-private-registration.html">Register as a CSEC private candidate</a></li>
+      <li><a href="Prototypes/bssee-special-request.html">Request special accommodation for the BSSEE (Form C)</a></li>
+      <li><a href="Prototypes/bssee-defer.html">Request to defer the BSSEE for an 11-year-old (Form B)</a></li>
+    </ul>
+  </section>
+
+  <section class="mda" id="ministry-of-people-empowerment-and-elder-affairs">
+    <h2>Ministry of People Empowerment and Elder Affairs <span class="count-chip">3 forms</span></h2>
+    <ul class="forms">
+      <li><a href="Prototypes/elder-care-companion.html">Elder Care Companion Application</a></li>
+      <li><a href="Prototypes/home-care-programme.html">Home Care Programme</a></li>
+      <li><a href="Prototypes/seniors-recreational-activities.html">Seniors' Recreational Activities Programme</a></li>
+    </ul>
+  </section>
+
+  <section class="mda" id="ministry-of-youth-sports-and-community-empowerment">
+    <h2>Ministry of Youth, Sports and Community Empowerment <span class="count-chip">1 form</span></h2>
+    <ul class="forms">
+      <li><a href="Prototypes/nscp-camper-registration.html">NSCP Camper Registration</a></li>
+    </ul>
+  </section>
+
+  <section class="mda" id="national-insurance-scheme">
+    <h2>National Insurance Scheme <span class="count-chip">7 forms</span></h2>
+    <ul class="forms">
+      <li><a href="Prototypes/unemployment-benefit.html">Claim for Unemployment Benefit</a></li>
+      <li><a href="Prototypes/self-employed-contributions.html">Contributions Payment Certificate — Self-employed Persons</a></li>
+      <li><a href="Prototypes/direct-deposit.html">Direct Deposit Form</a></li>
+      <li><a href="Prototypes/dp10-contributions.html">National Insurance Contributions Certificate (D.P. 10)</a></li>
+      <li><a href="Prototypes/nis-online-registration.html">NIS Online Social Security Service Registration</a></li>
+      <li><a href="Prototypes/self-employment-registration.html">Self-Employment Registration</a></li>
+      <li><a href="Prototypes/termination-certificate.html">Termination of Services / Layoff Certificate</a></li>
+    </ul>
+  </section>
+
+  <section class="mda" id="office-of-the-president">
+    <h2>Office of the President <span class="count-chip">1 form</span></h2>
+    <ul class="forms">
+      <li><a href="Prototypes/presidential-visit-centenarian.html">Request a Presidential visit for a centenarian</a></li>
+    </ul>
+  </section>
+
+  <section class="mda" id="social-empowerment-agency">
+    <h2>Social Empowerment Agency <span class="count-chip">3 forms</span></h2>
+    <ul class="forms">
+      <li><a href="Prototypes/sea-multiple-birth-benefit.html">Multiple Birth Benefit Application</a></li>
+      <li><a href="Prototypes/sea-national-assistance-grant.html">National Assistance Grant Application</a></li>
+      <li><a href="Prototypes/sea-request-for-assistance.html">Request for Assistance or Transportation</a></li>
+    </ul>
+  </section>
+
+  <section class="mda" id="internal">
+    <h2>Internal <span class="count-chip">1 item</span></h2>
+    <p class="note">Not a citizen-facing form — a co-design workshop artefact kept here for convenience.</p>
+    <ul class="forms">
+      <li><a href="Prototypes/workshop-presentation.html">Co-Design Workshop — Team Presentation</a></li>
+    </ul>
+  </section>
 </body>
 </html>
