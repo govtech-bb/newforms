@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request to defer the BSSEE for one year – Ministry of Educational Transformation</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+<div class="govbb-official-banner"><div class="govbb-container govbb-official-banner__inner"><div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div><div class="govbb-official-banner__text"><span>Official government website</span></div></div></div>
+<header class="govbb-header"><div class="govbb-container govbb-header__inner"><a href="/" aria-label="Go to the alpha.gov.bb homepage"><img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" /></a></div></header>
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite"><div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div></div>
+  <div class="govbb-container"><div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div></div>
+</main>
+<footer class="govbb-footer"><div class="govbb-container govbb-footer__inner"><nav class="govbb-footer__nav" aria-label="Footer"><a class="govbb-footer__link" href="#">Home</a><a class="govbb-footer__link" href="#">Privacy</a><a class="govbb-footer__link" href="#">Terms &amp; Conditions</a><a class="govbb-footer__link" href="#">Accessibility</a></nav><hr class="govbb-footer__divider" aria-hidden="true" /><div class="govbb-footer__end"><img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" /><p class="govbb-footer__copy">© 2025 Government of Barbados</p></div></div></footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors=function(){var s=document.getElementById('error-summary');if(s)s.remove();document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});};
+GovBB.showErrors=function(errors){GovBB.clearErrors();if(!errors||!errors.length)return;var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'" onclick="GovBB.focusError(\''+e.id+'\');return false;">'+e.msg+'</a></li>';});html+='</ul></div>';var app=document.getElementById('app');var h1=app.querySelector('h1');if(h1)h1.insertAdjacentHTML('afterend',html);else app.insertAdjacentHTML('afterbegin',html);document.getElementById('error-summary').focus();errors.forEach(function(e){var el=document.getElementById(e.id);if(!el)return;var errId='err-'+e.id;el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId);var msg=document.createElement('p');msg.className='govbb-error-message';msg.id=errId;msg.textContent=e.msg;var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;if(group)group.appendChild(msg);});if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;};
+GovBB.summaryRow=function(label,value,changeTo){var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';};
+</script>
+<script>
+function next(){GovBB.next();}function back(){GovBB.back();}function nav(p){GovBB.nav(p);}
+
+const FORM_NAME='Request to defer the BSSEE for one year (Form B)';
+const CAPTION='Ministry of Educational Transformation';
+const TITLES=['Mr','Mrs','Miss','Ms','Dr','Rev'];
+
+const FLOW=['start','pupil-details','guardian-details','reasons','reason-detail','declaration','check','confirmation'];
+
+function caption(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+CAPTION+'</p>';}
+function fmtDate(prefix){const d=GovBB.D[prefix+'-day'],m=GovBB.D[prefix+'-month'],y=GovBB.D[prefix+'-year'];if(!d&&!m&&!y)return '';return [d,m,y].filter(Boolean).join(' / ');}
+function parseDate(prefix){const d=parseInt(GovBB.D[prefix+'-day'],10),m=parseInt(GovBB.D[prefix+'-month'],10),y=parseInt(GovBB.D[prefix+'-year'],10);if(!d||!m||!y)return null;if(d<1||d>31||m<1||m>12||y<2000||y>2100)return false;const dt=new Date(y,m-1,d);if(dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d)return false;return dt;}
+function formatPhone(p){if(!p)return '';var digits=String(p).replace(/[^\d]/g,'');if(digits.length===10&&digits.indexOf('246')===0)return '(246) '+digits.substring(3,6)+' '+digits.substring(6);return String(p).trim();}
+function pupilName(){return [GovBB.D['pupil-first'],GovBB.D['pupil-other'],GovBB.D['pupil-surname']].filter(Boolean).join(' ');}
+function guardianName(){return [GovBB.D['guardian-title'],GovBB.D['guardian-first'],GovBB.D['guardian-last']].filter(Boolean).join(' ');}
+function ageOn31Aug(){const dob=parseDate('pupil-dob');if(!dob||dob===false)return null;const today=new Date();const aug31=new Date(today.getFullYear(),7,31);let age=aug31.getFullYear()-dob.getFullYear();if(aug31.getMonth()<dob.getMonth()||(aug31.getMonth()===dob.getMonth()&&aug31.getDate()<dob.getDate()))age--;return age;}
+
+function dateField(prefix,legend,hint){return `<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">${legend}</legend>${hint?`<p class="govbb-hint">${hint}</p>`:''}<div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;"><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-day">Day</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-day" name="${prefix}-day" data-field="${prefix}-day" inputmode="numeric" value="${GovBB.D[prefix+'-day']||''}" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-month">Month</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-month" name="${prefix}-month" data-field="${prefix}-month" inputmode="numeric" value="${GovBB.D[prefix+'-month']||''}" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-year">Year</label><div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="${prefix}-year" name="${prefix}-year" data-field="${prefix}-year" inputmode="numeric" value="${GovBB.D[prefix+'-year']||''}" /></div></div></div></fieldset>`;}
+
+const PAGES = {
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);"><ol class="govbb-breadcrumbs__list"><li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li><li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Education and schooling</a></li></ol></nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Defer your child's BSSEE for one year</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Last updated on 29 May 2026 · BSSEE Form B</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If your 11-year-old child is not yet ready to sit the Barbados Secondary Schools' Entrance Examination (BSSEE), use this form to request a one-year deferral.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. No fee. Takes about <strong>10 minutes</strong>.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start request</button></div>
+
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Your child will be given only one opportunity to write the examination.</strong> A deferral means they will sit the BSSEE next year instead of this year — not at any other time.</p>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your child's full name, date of birth, and current primary school</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your contact details</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The reason for the deferral request — academic performance or missed instruction</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">The Ministry will review your request, consult your child's primary school where needed, and respond within <strong>4 weeks</strong>. Approval is at the Ministry's discretion.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start request</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call the Ministry of Educational Transformation on <strong>+1 (246) 535-0700</strong> if you need help.</p>
+    </div>`,
+
+  'pupil-details': () => {
+    const age = ageOn31Aug();
+    return `<form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About your child</h1>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pupil-school">Current primary school</label><p class="govbb-hint">Type the official name in full — for example, "St. Stephen's Primary School".</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="pupil-school" name="pupil-school" data-field="pupil-school" value="${GovBB.D['pupil-school']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pupil-first">First name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="pupil-first" name="pupil-first" data-field="pupil-first" value="${GovBB.D['pupil-first']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pupil-other">Other names (optional)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="pupil-other" name="pupil-other" data-field="pupil-other" value="${GovBB.D['pupil-other']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="pupil-surname">Surname</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="pupil-surname" name="pupil-surname" data-field="pupil-surname" value="${GovBB.D['pupil-surname']||''}" /></div></div>
+      ${dateField('pupil-dob','Date of birth','For example, 15 6 2014.')}
+      ${age!==null?`<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);"><strong>Age on 31st August this year:</strong> ${age} years.</p>`:''}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`;
+  },
+
+  'guardian-details': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you (parent or guardian)</h1>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-title">Title</label><div class="govbb-select-wrapper"><select class="govbb-select" id="guardian-title" name="guardian-title" data-field="guardian-title"><option value="">Select a title</option>${TITLES.map(t=>`<option value="${t}"${GovBB.D['guardian-title']===t?' selected':''}>${t}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-first">First name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="guardian-first" name="guardian-first" data-field="guardian-first" autocomplete="given-name" value="${GovBB.D['guardian-first']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-last">Last name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="guardian-last" name="guardian-last" data-field="guardian-last" autocomplete="family-name" value="${GovBB.D['guardian-last']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-address">Address</label><textarea class="govbb-textarea" id="guardian-address" name="guardian-address" data-field="guardian-address" rows="2">${GovBB.D['guardian-address']||''}</textarea></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-phone">Contact number</label><p class="govbb-hint">For example, (246) 249 1234.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="guardian-phone" name="guardian-phone" data-field="guardian-phone" inputmode="tel" value="${GovBB.D['guardian-phone']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-email">Email address</label><div class="govbb-input-wrapper"><input class="govbb-input" type="email" id="guardian-email" name="guardian-email" data-field="guardian-email" inputmode="email" value="${GovBB.D['guardian-email']||''}" /></div></div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'reasons': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Reason for the deferral</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Tick all reasons that apply. You will be asked to add detail on the next page.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-visually-hidden">Reasons</legend>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-s);"><input class="govbb-checkbox" type="checkbox" id="reason-1" name="reason-1" data-field="reason-1"${GovBB.D['reason-1']?' checked':''} /><label class="govbb-checkbox-item__label" for="reason-1">My child was scoring less than 20% in both Mathematics and English over six (6) consecutive terms in Class 2 and Class 3.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="reason-2" name="reason-2" data-field="reason-2"${GovBB.D['reason-2']?' checked':''} data-trigger-render="1" /><label class="govbb-checkbox-item__label" for="reason-2">My child missed a significant portion of their instruction.</label></div>
+        ${GovBB.D['reason-2']?`<div style="padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+          <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Because of which of these? Tick all that apply:</p>
+          <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="reason-2a" name="reason-2a" data-field="reason-2a"${GovBB.D['reason-2a']?' checked':''} /><label class="govbb-checkbox-item__label" for="reason-2a">Trauma or illness</label></div>
+          <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="reason-2b" name="reason-2b" data-field="reason-2b"${GovBB.D['reason-2b']?' checked':''} /><label class="govbb-checkbox-item__label" for="reason-2b">Significant learning difficulties</label></div>
+        </div>`:''}
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'reason-detail': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Add detail to your reason</h1>
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);"><p class="govbb-text-body"><strong>Your reason is confidential.</strong> It is shared only with the Ministry and your child's primary school for assessment.</p></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="reason-detail">In your own words, why are you requesting the deferral?</label><p class="govbb-hint">Be specific. Give context the Ministry and the primary school can use to assess the request.</p><textarea class="govbb-textarea" id="reason-detail" name="reason-detail" data-field="reason-detail" rows="6">${GovBB.D['reason-detail']||''}</textarea></div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'declaration': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-accurate" name="decl-accurate" data-field="decl-accurate"${GovBB.D['decl-accurate']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-accurate">The information I have given is true and correct.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-one-chance" name="decl-one-chance" data-field="decl-one-chance"${GovBB.D['decl-one-chance']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-one-chance">I understand my child will be given <strong>only one opportunity</strong> to write the BSSEE.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-discretion" name="decl-discretion" data-field="decl-discretion"${GovBB.D['decl-discretion']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-discretion">I understand the decision is at the Ministry's discretion.</label></div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue to review</button></div>
+    </form>`,
+
+  'check': () => {
+    const reasons = [];
+    if (GovBB.D['reason-1']) reasons.push('Scoring <20% in Maths and English for 6 consecutive terms');
+    if (GovBB.D['reason-2']) {
+      var sub = [];
+      if (GovBB.D['reason-2a']) sub.push('trauma or illness');
+      if (GovBB.D['reason-2b']) sub.push('significant learning difficulties');
+      reasons.push('Missed significant instruction' + (sub.length ? ' — ' + sub.join(', ') : ''));
+    }
+    return `<div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before submitting</h1>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your child</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Primary school', GovBB.D['pupil-school'], 'pupil-details')}
+        ${GovBB.summaryRow('Name', pupilName(), 'pupil-details')}
+        ${GovBB.summaryRow('Date of birth', fmtDate('pupil-dob'), 'pupil-details')}
+        ${GovBB.summaryRow('Age on 31st August', ageOn31Aug()!==null?(ageOn31Aug()+' years'):'—', 'pupil-details')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parent or guardian</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Name', guardianName(), 'guardian-details')}
+        ${GovBB.summaryRow('Address', GovBB.D['guardian-address'], 'guardian-details')}
+        ${GovBB.summaryRow('Phone', formatPhone(GovBB.D['guardian-phone']), 'guardian-details')}
+        ${GovBB.summaryRow('Email', GovBB.D['guardian-email'], 'guardian-details')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Reason for deferral</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Reasons selected', reasons.join('; ') || 'None selected', 'reasons')}
+        ${GovBB.summaryRow('Detail', GovBB.D['reason-detail'], 'reason-detail')}
+      </dl>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Submit request</button></div>
+    </div>`;
+  },
+
+  'confirmation': () => {
+    window.__refNumber=window.__refNumber||('DEF-'+Math.random().toString(36).substring(2,8).toUpperCase());
+    if(document.title.indexOf('Error: ')===0)document.title=document.title.substring('Error: '.length);
+    return `<div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Request submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Ministry will review your request and may consult ${GovBB.D['pupil-school']||'your child\'s school'} for additional context.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You will be told the outcome within <strong>4 weeks</strong>.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We'll email a copy of your request to ${GovBB.D['guardian-email']||'the address you provided'}.</li>
+      </ul>
+    </div>`;
+  }
+};
+
+function validate(pageId){
+  const D=GovBB.D,errors=[];
+  const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function req(id,msg){if(!D[id]||String(D[id]).trim()==='')errors.push({id:id,msg:msg});}
+  function reqMinLetters(id,msg,min){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:msg});return;}if((v.match(/[A-Za-z]/g)||[]).length<min)errors.push({id:id,msg:msg});}
+  function reqPhone(id,label,required,emptyMsg){var v=(D[id]||'').trim();if(!v){if(required)errors.push({id:id,msg:emptyMsg});return;}var digits=v.replace(/[\s\-()+]/g,'');if(!/^\d{7,15}$/.test(digits))errors.push({id:id,msg:label+' must contain 7 to 15 digits'});}
+  function reqEmail(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!EMAIL_RE.test(v))errors.push({id:id,msg:label+' must be in the format you@example.com'});}
+  function reqDate(prefix,label){const dayV=D[prefix+'-day'],monV=D[prefix+'-month'],yrV=D[prefix+'-year'];if(!dayV||!monV||!yrV){errors.push({id:prefix+'-day',msg:label+' — enter a complete date.'});return null;}const dt=parseDate(prefix);if(dt===false){errors.push({id:prefix+'-day',msg:label+' — enter a real date.'});return null;}return dt;}
+
+  if(pageId==='pupil-details'){
+    reqMinLetters('pupil-school','Enter the primary school name in letters',3);
+    req('pupil-first','Enter your child\'s first name');
+    req('pupil-surname','Enter your child\'s surname');
+    const dob=reqDate('pupil-dob','Date of birth');
+    if(dob){const age=ageOn31Aug();if(age!==null){if(age<9||age>12)errors.push({id:'pupil-dob-day',msg:'Date of birth — this form is for pupils aged 10 to 12 on 31 August. Your child would be '+age+'.'});}}
+  }
+  if(pageId==='guardian-details'){
+    req('guardian-title','Select a title');req('guardian-first','Enter your first name');req('guardian-last','Enter your last name');
+    req('guardian-address','Enter your address');
+    reqPhone('guardian-phone','Contact number',true,'Enter a contact number');
+    reqEmail('guardian-email','Email address','Enter your email address');
+  }
+  if(pageId==='reasons'){
+    if(!D['reason-1']&&!D['reason-2'])errors.push({id:'reason-1',msg:'Tick at least one reason'});
+    if(D['reason-2']&&!D['reason-2a']&&!D['reason-2b'])errors.push({id:'reason-2a',msg:'You ticked "missed instruction" — choose whether it was due to trauma/illness or learning difficulties (or both).'});
+    /* Ghost cleanup: if reason-2 unticked, clear the sub-options */
+    if(!D['reason-2']){delete D['reason-2a'];delete D['reason-2b'];}
+  }
+  if(pageId==='reason-detail'){
+    var v=(D['reason-detail']||'').trim();
+    if(!v)errors.push({id:'reason-detail',msg:'Briefly explain why you are requesting the deferral'});
+    else if(v.length<30)errors.push({id:'reason-detail',msg:'Add more detail — the Ministry needs enough context to assess the request.'});
+  }
+  if(pageId==='declaration'){
+    if(!D['decl-accurate'])errors.push({id:'decl-accurate',msg:'Tick the box to confirm the information is true and correct'});
+    if(!D['decl-one-chance'])errors.push({id:'decl-one-chance',msg:'Tick the box to confirm you understand the one-opportunity rule'});
+    if(!D['decl-discretion'])errors.push({id:'decl-discretion',msg:'Tick the box to confirm you understand the Ministry\'s discretion'});
+  }
+  return errors;
+}
+
+GovBB.init({formName:FORM_NAME,flow:FLOW,pages:PAGES,validate:validate});
+</script>
+</body>
+</html>
