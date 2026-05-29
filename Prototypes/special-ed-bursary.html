@@ -30,6 +30,7 @@ const TITLES=['Mr','Mrs','Miss','Ms','Dr','Rev'];
 const ACCOUNT_TYPES=['Savings','Chequing'];
 const BANKS=['Republic Bank','First Caribbean International Bank','RBC Royal Bank','Scotiabank','Barbados National Bank','City of Bridgetown Credit Union','Barbados Public Workers Credit Union','Teachers Credit Union','Other'];
 const EMPLOYMENT=['Employed full-time','Employed part-time','Self-employed','Unemployed','Retired','Other'];
+const SCHOOLS=['Charles F. Broome Memorial Primary','Christ Church Boys\' Primary','Christ Church Girls\' Primary','Eden Lodge Primary','George Lamming Primary','Hilda Skeene Primary','People\'s Cathedral Primary','Roland Edwards Primary','St. Ambrose Primary','St. Bartholomew\'s Primary','St. Boniface Primary','St. Catherine\'s Primary','St. Christopher Primary','St. Cyprian\'s Primary','St. Giles Primary','St. Stephen\'s Primary','Wesley Hall Junior School','Westbury Primary School','Children\'s Development Centre','Irving Wilson School','Schoolhouse for Special Education','Learning Centre Barbados','Other (not listed)'];
 
 const FLOW=['start','child-details','child-needs','parent-details','household','provider-details','documents','banking','declaration','check','confirmation'];
 
@@ -123,7 +124,7 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="diagnosis-summary">Diagnosis or assessed needs</label><p class="govbb-hint">In your own words. For example, "Autism spectrum (Level 1)", "Severe dyslexia", "Cerebral palsy with communication difficulties". You will upload the formal evaluation later.</p><textarea class="govbb-textarea" id="diagnosis-summary" name="diagnosis-summary" data-field="diagnosis-summary" rows="3">${GovBB.D['diagnosis-summary']||''}</textarea></div>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="current-school">Current school or programme (if any)</label><p class="govbb-hint">If your child is currently in a school or programme, name it. Otherwise leave blank.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="current-school" name="current-school" data-field="current-school" value="${GovBB.D['current-school']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="current-school">Current school or programme (if any)</label><p class="govbb-hint">Start typing to see suggestions, or type the full official name. Leave blank if your child is not currently in a school or programme.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="current-school" name="current-school" data-field="current-school" list="schools-list" value="${GovBB.D['current-school']||''}" /></div><datalist id="schools-list">${SCHOOLS.map(s=>`<option value="${s}">`).join('')}</datalist></div>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="why-private">Why a private provider is needed</label><p class="govbb-hint">Briefly explain why a government-school placement is not suitable for your child. Be specific — for example, "the local school cannot provide a 1:1 aide" or "speech therapy is not available locally".</p><textarea class="govbb-textarea" id="why-private" name="why-private" data-field="why-private" rows="5">${GovBB.D['why-private']||''}</textarea></div>
 
@@ -151,7 +152,7 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="household-size">Number of people in your household</label><p class="govbb-hint">Adults and children living at your address.</p><div class="govbb-input-wrapper" style="max-width:8rem;"><input class="govbb-input" type="text" id="household-size" name="household-size" data-field="household-size" inputmode="numeric" value="${GovBB.D['household-size']||''}" /></div></div>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="dependants-count">Number of dependent children (including the applicant child)</label><div class="govbb-input-wrapper" style="max-width:8rem;"><input class="govbb-input" type="text" id="dependants-count" name="dependants-count" data-field="dependants-count" inputmode="numeric" value="${GovBB.D['dependants-count']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="dependants-count">Number of dependent children (including the applicant child)</label><p class="govbb-hint">Children under 18 (or under 23 if in full-time education) living in your household.</p><div class="govbb-input-wrapper" style="max-width:8rem;"><input class="govbb-input" type="text" id="dependants-count" name="dependants-count" data-field="dependants-count" inputmode="numeric" value="${GovBB.D['dependants-count']||''}" /></div></div>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="employment-status">Your employment status</label><div class="govbb-select-wrapper"><select class="govbb-select" id="employment-status" name="employment-status" data-field="employment-status" data-trigger-render="1"><option value="">Select one</option>${EMPLOYMENT.map(e=>`<option value="${e}"${GovBB.D['employment-status']===e?' selected':''}>${e}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
 
@@ -161,8 +162,9 @@ const PAGES = {
         <legend class="govbb-fieldset__legend">Approximate household income (per month)</legend>
         <p class="govbb-hint">Combined income from all earning adults in the household. Choose the closest band.</p>
         <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
-          ${['Less than $1,500','$1,500 to $3,000','$3,001 to $5,000','$5,001 to $8,000','$8,001 to $12,000','More than $12,000','Prefer not to say'].map((b,i)=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="income-band-${i}" name="income-band" data-field="income-band" value="${b}"${GovBB.D['income-band']===b?' checked':''} /><label class="govbb-radio-item__label" for="income-band-${i}">${b}</label></div>`).join('')}
+          ${['Less than $1,500','$1,500 to $3,000','$3,001 to $5,000','$5,001 to $8,000','$8,001 to $12,000','More than $12,000','Prefer not to say'].map((b,i)=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="income-band-${i}" name="income-band" data-field="income-band" value="${b}"${GovBB.D['income-band']===b?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="income-band-${i}">${b}</label></div>`).join('')}
         </div>
+        ${GovBB.D['income-band']==='Prefer not to say'?`<div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-top:var(--spacing-s);"><p class="govbb-text-body" style="margin:0;"><strong>This is a means-tested bursary.</strong> Choosing "Prefer not to say" will significantly slow your application or may prevent the Committee from assessing it. We recommend choosing a band — your information stays confidential.</p></div>`:''}
       </fieldset>
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Do you currently receive any other government support for this child?</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);"><div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="other-support-yes" name="other-support" data-field="other-support" value="Yes"${GovBB.D['other-support']==='Yes'?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="other-support-yes">Yes</label></div><div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="other-support-no" name="other-support" data-field="other-support" value="No"${GovBB.D['other-support']==='No'?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="other-support-no">No</label></div></div></fieldset>
@@ -185,7 +187,9 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="provider-contact">Contact person at the provider (optional)</label><p class="govbb-hint">For example, the principal or admissions officer.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="provider-contact" name="provider-contact" data-field="provider-contact" value="${GovBB.D['provider-contact']||''}" /></div></div>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="annual-fees">Annual fees ($BBD)</label><p class="govbb-hint">The total annual cost for your child at this provider. Whole dollars only.</p><div class="govbb-input-wrapper" style="max-width:12rem;"><input class="govbb-input" type="text" id="annual-fees" name="annual-fees" data-field="annual-fees" inputmode="numeric" value="${GovBB.D['annual-fees']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="annual-fees">Annual fees ($BBD)</label><p class="govbb-hint">The total annual cost for your child at this provider. Whole dollars only — no cents.</p><div class="govbb-input-wrapper" style="max-width:12rem;"><input class="govbb-input" type="text" id="annual-fees" name="annual-fees" data-field="annual-fees" inputmode="numeric" value="${GovBB.D['annual-fees']||''}" /></div></div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="amount-requested">Amount you are requesting from the bursary ($BBD)</label><p class="govbb-hint">How much of the annual fees you need the bursary to cover. If you can contribute some of the cost yourself, enter only the amount you cannot cover. The Committee may award less than you request.</p><div class="govbb-input-wrapper" style="max-width:12rem;"><input class="govbb-input" type="text" id="amount-requested" name="amount-requested" data-field="amount-requested" inputmode="numeric" value="${GovBB.D['amount-requested']||''}" /></div></div>
 
       ${dateField('start-date','Expected start date','When does your child start (or expect to start)?')}
 
@@ -211,8 +215,8 @@ const PAGES = {
 
   'banking': () => `
     <form novalidate>${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Where to send the bursary</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If approved, the bursary is normally paid into your account. The Committee may decide to pay the provider directly instead — we'll still need your details for verification.</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your bank account details</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If approved, the bursary is normally paid directly to the provider on your behalf. The Bursary Committee may decide to pay you instead, depending on the arrangement with the provider — we need these details either way for verification.</p>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bank-name">Bank or credit union</label><div class="govbb-select-wrapper"><select class="govbb-select" id="bank-name" name="bank-name" data-field="bank-name" data-trigger-render="1"><option value="">Select one</option>${BANKS.map(b=>`<option value="${b}"${GovBB.D['bank-name']===b?' selected':''}>${b}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
 
@@ -220,7 +224,9 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bank-branch">Branch</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="bank-branch" name="bank-branch" data-field="bank-branch" value="${GovBB.D['bank-branch']||''}" /></div></div>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="account-no">Account number</label><p class="govbb-hint">6 to 16 digits.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="account-no" name="account-no" data-field="account-no" inputmode="numeric" value="${GovBB.D['account-no']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="account-no">Account number</label><p class="govbb-hint">6 to 16 digits. Find this on your bank statement or in your online banking.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="account-no" name="account-no" data-field="account-no" inputmode="numeric" autocomplete="off" value="${GovBB.D['account-no']||''}" /></div></div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="account-no-confirm">Re-enter your account number</label><p class="govbb-hint">Type it again — a one-digit typo can send the bursary to the wrong account.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="account-no-confirm" name="account-no-confirm" data-field="account-no-confirm" inputmode="numeric" autocomplete="off" value="${GovBB.D['account-no-confirm']||''}" /></div></div>
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Account type</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${ACCOUNT_TYPES.map((t,i)=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="account-type-${i}" name="account-type" data-field="account-type" value="${t}"${GovBB.D['account-type']===t?' checked':''} /><label class="govbb-radio-item__label" for="account-type-${i}">${t}</label></div>`).join('')}</div></fieldset>
 
@@ -232,6 +238,7 @@ const PAGES = {
   'declaration': () => `
     <form novalidate>${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;"><strong>If approved, this bursary covers one school year.</strong> You must reapply each year your child continues in the placement.</p></div>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Before you submit, please confirm the following.</p>
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-visually-hidden">Declaration</legend>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-accurate" name="decl-accurate" data-field="decl-accurate"${GovBB.D['decl-accurate']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-accurate">The information I have given on this form is true and correct to the best of my knowledge.</label></div>
@@ -288,7 +295,8 @@ const PAGES = {
         ${GovBB.summaryRow('Address', GovBB.D['provider-address'], 'provider-details')}
         ${GovBB.summaryRow('Phone', formatPhone(GovBB.D['provider-phone']), 'provider-details')}
         ${GovBB.summaryRow('Contact person', GovBB.D['provider-contact'] || 'Not provided', 'provider-details')}
-        ${GovBB.summaryRow('Annual fees ($BBD)', GovBB.D['annual-fees']?'$'+GovBB.D['annual-fees']:'', 'provider-details')}
+        ${GovBB.summaryRow('Annual fees ($BBD)', GovBB.D['annual-fees']?'$'+parseInt(String(GovBB.D['annual-fees']).replace(/,/g,''),10).toLocaleString():'', 'provider-details')}
+        ${GovBB.summaryRow('Amount requested ($BBD)', GovBB.D['amount-requested']?'$'+parseInt(String(GovBB.D['amount-requested']).replace(/,/g,''),10).toLocaleString():'', 'provider-details')}
         ${GovBB.summaryRow('Expected start date', fmtDate('start-date'), 'provider-details')}
       </dl>
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Documents</h2>
@@ -303,7 +311,8 @@ const PAGES = {
         ${GovBB.summaryRow('Account type', GovBB.D['account-type'], 'banking')}
         ${GovBB.summaryRow('Name on account', GovBB.D['account-name'], 'banking')}
       </dl>
-      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Submit application</button></div>
+      <p class="govbb-text-body" style="font-size:var(--font-size-caption);color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">By submitting, you confirm you have read <a href="#" class="govbb-link">how the Ministry of Educational Transformation uses your information</a>. Special-category data (medical, household financial) is processed in line with the Data Protection Act, 2019.</p>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="if(this.disabled)return;this.disabled=true;this.textContent='Submitting…';next();">Submit application</button></div>
     </div>`;
   },
 
@@ -321,10 +330,14 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A bursary officer will review your application and may call you for additional information.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Ministry may contact ${GovBB.D['provider-name']||'the provider'} to verify the placement.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your application is then presented to the Bursary Committee. Decisions take up to <strong>8 weeks</strong>.</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If approved, the bursary is paid into your account (or directly to the provider, by agreement).</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If approved, the bursary is normally paid directly to the provider on your behalf. The Bursary Committee will tell you which arrangement applies.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We'll email a copy of your application to ${GovBB.D['parent-email']||'the address you provided'} once it has been processed.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you don't hear from us within 8 weeks, call <strong>+1 (246) 535-0760</strong>.</li>
       </ul>
+      <div style="display:flex;gap:var(--spacing-m);flex-wrap:wrap;margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="window.print()">Print this page</button>
+        <a class="govbb-btn--link" href="../forms.html">Return to all forms</a>
+      </div>
     </div>`;
   }
 };
@@ -339,7 +352,7 @@ function validate(pageId){
   function reqEmail(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!EMAIL_RE.test(v))errors.push({id:id,msg:label+' must be in the format you@example.com'});}
   function reqDate(prefix,label){const dayV=D[prefix+'-day'],monV=D[prefix+'-month'],yrV=D[prefix+'-year'];if(!dayV||!monV||!yrV){errors.push({id:prefix+'-day',msg:label+' — enter a complete date.'});return null;}const dt=parseDate(prefix);if(dt===false){errors.push({id:prefix+'-day',msg:label+' — enter a real date.'});return null;}return dt;}
   function reqInt(id,label,min,max){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:label+' — enter a whole number'});return;}if(!/^\d+$/.test(v)){errors.push({id:id,msg:label+' — must be a whole number'});return;}var n=parseInt(v,10);if(min!=null&&n<min)errors.push({id:id,msg:label+' — must be at least '+min});if(max!=null&&n>max)errors.push({id:id,msg:label+' — looks unusually high'});}
-  function reqMoney(id,label,max){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:label+' — enter an amount'});return;}if(!/^\d+(\.\d{1,2})?$/.test(v)){errors.push({id:id,msg:label+' — must be a number, for example 12000 or 12000.00'});return;}var n=parseFloat(v);if(max&&n>max)errors.push({id:id,msg:label+' — looks unusually high. Check the value.'});}
+  function reqWholeMoney(id,label,max,overMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:label+' — enter an amount in whole dollars (no cents)'});return;}if(!/^\d+$/.test(v.replace(/,/g,''))){errors.push({id:id,msg:label+' — must be a whole number of dollars, for example 12000'});return;}var n=parseInt(v.replace(/,/g,''),10);if(max&&n>max)errors.push({id:id,msg:overMsg||(label+' — looks unusually high. Check the value.')});}
 
   if(pageId==='child-details'){
     req('child-first','Enter your child\'s first name');req('child-surname','Enter your child\'s surname');
@@ -369,7 +382,10 @@ function validate(pageId){
   }
   if(pageId==='household'){
     reqInt('household-size','People in household',1,30);
-    reqInt('dependants-count','Dependent children',1,20);
+    reqInt('dependants-count','Dependent children',1,10);
+    /* Cross-field: dependants cannot exceed household size */
+    var hs=parseInt((D['household-size']||'').trim(),10),dc=parseInt((D['dependants-count']||'').trim(),10);
+    if(!isNaN(hs)&&!isNaN(dc)&&dc>hs)errors.push({id:'dependants-count',msg:'Dependent children — cannot be more than the number of people in your household ('+hs+')'});
     req('employment-status','Select your employment status');
     if(D['employment-status']==='Other')req('employment-other','Specify your employment status');
     if(!D['income-band'])errors.push({id:'income-band-0',msg:'Choose an income band (or Prefer not to say)'});
@@ -386,7 +402,12 @@ function validate(pageId){
     reqMinLetters('provider-name','Enter the provider\'s name in letters',3);
     req('provider-address','Enter the provider\'s address');
     reqPhone('provider-phone','Provider phone',true,'Enter the provider\'s phone number');
-    reqMoney('annual-fees','Annual fees',200000);
+    reqWholeMoney('annual-fees','Annual fees',200000,'Annual fees — over $200,000 is unusual. If your fees are genuinely higher, call the Special Education Section on +1 (246) 535-0760 before submitting.');
+    /* Amount requested */
+    var fees=parseInt((D['annual-fees']||'').replace(/,/g,'').trim(),10);
+    reqWholeMoney('amount-requested','Amount requested',200000);
+    var req$=parseInt((D['amount-requested']||'').replace(/,/g,'').trim(),10);
+    if(!isNaN(fees)&&!isNaN(req$)&&req$>fees)errors.push({id:'amount-requested',msg:'Amount requested — cannot be more than the annual fees ($'+fees.toLocaleString()+')'});
     const sd=reqDate('start-date','Expected start date');
     if(sd){const today=new Date();today.setHours(0,0,0,0);const twoYearsAhead=new Date(today.getFullYear()+2,today.getMonth(),today.getDate());if(sd>twoYearsAhead)errors.push({id:'start-date-day',msg:'Expected start date is too far in the future. Check the year.'});}
   }
@@ -397,7 +418,9 @@ function validate(pageId){
     req('bank-name','Select your bank or credit union');
     if(D['bank-name']==='Other')req('bank-name-other','Enter the name of your bank');
     req('bank-branch','Enter the branch');
-    var acct=(D['account-no']||'').trim();if(!acct){errors.push({id:'account-no',msg:'Enter your account number'});}else if(!/^\d{6,16}$/.test(acct.replace(/[\s\-]/g,''))){errors.push({id:'account-no',msg:'Account number must be 6 to 16 digits'});}
+    var acct=(D['account-no']||'').trim(),acct2=(D['account-no-confirm']||'').trim();
+    if(!acct){errors.push({id:'account-no',msg:'Enter your account number'});}else if(!/^\d{6,16}$/.test(acct.replace(/[\s\-]/g,''))){errors.push({id:'account-no',msg:'Account number must be 6 to 16 digits'});}
+    if(!acct2){errors.push({id:'account-no-confirm',msg:'Re-enter your account number to confirm'});}else if(acct&&acct.replace(/[\s\-]/g,'')!==acct2.replace(/[\s\-]/g,''))errors.push({id:'account-no-confirm',msg:'Account numbers do not match — check the digits and try again'});
     if(!D['account-type'])errors.push({id:'account-type-0',msg:'Select an account type'});
     req('account-name','Enter the name on the account');
   }

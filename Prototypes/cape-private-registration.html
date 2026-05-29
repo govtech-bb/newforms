@@ -95,18 +95,25 @@ const PAGES = {
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
     </form>`,
 
-  'subject-count': () => `
+  'subject-count': () => {
+    const prevCount = parseInt(GovBB.D['_prev-subject-count'],10);
+    const curCount = parseInt(GovBB.D['subject-count'],10);
+    const showShrinkWarn = !isNaN(prevCount) && !isNaN(curCount) && curCount < prevCount;
+    return `
     <form novalidate>${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">How many subjects?</h1>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">A subject + unit combination counts as one entry. If you are taking both Unit 1 and Unit 2 of Pure Mathematics, that's 2 entries.</p>
+      ${showShrinkWarn?`<div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;"><strong>Reducing the number of entries will discard the data you entered for Entry ${prevCount}${prevCount-curCount>1?' down to Entry '+(curCount+1):''}.</strong> Continue only if you are sure.</p></div>`:''}
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Number of entries (up to ${MAX_SUBJECTS})</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
-        ${Array.from({length:MAX_SUBJECTS},(_,i)=>i+1).map(n=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="subject-count-${n}" name="subject-count" data-field="subject-count" value="${n}"${String(GovBB.D['subject-count'])===String(n)?' checked':''} /><label class="govbb-radio-item__label" for="subject-count-${n}">${n}</label></div>`).join('')}
+        ${Array.from({length:MAX_SUBJECTS},(_,i)=>i+1).map(n=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="subject-count-${n}" name="subject-count" data-field="subject-count" value="${n}"${String(GovBB.D['subject-count'])===String(n)?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="subject-count-${n}">${n}</label></div>`).join('')}
       </div></fieldset>
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
-    </form>`,
+    </form>`;
+  },
 
   'subjects-data': () => {
     const count = subjectCount();
+    GovBB.D['_prev-subject-count'] = count;
     for (let i = count + 1; i <= MAX_SUBJECTS; i++) {
       ['name','unit','alternative','resit','prev-reg'].forEach(f=>delete GovBB.D['subj-'+i+'-'+f]);
     }
@@ -134,11 +141,12 @@ const PAGES = {
           </div>
         </fieldset>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="subj-${i}-alternative" name="subj-${i}-alternative" data-field="subj-${i}-alternative"${GovBB.D['subj-'+i+'-alternative']?' checked':''} /><label class="govbb-checkbox-item__label" for="subj-${i}-alternative">Alternative paper</label></div>
+        <p class="govbb-hint" style="margin-top:0;margin-bottom:var(--spacing-s);padding-left:var(--spacing-m);">Tick only if you have been told by CXC or a teacher that you need an "alternative paper" for this subject. Most candidates do not need this. If you are not sure, leave it unticked.</p>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-m);"><input class="govbb-checkbox" type="checkbox" id="subj-${i}-resit" name="subj-${i}-resit" data-field="subj-${i}-resit"${GovBB.D['subj-'+i+'-resit']?' checked':''} data-trigger-render="1" /><label class="govbb-checkbox-item__label" for="subj-${i}-resit">Resit (I have sat this unit before)</label></div>
         ${isResit?`
         <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);">
           <label class="govbb-label" for="subj-${i}-prev-reg">Previous registration number</label>
-          <p class="govbb-hint">Required if SBA was involved.</p>
+          <p class="govbb-hint">The candidate number you were given last time you sat this unit. If you cannot find it, contact the CXC Local Registrar.</p>
           <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="subj-${i}-prev-reg" name="subj-${i}-prev-reg" data-field="subj-${i}-prev-reg" value="${GovBB.D['subj-'+i+'-prev-reg']||''}" /></div>
         </div>`:''}
       </fieldset>`;
@@ -153,6 +161,7 @@ const PAGES = {
   'declaration': () => `
     <form novalidate>${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;"><strong>Make sure you are submitting before the CXC deadline</strong> for the May/June sitting. Late registration is not accepted.</p></div>
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-visually-hidden">Declaration</legend>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-accurate" name="decl-accurate" data-field="decl-accurate"${GovBB.D['decl-accurate']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-accurate">The information I have given is true and correct.</label></div>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-timetables" name="decl-timetables" data-field="decl-timetables"${GovBB.D['decl-timetables']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-timetables">I have checked ALL timetables and confirmed there are no clashes.</label></div>
@@ -189,7 +198,7 @@ const PAGES = {
       </dl>
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Entries (${count})</h2>
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">${subjectRows}</dl>
-      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Submit registration</button></div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="if(this.disabled)return;this.disabled=true;this.textContent='Submitting…';next();">Submit registration</button></div>
     </div>`;
   },
 
@@ -206,10 +215,14 @@ const PAGES = {
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You have registered for <strong>${count} ${count===1?'entry':'entries'}</strong>.</p>
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The CXC Local Registrar will confirm your candidate number.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The CXC Local Registrar will confirm your candidate number and the fees due.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Inform the Registrar of any name changes.</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We'll email a copy of your registration to ${GovBB.D['email']||'the address you provided'}.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We've sent a copy of your registration to ${GovBB.D['email']||'the address you provided'}.</li>
       </ul>
+      <div style="display:flex;gap:var(--spacing-m);flex-wrap:wrap;margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="window.print()">Print this page</button>
+        <a class="govbb-btn--link" href="../forms.html">Return to all forms</a>
+      </div>
     </div>`;
   }
 };
@@ -247,7 +260,7 @@ function validate(pageId){
         else seen[key]=i;
       }
       if(D['subj-'+i+'-resit']&&(!D['subj-'+i+'-prev-reg']||!D['subj-'+i+'-prev-reg'].trim())){
-        errors.push({id:'subj-'+i+'-prev-reg',msg:'Entry '+i+' — enter your previous registration number'});
+        errors.push({id:'subj-'+i+'-prev-reg',msg:'Entry '+i+' — enter your previous CXC candidate number for the last time you sat this unit'});
       }
     }
   }

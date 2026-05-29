@@ -27,10 +27,19 @@ function next(){GovBB.next();}function back(){GovBB.back();}function nav(p){GovB
 const FORM_NAME='Refer a student to Student Support Services';
 const CAPTION='Ministry of Educational Transformation';
 
-const DIFFICULTIES=['Hearing','Vision','Physical','Behavioural','Social or emotional','Speech and language','Learning'];
+const DIFFICULTIES=['Hearing','Vision','Physical or motor','Speech and language','Learning (literacy, numeracy)','Attention or concentration (e.g. ADHD)','Autism spectrum','Developmental delay','Behavioural','Social or emotional','Anxiety','Other (describe in the box above)'];
 const AGENCIES=["Children's Development Centre",'Probation Department','Juvenile Liaison Scheme','Child Care Board','Child Guidance Clinic','Private Support Services','Edna Nicholls Centre','Welfare Department','Government Industrial School'];
+const SCHOOLS=['Alexandra School','Alleyne School','Charles F. Broome Memorial Primary','Christ Church Boys\' Primary','Christ Church Foundation School','Christ Church Girls\' Primary','Coleridge & Parry School','Combermere School','Daryll Jordan Secondary','Deighton Griffith Secondary','Ellerslie Secondary','Frederick Smith Secondary','George Lamming Primary','Grantley Adams Memorial Secondary','Harrison College','Lester Vaughan School','Parkinson Memorial Secondary','People\'s Cathedral Primary','Princess Margaret Secondary','Queen\'s College','Roland Edwards Primary','Springer Memorial Secondary','St. George Secondary','St. James Secondary','St. Leonard\'s Boys\' Secondary','St. Lucy Secondary','St. Michael School','St. Stephen\'s Primary','The Lodge School','The St. Michael School','Wesley Hall Junior School','Westbury Primary School','Other (not listed)'];
+const RELATIONSHIPS=['Mother','Father','Stepmother','Stepfather','Grandmother','Grandfather','Aunt','Uncle','Sister','Brother','Legal guardian','Foster carer','Other'];
+const LIVES_WITH=['Both parents','Mother only','Father only','Grandparent(s)','Other relative','Legal guardian','Foster carer','Other arrangement'];
 
-const FLOW=['start','student-details','parent-details','school-info','challenges','attendance-and-agencies','interventions','referrer-and-declaration','check','confirmation'];
+const FLOW=['start','student-details','parents','school-info','challenges','attendance-and-agencies','interventions','evidence','referrer-and-declaration','check','confirmation'];
+
+function handleUpload(key,input){const file=input.files&&input.files[0];if(!file)return;if(file.size>10*1024*1024){alert('File is larger than 10 MB.');input.value='';return;}GovBB.D['upload-'+key]={name:file.name,size:file.size,type:file.type};GovBB.render();}
+function removeUpload(key){delete GovBB.D['upload-'+key];GovBB.render();}
+function formatBytes(n){if(n<1024)return n+' B';if(n<1024*1024)return (n/1024).toFixed(1)+' KB';return (n/(1024*1024)).toFixed(1)+' MB';}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function uploadRow(key,label,hint){var file=GovBB.D['upload-'+key];if(file){return `<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);border-left:4px solid var(--color-green-00);background:var(--color-white-00);margin-bottom:var(--spacing-s);"><div style="min-width:0;"><p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">${label}</p>${hint?`<p class="govbb-hint" style="margin:0;">${hint}</p>`:''}<p class="govbb-text-body" style="margin:0;font-size:var(--font-size-caption);color:var(--color-mid-grey-00);word-break:break-all;"><span aria-hidden="true">✓ </span>${escapeHtml(file.name)} (${formatBytes(file.size)})</p></div><button type="button" class="govbb-btn--link" style="flex-shrink:0;" onclick="removeUpload('${key}')">Remove<span class="govbb-visually-hidden"> ${label}</span></button></div>`;}return `<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);background:var(--color-white-00);margin-bottom:var(--spacing-s);"><div style="min-width:0;flex:1;"><p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">${label}</p>${hint?`<p class="govbb-hint" style="margin:0;">${hint}</p>`:''}</div><label for="upload-${key}" class="govbb-btn--secondary" style="flex-shrink:0;cursor:pointer;margin:0;">Upload file</label><input type="file" id="upload-${key}" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" onchange="handleUpload('${key}', this)" /></div>`;}
 
 function caption(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+CAPTION+'</p>';}
 function maskNid(nid){if(!nid)return '';var m=String(nid).trim().match(/^(\d{6})-(\d{4})$/);return m?'••••••-'+m[2]:String(nid).trim();}
@@ -95,31 +104,39 @@ const PAGES = {
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
     </form>`,
 
-  'parent-details': () => `
-    <form novalidate>${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Parent or guardian</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">List at least one parent or guardian. Phone numbers should include home (H), work (W), or cell (C) where known.</p>
+  'parents': () => {
+    function parentBlock(n,required){
+      const labelSuffix = required ? '' : ' (optional)';
+      return `
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-l);border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="padding:0 var(--spacing-s);">Parent or guardian ${n}${labelSuffix}</legend>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-${n}-name">Full name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="parent-${n}-name" name="parent-${n}-name" data-field="parent-${n}-name" value="${GovBB.D['parent-'+n+'-name']||''}" /></div></div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-${n}-rel">Relationship to the student</label><div class="govbb-select-wrapper"><select class="govbb-select" id="parent-${n}-rel" name="parent-${n}-rel" data-field="parent-${n}-rel"><option value="">Select one</option>${RELATIONSHIPS.map(r=>`<option value="${r}"${GovBB.D['parent-'+n+'-rel']===r?' selected':''}>${r}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-${n}-phone">Contact number${required?'':' (optional)'}</label><p class="govbb-hint">For example, (246) 249 1234.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="parent-${n}-phone" name="parent-${n}-phone" data-field="parent-${n}-phone" inputmode="tel" value="${GovBB.D['parent-'+n+'-phone']||''}" /></div></div>
+      </fieldset>`;
+    }
+    return `<form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Parent or guardian details</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">At least one parent or guardian is required. Add up to two more if you have their details — the more contacts SSSU has, the easier it is to reach the family.</p>
+      ${parentBlock(1,true)}
+      ${parentBlock(2,false)}
+      ${parentBlock(3,false)}
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-mother">Mother's name (if applicable)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="parent-mother" name="parent-mother" data-field="parent-mother" value="${GovBB.D['parent-mother']||''}" /></div></div>
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-mother-phone">Mother's contact number (optional)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="parent-mother-phone" name="parent-mother-phone" data-field="parent-mother-phone" inputmode="tel" value="${GovBB.D['parent-mother-phone']||''}" /></div></div>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Address (if different from student's)</legend>
+        <textarea class="govbb-textarea" id="parent-address" name="parent-address" data-field="parent-address" rows="2">${GovBB.D['parent-address']||''}</textarea>
+      </fieldset>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-father">Father's name (if applicable)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="parent-father" name="parent-father" data-field="parent-father" value="${GovBB.D['parent-father']||''}" /></div></div>
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-father-phone">Father's contact number (optional)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="parent-father-phone" name="parent-father-phone" data-field="parent-father-phone" inputmode="tel" value="${GovBB.D['parent-father-phone']||''}" /></div></div>
-
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-guardian">Other guardian's name (if applicable)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="parent-guardian" name="parent-guardian" data-field="parent-guardian" value="${GovBB.D['parent-guardian']||''}" /></div></div>
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-guardian-phone">Guardian's contact number (optional)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="parent-guardian-phone" name="parent-guardian-phone" data-field="parent-guardian-phone" inputmode="tel" value="${GovBB.D['parent-guardian-phone']||''}" /></div></div>
-
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-address">Parent or guardian address (if different from student's)</label><textarea class="govbb-textarea" id="parent-address" name="parent-address" data-field="parent-address" rows="2">${GovBB.D['parent-address']||''}</textarea></div>
-
-      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Who does the student live with?</legend><p class="govbb-hint">For example, "Mother", "Both parents", "Grandmother".</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="lives-with" name="lives-with" data-field="lives-with" value="${GovBB.D['lives-with']||''}" /></div></fieldset>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="lives-with">Who does the student live with most of the time?</label><div class="govbb-select-wrapper"><select class="govbb-select" id="lives-with" name="lives-with" data-field="lives-with"><option value="">Select one</option>${LIVES_WITH.map(o=>`<option value="${o}"${GovBB.D['lives-with']===o?' selected':''}>${o}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
-    </form>`,
+    </form>`;
+  },
 
   'school-info': () => `
     <form novalidate>${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">School details</h1>
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="school-name">School name</label><p class="govbb-hint">Type the official name in full.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="school-name" name="school-name" data-field="school-name" value="${GovBB.D['school-name']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="school-name">School name</label><p class="govbb-hint">Start typing to see suggestions, or type the full official name.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="school-name" name="school-name" data-field="school-name" list="schools-list" value="${GovBB.D['school-name']||''}" /></div><datalist id="schools-list">${SCHOOLS.map(s=>`<option value="${s}">`).join('')}</datalist></div>
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="class-form">Class or form</label><p class="govbb-hint">For example, "Class 3", "Form 2".</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="class-form" name="class-form" data-field="class-form" value="${GovBB.D['class-form']||''}" /></div></div>
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="school-phone">School telephone</label><p class="govbb-hint">For example, (246) 535 1234.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="school-phone" name="school-phone" data-field="school-phone" inputmode="tel" value="${GovBB.D['school-phone']||''}" /></div></div>
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
@@ -128,11 +145,11 @@ const PAGES = {
   'challenges': () => `
     <form novalidate>${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Student's challenges</h1>
-      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);"><p class="govbb-text-body"><strong>This information is confidential.</strong> It is shared only with the Student Support Services Unit.</p></div>
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);"><p class="govbb-text-body"><strong>This information is treated confidentially.</strong> It is shared only with the people who need it to assess the referral — the SSSU caseworker, your Principal, and the parent or guardian. It is not shared with classmates or other staff.</p></div>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="student-challenges">Describe the student's challenges</label><p class="govbb-hint">Be specific. What behaviours, learning issues, or other concerns have you observed? Try to give examples.</p><textarea class="govbb-textarea" id="student-challenges" name="student-challenges" data-field="student-challenges" rows="6">${GovBB.D['student-challenges']||''}</textarea></div>
 
-      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Tick any additional difficulties</legend><p class="govbb-hint">Choose all that apply.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Tick any difficulties you have observed</legend><p class="govbb-hint">Choose all that apply. The list is not exhaustive — if your concern isn't here, describe it in the box above.</p>
         ${DIFFICULTIES.map(d=>{var k='diff-'+d.toLowerCase().replace(/[^a-z]/g,'-');return `<div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="${k}" name="${k}" data-field="${k}"${GovBB.D[k]?' checked':''} /><label class="govbb-checkbox-item__label" for="${k}">${d}</label></div>`;}).join('')}
       </fieldset>
 
@@ -169,6 +186,16 @@ const PAGES = {
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="interventions-text">What has the school tried?</label><p class="govbb-hint">Be specific. Adjustments to seating, parent meetings, behaviour plans, additional teaching support — anything that has been tried with this student.</p><textarea class="govbb-textarea" id="interventions-text" name="interventions-text" data-field="interventions-text" rows="6">${GovBB.D['interventions-text']||''}</textarea></div>
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
     </form>`,
+
+  'evidence': () => `${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Supporting documents (optional)</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If you have any of these, upload them now instead of emailing them later. It speeds up the case-worker's assessment.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Accepted formats: PDF, JPG, PNG, DOC. Maximum size: 10 MB per file.</p>
+      ${uploadRow('profile', 'Student Profile Form', 'The Profile Form you completed after a period of observation.')}
+      ${uploadRow('clinical', 'Clinical or psychological reports', 'Reports from a doctor, psychologist, speech therapist, or similar.')}
+      ${uploadRow('school-report', 'School reports or attendance records', 'Recent academic reports, behaviour logs, or attendance records.')}
+      ${uploadRow('other', 'Other supporting document', 'Anything else SSSU should see.')}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>`,
 
   'referrer-and-declaration': () => `
     <form novalidate>${caption()}
@@ -207,16 +234,16 @@ const PAGES = {
         ${GovBB.summaryRow('Sex', GovBB.D['student-gender'], 'student-details')}
         ${GovBB.summaryRow('Home address', GovBB.D['student-address'], 'student-details')}
       </dl>
-      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parent or guardian</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parents or guardians</h2>
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
-        ${GovBB.summaryRow('Mother', GovBB.D['parent-mother'] || 'Not provided', 'parent-details')}
-        ${GovBB.summaryRow("Mother's phone", formatPhone(GovBB.D['parent-mother-phone']) || 'Not provided', 'parent-details')}
-        ${GovBB.summaryRow('Father', GovBB.D['parent-father'] || 'Not provided', 'parent-details')}
-        ${GovBB.summaryRow("Father's phone", formatPhone(GovBB.D['parent-father-phone']) || 'Not provided', 'parent-details')}
-        ${GovBB.summaryRow('Other guardian', GovBB.D['parent-guardian'] || 'Not provided', 'parent-details')}
-        ${GovBB.summaryRow("Guardian's phone", formatPhone(GovBB.D['parent-guardian-phone']) || 'Not provided', 'parent-details')}
-        ${GovBB.summaryRow('Address (if different)', GovBB.D['parent-address'] || 'Same as student', 'parent-details')}
-        ${GovBB.summaryRow('Lives with', GovBB.D['lives-with'], 'parent-details')}
+        ${[1,2,3].map(function(n){
+          var name=GovBB.D['parent-'+n+'-name'],rel=GovBB.D['parent-'+n+'-rel'],ph=GovBB.D['parent-'+n+'-phone'];
+          if(!name&&!rel&&!ph)return n===1?GovBB.summaryRow('Parent or guardian 1', 'Not provided', 'parents'):'';
+          var label='Parent or guardian '+n+(rel?' ('+rel+')':'');
+          return GovBB.summaryRow(label, [name||'No name', formatPhone(ph)||'No phone'].join(' · '), 'parents');
+        }).join('')}
+        ${GovBB.summaryRow('Address (if different)', GovBB.D['parent-address'] || 'Same as student', 'parents')}
+        ${GovBB.summaryRow('Lives with', GovBB.D['lives-with'], 'parents')}
       </dl>
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">School</h2>
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
@@ -236,6 +263,10 @@ const PAGES = {
       </dl>
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Interventions tried</h2>
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">${GovBB.summaryRow('Strategies', GovBB.D['interventions-text'], 'interventions')}</dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Supporting documents</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${[{key:'profile',label:'Student Profile Form'},{key:'clinical',label:'Clinical reports'},{key:'school-report',label:'School reports'},{key:'other',label:'Other document'}].map(function(d){var f=GovBB.D['upload-'+d.key];return GovBB.summaryRow(d.label, f?escapeHtml(f.name)+' ('+formatBytes(f.size)+')':'Not uploaded', 'evidence');}).join('')}
+      </dl>
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Referrer</h2>
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Name', GovBB.D['referrer-name'], 'referrer-and-declaration')}
@@ -243,13 +274,14 @@ const PAGES = {
         ${GovBB.summaryRow('Email', GovBB.D['referrer-email'], 'referrer-and-declaration')}
         ${GovBB.summaryRow('Parent consulted on', fmtDate('consult-date'), 'referrer-and-declaration')}
       </dl>
-      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Submit referral</button></div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="if(this.disabled)return;this.disabled=true;this.textContent='Submitting…';next();">Submit referral</button></div>
     </div>`;
   },
 
   'confirmation': () => {
     window.__refNumber=window.__refNumber||('SSU-'+Math.random().toString(36).substring(2,8).toUpperCase());
     if(document.title.indexOf('Error: ')===0)document.title=document.title.substring('Error: '.length);
+    document.title='Referral submitted — '+FORM_NAME;
     return `<div>
       <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
         <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Referral submitted</h1>
@@ -260,9 +292,13 @@ const PAGES = {
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">An SSSU caseworker will be assigned to ${GovBB.D['student-first']||'the student'} and will contact ${GovBB.D['school-name']||'the school'}.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Expect to hear back within <strong>3 weeks</strong>.</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Email any additional reports to <a href="mailto:studentsupportservices@mes.gov.bb" class="govbb-link">studentsupportservices@mes.gov.bb</a> with your reference number.</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We'll email a copy to ${GovBB.D['referrer-email']||'the address you provided'} once it has been processed.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We've sent a copy of this referral to <strong>${GovBB.D['referrer-email']||'the address you provided'}</strong> — quote your reference number if you contact SSSU about it.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you have additional reports later, email them to <a href="mailto:studentsupportservices@mes.gov.bb" class="govbb-link">studentsupportservices@mes.gov.bb</a> with your reference number.</li>
       </ul>
+      <div style="display:flex;gap:var(--spacing-m);flex-wrap:wrap;margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="window.print()">Print this page</button>
+        <a class="govbb-btn--link" href="../forms.html">Return to all forms</a>
+      </div>
     </div>`;
   }
 };
@@ -285,13 +321,18 @@ function validate(pageId){
     if(!D['student-gender'])errors.push({id:'student-gender-m',msg:'Select the student\'s sex'});
     req('student-address','Enter the student\'s address');
   }
-  if(pageId==='parent-details'){
-    var any=D['parent-mother']||D['parent-father']||D['parent-guardian'];
-    if(!any)errors.push({id:'parent-mother',msg:'Enter the name of at least one parent or guardian'});
-    reqPhone('parent-mother-phone','Mother\'s phone',false);
-    reqPhone('parent-father-phone','Father\'s phone',false);
-    reqPhone('parent-guardian-phone','Guardian\'s phone',false);
-    req('lives-with','Enter who the student lives with');
+  if(pageId==='parents'){
+    /* Parent 1 is required; parents 2 and 3 are optional */
+    req('parent-1-name','Enter the name of at least one parent or guardian');
+    req('parent-1-rel','Select the relationship for parent or guardian 1');
+    reqPhone('parent-1-phone','Contact number for parent or guardian 1',true,'Enter a contact number for parent or guardian 1');
+    /* If a parent 2 or 3 has a name or phone, require relationship too */
+    [2,3].forEach(function(n){
+      var name=D['parent-'+n+'-name'],rel=D['parent-'+n+'-rel'],ph=D['parent-'+n+'-phone'];
+      if((name&&name.trim())||ph)reqPhone('parent-'+n+'-phone','Contact number for parent or guardian '+n,false);
+      if((name&&name.trim())&&!rel)errors.push({id:'parent-'+n+'-rel',msg:'Select the relationship for parent or guardian '+n});
+    });
+    req('lives-with','Choose who the student lives with most of the time');
   }
   if(pageId==='school-info'){
     reqMinLetters('school-name','Enter the official school name in letters',3);
@@ -316,7 +357,15 @@ function validate(pageId){
     req('referrer-name','Enter your name');
     req('referrer-role','Enter your role at the school');
     reqEmail('referrer-email','Email address','Enter your email address');
-    reqDate('consult-date','Date the parent or guardian was consulted');
+    const cd=reqDate('consult-date','Date the parent or guardian was consulted');
+    if(cd){
+      const today=new Date();today.setHours(0,0,0,0);
+      if(cd>today)errors.push({id:'consult-date-day',msg:'Date the parent or guardian was consulted — must be today or in the past'});
+      else{
+        const eighteenMoAgo=new Date(today.getFullYear(),today.getMonth()-18,today.getDate());
+        if(cd<eighteenMoAgo)errors.push({id:'consult-date-day',msg:'Date the parent or guardian was consulted — too long ago. SSSU expects the consultation to be within the last 18 months. Speak with the parent again before referring.'});
+      }
+    }
     if(!D['decl-consulted'])errors.push({id:'decl-consulted',msg:'Tick the box to confirm the parent or guardian has been consulted'});
     if(!D['decl-accurate'])errors.push({id:'decl-accurate',msg:'Tick the box to confirm the information is true and correct'});
     if(!D['decl-principal'])errors.push({id:'decl-principal',msg:'Tick the box to confirm the Principal has approved the referral'});
