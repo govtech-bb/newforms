@@ -27,6 +27,8 @@ function next(){GovBB.next();}function back(){GovBB.back();}function nav(p){GovB
 const FORM_NAME='Apply for your child to sit the BSSEE early (Form A)';
 const CAPTION='Ministry of Educational Transformation';
 const TITLES=['Mr','Mrs','Miss','Dr','Rev','Pastor','Hon','Prof'];
+const CLASSES=['Infants A (Reception)','Infants B','Class 1','Class 2','Class 3','Class 4'];
+const SCHOOL_YEARS=['2025–2026 (current year)','2026–2027 (upcoming year)'];
 const PRIMARY_SCHOOLS=['A. DaCosta Edwards Primary','All Saints\' Primary','Arthur Smith Primary','Bay Primary','Bayley\'s Primary','Belmont Primary','Blackman & Gollop Primary','Bridgetown S.D.A Primary','Charles F. Broome Primary','Christ Church Girls Primary','Cuthbert Moore Primary','Deacon\'s Primary','Eagle Hall Primary','Eden Lodge Primary','Ellerton Primary','Elliott Belgrave','Erdiston Special School','George Lamming Primary','Good Shepherd Primary','Gordon Greenidge Primary','Gordon Walters Primary','Grantley Prescod Memorial Primary','Grazettes Primary','Half Moon Fort Primary','Hilda Skeene Primary','Hillaby-Turner\'s Hall Primary','Hindsbury Primary','Holy Innocents Primary','Ignatius Byer Primary','Lawrence T. Gay Memorial','Luther Thorne Memorial','Milton Lynch Primary','Mount Tabor Primary','Reynold Weekes Primary','Roland Edwards Primary','Sharon Primary','St Alban\'s Junior Primary','St Ambrose Primary','St Bartholomew\'s Primary','St Bernard\'s Primary','St Catherine\'s Primary','St Christopher\'s Primary','St Cyprian\'s Primary','St Elizabeth Primary','St George Primary','St Giles Primary','St James Primary','St Jude\'s Primary','St Lawrence Primary','St Luke\'s-Brighton Primary','St Margaret\'s Primary','St Mark\'s Primary','St Martin\'s Mangrove Primary','St Mary\'s Primary','St Matthew\'s Primary','St Paul\'s Primary','St Philip\'s Primary','St Silas Primary','St Stephen\'s Primary','St. Joseph\'s Primary','St. Lucy\'s Primary','The Codrington Primary','Welches Primary','Wesley Hall Junior Primary','West Terrace Primary','Westbury Primary','Wilkie Cumberbatch Primary','Workman\'s Primary','Other (private/independent)'];
 
 const FLOW=['start','guardian-details','child-details','reasons','evidence','declaration','check','confirmation'];
@@ -61,7 +63,12 @@ const PAGES = {
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body"><strong>You need your child's Principal's recommendation.</strong> The Principal signs the request to confirm the school supports an early sitting. Speak to them before submitting.</p>
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);"><strong>You need your child's Principal's recommendation.</strong> The Principal signs the request to confirm the school supports an early sitting. Speak to them before submitting.</p>
+        <p class="govbb-text-body" style="margin:0;"><em>If your child's school does not support this application, call the Ministry on +1 (246) 535-1284 before applying — they can advise on next steps.</em></p>
+      </div>
+
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Apply before the BSSEE registration deadline</strong> — usually in late January of the year your child would sit. Submit this form well before the deadline.</p>
       </div>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
@@ -113,8 +120,11 @@ const PAGES = {
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-name">Child's full name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-name" name="child-name" data-field="child-name" value="${GovBB.D['child-name']||''}" /></div></div>
       ${dateField('child-dob','Date of birth','For example, 15 6 2016.')}
       ${age!==null?`<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);"><strong>Age on 31st August this year:</strong> ${age} years. The standard BSSEE sitting age is 11. To qualify for an early sitting, your child must be at least 9 on 31 August.</p>`:''}
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Which BSSEE sitting are you applying for?</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+        ${SCHOOL_YEARS.map((y,i)=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="school-year-${i}" name="school-year" data-field="school-year" value="${y}"${GovBB.D['school-year']===y?' checked':''} /><label class="govbb-radio-item__label" for="school-year-${i}">${y}</label></div>`).join('')}
+      </div></fieldset>
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-school">Current school</label><p class="govbb-hint">Start typing to find your child's school.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-school" name="child-school" data-field="child-school" list="primary-schools-list" value="${GovBB.D['child-school']||''}" /></div><datalist id="primary-schools-list">${PRIMARY_SCHOOLS.map(s=>`<option value="${s}">`).join('')}</datalist></div>
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-class">Current class</label><p class="govbb-hint">For example, "Class 2", "Class 3".</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-class" name="child-class" data-field="child-class" value="${GovBB.D['child-class']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-class">Current class</label><div class="govbb-select-wrapper"><select class="govbb-select" id="child-class" name="child-class" data-field="child-class"><option value="">Select a class</option>${CLASSES.map(c=>`<option value="${c}"${GovBB.D['child-class']===c?' selected':''}>${c}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
     </form>`;
   },
@@ -165,6 +175,7 @@ const PAGES = {
         ${GovBB.summaryRow('Name', GovBB.D['child-name'], 'child-details')}
         ${GovBB.summaryRow('Date of birth', fmtDate('child-dob'), 'child-details')}
         ${GovBB.summaryRow('Age on 31 August', ageOn31Aug()!==null?(ageOn31Aug()+' years'):'—', 'child-details')}
+        ${GovBB.summaryRow('BSSEE sitting requested', GovBB.D['school-year'], 'child-details')}
         ${GovBB.summaryRow('Current school', GovBB.D['child-school'], 'child-details')}
         ${GovBB.summaryRow('Current class', GovBB.D['child-class'], 'child-details')}
       </dl>
@@ -227,9 +238,13 @@ function validate(pageId){
   if(pageId==='child-details'){
     req('child-name','Enter your child\'s full name');
     const dob=reqDate('child-dob','Date of birth');
-    if(dob){const age=ageOn31Aug();if(age!==null){if(age<8||age>11)errors.push({id:'child-dob-day',msg:'Date of birth — Form A is for children aged 9 to 11 on 31 August. Your child would be '+age+'. Check the year.'});else if(age>=11)errors.push({id:'child-dob-day',msg:'Your child is already old enough to sit the BSSEE in the standard year — you do not need an early-sitter application.'});}}
+    if(dob){const age=ageOn31Aug();if(age!==null){
+      if(age<9||age>11)errors.push({id:'child-dob-day',msg:'Date of birth — Form A is for children aged 9 or 10 on 31 August. Your child would be '+age+'. Check the year.'});
+      else if(age>=11)errors.push({id:'child-dob-day',msg:'Your child is already old enough to sit the BSSEE in the standard year — you do not need an early-sitter application.'});
+    }}
+    if(!D['school-year'])errors.push({id:'school-year-0',msg:'Choose which BSSEE sitting you are applying for'});
     reqMinLetters('child-school','Enter the school name in letters',3);
-    req('child-class','Enter your child\'s current class');
+    req('child-class','Select your child\'s current class');
   }
   if(pageId==='reasons'){
     var j=(D['justification']||'').trim();

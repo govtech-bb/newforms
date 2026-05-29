@@ -27,6 +27,9 @@ function next(){GovBB.next();}function back(){GovBB.back();}function nav(p){GovB
 const FORM_NAME='Request special accommodation for the BSSEE (Form C)';
 const CAPTION='Ministry of Educational Transformation';
 const TITLES=['Mr','Mrs','Miss','Dr','Rev','Pastor','Hon','Prof'];
+const CLASSES=['Infants A (Reception)','Infants B','Class 1','Class 2','Class 3','Class 4'];
+const SCHOOL_YEARS=['2025–2026 (current year)','2026–2027 (upcoming year)'];
+const REQUEST_TYPES=['Medical','Learning need','Physical','Other'];
 const PRIMARY_SCHOOLS=['A. DaCosta Edwards Primary','All Saints\' Primary','Arthur Smith Primary','Bay Primary','Bayley\'s Primary','Belmont Primary','Blackman & Gollop Primary','Bridgetown S.D.A Primary','Charles F. Broome Primary','Christ Church Girls Primary','Cuthbert Moore Primary','Deacon\'s Primary','Eagle Hall Primary','Eden Lodge Primary','Ellerton Primary','Elliott Belgrave','Erdiston Special School','George Lamming Primary','Good Shepherd Primary','Gordon Greenidge Primary','Gordon Walters Primary','Grantley Prescod Memorial Primary','Grazettes Primary','Half Moon Fort Primary','Hilda Skeene Primary','Hillaby-Turner\'s Hall Primary','Hindsbury Primary','Holy Innocents Primary','Ignatius Byer Primary','Lawrence T. Gay Memorial','Luther Thorne Memorial','Milton Lynch Primary','Mount Tabor Primary','Reynold Weekes Primary','Roland Edwards Primary','Sharon Primary','St Alban\'s Junior Primary','St Ambrose Primary','St Bartholomew\'s Primary','St Bernard\'s Primary','St Catherine\'s Primary','St Christopher\'s Primary','St Cyprian\'s Primary','St Elizabeth Primary','St George Primary','St Giles Primary','St James Primary','St Jude\'s Primary','St Lawrence Primary','St Luke\'s-Brighton Primary','St Margaret\'s Primary','St Mark\'s Primary','St Martin\'s Mangrove Primary','St Mary\'s Primary','St Matthew\'s Primary','St Paul\'s Primary','St Philip\'s Primary','St Silas Primary','St Stephen\'s Primary','St. Joseph\'s Primary','St. Lucy\'s Primary','The Codrington Primary','Welches Primary','Wesley Hall Junior Primary','West Terrace Primary','Westbury Primary','Wilkie Cumberbatch Primary','Workman\'s Primary','Other (private/independent)'];
 
 const FLOW=['start','guardian-details','child-details','request','evidence','declaration','check','confirmation'];
@@ -54,7 +57,7 @@ const PAGES = {
       <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Last updated on 29 May 2026 · BSSEE Form C</p>
       <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
 
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If your child needs a special accommodation to sit the Barbados Secondary Schools' Entrance Examination — for example, extra time, a separate room, large-print papers, a reader, or a medical adjustment — use this form to apply.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">You can request <strong>access arrangements</strong> (sometimes called "special accommodations") if your child needs them to sit the Barbados Secondary Schools' Entrance Examination on equal terms — for example, extra time, a separate room, large-print papers, a reader, or a medical adjustment.</p>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. No fee. Takes about <strong>10 minutes</strong>.</p>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start request</button></div>
@@ -101,43 +104,42 @@ const PAGES = {
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About your child</h1>
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-name">Child's full name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-name" name="child-name" data-field="child-name" value="${GovBB.D['child-name']||''}" /></div></div>
       ${dateField('child-dob','Date of birth','For example, 15 6 2015.')}
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Which BSSEE sitting are you applying for?</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+        ${SCHOOL_YEARS.map((y,i)=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="school-year-${i}" name="school-year" data-field="school-year" value="${y}"${GovBB.D['school-year']===y?' checked':''} /><label class="govbb-radio-item__label" for="school-year-${i}">${y}</label></div>`).join('')}
+      </div></fieldset>
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-school">Current school</label><p class="govbb-hint">Start typing to find your child's school.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-school" name="child-school" data-field="child-school" list="primary-schools-list" value="${GovBB.D['child-school']||''}" /></div><datalist id="primary-schools-list">${PRIMARY_SCHOOLS.map(s=>`<option value="${s}">`).join('')}</datalist></div>
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-class">Current class</label><p class="govbb-hint">For example, "Class 3", "Class 4".</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-class" name="child-class" data-field="child-class" value="${GovBB.D['child-class']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-class">Current class</label><div class="govbb-select-wrapper"><select class="govbb-select" id="child-class" name="child-class" data-field="child-class"><option value="">Select a class</option>${CLASSES.map(c=>`<option value="${c}"${GovBB.D['child-class']===c?' selected':''}>${c}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
     </form>`,
 
-  'request': () => {
-    const reqType = GovBB.D['request-type'];
-    return `<form novalidate>${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">The accommodation you need</h1>
+  'request': () => `<form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">The arrangement you need</h1>
       <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);"><p class="govbb-text-body"><strong>What you write here is treated confidentially.</strong> It is read by the Ministry's BSSEE team and your child's Principal, and shared with the exam centre staff who need to know on the day.</p></div>
 
-      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">What kind of accommodation are you requesting?</legend><p class="govbb-hint">Tick the one that best matches. If more than one applies, tick the main one and describe the rest in the box below.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">What kind of access arrangement does your child need?</legend><p class="govbb-hint">Tick all that apply — many children need a combination (for example, a diagnosis with both medical and learning aspects).</p>
         <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
-          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="rt-medical" name="request-type" data-field="request-type" value="Medical"${reqType==='Medical'?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="rt-medical">Medical (illness, condition, recent injury)</label></div>
-          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="rt-learning" name="request-type" data-field="request-type" value="Learning need"${reqType==='Learning need'?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="rt-learning">Learning need (e.g. dyslexia, ADHD, autism)</label></div>
-          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="rt-physical" name="request-type" data-field="request-type" value="Physical"${reqType==='Physical'?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="rt-physical">Physical (mobility, hearing, vision)</label></div>
-          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="rt-other" name="request-type" data-field="request-type" value="Other"${reqType==='Other'?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="rt-other">Other (describe below)</label></div>
+          <div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="rt-medical" name="rt-medical" data-field="rt-medical"${GovBB.D['rt-medical']?' checked':''} /><label class="govbb-checkbox-item__label" for="rt-medical">Medical (illness, condition, recent injury)</label></div>
+          <div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="rt-learning" name="rt-learning" data-field="rt-learning"${GovBB.D['rt-learning']?' checked':''} /><label class="govbb-checkbox-item__label" for="rt-learning">Learning need (e.g. dyslexia, ADHD, autism)</label></div>
+          <div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="rt-physical" name="rt-physical" data-field="rt-physical"${GovBB.D['rt-physical']?' checked':''} /><label class="govbb-checkbox-item__label" for="rt-physical">Physical (mobility, hearing, vision)</label></div>
+          <div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="rt-other" name="rt-other" data-field="rt-other"${GovBB.D['rt-other']?' checked':''} /><label class="govbb-checkbox-item__label" for="rt-other">Other (describe below)</label></div>
         </div>
       </fieldset>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="request-detail">Describe the accommodation you need</label><p class="govbb-hint">Be specific. For example, "extra 30 minutes on each paper", "separate room with one invigilator", "large-print papers (font size 18)", "a reader for the science paper".</p><textarea class="govbb-textarea" id="request-detail" name="request-detail" data-field="request-detail" rows="6">${GovBB.D['request-detail']||''}</textarea></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="request-detail">Describe the arrangement you need</label><p class="govbb-hint">Be specific so the exam centre can set things up correctly. For example, "extra 30 minutes on each paper", "separate room with one invigilator", "large-print papers (font size 18)", "a reader for the science paper".</p><textarea class="govbb-textarea" id="request-detail" name="request-detail" data-field="request-detail" rows="6">${GovBB.D['request-detail']||''}</textarea></div>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="request-context">Supporting context</label><p class="govbb-hint">Why does your child need this? Describe their diagnosis, condition, or learning history. Mention any accommodations they have used at school.</p><textarea class="govbb-textarea" id="request-context" name="request-context" data-field="request-context" rows="6">${GovBB.D['request-context']||''}</textarea></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="request-context">Supporting context</label><p class="govbb-hint">Why does your child need this? Describe their diagnosis, condition, or learning history. Mention any access arrangements they have used at school.</p><textarea class="govbb-textarea" id="request-context" name="request-context" data-field="request-context" rows="6">${GovBB.D['request-context']||''}</textarea></div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
-    </form>`;
-  },
+    </form>`,
 
   'evidence': () => {
-    const reqType = GovBB.D['request-type'];
-    const medicalRequired = reqType==='Medical' || reqType==='Physical' || reqType==='Learning need';
+    const medicalRequired = !!(GovBB.D['rt-medical'] || GovBB.D['rt-physical'] || GovBB.D['rt-learning']);
     return `${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Upload supporting evidence</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">${medicalRequired?'A medical or specialist report is required for this type of request.':'Upload any supporting documents — optional but speeds up the Ministry\'s review.'}</p>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Accepted formats: PDF, JPG, PNG, DOC. Maximum size: 10 MB per file.</p>
-      ${uploadRow('medical', 'Medical or specialist report'+(medicalRequired?' (required)':' (optional)'), 'Signed letter from a doctor, specialist, or educational psychologist that supports your request.')}
-      ${uploadRow('principal', 'Principal\'s letter (optional)', 'Letter from your child\'s primary school confirming accommodations they already use at school.')}
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">${medicalRequired?'A medical, specialist, or educational-psychologist report is required for medical, physical, or learning-need requests.':'Upload any supporting documents — optional but speeds up the Ministry\'s review.'}</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Accepted formats: PDF, JPG, PNG, DOC. Maximum size: 10 MB per file. If your file is larger, compress or split it.</p>
+      ${uploadRow('medical', 'Medical, specialist, or psychologist report'+(medicalRequired?' (required)':' (optional)'), 'Signed letter from a doctor, specialist, or educational psychologist that supports your request.')}
+      ${uploadRow('principal', 'Principal\'s letter (optional)', 'Letter from your child\'s primary school confirming arrangements they already use at school.')}
       ${uploadRow('other', 'Other supporting document (optional)', 'Anything else the Ministry should see.')}
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>`;
   },
@@ -168,12 +170,13 @@ const PAGES = {
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Name', GovBB.D['child-name'], 'child-details')}
         ${GovBB.summaryRow('Date of birth', fmtDate('child-dob'), 'child-details')}
+        ${GovBB.summaryRow('BSSEE sitting', GovBB.D['school-year'], 'child-details')}
         ${GovBB.summaryRow('School', GovBB.D['child-school'], 'child-details')}
         ${GovBB.summaryRow('Class', GovBB.D['child-class'], 'child-details')}
       </dl>
-      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Accommodation requested</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Access arrangement requested</h2>
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
-        ${GovBB.summaryRow('Type', GovBB.D['request-type'], 'request')}
+        ${GovBB.summaryRow('Type(s)', [GovBB.D['rt-medical']?'Medical':null,GovBB.D['rt-learning']?'Learning need':null,GovBB.D['rt-physical']?'Physical':null,GovBB.D['rt-other']?'Other':null].filter(Boolean).join(', ')||'None ticked', 'request')}
         ${GovBB.summaryRow('What is needed', GovBB.D['request-detail'], 'request')}
         ${GovBB.summaryRow('Context', GovBB.D['request-context'], 'request')}
       </dl>
@@ -231,22 +234,22 @@ function validate(pageId){
     req('child-name','Enter your child\'s full name');
     const dob=reqDate('child-dob','Date of birth');
     if(dob){const today=new Date();today.setHours(0,0,0,0);const age=today.getFullYear()-dob.getFullYear();if(dob>=today)errors.push({id:'child-dob-day',msg:'Date of birth must be in the past.'});else if(age<8||age>13)errors.push({id:'child-dob-day',msg:'Date of birth — BSSEE candidates are usually 10 to 12. Check the year.'});}
+    if(!D['school-year'])errors.push({id:'school-year-0',msg:'Choose which BSSEE sitting you are applying for'});
     reqMinLetters('child-school','Enter the school name in letters',3);
-    req('child-class','Enter your child\'s current class');
+    req('child-class','Select your child\'s current class');
   }
   if(pageId==='request'){
-    if(!D['request-type'])errors.push({id:'rt-medical',msg:'Select the kind of accommodation you are requesting'});
+    if(!D['rt-medical']&&!D['rt-learning']&&!D['rt-physical']&&!D['rt-other'])errors.push({id:'rt-medical',msg:'Tick at least one kind of access arrangement'});
     var d=(D['request-detail']||'').trim();
-    if(!d)errors.push({id:'request-detail',msg:'Describe the accommodation you need'});
-    else if(d.length<30)errors.push({id:'request-detail',msg:'Add more detail — be specific so the exam centre can set things up correctly.'});
+    if(!d)errors.push({id:'request-detail',msg:'Describe the arrangement you need'});
+    else if(d.length<60)errors.push({id:'request-detail',msg:'Add more detail — be specific so the exam centre can set things up correctly. At least 60 characters.'});
     var c=(D['request-context']||'').trim();
     if(!c)errors.push({id:'request-context',msg:'Provide supporting context for the request'});
-    else if(c.length<60)errors.push({id:'request-context',msg:'Add more detail — the Ministry needs enough context to make a fair decision.'});
+    else if(c.length<100)errors.push({id:'request-context',msg:'Add more detail — the Ministry needs enough context to make a fair decision. At least 100 characters.'});
   }
   if(pageId==='evidence'){
-    const reqType = D['request-type'];
-    const medicalRequired = reqType==='Medical' || reqType==='Physical' || reqType==='Learning need';
-    if(medicalRequired && !D['upload-medical'])errors.push({id:'upload-medical',msg:'A medical or specialist report is required for this type of request'});
+    const medicalRequired = !!(D['rt-medical'] || D['rt-physical'] || D['rt-learning']);
+    if(medicalRequired && !D['upload-medical'])errors.push({id:'upload-medical',msg:'A medical, specialist, or psychologist report is required for medical, physical, or learning-need requests'});
   }
   if(pageId==='declaration'){
     ['accurate','principal','share','discretion'].forEach(function(k){if(!D['decl-'+k])errors.push({id:'decl-'+k,msg:'Tick the box to confirm'});});
