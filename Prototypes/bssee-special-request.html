@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request special accommodation for the BSSEE – Ministry of Educational Transformation</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+<div class="govbb-official-banner"><div class="govbb-container govbb-official-banner__inner"><div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div><div class="govbb-official-banner__text"><span>Official government website</span></div></div></div>
+<header class="govbb-header"><div class="govbb-container govbb-header__inner"><a href="/" aria-label="Go to the alpha.gov.bb homepage"><img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" /></a></div></header>
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite"><div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div></div>
+  <div class="govbb-container"><div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div></div>
+</main>
+<footer class="govbb-footer"><div class="govbb-container govbb-footer__inner"><nav class="govbb-footer__nav" aria-label="Footer"><a class="govbb-footer__link" href="#">Home</a><a class="govbb-footer__link" href="#">Privacy</a><a class="govbb-footer__link" href="#">Terms &amp; Conditions</a><a class="govbb-footer__link" href="#">Accessibility</a></nav><hr class="govbb-footer__divider" aria-hidden="true" /><div class="govbb-footer__end"><img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" /><p class="govbb-footer__copy">© 2025 Government of Barbados</p></div></div></footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors=function(){var s=document.getElementById('error-summary');if(s)s.remove();document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});};
+GovBB.showErrors=function(errors){GovBB.clearErrors();if(!errors||!errors.length)return;var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'" onclick="GovBB.focusError(\''+e.id+'\');return false;">'+e.msg+'</a></li>';});html+='</ul></div>';var app=document.getElementById('app');var h1=app.querySelector('h1');if(h1)h1.insertAdjacentHTML('afterend',html);else app.insertAdjacentHTML('afterbegin',html);document.getElementById('error-summary').focus();errors.forEach(function(e){var el=document.getElementById(e.id);if(!el)return;var errId='err-'+e.id;el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId);var msg=document.createElement('p');msg.className='govbb-error-message';msg.id=errId;msg.textContent=e.msg;var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;if(group)group.appendChild(msg);});if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;};
+GovBB.summaryRow=function(label,value,changeTo){var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';};
+</script>
+<script>
+function next(){GovBB.next();}function back(){GovBB.back();}function nav(p){GovBB.nav(p);}
+
+const FORM_NAME='Request special accommodation for the BSSEE (Form C)';
+const CAPTION='Ministry of Educational Transformation';
+const TITLES=['Mr','Mrs','Miss','Dr','Rev','Pastor','Hon','Prof'];
+const PRIMARY_SCHOOLS=['A. DaCosta Edwards Primary','All Saints\' Primary','Arthur Smith Primary','Bay Primary','Bayley\'s Primary','Belmont Primary','Blackman & Gollop Primary','Bridgetown S.D.A Primary','Charles F. Broome Primary','Christ Church Girls Primary','Cuthbert Moore Primary','Deacon\'s Primary','Eagle Hall Primary','Eden Lodge Primary','Ellerton Primary','Elliott Belgrave','Erdiston Special School','George Lamming Primary','Good Shepherd Primary','Gordon Greenidge Primary','Gordon Walters Primary','Grantley Prescod Memorial Primary','Grazettes Primary','Half Moon Fort Primary','Hilda Skeene Primary','Hillaby-Turner\'s Hall Primary','Hindsbury Primary','Holy Innocents Primary','Ignatius Byer Primary','Lawrence T. Gay Memorial','Luther Thorne Memorial','Milton Lynch Primary','Mount Tabor Primary','Reynold Weekes Primary','Roland Edwards Primary','Sharon Primary','St Alban\'s Junior Primary','St Ambrose Primary','St Bartholomew\'s Primary','St Bernard\'s Primary','St Catherine\'s Primary','St Christopher\'s Primary','St Cyprian\'s Primary','St Elizabeth Primary','St George Primary','St Giles Primary','St James Primary','St Jude\'s Primary','St Lawrence Primary','St Luke\'s-Brighton Primary','St Margaret\'s Primary','St Mark\'s Primary','St Martin\'s Mangrove Primary','St Mary\'s Primary','St Matthew\'s Primary','St Paul\'s Primary','St Philip\'s Primary','St Silas Primary','St Stephen\'s Primary','St. Joseph\'s Primary','St. Lucy\'s Primary','The Codrington Primary','Welches Primary','Wesley Hall Junior Primary','West Terrace Primary','Westbury Primary','Wilkie Cumberbatch Primary','Workman\'s Primary','Other (private/independent)'];
+
+const FLOW=['start','guardian-details','child-details','request','evidence','declaration','check','confirmation'];
+
+function caption(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+CAPTION+'</p>';}
+function maskNid(nid){if(!nid)return '';var m=String(nid).trim().match(/^(\d{6})-(\d{4})$/);return m?'••••••-'+m[2]:String(nid).trim();}
+function formatPhone(p){if(!p)return '';var digits=String(p).replace(/[^\d]/g,'');if(digits.length===10&&digits.indexOf('246')===0)return '(246) '+digits.substring(3,6)+' '+digits.substring(6);return String(p).trim();}
+function fmtDate(prefix){const d=GovBB.D[prefix+'-day'],m=GovBB.D[prefix+'-month'],y=GovBB.D[prefix+'-year'];if(!d&&!m&&!y)return '';return [d,m,y].filter(Boolean).join(' / ');}
+function parseDate(prefix){const d=parseInt(GovBB.D[prefix+'-day'],10),m=parseInt(GovBB.D[prefix+'-month'],10),y=parseInt(GovBB.D[prefix+'-year'],10);if(!d||!m||!y)return null;if(d<1||d>31||m<1||m>12||y<2000||y>2100)return false;const dt=new Date(y,m-1,d);if(dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d)return false;return dt;}
+function guardianName(){return [GovBB.D['guardian-title'],GovBB.D['guardian-name']].filter(Boolean).join(' ');}
+
+function handleUpload(key,input){const file=input.files&&input.files[0];if(!file)return;if(file.size>10*1024*1024){alert('File is larger than 10 MB.');input.value='';return;}GovBB.D['upload-'+key]={name:file.name,size:file.size,type:file.type};GovBB.render();}
+function removeUpload(key){delete GovBB.D['upload-'+key];GovBB.render();}
+function formatBytes(n){if(n<1024)return n+' B';if(n<1024*1024)return (n/1024).toFixed(1)+' KB';return (n/(1024*1024)).toFixed(1)+' MB';}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function uploadRow(key,label,hint){var file=GovBB.D['upload-'+key];if(file){return `<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);border-left:4px solid var(--color-green-00);background:var(--color-white-00);margin-bottom:var(--spacing-s);"><div style="min-width:0;"><p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">${label}</p>${hint?`<p class="govbb-hint" style="margin:0;">${hint}</p>`:''}<p class="govbb-text-body" style="margin:0;font-size:var(--font-size-caption);color:var(--color-mid-grey-00);word-break:break-all;"><span aria-hidden="true">✓ </span>${escapeHtml(file.name)} (${formatBytes(file.size)})</p></div><button type="button" class="govbb-btn--link" style="flex-shrink:0;" onclick="removeUpload('${key}')">Remove<span class="govbb-visually-hidden"> ${label}</span></button></div>`;}return `<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);background:var(--color-white-00);margin-bottom:var(--spacing-s);"><div style="min-width:0;flex:1;"><p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">${label}</p>${hint?`<p class="govbb-hint" style="margin:0;">${hint}</p>`:''}</div><label for="upload-${key}" class="govbb-btn--secondary" style="flex-shrink:0;cursor:pointer;margin:0;">Upload file</label><input type="file" id="upload-${key}" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" onchange="handleUpload('${key}', this)" /></div>`;}
+
+function dateField(prefix,legend,hint){return `<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">${legend}</legend>${hint?`<p class="govbb-hint">${hint}</p>`:''}<div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;"><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-day">Day</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-day" name="${prefix}-day" data-field="${prefix}-day" inputmode="numeric" value="${GovBB.D[prefix+'-day']||''}" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-month">Month</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-month" name="${prefix}-month" data-field="${prefix}-month" inputmode="numeric" value="${GovBB.D[prefix+'-month']||''}" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-year">Year</label><div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="${prefix}-year" name="${prefix}-year" data-field="${prefix}-year" inputmode="numeric" value="${GovBB.D[prefix+'-year']||''}" /></div></div></div></fieldset>`;}
+
+const PAGES = {
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);"><ol class="govbb-breadcrumbs__list"><li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li><li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Education and schooling</a></li></ol></nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Request special accommodation for the BSSEE</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Last updated on 29 May 2026 · BSSEE Form C</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If your child needs a special accommodation to sit the Barbados Secondary Schools' Entrance Examination — for example, extra time, a separate room, large-print papers, a reader, or a medical adjustment — use this form to apply.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. No fee. Takes about <strong>10 minutes</strong>.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start request</button></div>
+
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Apply early.</strong> Special accommodations need to be arranged before exam day. Submit at least <strong>6 weeks before the BSSEE</strong> so the Ministry has time to set up the arrangement.</p>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your name, National ID Number, and contact details</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your child's full name, date of birth, school, and current class</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A description of the accommodation needed and the reason for it</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A medical report or specialist letter where the request is medical or related to a diagnosis</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">The Ministry will review your request, consult your child's primary school Principal, and respond within <strong>3 weeks</strong>. If approved, the arrangement will be communicated to the exam centre before exam day.</p>
+
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body">Other BSSEE forms: <a href="bssee-early-sitter.html" class="govbb-link">sit early (Form A)</a>, <a href="bssee-defer.html" class="govbb-link">defer for a year (Form B)</a>, <a href="bssee-choice.html" class="govbb-link">choose secondary schools</a>.</p>
+      </div>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start request</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call the Ministry of Educational Transformation on <strong>+1 (246) 535-1284</strong> or email <a href="mailto:mist.forms@barbados.gov.bb" class="govbb-link">mist.forms@barbados.gov.bb</a>.</p>
+    </div>`,
+
+  'guardian-details': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you (parent or guardian)</h1>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-title">Title</label><div class="govbb-select-wrapper"><select class="govbb-select" id="guardian-title" name="guardian-title" data-field="guardian-title"><option value="">Select a title</option>${TITLES.map(t=>`<option value="${t}"${GovBB.D['guardian-title']===t?' selected':''}>${t}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-name">Full name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="guardian-name" name="guardian-name" data-field="guardian-name" autocomplete="name" value="${GovBB.D['guardian-name']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-nid">National ID Number</label><p class="govbb-hint">For example, 110915-0048.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="guardian-nid" name="guardian-nid" data-field="guardian-nid" value="${GovBB.D['guardian-nid']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-address">Home address</label><textarea class="govbb-textarea" id="guardian-address" name="guardian-address" data-field="guardian-address" rows="3">${GovBB.D['guardian-address']||''}</textarea></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-phone">Mobile number</label><p class="govbb-hint">For example, (246) 249 1234.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="guardian-phone" name="guardian-phone" data-field="guardian-phone" inputmode="tel" autocomplete="tel" value="${GovBB.D['guardian-phone']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-email">Email address</label><div class="govbb-input-wrapper"><input class="govbb-input" type="email" id="guardian-email" name="guardian-email" data-field="guardian-email" inputmode="email" autocomplete="email" value="${GovBB.D['guardian-email']||''}" /></div></div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'child-details': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About your child</h1>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-name">Child's full name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-name" name="child-name" data-field="child-name" value="${GovBB.D['child-name']||''}" /></div></div>
+      ${dateField('child-dob','Date of birth','For example, 15 6 2015.')}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-school">Current school</label><p class="govbb-hint">Start typing to find your child's school.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-school" name="child-school" data-field="child-school" list="primary-schools-list" value="${GovBB.D['child-school']||''}" /></div><datalist id="primary-schools-list">${PRIMARY_SCHOOLS.map(s=>`<option value="${s}">`).join('')}</datalist></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-class">Current class</label><p class="govbb-hint">For example, "Class 3", "Class 4".</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-class" name="child-class" data-field="child-class" value="${GovBB.D['child-class']||''}" /></div></div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'request': () => {
+    const reqType = GovBB.D['request-type'];
+    return `<form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">The accommodation you need</h1>
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);"><p class="govbb-text-body"><strong>What you write here is treated confidentially.</strong> It is read by the Ministry's BSSEE team and your child's Principal, and shared with the exam centre staff who need to know on the day.</p></div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">What kind of accommodation are you requesting?</legend><p class="govbb-hint">Tick the one that best matches. If more than one applies, tick the main one and describe the rest in the box below.</p>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="rt-medical" name="request-type" data-field="request-type" value="Medical"${reqType==='Medical'?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="rt-medical">Medical (illness, condition, recent injury)</label></div>
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="rt-learning" name="request-type" data-field="request-type" value="Learning need"${reqType==='Learning need'?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="rt-learning">Learning need (e.g. dyslexia, ADHD, autism)</label></div>
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="rt-physical" name="request-type" data-field="request-type" value="Physical"${reqType==='Physical'?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="rt-physical">Physical (mobility, hearing, vision)</label></div>
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="rt-other" name="request-type" data-field="request-type" value="Other"${reqType==='Other'?' checked':''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="rt-other">Other (describe below)</label></div>
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="request-detail">Describe the accommodation you need</label><p class="govbb-hint">Be specific. For example, "extra 30 minutes on each paper", "separate room with one invigilator", "large-print papers (font size 18)", "a reader for the science paper".</p><textarea class="govbb-textarea" id="request-detail" name="request-detail" data-field="request-detail" rows="6">${GovBB.D['request-detail']||''}</textarea></div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="request-context">Supporting context</label><p class="govbb-hint">Why does your child need this? Describe their diagnosis, condition, or learning history. Mention any accommodations they have used at school.</p><textarea class="govbb-textarea" id="request-context" name="request-context" data-field="request-context" rows="6">${GovBB.D['request-context']||''}</textarea></div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`;
+  },
+
+  'evidence': () => {
+    const reqType = GovBB.D['request-type'];
+    const medicalRequired = reqType==='Medical' || reqType==='Physical' || reqType==='Learning need';
+    return `${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Upload supporting evidence</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">${medicalRequired?'A medical or specialist report is required for this type of request.':'Upload any supporting documents — optional but speeds up the Ministry\'s review.'}</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Accepted formats: PDF, JPG, PNG, DOC. Maximum size: 10 MB per file.</p>
+      ${uploadRow('medical', 'Medical or specialist report'+(medicalRequired?' (required)':' (optional)'), 'Signed letter from a doctor, specialist, or educational psychologist that supports your request.')}
+      ${uploadRow('principal', 'Principal\'s letter (optional)', 'Letter from your child\'s primary school confirming accommodations they already use at school.')}
+      ${uploadRow('other', 'Other supporting document (optional)', 'Anything else the Ministry should see.')}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>`;
+  },
+
+  'declaration': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-accurate" name="decl-accurate" data-field="decl-accurate"${GovBB.D['decl-accurate']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-accurate">The information I have given is true and correct.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-principal" name="decl-principal" data-field="decl-principal"${GovBB.D['decl-principal']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-principal">My child's primary school Principal is aware of this request.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-share" name="decl-share" data-field="decl-share"${GovBB.D['decl-share']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-share">I agree that the Ministry may share this information with the exam centre staff who need to know to provide the accommodation on the day.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-discretion" name="decl-discretion" data-field="decl-discretion"${GovBB.D['decl-discretion']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-discretion">I understand the decision is at the Ministry's discretion.</label></div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue to review</button></div>
+    </form>`,
+
+  'check': () => `<div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before submitting</h1>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parent or guardian</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Name', guardianName(), 'guardian-details')}
+        ${GovBB.summaryRow('National ID', maskNid(GovBB.D['guardian-nid']), 'guardian-details')}
+        ${GovBB.summaryRow('Address', GovBB.D['guardian-address'], 'guardian-details')}
+        ${GovBB.summaryRow('Mobile', formatPhone(GovBB.D['guardian-phone']), 'guardian-details')}
+        ${GovBB.summaryRow('Email', GovBB.D['guardian-email'], 'guardian-details')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your child</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Name', GovBB.D['child-name'], 'child-details')}
+        ${GovBB.summaryRow('Date of birth', fmtDate('child-dob'), 'child-details')}
+        ${GovBB.summaryRow('School', GovBB.D['child-school'], 'child-details')}
+        ${GovBB.summaryRow('Class', GovBB.D['child-class'], 'child-details')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Accommodation requested</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Type', GovBB.D['request-type'], 'request')}
+        ${GovBB.summaryRow('What is needed', GovBB.D['request-detail'], 'request')}
+        ${GovBB.summaryRow('Context', GovBB.D['request-context'], 'request')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Supporting evidence</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${[{key:'medical',label:'Medical or specialist report'},{key:'principal',label:'Principal\'s letter'},{key:'other',label:'Other document'}].map(function(d){var f=GovBB.D['upload-'+d.key];return GovBB.summaryRow(d.label, f?escapeHtml(f.name)+' ('+formatBytes(f.size)+')':'Not uploaded', 'evidence');}).join('')}
+      </dl>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="if(this.disabled)return;this.disabled=true;this.textContent='Submitting…';next();">Submit request</button></div>
+    </div>`,
+
+  'confirmation': () => {
+    window.__refNumber=window.__refNumber||('BSSC-'+Math.random().toString(36).substring(2,8).toUpperCase());
+    if(document.title.indexOf('Error: ')===0)document.title=document.title.substring('Error: '.length);
+    document.title='Request submitted — '+FORM_NAME;
+    return `<div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Request submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Ministry reviews your request and consults ${GovBB.D['child-school']||'your child\'s school'}.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You will be told the outcome within <strong>3 weeks</strong> by letter and phone.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If approved, the arrangement will be communicated to the exam centre before exam day.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We've sent a copy of your request to ${GovBB.D['guardian-email']||'the address you provided'}.</li>
+      </ul>
+      <div style="display:flex;gap:var(--spacing-m);flex-wrap:wrap;margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="window.print()">Print this page</button>
+        <a class="govbb-btn--link" href="../forms.html">Return to all forms</a>
+      </div>
+    </div>`;
+  }
+};
+
+function validate(pageId){
+  const D=GovBB.D,errors=[];
+  const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/,NID_RE=/^\d{6}-\d{4}$/;
+  function req(id,msg){if(!D[id]||String(D[id]).trim()==='')errors.push({id:id,msg:msg});}
+  function reqMinLetters(id,msg,min){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:msg});return;}if((v.match(/[A-Za-z]/g)||[]).length<min)errors.push({id:id,msg:msg});}
+  function reqNid(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!NID_RE.test(v))errors.push({id:id,msg:label+' must be in the format 110915-0048'});}
+  function reqPhone(id,label,required,emptyMsg){var v=(D[id]||'').trim();if(!v){if(required)errors.push({id:id,msg:emptyMsg});return;}var digits=v.replace(/[\s\-()+]/g,'');if(!/^\d{7,15}$/.test(digits))errors.push({id:id,msg:label+' must contain 7 to 15 digits'});}
+  function reqEmail(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!EMAIL_RE.test(v))errors.push({id:id,msg:label+' must be in the format you@example.com'});}
+  function reqDate(prefix,label){const dayV=D[prefix+'-day'],monV=D[prefix+'-month'],yrV=D[prefix+'-year'];if(!dayV||!monV||!yrV){errors.push({id:prefix+'-day',msg:label+' — enter a complete date.'});return null;}const dt=parseDate(prefix);if(dt===false){errors.push({id:prefix+'-day',msg:label+' — enter a real date.'});return null;}return dt;}
+
+  if(pageId==='guardian-details'){
+    req('guardian-title','Select a title');
+    req('guardian-name','Enter your full name');
+    reqNid('guardian-nid','National ID Number','Enter your National ID Number');
+    req('guardian-address','Enter your home address');
+    reqPhone('guardian-phone','Mobile number',true,'Enter your mobile number');
+    reqEmail('guardian-email','Email address','Enter your email address');
+  }
+  if(pageId==='child-details'){
+    req('child-name','Enter your child\'s full name');
+    const dob=reqDate('child-dob','Date of birth');
+    if(dob){const today=new Date();today.setHours(0,0,0,0);const age=today.getFullYear()-dob.getFullYear();if(dob>=today)errors.push({id:'child-dob-day',msg:'Date of birth must be in the past.'});else if(age<8||age>13)errors.push({id:'child-dob-day',msg:'Date of birth — BSSEE candidates are usually 10 to 12. Check the year.'});}
+    reqMinLetters('child-school','Enter the school name in letters',3);
+    req('child-class','Enter your child\'s current class');
+  }
+  if(pageId==='request'){
+    if(!D['request-type'])errors.push({id:'rt-medical',msg:'Select the kind of accommodation you are requesting'});
+    var d=(D['request-detail']||'').trim();
+    if(!d)errors.push({id:'request-detail',msg:'Describe the accommodation you need'});
+    else if(d.length<30)errors.push({id:'request-detail',msg:'Add more detail — be specific so the exam centre can set things up correctly.'});
+    var c=(D['request-context']||'').trim();
+    if(!c)errors.push({id:'request-context',msg:'Provide supporting context for the request'});
+    else if(c.length<60)errors.push({id:'request-context',msg:'Add more detail — the Ministry needs enough context to make a fair decision.'});
+  }
+  if(pageId==='evidence'){
+    const reqType = D['request-type'];
+    const medicalRequired = reqType==='Medical' || reqType==='Physical' || reqType==='Learning need';
+    if(medicalRequired && !D['upload-medical'])errors.push({id:'upload-medical',msg:'A medical or specialist report is required for this type of request'});
+  }
+  if(pageId==='declaration'){
+    ['accurate','principal','share','discretion'].forEach(function(k){if(!D['decl-'+k])errors.push({id:'decl-'+k,msg:'Tick the box to confirm'});});
+  }
+  return errors;
+}
+
+GovBB.init({formName:FORM_NAME,flow:FLOW,pages:PAGES,validate:validate});
+</script>
+</body>
+</html>
