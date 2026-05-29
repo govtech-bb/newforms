@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Request a Presidential Visit for a Centenarian – Office of the President</title>
+  <title>Request a Presidential visit for a centenarian – Office of the President</title>
   <link rel="stylesheet" href="../dist/styles.css">
 </head>
 <body class="govbb-page">
@@ -80,7 +80,7 @@ GovBB.summaryRow = function(label,value,changeTo){
 </script>
 <script>
 /* ───────── Form-specific configuration ───────── */
-const FORM_NAME = 'Request for a Presidential Visit to a Centenarian';
+const FORM_NAME = 'Request a Presidential visit for a centenarian';
 
 const FLOW = [
   'start',
@@ -94,11 +94,9 @@ const FLOW = [
 ];
 
 /* ───────── Previous + Continue button pair ───────── */
-const PREV_BTN_STYLE = 'display:inline-flex;align-items:center;justify-content:center;background:var(--color-grey-00);color:var(--color-black-00);border:none;padding:var(--spacing-s) var(--spacing-m);font-size:var(--font-size-body);font-weight:var(--font-weight-bold);border-radius:var(--border-radius-s);cursor:pointer;line-height:1.5;';
-
 function btnGroup(continueLabel) {
   return `<div class="govbb-btn-group" style="margin-top:var(--spacing-l);display:flex;gap:var(--spacing-s);align-items:center;flex-wrap:wrap;">
-    <button type="button" onclick="back()" style="${PREV_BTN_STYLE}">Previous</button>
+    <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
     <button type="button" class="govbb-btn" onclick="next()">${continueLabel || 'Continue'}</button>
   </div>`;
 }
@@ -122,11 +120,19 @@ function parishSelect(id, label) {
   </div>`;
 }
 
-/* ───────── Address block (line 1, line 2, parish) ───────── */
+/* ───────── Address block (facility, line 1, line 2, parish) ───────── */
 function addressBlock(prefix) {
   return `
     <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+      <label class="govbb-label" for="${prefix}-building">Name of building, facility, or care home (optional)</label>
+      <p class="govbb-hint">For example, "Geriatric Hospital" or "St James Care Home". Leave blank if not applicable.</p>
+      <div class="govbb-input-wrapper">
+        <input class="govbb-input" type="text" id="${prefix}-building" name="${prefix}-building" data-field="${prefix}-building" value="${GovBB.D[prefix+'-building']||''}" />
+      </div>
+    </div>
+    <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
       <label class="govbb-label" for="${prefix}-line1">Address line 1</label>
+      <p class="govbb-hint">For example, "12 Highland Avenue" or "PO Box 274, Bridgetown".</p>
       <div class="govbb-input-wrapper">
         <input class="govbb-input" type="text" id="${prefix}-line1" name="${prefix}-line1" data-field="${prefix}-line1" value="${GovBB.D[prefix+'-line1']||''}" />
       </div>
@@ -154,7 +160,23 @@ function centenarianFullName() {
 
 function addressDisplay(prefix) {
   const d = GovBB.D;
-  return [d[prefix + '-line1'], d[prefix + '-line2'], d[prefix + '-parish']].filter(Boolean).join(', ') || '—';
+  return [d[prefix + '-building'], d[prefix + '-line1'], d[prefix + '-line2'], d[prefix + '-parish']].filter(Boolean).join(', ') || '—';
+}
+
+/* Months between today and next birthday for given DOB y/m/d */
+function monthsToNextBirthday(year, month, day) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  let next = new Date(today.getFullYear(), month - 1, day);
+  if (next < today) next = new Date(today.getFullYear() + 1, month - 1, day);
+  const msPerDay = 86400000;
+  return Math.round((next - today) / msPerDay / 30.44);
+}
+function daysToNextBirthday(year, month, day) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  let next = new Date(today.getFullYear(), month - 1, day);
+  if (next < today) next = new Date(today.getFullYear() + 1, month - 1, day);
+  const msPerDay = 86400000;
+  return Math.round((next - today) / msPerDay);
 }
 
 function visitAddressDisplay() {
@@ -194,7 +216,7 @@ const PAGES = {
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start request</button></div>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body" style="margin:0;"><strong>Submit at least 3 months before the birthday</strong> so the Office has time to arrange the visit and confirm the President's diary.</p>
+        <p class="govbb-text-body" style="margin:0;"><strong>Submit this online request — and post the original documents — at least 3 months before the birthday.</strong> The 3-month lead time is counted from when the Office has both the request <em>and</em> the documents in hand. Allow extra time for post.</p>
       </div>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
@@ -260,7 +282,7 @@ const PAGES = {
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
         <legend class="govbb-fieldset__legend">Date of birth</legend>
-        <p class="govbb-hint">For example, 27 03 1925</p>
+        <p class="govbb-hint">For example, 15 06 1926</p>
         <div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">
           <div class="govbb-date-input__part">
             <label class="govbb-date-input__label" for="cen-dob-day">Day</label>
@@ -292,14 +314,12 @@ const PAGES = {
         </div>
       </fieldset>
 
-      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);display:flex;gap:var(--spacing-s);align-items:center;flex-wrap:wrap;">
-        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-      </div>
+      ${btnGroup()}
     </form>`,
 
   /* ── Addresses: home + visit (conditional inline) ── */
   'addresses': () => {
-    const showVisit = GovBB.D['visit-same'] && GovBB.D['visit-same'] !== 'Yes';
+    const showVisit = GovBB.D['visit-same'] === 'No';
     return `
     <form novalidate>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Office of the President</p>
@@ -315,33 +335,43 @@ const PAGES = {
             <label class="govbb-radio-item__label" for="visit-same-yes">Yes</label>
           </div>
           <div class="govbb-radio-item">
-            <input class="govbb-radio" type="radio" id="visit-same-no" name="visit-same" data-field="visit-same" value="No – the visit will be at a different address"${GovBB.D['visit-same']==='No – the visit will be at a different address'?' checked':''} />
-            <label class="govbb-radio-item__label" for="visit-same-no">No – the visit will be at a different address</label>
+            <input class="govbb-radio" type="radio" id="visit-same-no" name="visit-same" data-field="visit-same" value="No"${GovBB.D['visit-same']==='No'?' checked':''} />
+            <label class="govbb-radio-item__label" for="visit-same-no">No, the visit will be at a different address</label>
           </div>
         </div>
       </fieldset>
 
       ${showVisit ? `
-      <div style="border-left:4px solid var(--color-blue-40);padding-left:var(--spacing-s);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);color:var(--color-mid-grey-00);margin-bottom:var(--spacing-s);">Address for the visit</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="padding:0 var(--spacing-s);">Address for the visit</legend>
         ${addressBlock('visit')}
-      </div>` : ''}
+      </fieldset>` : ''}
 
       ${btnGroup()}
     </form>`;
   },
 
-  /* ── Contact person + email (merged) ── */
+  /* ── Visit arrangements (contact person + visit preferences + notes) ── */
   'visit-and-contact': () => `
     <form novalidate>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Office of the President</p>
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Who should we contact about the arrangements?</h1>
-      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Give us the details of the person the Office of the President should contact.</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Visit arrangements</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Who to contact</h2>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">The person the Office of the President will phone to discuss dates and arrangements.</p>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
         <label class="govbb-label" for="contact-fullname">Full name</label>
         <div class="govbb-input-wrapper">
-          <input class="govbb-input" type="text" id="contact-fullname" name="contact-fullname" data-field="contact-fullname" value="${GovBB.D['contact-fullname']||''}" />
+          <input class="govbb-input" type="text" id="contact-fullname" name="contact-fullname" data-field="contact-fullname" autocomplete="name" value="${GovBB.D['contact-fullname']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="contact-relationship">Relationship to the centenarian</label>
+        <p class="govbb-hint">For example, "Daughter", "Grandson", "Niece", "Neighbour", "Care home manager".</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="contact-relationship" name="contact-relationship" data-field="contact-relationship" value="${GovBB.D['contact-relationship']||''}" />
         </div>
       </div>
 
@@ -349,9 +379,9 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
         <label class="govbb-label" for="contact-tel">Phone number</label>
-        <p class="govbb-hint">For example, 246-555-1234</p>
+        <p class="govbb-hint">For example, (246) 249 1234.</p>
         <div class="govbb-input-wrapper">
-          <input class="govbb-input" type="tel" id="contact-tel" name="contact-tel" data-field="contact-tel" placeholder="246-" value="${GovBB.D['contact-tel']||''}" />
+          <input class="govbb-input" type="tel" id="contact-tel" name="contact-tel" data-field="contact-tel" inputmode="tel" autocomplete="tel" value="${GovBB.D['contact-tel']||''}" />
         </div>
       </div>
 
@@ -359,8 +389,35 @@ const PAGES = {
         <label class="govbb-label" for="contact-email">Email address</label>
         <p class="govbb-hint">We'll send you a confirmation of your request. For example, name@example.com</p>
         <div class="govbb-input-wrapper">
-          <input class="govbb-input" type="email" id="contact-email" name="contact-email" data-field="contact-email" value="${GovBB.D['contact-email']||''}" />
+          <input class="govbb-input" type="email" id="contact-email" name="contact-email" data-field="contact-email" inputmode="email" autocomplete="email" value="${GovBB.D['contact-email']||''}" />
         </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-top:var(--spacing-l);margin-bottom:var(--spacing-s);">Best time for the visit</h2>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Optional. The Office will use this as a starting point when arranging the date.</p>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend">Best time of day (optional)</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+          ${['Morning','Early afternoon','Late afternoon','No preference'].map((t,i)=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="visit-time-${i}" name="visit-time" data-field="visit-time" value="${t}"${GovBB.D['visit-time']===t?' checked':''} /><label class="govbb-radio-item__label" for="visit-time-${i}">${t}</label></div>`).join('')}
+        </div>
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="visit-days">Preferred days (optional)</label>
+        <p class="govbb-hint">For example, "Weekdays only", "Any day except Sunday", "Tuesday or Thursday best".</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="visit-days" name="visit-days" data-field="visit-days" value="${GovBB.D['visit-days']||''}" />
+        </div>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-top:var(--spacing-l);margin-bottom:var(--spacing-s);">Anything else we should know</h2>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Optional. Tell the Office about care needs, language preferences, religious sensitivities, or whether photographs and press are welcome.</p>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="visit-notes">Notes for the Office (optional)</label>
+        <p class="govbb-hint">For example, "Mum uses a hearing aid — please speak clearly", "No press photographers please", "She speaks mostly Bajan dialect".</p>
+        <textarea class="govbb-textarea" id="visit-notes" name="visit-notes" data-field="visit-notes" rows="4">${GovBB.D['visit-notes']||''}</textarea>
       </div>
 
       ${btnGroup()}
@@ -390,7 +447,7 @@ const PAGES = {
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">How to send them</h2>
 
       <h3 class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">By post</h3>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Send by registered post — the documents are originals and you'll need them returned.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Send by registered post so you can track the delivery.</p>
       <address style="font-style:normal;background:var(--color-grey-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
         <p class="govbb-text-body">Private Secretary to the President<br>
         Office of the President<br>
@@ -400,20 +457,47 @@ const PAGES = {
       </address>
 
       <h3 class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">In person</h3>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Drop the documents off at State House at the same address. Call <strong>536-0456</strong> before visiting to confirm office hours and to let the Private Secretary know to expect you.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Drop the documents off at State House at the same address. Call <strong>536-0456</strong> before visiting to confirm office hours and to let the Private Secretary know to expect you.</p>
 
-      <div style="background:var(--color-blue-10);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Quote your reference number</p>
-        <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin:0;">After you submit this online form you'll get a reference number — include it with the documents so the Office can match them to your request.</p>
+      <div style="background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Will I get my originals back?</p>
+        <p class="govbb-text-body" style="margin:0;">Yes. The Office verifies the documents and returns the originals to you by registered post after the visit, or sooner on request. They are not kept on file.</p>
       </div>
 
-      ${btnGroup('Continue to review')}
+      <div style="background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Quote your reference number</p>
+        <p class="govbb-text-body" style="margin:0;">After you submit this online form you'll get a reference number — include it with the documents so the Office can match them to your request.</p>
+      </div>
+
+      <div style="background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">If the birth certificate has been lost or was never issued</p>
+        <p class="govbb-text-body" style="margin:0;">Call <strong>536-0456</strong> before you submit. The Office can advise on alternatives — for example, a sworn statement, baptism record, or old census reference.</p>
+      </div>
+
+      ${btnGroup('Continue')}
     </div>`;
   },
 
   /* ── Check your answers ── */
-  'check': () => `
-    <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before sending</h1>
+  'check': () => {
+    /* 3-month lead-time warning */
+    let leadTimeWarn = '';
+    const day = parseInt(GovBB.D['cen-dob-day'],10),
+          month = parseInt(GovBB.D['cen-dob-month'],10),
+          year = parseInt(GovBB.D['cen-dob-year'],10);
+    if (!isNaN(day) && !isNaN(month) && !isNaN(year)) {
+      const days = daysToNextBirthday(year, month, day);
+      if (days < 90) {
+        leadTimeWarn = `<div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+          <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Heads up — the next birthday is in about ${days} day${days===1?'':'s'}.</strong> That's less than the 3-month lead time the Office of the President recommends.</p>
+          <p class="govbb-text-body" style="margin:0;">You can still submit, but the Office cannot guarantee that a visit can be arranged in time. If you've entered the date by mistake, <a href="#" onclick="nav('centenarian-info');return false;" class="govbb-link">go back and check the date of birth</a>.</p>
+        </div>`;
+      }
+    }
+    return `
+    <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before submitting</h1>
+
+    ${leadTimeWarn}
 
     <section style="margin-bottom:var(--spacing-m);">
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About the centenarian</h2>
@@ -436,9 +520,19 @@ const PAGES = {
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact person</h2>
       <dl>
         ${GovBB.summaryRow('Name', contactFullName(), 'visit-and-contact')}
+        ${GovBB.summaryRow('Relationship to centenarian', GovBB.D['contact-relationship'] || '—', 'visit-and-contact')}
         ${GovBB.summaryRow('Address', addressDisplay('contact'), 'visit-and-contact')}
         ${GovBB.summaryRow('Phone', GovBB.D['contact-tel'] || '—', 'visit-and-contact')}
         ${GovBB.summaryRow('Email', GovBB.D['contact-email'] || '—', 'visit-and-contact')}
+      </dl>
+    </section>
+
+    <section style="margin-bottom:var(--spacing-m);">
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Visit preferences</h2>
+      <dl>
+        ${GovBB.summaryRow('Best time of day', GovBB.D['visit-time'] || 'No preference given', 'visit-and-contact')}
+        ${GovBB.summaryRow('Preferred days', GovBB.D['visit-days'] || 'No preference given', 'visit-and-contact')}
+        ${GovBB.summaryRow('Notes for the Office', GovBB.D['visit-notes'] || 'None', 'visit-and-contact')}
       </dl>
     </section>
 
@@ -452,7 +546,8 @@ const PAGES = {
       <p class="govbb-text-body" style="color:var(--color-mid-grey-00);"><a href="#" onclick="nav('documents');return false;" class="govbb-link">Review where to send these</a></p>
     </section>
 
-    ${btnGroup('Continue to declaration')}`,
+    ${btnGroup('Continue to declaration')}`;
+  },
 
   /* ── Declaration ── */
   'declaration': () => `
@@ -460,38 +555,50 @@ const PAGES = {
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">Office of the President</p>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
 
-      <div style="background:var(--color-grey-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">By submitting this request, I confirm that:</p>
-        <ul style="padding-left:var(--spacing-m);">
-          <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The information I have given is correct to the best of my knowledge</li>
-          <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">I understand the request must be received at least 3 months before the birthday</li>
-          <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">I will send the original supporting documents (birth certificate, and marriage certificate(s) if applicable) to the Office of the President by post or in person</li>
-        </ul>
-      </div>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Before you submit, please confirm the following.</p>
 
-      <div style="margin-bottom:var(--spacing-m);">
-        <div id="declaration-error" style="display:none;color:var(--color-red-00);font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-s);" role="alert"></div>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Declaration</legend>
         <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
-          <input class="govbb-checkbox" type="checkbox" id="declaration-confirm-btn" name="declaration-confirm-btn"${GovBB.D['declaration-confirmed']==='yes'?' checked':''}
-            onchange="GovBB.D['declaration-confirmed']=this.checked?'yes':'';" />
-          <label class="govbb-checkbox-item__label" for="declaration-confirm-btn">I confirm this is true and I agree to the declaration above</label>
+          <input class="govbb-checkbox" type="checkbox" id="decl-accurate" name="decl-accurate" data-field="decl-accurate"${GovBB.D['decl-accurate']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="decl-accurate">The information I have given is true and correct to the best of my knowledge.</label>
         </div>
-      </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="decl-lead-time" name="decl-lead-time" data-field="decl-lead-time"${GovBB.D['decl-lead-time']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="decl-lead-time">I understand that both this online request <strong>and</strong> the original documents need to reach the Office of the President at least 3 months before the birthday — and that allowing time for post is my responsibility.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="decl-originals" name="decl-originals" data-field="decl-originals"${GovBB.D['decl-originals']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="decl-originals">I will send the original supporting documents (birth certificate, and marriage certificate(s) if applicable) to the Office of the President by post or in person.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);">
+          <input class="govbb-checkbox" type="checkbox" id="decl-discretion" name="decl-discretion" data-field="decl-discretion"${GovBB.D['decl-discretion']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="decl-discretion">I understand that a Presidential visit is at the President's discretion and is not guaranteed.</label>
+        </div>
+      </fieldset>
 
-      ${btnGroup('Submit request')}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);display:flex;gap:var(--spacing-s);align-items:center;flex-wrap:wrap;">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="if(this.disabled)return;this.disabled=true;this.textContent='Submitting…';next();">Submit request</button>
+      </div>
     </form>`,
 
   /* ── Confirmation ── */
   'confirmation': () => {
-    const ref = window.__refNumber || ('PVC-' + Math.random().toString(36).substring(2,8).toUpperCase());
-    window.__refNumber = ref;
+    if (!window.__refNumber) {
+      const refYear = new Date().getFullYear();
+      const refNum = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
+      window.__refNumber = `PVC-${refYear}-${refNum}`;
+    }
+    const ref = window.__refNumber;
     if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
-    document.title = 'Request submitted — ' + FORM_NAME;
+    document.title = 'Online request received — ' + FORM_NAME;
     const isFemale = GovBB.D['centenarian-gender'] === 'Female';
+    const contactName = (GovBB.D['contact-fullname'] || '').trim() || 'the contact person you named';
     return `
     <div>
       <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
-        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Request submitted</h1>
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Online request received</h1>
         <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
         <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${ref}</p>
       </div>
@@ -521,9 +628,17 @@ const PAGES = {
       <h3 class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">In person</h3>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Drop the documents at State House (same address). Call <strong>536-0456</strong> first to confirm office hours and let the Private Secretary know to expect you.</p>
 
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">The Office will return your originals to you by registered post after the visit, or sooner on request.</p>
+
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens after that</h2>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Once the Office of the President has both your online request and the original documents, they will contact <strong>${contactFullName()}</strong> to discuss the arrangements for the visit.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Once the Office of the President has both your online request and the original documents, they will phone <strong>${contactName}</strong> to discuss the arrangements for the visit.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">A visit usually involves the President, an aide, and a press photographer. If you'd prefer no press coverage, tell the Office when they call.</p>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If you don't hear back within 4 weeks of sending the documents, contact the Office of the President.</p>
+
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>If circumstances change before the visit</strong></p>
+        <p class="govbb-text-body" style="margin:0;">If the centenarian's health, address, or other circumstances change — including, sadly, if they pass away — please call <strong>536-0456</strong> as soon as you can, quoting reference <strong>${ref}</strong>.</p>
+      </div>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
       <ul style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
@@ -531,6 +646,8 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Phone: <strong>536-0456</strong> (Private Secretary, direct)</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Main office: <strong>536-0450</strong></li>
       </ul>
+
+      <p class="govbb-text-body" style="font-size:var(--font-size-caption);color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">The Office of the President processes the personal information on this request in line with the Data Protection Act, 2019. Read the <a class="govbb-link" href="#">privacy notice</a> for details.</p>
 
       <div style="display:flex;gap:var(--spacing-m);flex-wrap:wrap;margin-top:var(--spacing-l);">
         <button type="button" class="govbb-btn--secondary" onclick="window.print()">Print this page</button>
@@ -555,15 +672,17 @@ function validate(pageId) {
     } else {
       const parsed = new Date(year, month - 1, day);
       if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) {
-        errors.push({ id: 'cen-dob-day', msg: 'Date of birth – Enter a real date, for example 27 03 1925' });
+        errors.push({ id: 'cen-dob-day', msg: 'Date of birth – Enter a real date, for example 15 06 1926' });
       } else if (parsed >= new Date()) {
         errors.push({ id: 'cen-dob-day', msg: 'Date of birth – The date of birth must be in the past' });
       } else {
         const today = new Date();
         let age = today.getFullYear() - year;
         if (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)) age--;
-        if (age < 99 || age > 100) {
-          errors.push({ id: 'cen-dob-day', msg: 'Date of birth – The centenarian must be turning or have turned 100. Check the date of birth is correct.' });
+        if (age < 99) {
+          errors.push({ id: 'cen-dob-day', msg: 'Date of birth – This form is for centenarians turning 100, or who have recently turned 100. Your person would be ' + age + '. Check the date of birth.' });
+        } else if (age > 105) {
+          errors.push({ id: 'cen-dob-day', msg: 'Date of birth – Your person would be ' + age + ', which looks unusually high. Check the date of birth, or call the Office of the President on 536-0456 to discuss.' });
         }
       }
     }
@@ -574,17 +693,29 @@ function validate(pageId) {
     if (!D['home-line1'])  errors.push({ id: 'home-line1',  msg: 'Address line 1 – Enter the first line of the home address' });
     if (!D['home-parish']) errors.push({ id: 'home-parish', msg: 'Parish – Choose a parish' });
     if (!D['visit-same'])  errors.push({ id: 'visit-same-yes',  msg: 'Visit location – Choose where the visit will take place' });
-    if (D['visit-same'] && D['visit-same'] !== 'Yes') {
+    if (D['visit-same'] === 'No') {
       if (!D['visit-line1'])  errors.push({ id: 'visit-line1',  msg: 'Address line 1 – Enter the first line of the visit address' });
       if (!D['visit-parish']) errors.push({ id: 'visit-parish', msg: 'Parish – Choose a parish for the visit address' });
+    } else if (D['visit-same'] === 'Yes') {
+      /* Ghost-data cleanup: clear any visit-address fields if user toggled back to Yes */
+      ['building','line1','line2','parish'].forEach(function(k){ delete D['visit-' + k]; });
     }
   }
 
   if (pageId === 'visit-and-contact') {
     if (!D['contact-fullname']) errors.push({ id: 'contact-fullname', msg: 'Full name – Enter the contact person\'s full name' });
+    if (!D['contact-relationship']) errors.push({ id: 'contact-relationship', msg: 'Relationship – Enter the contact person\'s relationship to the centenarian' });
     if (!D['contact-line1'])  errors.push({ id: 'contact-line1',  msg: 'Address line 1 – Enter the contact person\'s address' });
     if (!D['contact-parish']) errors.push({ id: 'contact-parish', msg: 'Parish – Choose a parish' });
-    if (!D['contact-tel'])    errors.push({ id: 'contact-tel',    msg: 'Phone number – Enter a phone number' });
+    var tel = (D['contact-tel'] || '').trim();
+    if (!tel) {
+      errors.push({ id: 'contact-tel', msg: 'Phone number – Enter a phone number' });
+    } else {
+      var telDigits = tel.replace(/[\s\-()+]/g, '');
+      if (!/^\d{7,15}$/.test(telDigits)) {
+        errors.push({ id: 'contact-tel', msg: 'Phone number – Must contain 7 to 15 digits, for example (246) 249 1234' });
+      }
+    }
     if (!D['contact-email']) {
       errors.push({ id: 'contact-email', msg: 'Email address – Enter your email address' });
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(D['contact-email'])) {
@@ -593,11 +724,9 @@ function validate(pageId) {
   }
 
   if (pageId === 'declaration') {
-    if (D['declaration-confirmed'] !== 'yes') {
-      const errEl = document.getElementById('declaration-error');
-      if (errEl) { errEl.textContent = 'You must confirm the declaration before submitting'; errEl.style.display = ''; }
-      errors.push({ id: 'declaration-confirm-btn', msg: 'Declaration – Tick the box to confirm the declaration' });
-    }
+    ['accurate','lead-time','originals','discretion'].forEach(function(k){
+      if (!D['decl-' + k]) errors.push({ id: 'decl-' + k, msg: 'Tick the box to confirm' });
+    });
   }
 
   return errors;
