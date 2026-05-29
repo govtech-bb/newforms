@@ -91,6 +91,23 @@ const SECONDARY_SCHOOLS = [
   'Springer Memorial School','St. George Secondary School','St. Leonard\'s Boys\' Secondary School',
   'St. Michael School'
 ];
+
+/* Indicative zone -> schools mapping. For a real implementation the
+   Ministry's authoritative mapping would be loaded; here we use a
+   reasonable demonstrator so the zone filter works in the prototype. */
+const SCHOOLS_BY_ZONE = {
+  '1': ['Alleyne School','Coleridge & Parry School','Daryll Jordan Secondary School','Frederick Smith Secondary School','Lester Vaughan School'],
+  '2': ['Alleyne School','Coleridge & Parry School','Combermere School','Ellerslie Secondary School','Lester Vaughan School'],
+  '3': ['Combermere School','Ellerslie Secondary School','Graydon Sealy Secondary School','Springer Memorial School','St. Michael School'],
+  '4': ['Combermere School','Graydon Sealy Secondary School','Harrison College','Queen\'s College','Springer Memorial School','St. Michael School'],
+  '5': ['Alexandra School','Daryll Jordan Secondary School','Frederick Smith Secondary School','Coleridge & Parry School','Lester Vaughan School'],
+  '6': ['Christ Church Foundation School','Garrison Secondary School','Graydon Sealy Secondary School','Harrison College','Springer Memorial School'],
+  '7': ['Christ Church Foundation School','Garrison Secondary School','Princess Margaret Secondary School','St. George Secondary School'],
+  '8': ['Lodge School','Princess Margaret Secondary School','St. George Secondary School','St. Leonard\'s Boys\' Secondary School'],
+  '9': ['Deighton Griffith Secondary School','Lodge School','Princess Margaret Secondary School','St. Leonard\'s Boys\' Secondary School'],
+  '10': ['Deighton Griffith Secondary School','Lodge School','St. George Secondary School','St. Leonard\'s Boys\' Secondary School']
+};
+function schoolsForZone(z){ return SCHOOLS_BY_ZONE[z] || []; }
 const BIRTH_COUNTRIES = ['Barbados','Antigua and Barbuda','Bahamas','Belize','Dominica','Grenada','Guyana','Jamaica','Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Suriname','Trinidad and Tobago','Canada','India','Nigeria','United Kingdom','United States','Other'];
 
 const FLOW = ['start','student-details','student-contact','guardian-details','school-choices','declaration','check','confirmation'];
@@ -122,17 +139,18 @@ const PAGES = {
           <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Education and schooling</a></li>
         </ol>
       </nav>
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Choose secondary schools for the BSSEE</h1>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">BSSEE — choose your secondary schools</h1>
       <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Last updated on 14 June 2025</p>
       <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
 
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If your child is sitting the Barbados Secondary School Entrance Examination (BSSEE), use this form to choose the secondary schools you would like them to attend, in order of preference.</p>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. There is no application fee. Filling in the form takes about <strong>15 minutes</strong> — gather your information first.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If your child is sitting the Barbados Secondary School Entrance Examination (BSSEE), use this form to rank the secondary schools you would like them to attend.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply online. There is no application fee.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Takes about <strong>15 minutes</strong> — gather your information first. <strong>You'll rank 9 schools:</strong> 2 from any of the 21 secondary schools, plus 7 from your assigned zone.</p>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
 
-      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body"><strong>You choose 9 schools in total:</strong> 2 from any of the 21 secondary schools, plus 7 from your assigned zone. The order is your order of preference.</p>
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Don't know your assigned zone?</strong> Your child's primary school assigns this. Call them before continuing if you don't have it.</p>
       </div>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
@@ -300,7 +318,19 @@ const PAGES = {
       </div>
     </form>`,
 
-  'school-choices': () => `
+  'school-choices': () => {
+    /* If the user changed zone, drop any zone-only choices (3-9) that
+       aren't in the new zone, so the dropdown reset doesn't show a
+       stale selection. */
+    if (GovBB.D['zone']) {
+      const valid = schoolsForZone(GovBB.D['zone']);
+      for (let i = 3; i <= 9; i++) {
+        if (GovBB.D['choice-'+i] && valid.indexOf(GovBB.D['choice-'+i]) === -1) {
+          delete GovBB.D['choice-'+i];
+        }
+      }
+    }
+    return `
     <form novalidate>${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">School choices</h1>
 
@@ -310,9 +340,9 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
         <label class="govbb-label" for="zone">Your assigned zone</label>
-        <p class="govbb-hint">Your child's primary school should have told you this.</p>
+        <p class="govbb-hint">Your child's primary school should have told you this. The zone dropdowns below will filter once you select.</p>
         <div class="govbb-select-wrapper">
-          <select class="govbb-select" id="zone" name="zone" data-field="zone">
+          <select class="govbb-select" id="zone" name="zone" data-field="zone" data-trigger-render="1">
             <option value="">Select a zone</option>
             ${ZONES.map(z=>`<option value="${z}"${GovBB.D['zone']===z?' selected':''}>Zone ${z}</option>`).join('')}
           </select>
@@ -334,17 +364,21 @@ const PAGES = {
       </div>`).join('')}
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);border-bottom:1px solid var(--color-grey-00);padding-bottom:var(--spacing-s);">Zone choices (from your assigned zone only)</h2>
-      ${[3,4,5,6,7,8,9].map(i=>`
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
-        <label class="govbb-label" for="choice-${i}">Choice ${i}</label>
-        <div class="govbb-select-wrapper">
-          <select class="govbb-select" id="choice-${i}" name="choice-${i}" data-field="choice-${i}">
-            <option value="">Select a school</option>
-            ${SECONDARY_SCHOOLS.map(s=>`<option value="${s}"${GovBB.D['choice-'+i]===s?' selected':''}>${s}</option>`).join('')}
-          </select>
-          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
-        </div>
-      </div>`).join('')}
+      ${GovBB.D['zone'] ? `<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">Showing schools in <strong>Zone ${GovBB.D['zone']}</strong>.</p>` : `<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">Select your zone above to see the schools available.</p>`}
+      ${[3,4,5,6,7,8,9].map(i=>{
+        const zoneSchools = GovBB.D['zone'] ? schoolsForZone(GovBB.D['zone']) : [];
+        return `
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <label class="govbb-label" for="choice-${i}">Choice ${i}</label>
+          <div class="govbb-select-wrapper">
+            <select class="govbb-select" id="choice-${i}" name="choice-${i}" data-field="choice-${i}"${!GovBB.D['zone']?' disabled':''}>
+              <option value="">${GovBB.D['zone']?'Select a school':'Select your zone first'}</option>
+              ${zoneSchools.map(s=>`<option value="${s}"${GovBB.D['choice-'+i]===s?' selected':''}>${s}</option>`).join('')}
+            </select>
+            <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+          </div>
+        </div>`;
+      }).join('')}
 
       <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-m);margin-top:var(--spacing-l);">
         <input class="govbb-checkbox" type="checkbox" id="willing-private" name="willing-private" data-field="willing-private"${GovBB.D['willing-private']?' checked':''} />
@@ -355,7 +389,8 @@ const PAGES = {
         <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
       </div>
-    </form>`,
+    </form>`;
+  },
 
   'declaration': () => `
     <form novalidate>${caption()}

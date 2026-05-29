@@ -74,20 +74,22 @@ const PAGES = {
       <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
 
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this form to claim payment for duties you performed during a recent examination period — as an invigilator, supervisor, examination assessor, practical exam setup, reader, writer, interpreter, model, moderator, or dictator.</p>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. Filling in the form takes about <strong>15 minutes</strong> per claim, depending on how many duties you are claiming for.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. No fee. Takes <strong>15 to 45 minutes</strong> depending on how many duties you are claiming for. All amounts are in <strong>Barbados dollars ($BBD)</strong>.</p>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start your claim</button></div>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National ID Number, NIS number, TAMIS number, and contact details</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National ID Number, NIS number (if you have one), and contact details</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your TAMIS number (your tax ID with the Barbados Revenue Authority), if you have one</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The exam period and the date range you are claiming for</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The dates, centres, roles, and rates for each duty you performed</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your bank or credit union account details for payment</li>
       </ul>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Your supervisor will verify your claim. Once approved, payment is made directly into your account, typically within <strong>4 to 6 weeks</strong> of the exam period ending.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Your supervisor verifies your claim. Once approved, payment is made directly into your account, typically within <strong>4 to 6 weeks</strong> of the exam period ending.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);"><strong>If your supervisor is unavailable</strong> and your claim is held up, contact the Examinations Section on +1 (246) 535-0600 — they can help escalate.</p>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start your claim</button></div>
 
@@ -161,8 +163,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
-        <label class="govbb-label" for="nis-no">NIS number</label>
-        <p class="govbb-hint">Your National Insurance Scheme number — usually 8 to 12 digits.</p>
+        <label class="govbb-label" for="nis-no">NIS number (optional)</label>
+        <p class="govbb-hint">Your National Insurance Scheme number — usually 8 to 12 digits. <strong>If you have one, please provide it</strong> — leaving it blank may delay your payment. If you don't have one, contact the NIS office on +1 (246) 467-4500 to register.</p>
         <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="nis-no" name="nis-no" data-field="nis-no" inputmode="numeric" value="${GovBB.D['nis-no']||''}" /></div>
       </div>
 
@@ -607,7 +609,11 @@ function validate(pageId){
     reqPhone('telephone','Telephone',true,'Enter a telephone number');
     reqEmail('email','Email address','Enter your email address');
     req('supervisor','Enter your supervisor\'s name');
-    var nis=(D['nis-no']||'').trim();if(!nis){errors.push({id:'nis-no',msg:'Enter your NIS number'});}else if(!/^\d{8,12}$/.test(nis.replace(/[\s\-]/g,''))){errors.push({id:'nis-no',msg:'NIS number must be 8 to 12 digits'});}
+    /* NIS is optional. If entered, must be 8-12 digits. */
+    var nis=(D['nis-no']||'').trim();
+    if(nis && !/^\d{8,12}$/.test(nis.replace(/[\s\-]/g,''))){
+      errors.push({id:'nis-no',msg:'NIS number must be 8 to 12 digits, or leave it blank if you don\'t have one'});
+    }
   }
   if(pageId==='exam-period'){
     req('exam-period','Select the exam period');
