@@ -95,8 +95,8 @@ const FLOW = [
 
 /* ───────── Previous + Continue button pair ───────── */
 function btnGroup(continueLabel) {
-  return `<div class="govbb-btn-group" style="margin-top:var(--spacing-l);display:flex;gap:var(--spacing-s);align-items:center;flex-wrap:wrap;">
-    <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+  return `<div class="govbb-btn-group" data-keep-previous="1" style="margin-top:var(--spacing-l);display:flex;gap:var(--spacing-s);align-items:center;flex-wrap:wrap;">
+    <button type="button" class="govbb-btn--secondary" onclick="back()" style="display:inline-flex;">Previous</button>
     <button type="button" class="govbb-btn" onclick="next()">${continueLabel || 'Continue'}</button>
   </div>`;
 }
@@ -155,7 +155,8 @@ function formatDate(prefix) {
 }
 
 function centenarianFullName() {
-  return GovBB.D['cen-fullname'] || '—';
+  const parts = [GovBB.D['cen-first'], GovBB.D['cen-other'], GovBB.D['cen-surname']].filter(Boolean);
+  return parts.length ? parts.join(' ') : '—';
 }
 
 function addressDisplay(prefix) {
@@ -274,9 +275,24 @@ const PAGES = {
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Tell us about the centenarian</h1>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
-        <label class="govbb-label" for="cen-fullname">Full name</label>
+        <label class="govbb-label" for="cen-first">First name</label>
         <div class="govbb-input-wrapper">
-          <input class="govbb-input" type="text" id="cen-fullname" name="cen-fullname" data-field="cen-fullname" value="${GovBB.D['cen-fullname']||''}" />
+          <input class="govbb-input" type="text" id="cen-first" name="cen-first" data-field="cen-first" value="${GovBB.D['cen-first']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="cen-other">Other names (optional)</label>
+        <p class="govbb-hint">Middle names, maiden name, or any other given names on the birth certificate.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="cen-other" name="cen-other" data-field="cen-other" value="${GovBB.D['cen-other']||''}" />
+        </div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="cen-surname">Surname</label>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="text" id="cen-surname" name="cen-surname" data-field="cen-surname" value="${GovBB.D['cen-surname']||''}" />
         </div>
       </div>
 
@@ -663,7 +679,8 @@ function validate(pageId) {
   const errors = [];
 
   if (pageId === 'centenarian-info') {
-    if (!D['cen-fullname']) errors.push({ id: 'cen-fullname', msg: 'Full name – Enter the centenarian\'s full name' });
+    if (!D['cen-first']) errors.push({ id: 'cen-first', msg: 'First name – Enter the centenarian\'s first name' });
+    if (!D['cen-surname']) errors.push({ id: 'cen-surname', msg: 'Surname – Enter the centenarian\'s surname' });
     const day = parseInt(D['cen-dob-day'], 10), month = parseInt(D['cen-dob-month'], 10), year = parseInt(D['cen-dob-year'], 10);
     if (!D['cen-dob-day'] || !D['cen-dob-month'] || !D['cen-dob-year']) {
       errors.push({ id: 'cen-dob-day', msg: 'Date of birth – Enter a complete date of birth' });
@@ -742,6 +759,19 @@ GovBB.init({
     if (name === 'visit-same') GovBB.render();
   },
 });
+
+/* Ensure the Previous button is never hidden by the framework — we want the
+   user to be able to go back to the entry page from step 1 if they need to
+   re-read the eligibility rules or the 3-month-lead-time advice. */
+(function(){
+  var _origRender = GovBB.render;
+  GovBB.render = function(){
+    _origRender.apply(this, arguments);
+    document.querySelectorAll('[data-keep-previous="1"] .govbb-btn--secondary').forEach(function(b){
+      b.style.display = 'inline-flex';
+    });
+  };
+})();
 </script>
 </body>
 </html>
