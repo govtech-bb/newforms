@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service map — Ministry of Educational Transformation</title>
+  <link rel="stylesheet" href="dist/styles.css">
+  <style>
+    .sm-container { max-width: 64rem; }
+
+    .sm-stats { display: flex; gap: var(--spacing-m); flex-wrap: wrap; margin-bottom: var(--spacing-l); }
+    .sm-stat { flex: 1 1 12rem; padding: var(--spacing-m); border: 2px solid var(--color-grey-00); background: var(--color-white-00); }
+    .sm-stat__label { font-size: var(--font-size-caption); color: var(--color-mid-grey-00); margin: 0 0 var(--spacing-xs); }
+    .sm-stat__value { font-size: var(--font-size-h1); font-weight: var(--font-weight-bold); margin: 0; line-height: 1; }
+    .sm-stat__sub { font-size: var(--font-size-caption); color: var(--color-mid-grey-00); margin: var(--spacing-xs) 0 0; }
+    .sm-stat--proposed { border-color: var(--color-blue-40); background: var(--color-blue-10); }
+    .sm-stat--proposed .sm-stat__value { color: var(--color-blue-40); }
+
+    /* Audience block */
+    .sm-audience { margin-bottom: var(--spacing-l); border-top: 4px solid var(--color-grey-00); padding-top: var(--spacing-m); }
+    .sm-audience__icon { display: inline-block; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--color-blue-40); color: var(--color-white-00); text-align: center; line-height: 2.5rem; font-weight: var(--font-weight-bold); margin-right: var(--spacing-s); vertical-align: middle; }
+    .sm-audience__title { display: inline; vertical-align: middle; }
+    .sm-audience__lede { margin: var(--spacing-s) 0 var(--spacing-m); color: var(--color-mid-grey-00); }
+
+    /* Service card (consolidated) */
+    .sm-service { border-left: 4px solid var(--color-blue-40); background: var(--color-blue-10); padding: var(--spacing-m); margin-bottom: var(--spacing-m); }
+    .sm-service__tag { display: inline-block; font-size: var(--font-size-caption); font-weight: var(--font-weight-bold); background: var(--color-blue-40); color: var(--color-white-00); padding: 2px var(--spacing-xs); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--spacing-xs); }
+    .sm-service__title { font-size: var(--font-size-h3); font-weight: var(--font-weight-bold); margin: 0 0 var(--spacing-xs); }
+    .sm-service__lede { margin: 0 0 var(--spacing-s); }
+    .sm-service__forms-label { font-size: var(--font-size-caption); color: var(--color-mid-grey-00); margin: var(--spacing-s) 0 var(--spacing-xs); text-transform: uppercase; letter-spacing: 0.05em; font-weight: var(--font-weight-bold); }
+    .sm-service__forms { list-style: none; padding: 0; margin: 0; }
+    .sm-service__forms li { padding: var(--spacing-xs) 0; border-top: 1px solid rgba(0,0,0,0.06); }
+    .sm-service__forms li:first-child { border-top: 0; }
+    .sm-service__forms a { color: var(--color-blue-40); font-weight: var(--font-weight-bold); }
+
+    /* Stand-alone form card */
+    .sm-form { border: 1px solid var(--color-grey-00); background: var(--color-white-00); padding: var(--spacing-m); margin-bottom: var(--spacing-m); }
+    .sm-form__tag { display: inline-block; font-size: var(--font-size-caption); font-weight: var(--font-weight-bold); background: var(--color-grey-00); color: var(--color-mid-grey-00); padding: 2px var(--spacing-xs); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--spacing-xs); }
+    .sm-form__title { font-size: var(--font-size-h3); font-weight: var(--font-weight-bold); margin: 0 0 var(--spacing-xs); }
+    .sm-form__title a { color: inherit; }
+    .sm-form__lede { margin: 0; color: var(--color-mid-grey-00); font-size: var(--font-size-caption); }
+
+    /* Caveat block (the senior designer review) */
+    .sm-caveat { border-left: 4px solid var(--color-yellow-100); background: var(--color-yellow-40); padding: var(--spacing-s) var(--spacing-m); margin-bottom: var(--spacing-m); }
+    .sm-caveat__title { margin: 0 0 var(--spacing-xs); font-weight: var(--font-weight-bold); }
+
+    @media (min-width: 48rem) {
+      .sm-audience__title { font-size: var(--font-size-h2); }
+    }
+  </style>
+</head>
+<body class="govbb-page">
+<div class="govbb-official-banner"><div class="govbb-container govbb-official-banner__inner"><div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="dist/assets/images/govbb-creast.svg" alt="" /></div><div class="govbb-official-banner__text"><span>Official government website</span></div></div></div>
+<header class="govbb-header"><div class="govbb-container govbb-header__inner"><a href="/" aria-label="Go to the alpha.gov.bb homepage"><img class="govbb-header__logo" src="dist/assets/images/govbb-logo.svg" alt="GovBB" /></a></div></header>
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite"><div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div></div>
+  <div class="govbb-container sm-container" style="padding-block: var(--spacing-l);">
+
+    <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+      <ol class="govbb-breadcrumbs__list">
+        <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="forms.html">All form prototypes</a></li>
+        <li class="govbb-breadcrumbs__item">Service map</li>
+      </ol>
+    </nav>
+
+    <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Service map</h1>
+    <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Ministry of Educational Transformation · Service-design artefact · Last updated 29 May 2026</p>
+    <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+    <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">A citizen-facing taxonomy for the Ministry of Educational Transformation's online forms. Groups today's 16 separate forms into 4 proposed services plus 4 stand-alone transactions, organised by the audience who uses them.</p>
+
+    <p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">This is a working artefact — not a recommendation to implement as-drawn. See the caveats at the bottom of the page.</p>
+
+    <!-- Stats -->
+    <div class="sm-stats">
+      <div class="sm-stat">
+        <p class="sm-stat__label">Today</p>
+        <p class="sm-stat__value">16</p>
+        <p class="sm-stat__sub">Separate forms, one per legacy PDF</p>
+      </div>
+      <div class="sm-stat sm-stat--proposed">
+        <p class="sm-stat__label">Proposed</p>
+        <p class="sm-stat__value">8</p>
+        <p class="sm-stat__sub">4 consolidated services + 4 stand-alone transactions</p>
+      </div>
+      <div class="sm-stat">
+        <p class="sm-stat__label">Forms inside the consolidated services</p>
+        <p class="sm-stat__value">11</p>
+        <p class="sm-stat__sub">Delivered as branches within 4 services</p>
+      </div>
+    </div>
+
+    <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">How to read this map</h2>
+    <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-l);">
+      <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong style="color:var(--color-blue-40);">Blue blocks</strong> are proposed <em>consolidated services</em> — one front-door that branches into several form journeys for related needs.</li>
+      <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>White-bordered blocks</strong> are <em>stand-alone forms</em> that have no obvious consolidation partner.</li>
+      <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Each form name is clickable — it opens the existing prototype.</li>
+    </ul>
+
+    <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-m);">Citizen-facing taxonomy</h2>
+
+    <!-- AUDIENCE 1: PARENT -->
+    <section class="sm-audience" aria-labelledby="audience-parent">
+      <span class="sm-audience__icon" aria-hidden="true">P</span>
+      <h3 class="sm-audience__title" id="audience-parent">If you're a parent</h3>
+      <p class="sm-audience__lede">You're a parent or guardian of a child in or about to enter the Barbadian school system.</p>
+
+      <!-- Service 1 -->
+      <div class="sm-service">
+        <span class="sm-service__tag">Proposed service · 1 of 4</span>
+        <h4 class="sm-service__title">School grants and bursaries</h4>
+        <p class="sm-service__lede">One application captures you, your child, and your bank details once. You then pick which awards you're applying for. Used at the start of each school year.</p>
+        <p class="sm-service__forms-label">Branches into</p>
+        <ul class="sm-service__forms">
+          <li><a class="govbb-link" href="Prototypes/textbook-grant.html">$100 Textbook Grant</a> <span style="color:var(--color-mid-grey-00);">— annual, per child</span></li>
+          <li><a class="govbb-link" href="Prototypes/uniform-grant.html">$100 Uniform Grant</a> <span style="color:var(--color-mid-grey-00);">— annual, per child</span></li>
+          <li><a class="govbb-link" href="Prototypes/special-ed-bursary.html">Special Education Bursary</a> <span style="color:var(--color-mid-grey-00);">— heavier flow, means-tested</span></li>
+        </ul>
+      </div>
+
+      <!-- Service 2 -->
+      <div class="sm-service">
+        <span class="sm-service__tag">Proposed service · 2 of 4</span>
+        <h4 class="sm-service__title">Your child's BSSEE</h4>
+        <p class="sm-service__lede">A single front-door for every BSSEE-related parent journey. The parent picks what they need — choose schools, sit early, defer, or request access arrangements — and the service routes to the right flow.</p>
+        <p class="sm-service__forms-label">Branches into</p>
+        <ul class="sm-service__forms">
+          <li><a class="govbb-link" href="Prototypes/bssee-choice.html">Choose secondary schools</a> <span style="color:var(--color-mid-grey-00);">— standard path, all parents</span></li>
+          <li><a class="govbb-link" href="Prototypes/bssee-early-sitter.html">Apply for an early sitting (Form A)</a></li>
+          <li><a class="govbb-link" href="Prototypes/bssee-defer.html">Defer the exam by one year (Form B)</a></li>
+          <li><a class="govbb-link" href="Prototypes/bssee-special-request.html">Request access arrangements (Form C)</a></li>
+        </ul>
+      </div>
+
+      <!-- Stand-alone forms for parents -->
+      <div class="sm-form">
+        <span class="sm-form__tag">Stand-alone form</span>
+        <h4 class="sm-form__title"><a class="govbb-link" href="Prototypes/home-schooling.html">Apply to home-school your child</a></h4>
+        <p class="sm-form__lede">Different audience emotional state and long evidence-heavy flow — kept separate from the BSSEE service.</p>
+      </div>
+
+      <div class="sm-form">
+        <span class="sm-form__tag">Stand-alone form</span>
+        <h4 class="sm-form__title"><a class="govbb-link" href="Prototypes/non-nationals-entry.html">Apply for a non-national child to attend a government secondary school</a></h4>
+        <p class="sm-form__lede">Specific residency/legal shape — different supporting evidence and a different downstream team.</p>
+      </div>
+    </section>
+
+    <!-- AUDIENCE 2: STUDENT -->
+    <section class="sm-audience" aria-labelledby="audience-student">
+      <span class="sm-audience__icon" aria-hidden="true" style="background:var(--color-green-00);">S</span>
+      <h3 class="sm-audience__title" id="audience-student">If you're a student (private candidate)</h3>
+      <p class="sm-audience__lede">You're sitting a CXC examination outside of a school — either preparing privately for your first attempt, or resitting a subject.</p>
+
+      <!-- Service 3 -->
+      <div class="sm-service">
+        <span class="sm-service__tag">Proposed service · 3 of 4</span>
+        <h4 class="sm-service__title">Register as a CXC private candidate</h4>
+        <p class="sm-service__lede">CSEC and CAPE registrations are almost identical forms today. Merging them means a candidate sitting both fills out their personal details once, with a single candidate record.</p>
+        <p class="sm-service__forms-label">Branches into</p>
+        <ul class="sm-service__forms">
+          <li><a class="govbb-link" href="Prototypes/csec-private-registration.html">Register for CSEC (January or May/June sitting)</a></li>
+          <li><a class="govbb-link" href="Prototypes/cape-private-registration.html">Register for CAPE (May/June sitting)</a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- AUDIENCE 3: TEACHER -->
+    <section class="sm-audience" aria-labelledby="audience-teacher">
+      <span class="sm-audience__icon" aria-hidden="true" style="background:var(--color-yellow-100);color:var(--color-grey-100);">T</span>
+      <h3 class="sm-audience__title" id="audience-teacher">If you're a teacher</h3>
+      <p class="sm-audience__lede">You teach in (or are applying to teach in) a Barbadian school.</p>
+
+      <!-- Service 4 -->
+      <div class="sm-service">
+        <span class="sm-service__tag">Proposed service · 4 of 4</span>
+        <h4 class="sm-service__title">Claim for exam work</h4>
+        <p class="sm-service__lede">A teacher invigilating CSEC in May claims both a duty payment and travel reimbursement for the same period. Today these are two forms with overlapping data — proposed as one combined monthly claim.</p>
+        <p class="sm-service__forms-label">Branches into</p>
+        <ul class="sm-service__forms">
+          <li><a class="govbb-link" href="Prototypes/exam-duties-claim.html">Claim payment for examination duties</a></li>
+          <li><a class="govbb-link" href="Prototypes/examination-travel.html">Claim examination travel expenses</a></li>
+        </ul>
+      </div>
+
+      <!-- Stand-alone forms for teachers -->
+      <div class="sm-form">
+        <span class="sm-form__tag">Stand-alone form</span>
+        <h4 class="sm-form__title"><a class="govbb-link" href="Prototypes/temporary-teacher.html">Apply for the post of temporary teacher</a></h4>
+        <p class="sm-form__lede">A pre-employment journey, not an in-role transaction — different team, different timeline.</p>
+      </div>
+
+      <div class="sm-form">
+        <span class="sm-form__tag">Stand-alone form</span>
+        <h4 class="sm-form__title"><a class="govbb-link" href="Prototypes/terms-leave.html">Apply for term's leave</a></h4>
+        <p class="sm-form__lede">Could later sit in a wider "Teacher administrative requests" service if more teacher forms emerge (sabbatical, secondment, retirement). For now, one form.</p>
+      </div>
+    </section>
+
+    <!-- AUDIENCE 4: SCHOOL STAFF -->
+    <section class="sm-audience" aria-labelledby="audience-staff">
+      <span class="sm-audience__icon" aria-hidden="true" style="background:var(--color-red-40,#a83232);">SS</span>
+      <h3 class="sm-audience__title" id="audience-staff">If you're school staff</h3>
+      <p class="sm-audience__lede">You're filling out something <em>about</em> a child in your care, not about yourself.</p>
+
+      <div class="sm-form">
+        <span class="sm-form__tag">Stand-alone form</span>
+        <h4 class="sm-form__title"><a class="govbb-link" href="Prototypes/student-support-referral.html">Refer a student to Student Support Services</a></h4>
+        <p class="sm-form__lede">The only form filled out by school staff about a child. Completely different audience and authentication needs from the parent-facing forms — kept separate.</p>
+      </div>
+    </section>
+
+    <!-- Senior-designer caveats -->
+    <h2 class="govbb-text-h2" style="margin-top:var(--spacing-l);margin-bottom:var(--spacing-s);">Caveats — what this map doesn't yet show</h2>
+    <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">A senior GDS service designer reviewed this map and pushed back on the following. Treat the map above as a hypothesis to test, not a plan to ship.</p>
+
+    <div class="sm-caveat">
+      <p class="sm-caveat__title">It's a form architecture, not a service map</p>
+      <p class="govbb-text-body" style="margin:0;">A real service map includes discovery, eligibility, application, processing, outcome, payment, queries, and complaints — across all channels. This map covers the application step only.</p>
+    </div>
+
+    <div class="sm-caveat">
+      <p class="sm-caveat__title">No user research backs the audience taxonomy</p>
+      <p class="govbb-text-body" style="margin:0;">"Parent / student / teacher / school staff" is an org chart, not a behavioural segmentation. A teacher whose child is also sitting BSSEE wears two of these hats at once.</p>
+    </div>
+
+    <div class="sm-caveat">
+      <p class="sm-caveat__title">No assisted-digital or offline channels</p>
+      <p class="govbb-text-body" style="margin:0;">Every consolidation here is digital-first. The map says nothing about parents without smartphones, areas with intermittent broadband, or the in-person/phone fallback that the Ministry must still offer.</p>
+    </div>
+
+    <div class="sm-caveat">
+      <p class="sm-caveat__title">It's missing the back office</p>
+      <p class="govbb-text-body" style="margin:0;">Some consolidations (Service 1) cross two very different back-office teams: the Grants Unit and the Special Education Section. The merge isn't deliverable until those teams' workflows can absorb it.</p>
+    </div>
+
+    <div class="sm-caveat">
+      <p class="sm-caveat__title">Identity is the hard problem, not a footnote</p>
+      <p class="govbb-text-body" style="margin:0;">Real consolidation gains require a citizen identity layer ("MyGovBB") that pre-fills personal details. Without it, every saving here is marginal.</p>
+    </div>
+
+    <div class="sm-caveat">
+      <p class="sm-caveat__title">It doesn't show what's missing</p>
+      <p class="govbb-text-body" style="margin:0;">The Ministry has off-system transactions today — update a child's school details, withdraw a child, request a transcript, appeal a Bursary decision. A real service map surfaces those gaps, not just the existing digitised forms.</p>
+    </div>
+
+    <div class="sm-caveat">
+      <p class="sm-caveat__title">Naming still uses internal jargon</p>
+      <p class="govbb-text-body" style="margin:0;">"BSSEE" is the Ministry's acronym, not how every parent describes the eleven-plus / secondary entrance. User-facing labels need testing.</p>
+    </div>
+
+    <h2 class="govbb-text-h2" style="margin-top:var(--spacing-l);margin-bottom:var(--spacing-s);">Recommended sequencing</h2>
+    <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If the proposed consolidations are pursued, do them in low-risk order:</p>
+    <ol style="padding-left:var(--spacing-m);margin-bottom:var(--spacing-l);">
+      <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Service 3 first.</strong> CSEC + CAPE are ~95% the same form. Lowest similarity risk, easiest pilot of the consolidation pattern.</li>
+      <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Then the front half of Service 1.</strong> Textbook + Uniform Grants share audience, time of year, evidence, and payment. Keep the Special Education Bursary as a separate branch within the same service because of its weight.</li>
+      <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Then Service 2.</strong> Four BSSEE forms behind one triage. Retire "Form A/B/C" from the user-facing surface.</li>
+      <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Then Service 4.</strong> Exam-work claims — needs Exams Officer + DPS + Account Officer to agree the merged back-office workflow first.</li>
+      <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Eventually:</strong> the MyGovBB identity layer.</li>
+    </ol>
+
+    <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-l);">Companion to the <a class="govbb-link" href="forms.html">35-form prototype set</a>. Designed and reviewed under the GDS Service Standard.</p>
+  </div>
+</main>
+<footer class="govbb-footer"><div class="govbb-container govbb-footer__inner"><nav class="govbb-footer__nav" aria-label="Footer"><a class="govbb-footer__link" href="#">Home</a><a class="govbb-footer__link" href="#">Privacy</a><a class="govbb-footer__link" href="#">Terms &amp; Conditions</a><a class="govbb-footer__link" href="#">Accessibility</a></nav><hr class="govbb-footer__divider" aria-hidden="true" /><div class="govbb-footer__end"><img class="govbb-footer__coat" src="dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" /><p class="govbb-footer__copy">© 2025 Government of Barbados</p></div></div></footer>
+</body>
+</html>
