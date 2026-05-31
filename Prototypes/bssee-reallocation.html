@@ -69,7 +69,8 @@ const PAGES = {
       </div>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body"><strong>Reallocation requests are time-limited.</strong> Submit within the window the Ministry announces after BSSEE results — usually a few weeks. Late requests will not be considered for the September intake.</p>
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Reallocation requests are time-limited.</strong> Submit within the window the Ministry announces after BSSEE results — usually 2 to 3 weeks. Late requests will not be considered for the September intake.</p>
+        <p class="govbb-text-body" style="margin:0;">Check the current window on the <a class="govbb-link" href="https://www.gov.bb/Ministries/educational-transformation" target="_blank" rel="noopener">Ministry's website</a> or call the Ministry on <strong>(246) 535-1284</strong>.</p>
       </div>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
@@ -125,8 +126,9 @@ const PAGES = {
       ${dateField('child-dob','Date of birth','For example, 15 6 2014.')}
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Sex</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);"><div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="child-sex-m" name="child-sex" data-field="child-sex" value="Male"${GovBB.D['child-sex']==='Male'?' checked':''} /><label class="govbb-radio-item__label" for="child-sex-m">Male</label></div><div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="child-sex-f" name="child-sex" data-field="child-sex" value="Female"${GovBB.D['child-sex']==='Female'?' checked':''} /><label class="govbb-radio-item__label" for="child-sex-f">Female</label></div></div></fieldset>
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-primary">Primary school attended</label><div class="govbb-select-wrapper"><select class="govbb-select" id="child-primary" name="child-primary" data-field="child-primary"><option value="">Select a primary school</option>${PRIMARY_SCHOOLS.map(s=>`<option value="${s}"${GovBB.D['child-primary']===s?' selected':''}>${s}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bssee-score">BSSEE composite score (optional)</label><p class="govbb-hint">From the results slip.</p><div class="govbb-input-wrapper" style="max-width:8rem;"><input class="govbb-input" type="text" id="bssee-score" name="bssee-score" data-field="bssee-score" inputmode="decimal" value="${GovBB.D['bssee-score']||''}" /></div></div>
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="candidate-no">Candidate number (optional)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="candidate-no" name="candidate-no" data-field="candidate-no" value="${GovBB.D['candidate-no']||''}" /></div></div>
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;"><strong>Strongly recommended:</strong> provide the BSSEE composite score and candidate number from your child's results slip. The Ministry can process the request faster when these are filled.</p></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bssee-score">BSSEE composite score</label><p class="govbb-hint">From the results slip — a number between 0 and 500. For example, "352.5".</p><div class="govbb-input-wrapper" style="max-width:8rem;"><input class="govbb-input" type="text" id="bssee-score" name="bssee-score" data-field="bssee-score" inputmode="decimal" value="${GovBB.D['bssee-score']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="candidate-no">Candidate number</label><p class="govbb-hint">A 7-digit number on the results slip.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="candidate-no" name="candidate-no" data-field="candidate-no" inputmode="numeric" value="${GovBB.D['candidate-no']||''}" /></div></div>
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
     </form>`,
 
@@ -271,6 +273,15 @@ function validate(pageId){
     if(dob){const today=new Date();today.setHours(0,0,0,0);const age=today.getFullYear()-dob.getFullYear();if(dob>=today)errors.push({id:'child-dob-day',msg:'Date of birth must be in the past.'});else if(age<10||age>13)errors.push({id:'child-dob-day',msg:'Date of birth — BSSEE candidates are usually 10 to 12. Check the date.'});}
     if(!D['child-sex'])errors.push({id:'child-sex-m',msg:'Select your child\'s sex'});
     req('child-primary','Select your child\'s primary school');
+    /* Composite score: optional but validate format/range if provided */
+    var score=(D['bssee-score']||'').trim();
+    if(score){
+      if(!/^\d+(\.\d{1,2})?$/.test(score))errors.push({id:'bssee-score',msg:'BSSEE composite score — must be a number, for example "352" or "352.5"'});
+      else{var n=parseFloat(score);if(n<0||n>500)errors.push({id:'bssee-score',msg:'BSSEE composite score — must be between 0 and 500'});}
+    }
+    /* Candidate number: optional but validate digits if provided */
+    var cand=(D['candidate-no']||'').trim();
+    if(cand&&!/^\d{4,10}$/.test(cand))errors.push({id:'candidate-no',msg:'Candidate number — must be 4 to 10 digits'});
   }
   if(pageId==='current-placement'){
     req('current-school','Select the school your child is currently allocated to');

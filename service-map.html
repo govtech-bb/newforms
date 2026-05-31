@@ -67,7 +67,7 @@
     <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Ministry of Educational Transformation · Service-design artefact · Last updated 29 May 2026</p>
     <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
 
-    <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">A citizen-facing taxonomy for the Ministry of Educational Transformation's online forms. Groups today's 16 separate forms into 4 proposed services plus 4 stand-alone transactions, organised by the audience who uses them.</p>
+    <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">A citizen-facing taxonomy for the Ministry of Educational Transformation's online forms. Groups today's 21 separate forms into 4 proposed services plus 7 stand-alone transactions, organised by the audience who uses them.</p>
 
     <p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">This is a working artefact — not a recommendation to implement as-drawn. See the caveats at the bottom of the page.</p>
 
@@ -75,17 +75,17 @@
     <div class="sm-stats">
       <div class="sm-stat">
         <p class="sm-stat__label">Today</p>
-        <p class="sm-stat__value">16</p>
+        <p class="sm-stat__value">21</p>
         <p class="sm-stat__sub">Separate forms, one per legacy PDF</p>
       </div>
       <div class="sm-stat sm-stat--proposed">
         <p class="sm-stat__label">Proposed</p>
-        <p class="sm-stat__value">8</p>
-        <p class="sm-stat__sub">4 consolidated services + 4 stand-alone transactions</p>
+        <p class="sm-stat__value">11</p>
+        <p class="sm-stat__sub">4 consolidated services + 7 stand-alone transactions</p>
       </div>
       <div class="sm-stat">
         <p class="sm-stat__label">Forms inside the consolidated services</p>
-        <p class="sm-stat__value">11</p>
+        <p class="sm-stat__value">14</p>
         <p class="sm-stat__sub">Delivered as branches within 4 services</p>
       </div>
     </div>
@@ -122,13 +122,14 @@
       <div class="sm-service">
         <span class="sm-service__tag">Proposed service · 2 of 4</span>
         <h4 class="sm-service__title">Your child's BSSEE</h4>
-        <p class="sm-service__lede">A single front-door for every BSSEE-related parent journey. The parent picks what they need — choose schools, sit early, defer, or request access arrangements — and the service routes to the right flow.</p>
+        <p class="sm-service__lede">A single front-door for every BSSEE-related parent journey — from choosing schools through to requesting a reallocation after results.</p>
         <p class="sm-service__forms-label">Branches into</p>
         <ul class="sm-service__forms">
           <li><a class="govbb-link" href="Prototypes/bssee-choice.html">Choose secondary schools</a> <span style="color:var(--color-mid-grey-00);">— standard path, all parents</span></li>
           <li><a class="govbb-link" href="Prototypes/bssee-early-sitter.html">Apply for an early sitting (Form A)</a></li>
           <li><a class="govbb-link" href="Prototypes/bssee-defer.html">Defer the exam by one year (Form B)</a></li>
           <li><a class="govbb-link" href="Prototypes/bssee-special-request.html">Request access arrangements (Form C)</a></li>
+          <li><a class="govbb-link" href="Prototypes/bssee-reallocation.html">Request a reallocation after results</a></li>
         </ul>
       </div>
 
@@ -141,8 +142,20 @@
 
       <div class="sm-form">
         <span class="sm-form__tag">Stand-alone form</span>
+        <h4 class="sm-form__title"><a class="govbb-link" href="Prototypes/exemption-from-attendance.html">Apply for a Certificate of Exemption from Attendance at School</a></h4>
+        <p class="sm-form__lede">Education Act journey — medical, disability, relocation, religious, or home-schooling reasons. Signposts to the home-schooling application where relevant.</p>
+      </div>
+
+      <div class="sm-form">
+        <span class="sm-form__tag">Stand-alone form</span>
         <h4 class="sm-form__title"><a class="govbb-link" href="Prototypes/non-nationals-entry.html">Apply for a non-national child to attend a government secondary school</a></h4>
         <p class="sm-form__lede">Specific residency/legal shape — different supporting evidence and a different downstream team.</p>
+      </div>
+
+      <div class="sm-form">
+        <span class="sm-form__tag">Stand-alone form</span>
+        <h4 class="sm-form__title"><a class="govbb-link" href="Prototypes/sixth-form-placement.html">Apply for placement in a 6th Form school</a></h4>
+        <p class="sm-form__lede">Post-CSEC transition. Different lifecycle stage from the BSSEE service (older audience, different schools, CAPE subject selection). Could later pair with CXC private-candidate service if a student applies via both routes.</p>
       </div>
     </section>
 
@@ -155,13 +168,21 @@
       <!-- Service 3 -->
       <div class="sm-service">
         <span class="sm-service__tag">Proposed service · 3 of 4</span>
-        <h4 class="sm-service__title">Register as a CXC private candidate</h4>
-        <p class="sm-service__lede">CSEC and CAPE registrations are almost identical forms today. Merging them means a candidate sitting both fills out their personal details once, with a single candidate record.</p>
+        <h4 class="sm-service__title">Register as a CXC private candidate (and claim refunds)</h4>
+        <p class="sm-service__lede">CSEC and CAPE registrations are almost identical forms today, and the refund flow shares the same audience and identity. One service covers the full registration-to-refund lifecycle for private candidates.</p>
         <p class="sm-service__forms-label">Branches into</p>
         <ul class="sm-service__forms">
           <li><a class="govbb-link" href="Prototypes/csec-private-registration.html">Register for CSEC (January or May/June sitting)</a></li>
           <li><a class="govbb-link" href="Prototypes/cape-private-registration.html">Register for CAPE (May/June sitting)</a></li>
+          <li><a class="govbb-link" href="Prototypes/exam-fee-refund.html">Claim a refund of examination fees</a></li>
         </ul>
+      </div>
+
+      <!-- Stand-alone form -->
+      <div class="sm-form">
+        <span class="sm-form__tag">Stand-alone form</span>
+        <h4 class="sm-form__title"><a class="govbb-link" href="Prototypes/exam-results-statement.html">Request an examination results statement</a></h4>
+        <p class="sm-form__lede">Broader audience than just private candidates — anyone who sat a CSEC, CAPE, BSSEE, or other exam through the Ministry. Distinct lifecycle (long after the exam) from the registration service.</p>
       </div>
     </section>
 

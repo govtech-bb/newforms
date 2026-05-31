@@ -56,13 +56,13 @@ const PAGES = {
       <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
 
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Ask the Examinations Unit for an official statement of your past examination results — CSEC, CAPE, BSSEE, City & Guilds, Cambridge, GCE, or any other examination you took through the Ministry.</p>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Submit online. A processing fee is payable to the MoE Accounts Department. Takes about <strong>10 minutes</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. The processing fee is paid separately at the MoE Accounts Department before you submit. Takes about <strong>10 minutes</strong>.</p>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start request</button></div>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>A processing fee applies.</strong> Confirm the current fee with the Examinations Unit (<strong>(246) 535-0600</strong>) and pay at the MoE Accounts Department before submitting. You'll need to upload your receipt.</p>
-        <p class="govbb-text-body" style="margin:0;">Statements are not issued until the fee is paid and verified.</p>
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Pay the fee first, then submit this form.</strong> The current processing fee is approximately <strong>$30 BBD per subject</strong> — confirm the exact amount with the Examinations Unit on <strong>(246) 535-0600</strong>. Pay at the MoE Accounts Department and keep the receipt — you'll upload it as part of this form.</p>
+        <p class="govbb-text-body" style="margin:0;">Statements are not issued until the fee is paid and the receipt is verified.</p>
       </div>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
@@ -96,7 +96,7 @@ const PAGES = {
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="first-name">First name(s)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="first-name" name="first-name" data-field="first-name" autocomplete="given-name" value="${GovBB.D['first-name']||''}" /></div></div>
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="former-name">Maiden or former name (optional)</label><p class="govbb-hint">If your surname has changed since you sat the examination.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="former-name" name="former-name" data-field="former-name" value="${GovBB.D['former-name']||''}" /></div></div>
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="nid">National ID Number</label><p class="govbb-hint">For example, 050615-0048.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="nid" name="nid" data-field="nid" value="${GovBB.D['nid']||''}" /></div></div>
-      ${dateField('dob','Date of birth','For example, 15 6 1990.')}
+      ${dateField('dob','Date of birth','For example, 15 6 2005.')}
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="address">Home address</label><textarea class="govbb-textarea" id="address" name="address" data-field="address" rows="3">${GovBB.D['address']||''}</textarea></div>
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="phone">Mobile number</label><p class="govbb-hint">For example, (246) 249 1234.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="phone" name="phone" data-field="phone" inputmode="tel" autocomplete="tel" value="${GovBB.D['phone']||''}" /></div></div>
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="email">Email address</label><div class="govbb-input-wrapper"><input class="govbb-input" type="email" id="email" name="email" data-field="email" inputmode="email" autocomplete="email" value="${GovBB.D['email']||''}" /></div></div>
@@ -111,13 +111,13 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="exam-series">Examination series / sitting</label><p class="govbb-hint">For example, "May/June 2018" or "January 2020".</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="exam-series" name="exam-series" data-field="exam-series" value="${GovBB.D['exam-series']||''}" /></div></div>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="candidate-no">Candidate number (optional)</label><p class="govbb-hint">The number you were given when you registered. Helps the Unit locate your record faster.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="candidate-no" name="candidate-no" data-field="candidate-no" value="${GovBB.D['candidate-no']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="candidate-no">Candidate number (optional)</label><p class="govbb-hint">A 7-digit number, typically printed on your slip. For example, "1234567". Helps the Unit locate your record faster.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="candidate-no" name="candidate-no" data-field="candidate-no" inputmode="numeric" value="${GovBB.D['candidate-no']||''}" /></div></div>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="exam-centre">School or centre where you sat the exam</label><p class="govbb-hint">Type the official name in full.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="exam-centre" name="exam-centre" data-field="exam-centre" value="${GovBB.D['exam-centre']||''}" /></div></div>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="subjects">Subjects you want on the statement</label><p class="govbb-hint">List one per line. If you want all subjects from this sitting, type "All subjects".</p><textarea class="govbb-textarea" id="subjects" name="subjects" data-field="subjects" rows="5">${GovBB.D['subjects']||''}</textarea></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="subjects">Subjects you want on the statement</label><p class="govbb-hint">List one subject per line — for example: Mathematics, English A, Biology, Chemistry. If you want every subject from this sitting, type "All subjects".</p><textarea class="govbb-textarea" id="subjects" name="subjects" data-field="subjects" rows="5">${GovBB.D['subjects']||''}</textarea></div>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="reason">Why do you need the statement? (optional)</label><p class="govbb-hint">For example, "job application", "university application", "verification for an overseas employer".</p><textarea class="govbb-textarea" id="reason" name="reason" data-field="reason" rows="3">${GovBB.D['reason']||''}</textarea></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="reason">Why do you need the statement?</label><p class="govbb-hint">For example, "job application", "university application", "verification for an overseas employer". The Unit uses this to prioritise urgent requests.</p><textarea class="govbb-textarea" id="reason" name="reason" data-field="reason" rows="3">${GovBB.D['reason']||''}</textarea></div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
     </form>`,
@@ -173,7 +173,7 @@ const PAGES = {
         ${GovBB.summaryRow('Candidate number', GovBB.D['candidate-no'] || 'Not provided', 'exam-details')}
         ${GovBB.summaryRow('Centre', GovBB.D['exam-centre'], 'exam-details')}
         ${GovBB.summaryRow('Subjects', GovBB.D['subjects'], 'exam-details')}
-        ${GovBB.summaryRow('Reason', GovBB.D['reason'] || 'Not provided', 'exam-details')}
+        ${GovBB.summaryRow('Reason', GovBB.D['reason'], 'exam-details')}
       </dl>
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Delivery</h2>
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
@@ -245,6 +245,9 @@ function validate(pageId){
     var s=(D['subjects']||'').trim();
     if(!s)errors.push({id:'subjects',msg:'List the subjects you want on the statement'});
     else if(s.length<3)errors.push({id:'subjects',msg:'List the subjects in more detail — for example, "Mathematics, English A, Biology"'});
+    var r=(D['reason']||'').trim();
+    if(!r)errors.push({id:'reason',msg:'Briefly say why you need the statement'});
+    else if(r.length<10)errors.push({id:'reason',msg:'Add more detail — even a short note helps the Unit prioritise.'});
   }
   if(pageId==='delivery'){
     if(!D['delivery-method'])errors.push({id:'delivery-0',msg:'Choose a delivery method'});

@@ -31,6 +31,9 @@ const RELATIONSHIPS=['Mother','Father','Legal guardian','Grandparent','Other'];
 const SECONDARY_SCHOOLS=['Alexandra Secondary School','Alleyne','Christ Church Foundation','Coleridge and Parry','Combermere','Daryl Jordan Secondary','Deighton Griffith Secondary','Ellerslie Secondary','Frederick Smith','Grantley Adams Memorial','Graydon Sealy Secondary','Harrison College','Parkinson Secondary','Princess Margaret Secondary','Queen\'s College','Springer Memorial','St George Secondary','St Leonard\'s Boys\' Secondary','The Lester Vaughan School','The Lodge School','The St Michael School'];
 const SIXTH_FORM_SCHOOLS=['Alexandra School','Alleyne School','Christ Church Foundation','Combermere','Ellerslie School','Harrison College','Queen\'s College','Springer Memorial','St. Leonard\'s Boys\' Secondary School','The Lodge School','The St. Michael School'];
 const CAPE_SUBJECTS=['Accounting','Applied Mathematics','Art & Design','Biology','Building & Mechanical Engineering Drawing','Caribbean Studies','Chemistry','Communication Studies','Computer Science','Design & Technology','Economics','Entrepreneurship','Environmental Science','Food & Nutrition','French','Geography','Green Engineering','History','Information Technology','Law','Literatures in English','Management of Business','Performing Arts','Physical Education & Sport','Physics','Pure Mathematics','Sociology','Spanish','Technical Drawing','Tourism','Animation & Game Design','Electrical & Electronic Engineering Technology','Musical Performance','Agricultural Science'];
+const CSEC_SUBJECTS=['Agricultural Science','Biology','Building Technology','Caribbean History','Chemistry','Economics','Electrical Engineering Technology','English A','English B','Food, Nutrition and Health','French','Geography','Human and Social Biology','Information Technology','Integrated Science','Mathematics','Mechanical Engineering Technology','Music','Office Administration','Physical Education and Sport','Physics','Principles of Accounts','Principles of Business','Religious Education','Social Studies','Spanish','Technical Drawing','Theatre Arts','Visual Arts'];
+const CSEC_GRADES=['I','II','III','IV','V','Pending','Did not sit'];
+const MAX_CSEC_ROWS=10;
 
 const FLOW=['start','student-info','current-school','csec-results','parent-details','school-choices','cape-subjects','evidence','declaration','check','confirmation'];
 
@@ -63,7 +66,11 @@ const PAGES = {
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body"><strong>Placement is not guaranteed.</strong> It depends on the availability of spaces and the entry requirements of each school. Each school sets its own minimum grades for each subject.</p>
+        <p class="govbb-text-body"><strong>Placement is not guaranteed.</strong> It depends on the availability of spaces and the entry requirements of each school. Each school sets its own minimum grades for each subject — typically <strong>at least 5 CSEC passes</strong> (Grades I, II, or III) including English A and Mathematics.</p>
+      </div>
+
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Apply by the deadline announced by the Ministry</strong> — usually within 4 weeks of CSEC results being released. Late applications may not be considered for September intake.</p>
       </div>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
@@ -113,13 +120,42 @@ const PAGES = {
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
     </form>`,
 
-  'csec-results': () => `
-    <form novalidate>${caption()}
+  'csec-results': () => {
+    /* Count passes (Grades I, II, III) live */
+    let passCount = 0;
+    for(let i=1;i<=MAX_CSEC_ROWS;i++){
+      var g = GovBB.D['csec-'+i+'-grade'];
+      if(g==='I'||g==='II'||g==='III') passCount++;
+    }
+    let rows = '';
+    for(let i=1;i<=MAX_CSEC_ROWS;i++){
+      const required = i<=5;
+      rows += `
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);border-top:1px solid var(--color-grey-00);padding-top:var(--spacing-s);">
+        <legend class="govbb-fieldset__legend" style="font-size:var(--font-size-body);">Subject ${i}${required?'':' (optional)'}</legend>
+        <div style="display:grid;grid-template-columns:1fr 8rem;gap:var(--spacing-s);">
+          <div class="govbb-form-group" style="margin:0;">
+            <label class="govbb-label" for="csec-${i}-subject" style="font-size:var(--font-size-caption);">Subject</label>
+            <div class="govbb-select-wrapper"><select class="govbb-select" id="csec-${i}-subject" name="csec-${i}-subject" data-field="csec-${i}-subject"><option value="">Select</option>${CSEC_SUBJECTS.map(s=>`<option value="${s}"${GovBB.D['csec-'+i+'-subject']===s?' selected':''}>${s}</option>`).join('')}<option value="Other"${GovBB.D['csec-'+i+'-subject']==='Other'?' selected':''}>Other</option></select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div>
+          </div>
+          <div class="govbb-form-group" style="margin:0;">
+            <label class="govbb-label" for="csec-${i}-grade" style="font-size:var(--font-size-caption);">Grade</label>
+            <div class="govbb-select-wrapper"><select class="govbb-select" id="csec-${i}-grade" name="csec-${i}-grade" data-field="csec-${i}-grade" data-trigger-render="1"><option value="">Select</option>${CSEC_GRADES.map(g=>`<option value="${g}"${GovBB.D['csec-'+i+'-grade']===g?' selected':''}>${g}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div>
+          </div>
+        </div>
+      </fieldset>`;
+    }
+    const passBanner = passCount >= 5
+      ? `<div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-s) var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;"><strong>✓ ${passCount} passes recorded.</strong> You meet the minimum CSEC requirement for Sixth Form entry. Schools still set their own subject-specific minimums.</p></div>`
+      : `<div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;"><strong>${passCount} pass${passCount===1?'':'es'} recorded so far.</strong> Sixth Form entry typically requires at least 5 CSEC passes at Grades I, II, or III, including English A and Mathematics. You can still submit if your results are pending — set Grade to "Pending" for those subjects.</p></div>`;
+    return `<form novalidate>${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your CSEC results</h1>
-      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">List your CSEC subjects and grades. Grades I, II, and III count as passes. List one subject per line — for example: "Mathematics — Grade I", "English A — Grade II".</p>
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="csec-results">CSEC subjects and grades</label><textarea class="govbb-textarea" id="csec-results" name="csec-results" data-field="csec-results" rows="8">${GovBB.D['csec-results']||''}</textarea></div>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Add at least 5 CSEC subjects. Grades I, II, and III count as passes. If your results are pending, set the grade to "Pending".</p>
+      ${passBanner}
+      ${rows}
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
-    </form>`,
+    </form>`;
+  },
 
   'parent-details': () => `
     <form novalidate>${caption()}
@@ -143,7 +179,11 @@ const PAGES = {
   'cape-subjects': () => `
     <form novalidate>${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">CAPE subjects you want to study</h1>
-      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Most students take 3 to 5 CAPE subjects. Each school offers its own combinations ("option blocks") — once you're placed, the school will confirm what's available. Choose from the list below.</p>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Most students take 3 to 5 CAPE subjects.</p>
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Each school offers its own combinations ("option blocks").</strong> Your choices here show the Ministry what you'd like to study — but the school you're placed at may not offer that exact mix. Once placed, you'll meet with the school to confirm which subjects are actually available to you.</p>
+        <p class="govbb-text-body" style="margin:0;">If you have a strong preference for particular subjects, list them as your top 3 here — that helps the Ministry place you at a school that offers them.</p>
+      </div>
       ${[1,2,3,4,5].map(function(n){return `<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="cape-${n}">Subject ${n}${n>3?' (optional)':''}</label><div class="govbb-select-wrapper"><select class="govbb-select" id="cape-${n}" name="cape-${n}" data-field="cape-${n}"><option value="">${n<=3?'Select a subject':'Select a subject (or leave blank)'}</option>${CAPE_SUBJECTS.map(function(s){return '<option value="'+s+'"'+(GovBB.D['cape-'+n]===s?' selected':'')+'>'+s+'</option>';}).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>`;}).join('')}
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
     </form>`,
@@ -186,7 +226,18 @@ const PAGES = {
         ${GovBB.summaryRow('School', GovBB.D['prev-school']==='Other'?(GovBB.D['prev-school-other']||'Other'):GovBB.D['prev-school'], 'current-school')}
       </dl>
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">CSEC results</h2>
-      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">${GovBB.summaryRow('Subjects and grades', GovBB.D['csec-results'], 'csec-results')}</dl>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${(function(){
+          var rows='',count=0,passes=0;
+          for(var i=1;i<=10;i++){
+            var s=GovBB.D['csec-'+i+'-subject'],g=GovBB.D['csec-'+i+'-grade'];
+            if(s||g){count++;rows+=GovBB.summaryRow('Subject '+i, (s||'—') + ' — Grade ' + (g||'—'), 'csec-results');}
+            if(g==='I'||g==='II'||g==='III')passes++;
+          }
+          rows += GovBB.summaryRow('Total passes (Grades I-III)', String(passes), null);
+          return rows;
+        })()}
+      </dl>
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parent or guardian</h2>
       <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Relationship', GovBB.D['parent-rel'], 'parent-details')}
@@ -266,9 +317,20 @@ function validate(pageId){
     if(D['prev-school']==='Other')req('prev-school-other','Type the name of the school');
   }
   if(pageId==='csec-results'){
-    var r=(D['csec-results']||'').trim();
-    if(!r)errors.push({id:'csec-results',msg:'List your CSEC subjects and grades'});
-    else if(r.length<20)errors.push({id:'csec-results',msg:'Add more detail — list each subject on a separate line with the grade.'});
+    /* First 5 rows: subject + grade required */
+    for(let i=1;i<=5;i++){
+      if(!D['csec-'+i+'-subject'])errors.push({id:'csec-'+i+'-subject',msg:'Subject '+i+' — select a subject'});
+      if(!D['csec-'+i+'-grade'])errors.push({id:'csec-'+i+'-grade',msg:'Subject '+i+' — select a grade (or "Pending" if you don\'t have the result yet)'});
+    }
+    /* Check subjects aren't duplicated (excluding "Other") */
+    const seenSubjects = {};
+    for(let i=1;i<=MAX_CSEC_ROWS;i++){
+      var s = D['csec-'+i+'-subject'];
+      if(s && s!=='Other'){
+        if(seenSubjects[s]){errors.push({id:'csec-'+i+'-subject',msg:'Subject '+i+' — "'+s+'" is the same as Subject '+seenSubjects[s]+'. Each subject must be different.'});break;}
+        seenSubjects[s] = i;
+      }
+    }
   }
   if(pageId==='parent-details'){
     req('parent-rel','Select the parent or guardian\'s relationship');

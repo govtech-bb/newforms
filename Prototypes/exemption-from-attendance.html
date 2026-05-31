@@ -74,7 +74,8 @@ const PAGES = {
       </div>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body"><strong>An exemption is granted at the Ministry's discretion</strong> and may be revoked if the conditions are not met.</p>
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>An exemption is granted at the Ministry's discretion</strong> and may be revoked if the conditions of the certificate are not met.</p>
+        <p class="govbb-text-body" style="margin:0;">Typical conditions: the child must continue to receive education during the exemption (you'll describe how, later in this form); you must notify the Ministry if circumstances change; the exemption is for the period granted only — to extend it, you must reapply.</p>
       </div>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
@@ -133,8 +134,12 @@ const PAGES = {
     <form novalidate>${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Reason for the exemption</h1>
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Tick all reasons that apply</legend>
-        ${REASONS.map(r=>`<div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="reason-${r.key}" name="reason-${r.key}" data-field="reason-${r.key}"${GovBB.D['reason-'+r.key]?' checked':''} /><label class="govbb-checkbox-item__label" for="reason-${r.key}">${r.label}</label></div>`).join('')}
+        ${REASONS.map(r=>`<div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="reason-${r.key}" name="reason-${r.key}" data-field="reason-${r.key}"${GovBB.D['reason-'+r.key]?' checked':''}${r.key==='homeschool'?' data-trigger-render="1"':''} /><label class="govbb-checkbox-item__label" for="reason-${r.key}">${r.label}</label></div>`).join('')}
       </fieldset>
+
+      ${GovBB.D['reason-homeschool']?`<div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin:0;"><strong>You'll also need to submit the Home Schooling application.</strong> The Certificate of Exemption only covers attendance; the Home Schooling application sets out your curriculum and the qualifications of the person teaching the child. <a class="govbb-link" href="home-schooling.html">Open the Home Schooling form in a new tab</a> after you finish this one.</p>
+      </div>`:''}
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="reason-detail">Detailed reason for the exemption</label><p class="govbb-hint">Be specific. The Ministry needs enough context to make a fair decision. If the reason is medical, briefly describe the condition — you'll upload the medical report later.</p><textarea class="govbb-textarea" id="reason-detail" name="reason-detail" data-field="reason-detail" rows="6">${GovBB.D['reason-detail']||''}</textarea></div>
 
@@ -276,9 +281,14 @@ function validate(pageId){
     req('child-first','Enter your child\'s first name');
     req('child-surname','Enter your child\'s surname');
     const dob=reqDate('child-dob','Date of birth');
-    if(dob){const today=new Date();today.setHours(0,0,0,0);const age=today.getFullYear()-dob.getFullYear();if(dob>=today)errors.push({id:'child-dob-day',msg:'Date of birth must be in the past.'});else if(age<3||age>18)errors.push({id:'child-dob-day',msg:'Date of birth — exemptions are for compulsory school-age children (5 to 16). Check the date.'});}
+    if(dob){const today=new Date();today.setHours(0,0,0,0);const age=today.getFullYear()-dob.getFullYear();if(dob>=today)errors.push({id:'child-dob-day',msg:'Date of birth must be in the past.'});else if(age<4||age>17)errors.push({id:'child-dob-day',msg:'Date of birth — exemptions are for compulsory school-age children (5 to 16, with a 1-year grace on either side). Check the date.'});}
     if(!D['child-sex'])errors.push({id:'child-sex-m',msg:'Select your child\'s sex'});
     reqNid('child-nid','Child\'s NID or birth certificate number','Enter your child\'s NID or birth certificate number');
+    /* Last date attended must be in the past, if entered */
+    if(D['last-date-day']||D['last-date-month']||D['last-date-year']){
+      const ld=reqDate('last-date','Last date attended');
+      if(ld){const today=new Date();today.setHours(0,0,0,0);if(ld>today)errors.push({id:'last-date-day',msg:'Last date attended — must be today or in the past'});}
+    }
   }
   if(pageId==='reasons'){
     var any = REASONS.some(function(r){return D['reason-'+r.key];});
@@ -290,7 +300,15 @@ function validate(pageId){
   if(pageId==='period'){
     const sd=reqDate('start-date','Start date');
     const ed=reqDate('end-date','End date');
-    if(sd&&ed&&sd>ed)errors.push({id:'end-date-day',msg:'End date — must be after the start date'});
+    if(sd&&ed){
+      if(sd>ed){
+        errors.push({id:'end-date-day',msg:'End date — must be after the start date'});
+      } else {
+        /* Max 3-year period */
+        const threeYears=new Date(sd.getFullYear()+3,sd.getMonth(),sd.getDate());
+        if(ed>threeYears)errors.push({id:'end-date-day',msg:'End date — exemptions are normally granted for up to 3 years. If you need longer, apply again closer to the time.'});
+      }
+    }
   }
   if(pageId==='arrangements'){
     var a=(D['arrangements']||'').trim();

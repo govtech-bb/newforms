@@ -31,6 +31,9 @@ const PARISHES=['Christ Church','St. Andrew','St. George','St. James','St. John'
 const RELATIONSHIPS=['Mother','Father','Grandmother','Grandfather','Aunt','Uncle','Legal guardian','Sibling','Other'];
 const CANDIDATE_STATUS=['Part-time','Full-time','Other'];
 const EXAM_SERIES=['2025 January','2025 May/June','2026 January','2026 May/June'];
+const CSEC_SUBJECTS=['CSEC: Agricultural Science','CSEC: Biology','CSEC: Building Technology','CSEC: Caribbean History','CSEC: Chemistry','CSEC: Economics','CSEC: Electrical Engineering Technology','CSEC: English A','CSEC: English B','CSEC: Food, Nutrition and Health','CSEC: French','CSEC: Geography','CSEC: Human and Social Biology','CSEC: Information Technology','CSEC: Integrated Science','CSEC: Mathematics','CSEC: Mechanical Engineering Technology','CSEC: Music','CSEC: Office Administration','CSEC: Physical Education and Sport','CSEC: Physics','CSEC: Principles of Accounts','CSEC: Principles of Business','CSEC: Religious Education','CSEC: Social Studies','CSEC: Spanish','CSEC: Technical Drawing','CSEC: Theatre Arts','CSEC: Visual Arts'];
+const CAPE_SUBJECTS_LIST=['CAPE: Accounting Unit 1','CAPE: Accounting Unit 2','CAPE: Applied Mathematics Unit 1','CAPE: Applied Mathematics Unit 2','CAPE: Biology Unit 1','CAPE: Biology Unit 2','CAPE: Caribbean Studies','CAPE: Chemistry Unit 1','CAPE: Chemistry Unit 2','CAPE: Communication Studies','CAPE: Computer Science Unit 1','CAPE: Computer Science Unit 2','CAPE: Economics Unit 1','CAPE: Economics Unit 2','CAPE: French Unit 1','CAPE: French Unit 2','CAPE: Geography Unit 1','CAPE: Geography Unit 2','CAPE: History Unit 1','CAPE: History Unit 2','CAPE: Information Technology Unit 1','CAPE: Information Technology Unit 2','CAPE: Law Unit 1','CAPE: Law Unit 2','CAPE: Literatures in English Unit 1','CAPE: Literatures in English Unit 2','CAPE: Management of Business Unit 1','CAPE: Management of Business Unit 2','CAPE: Physics Unit 1','CAPE: Physics Unit 2','CAPE: Pure Mathematics Unit 1','CAPE: Pure Mathematics Unit 2','CAPE: Sociology Unit 1','CAPE: Sociology Unit 2','CAPE: Spanish Unit 1','CAPE: Spanish Unit 2'];
+const SUBJECT_OPTIONS=CSEC_SUBJECTS.concat(CAPE_SUBJECTS_LIST).concat(['Other (specify)']);
 const BANKS=['Bank of Nova Scotia','Royal Bank of Canada','Republic Bank Barbados Ltd','First Citizens Bank','CIBC FirstCaribbean International','Sagicor Bank (Barbados) Ltd','City of Bridgetown Co-operative Credit Union','Barbados Public Workers\' Co-op Credit Union','Barbados Workers\' Union Co-op Credit Union','Barbados Teachers\' Co-op Credit Union','Other'];
 const ACCOUNT_TYPES=['Savings','Chequing'];
 const MAX_SUBJECTS=8;
@@ -71,7 +74,8 @@ const PAGES = {
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start claim</button></div>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body"><strong>Refunds are not automatic.</strong> Each claim is reviewed by the Examinations Unit against CXC's refund rules. Some fees — for example, administrative or late-registration fees — are non-refundable.</p>
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Refunds are not automatic.</strong> Each claim is reviewed by the Examinations Unit against CXC's refund rules. Some fees — for example, administrative or late-registration fees — are non-refundable.</p>
+        <p class="govbb-text-body" style="margin:0;">Partial refunds are common: part of your claim may be approved while other parts are declined. You'll get a written breakdown showing the decision for each subject.</p>
       </div>
 
       <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
@@ -152,20 +156,25 @@ const PAGES = {
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Number of subjects</legend><div style="display:flex;flex-wrap:wrap;gap:var(--spacing-xs);">
         ${Array.from({length:MAX_SUBJECTS},(_,i)=>i+1).map(n=>`<div class="govbb-radio-item" style="margin-right:var(--spacing-s);"><input class="govbb-radio" type="radio" id="subject-count-${n}" name="subject-count" data-field="subject-count" value="${n}"${String(GovBB.D['subject-count'])===String(n)?' checked':''} /><label class="govbb-radio-item__label" for="subject-count-${n}">${n}</label></div>`).join('')}
       </div></fieldset>
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-s) var(--spacing-m);background:var(--color-blue-10);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin:0;"><strong>Claiming for more than ${MAX_SUBJECTS} subjects?</strong> Submit one claim for the first ${MAX_SUBJECTS} subjects, then call the Examinations Unit on <strong>(246) 535-0600</strong> to arrange the rest. Don't submit duplicate claims.</p>
+      </div>
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
     </form>`,
 
   'subjects-data': () => {
     const count = subjectCount();
     for (let i = count + 1; i <= MAX_SUBJECTS; i++) {
-      ['name','series','amount'].forEach(f=>delete GovBB.D['subj-'+i+'-'+f]);
+      ['name','name-other','series','amount'].forEach(f=>delete GovBB.D['subj-'+i+'-'+f]);
     }
     let sections = '';
     for (let i = 1; i <= count; i++) {
+      const isOther = GovBB.D['subj-'+i+'-name']==='Other (specify)';
       sections += `
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-l);border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);">
         <legend class="govbb-fieldset__legend govbb-text-h2" style="padding:0 var(--spacing-s);">Subject ${i}</legend>
-        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="subj-${i}-name">Subject name</label><p class="govbb-hint">For example, "Mathematics", "Pure Mathematics Unit 1".</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="subj-${i}-name" name="subj-${i}-name" data-field="subj-${i}-name" value="${GovBB.D['subj-'+i+'-name']||''}" /></div></div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="subj-${i}-name">Subject</label><div class="govbb-select-wrapper"><select class="govbb-select" id="subj-${i}-name" name="subj-${i}-name" data-field="subj-${i}-name" data-trigger-render="1"><option value="">Select a subject</option>${SUBJECT_OPTIONS.map(s=>`<option value="${s}"${GovBB.D['subj-'+i+'-name']===s?' selected':''}>${s}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+        ${isOther?`<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);"><label class="govbb-label" for="subj-${i}-name-other">Type the subject name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="subj-${i}-name-other" name="subj-${i}-name-other" data-field="subj-${i}-name-other" value="${GovBB.D['subj-'+i+'-name-other']||''}" /></div></div>`:''}
         <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="subj-${i}-series">Examination series</label><div class="govbb-select-wrapper"><select class="govbb-select" id="subj-${i}-series" name="subj-${i}-series" data-field="subj-${i}-series"><option value="">Select a series</option>${EXAM_SERIES.map(s=>`<option value="${s}"${GovBB.D['subj-'+i+'-series']===s?' selected':''}>${s}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
         <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="subj-${i}-amount">Amount paid ($BBD)</label><p class="govbb-hint">The fee you paid for this subject.</p><div class="govbb-input-wrapper" style="max-width:10rem;"><input class="govbb-input" type="text" id="subj-${i}-amount" name="subj-${i}-amount" data-field="subj-${i}-amount" data-trigger-render="1" inputmode="decimal" value="${GovBB.D['subj-'+i+'-amount']||''}" /></div></div>
       </fieldset>`;
@@ -229,7 +238,8 @@ const PAGES = {
     let subjRows = '';
     for (let i = 1; i <= count; i++) {
       var bits = [];
-      bits.push(GovBB.D['subj-'+i+'-name']||'No name');
+      var nm = GovBB.D['subj-'+i+'-name'];
+      bits.push(nm==='Other (specify)' ? (GovBB.D['subj-'+i+'-name-other']||'Other') : (nm||'No subject'));
       bits.push(GovBB.D['subj-'+i+'-series']||'No series');
       var amt=parseFloat(String(GovBB.D['subj-'+i+'-amount']||'').replace(/,/g,''));
       bits.push(isNaN(amt)?'$0.00':'$'+amt.toFixed(2));
@@ -348,7 +358,8 @@ function validate(pageId){
   }
   if(pageId==='subjects-data'){
     for(let i=1;i<=subjectCount();i++){
-      req('subj-'+i+'-name','Subject '+i+' — enter the subject name');
+      req('subj-'+i+'-name','Subject '+i+' — select the subject');
+      if(D['subj-'+i+'-name']==='Other (specify)')req('subj-'+i+'-name-other','Subject '+i+' — type the subject name');
       req('subj-'+i+'-series','Subject '+i+' — select the examination series');
       var amt=(D['subj-'+i+'-amount']||'').trim();
       if(!amt){errors.push({id:'subj-'+i+'-amount',msg:'Subject '+i+' — enter the amount paid'});}
