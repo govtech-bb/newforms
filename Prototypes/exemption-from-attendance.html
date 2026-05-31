@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for a Certificate of Exemption from Attendance at School – Ministry of Educational Transformation</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+<div class="govbb-official-banner"><div class="govbb-container govbb-official-banner__inner"><div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div><div class="govbb-official-banner__text"><span>Official government website</span></div></div></div>
+<header class="govbb-header"><div class="govbb-container govbb-header__inner"><a href="/" aria-label="Go to the alpha.gov.bb homepage"><img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" /></a></div></header>
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite"><div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div></div>
+  <div class="govbb-container"><div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div></div>
+</main>
+<footer class="govbb-footer"><div class="govbb-container govbb-footer__inner"><nav class="govbb-footer__nav" aria-label="Footer"><a class="govbb-footer__link" href="#">Home</a><a class="govbb-footer__link" href="#">Privacy</a><a class="govbb-footer__link" href="#">Terms &amp; Conditions</a><a class="govbb-footer__link" href="#">Accessibility</a></nav><hr class="govbb-footer__divider" aria-hidden="true" /><div class="govbb-footer__end"><img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" /><p class="govbb-footer__copy">© 2025 Government of Barbados</p></div></div></footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors=function(){var s=document.getElementById('error-summary');if(s)s.remove();document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});};
+GovBB.showErrors=function(errors){GovBB.clearErrors();if(!errors||!errors.length)return;var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'" onclick="GovBB.focusError(\''+e.id+'\');return false;">'+e.msg+'</a></li>';});html+='</ul></div>';var app=document.getElementById('app');var h1=app.querySelector('h1');if(h1)h1.insertAdjacentHTML('afterend',html);else app.insertAdjacentHTML('afterbegin',html);document.getElementById('error-summary').focus();errors.forEach(function(e){var el=document.getElementById(e.id);if(!el)return;var errId='err-'+e.id;el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId);var msg=document.createElement('p');msg.className='govbb-error-message';msg.id=errId;msg.textContent=e.msg;var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;if(group)group.appendChild(msg);});if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;};
+GovBB.summaryRow=function(label,value,changeTo){var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';};
+</script>
+<script>
+function next(){GovBB.next();}function back(){GovBB.back();}function nav(p){GovBB.nav(p);}
+
+const FORM_NAME='Apply for a Certificate of Exemption from Attendance at School';
+const CAPTION='Ministry of Educational Transformation';
+const TITLES=['Mr','Mrs','Miss','Dr','Rev','Pastor','Hon','Prof'];
+const RELATIONSHIPS=['Mother','Father','Legal guardian','Grandparent','Foster carer','Other'];
+const PARISHES=['Christ Church','St. Andrew','St. George','St. James','St. John','St. Joseph','St. Lucy','St. Michael','St. Peter','St. Philip','St. Thomas'];
+const REASONS=[
+  {key:'medical',label:'Medical or health condition'},
+  {key:'disability',label:'Disability requiring alternative education arrangement'},
+  {key:'relocation',label:'Family relocation or extended travel'},
+  {key:'religious',label:'Religious or cultural reason'},
+  {key:'homeschool',label:'Home schooling (a separate Home Schooling application is also required)'},
+  {key:'other',label:'Other (describe below)'}
+];
+
+const FLOW=['start','parent-details','child-details','reasons','period','arrangements','evidence','declaration','check','confirmation'];
+
+function caption(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+CAPTION+'</p>';}
+function maskNid(nid){if(!nid)return '';var m=String(nid).trim().match(/^(\d{6})-(\d{4})$/);return m?'••••••-'+m[2]:String(nid).trim();}
+function formatPhone(p){if(!p)return '';var digits=String(p).replace(/[^\d]/g,'');if(digits.length===10&&digits.indexOf('246')===0)return '(246) '+digits.substring(3,6)+' '+digits.substring(6);return String(p).trim();}
+function fmtDate(prefix){const d=GovBB.D[prefix+'-day'],m=GovBB.D[prefix+'-month'],y=GovBB.D[prefix+'-year'];if(!d&&!m&&!y)return '';return [d,m,y].filter(Boolean).join(' / ');}
+function parseDate(prefix){const d=parseInt(GovBB.D[prefix+'-day'],10),m=parseInt(GovBB.D[prefix+'-month'],10),y=parseInt(GovBB.D[prefix+'-year'],10);if(!d||!m||!y)return null;if(d<1||d>31||m<1||m>12||y<1900||y>2100)return false;const dt=new Date(y,m-1,d);if(dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d)return false;return dt;}
+function parentName(){return [GovBB.D['parent-title'],GovBB.D['parent-first'],GovBB.D['parent-surname']].filter(Boolean).join(' ');}
+function childName(){return [GovBB.D['child-first'],GovBB.D['child-other'],GovBB.D['child-surname']].filter(Boolean).join(' ');}
+
+function handleUpload(key,input){const file=input.files&&input.files[0];if(!file)return;if(file.size>10*1024*1024){alert('File is larger than 10 MB.');input.value='';return;}GovBB.D['upload-'+key]={name:file.name,size:file.size,type:file.type};GovBB.render();}
+function removeUpload(key){delete GovBB.D['upload-'+key];GovBB.render();}
+function formatBytes(n){if(n<1024)return n+' B';if(n<1024*1024)return (n/1024).toFixed(1)+' KB';return (n/(1024*1024)).toFixed(1)+' MB';}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function uploadRow(key,label,hint){var file=GovBB.D['upload-'+key];if(file){return `<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);border-left:4px solid var(--color-green-00);background:var(--color-white-00);margin-bottom:var(--spacing-s);"><div style="min-width:0;"><p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">${label}</p>${hint?`<p class="govbb-hint" style="margin:0;">${hint}</p>`:''}<p class="govbb-text-body" style="margin:0;font-size:var(--font-size-caption);color:var(--color-mid-grey-00);word-break:break-all;"><span aria-hidden="true">✓ </span>${escapeHtml(file.name)} (${formatBytes(file.size)})</p></div><button type="button" class="govbb-btn--link" style="flex-shrink:0;" onclick="removeUpload('${key}')">Remove<span class="govbb-visually-hidden"> ${label}</span></button></div>`;}return `<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);background:var(--color-white-00);margin-bottom:var(--spacing-s);"><div style="min-width:0;flex:1;"><p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">${label}</p>${hint?`<p class="govbb-hint" style="margin:0;">${hint}</p>`:''}</div><label for="upload-${key}" class="govbb-btn--secondary" style="flex-shrink:0;cursor:pointer;margin:0;">Upload file</label><input type="file" id="upload-${key}" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" onchange="handleUpload('${key}', this)" /></div>`;}
+
+function dateField(prefix,legend,hint){return `<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">${legend}</legend>${hint?`<p class="govbb-hint">${hint}</p>`:''}<div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;"><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-day">Day</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-day" name="${prefix}-day" data-field="${prefix}-day" inputmode="numeric" value="${GovBB.D[prefix+'-day']||''}" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-month">Month</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-month" name="${prefix}-month" data-field="${prefix}-month" inputmode="numeric" value="${GovBB.D[prefix+'-month']||''}" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-year">Year</label><div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="${prefix}-year" name="${prefix}-year" data-field="${prefix}-year" inputmode="numeric" value="${GovBB.D[prefix+'-year']||''}" /></div></div></div></fieldset>`;}
+
+const PAGES = {
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);"><ol class="govbb-breadcrumbs__list"><li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li><li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Education and schooling</a></li></ol></nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Apply for a Certificate of Exemption from Attendance at School</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Last updated on 29 May 2026</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If your child cannot attend school in the usual way — for example, because of a medical condition, a disability, religious reasons, or an extended family relocation — you can apply for a Certificate of Exemption under the Education Act.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. No fee. Takes about <strong>15 minutes</strong>.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
+
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>This is not a way to keep a child home long-term without education.</strong> You will need to describe how your child's education will continue during the exemption. If you want to home-school, you also need to submit the <a class="govbb-link" href="home-schooling.html">Home Schooling application</a>.</p>
+      </div>
+
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>An exemption is granted at the Ministry's discretion</strong> and may be revoked if the conditions are not met.</p>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your name, National ID Number, and contact details</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your child's name, date of birth, and current school (if any)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The reason for the exemption and how long you need it for</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A description of how your child's education will continue during the exemption</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A scan or photo of: your child's birth certificate, a medical report (if the reason is medical), and any other supporting documents</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">An Education Officer reviews your application and may contact you for more information.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Chief Education Officer approves or declines the certificate.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You will be told the outcome within <strong>6 weeks</strong> by letter and email.</li>
+      </ul>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start application</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call the Ministry on <strong>(246) 535-0700</strong> or email <a class="govbb-link" href="mailto:enquiries@mes.gov.bb">enquiries@mes.gov.bb</a>.</p>
+    </div>`,
+
+  'parent-details': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you (parent or guardian)</h1>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-title">Title</label><div class="govbb-select-wrapper"><select class="govbb-select" id="parent-title" name="parent-title" data-field="parent-title"><option value="">Select a title</option>${TITLES.map(t=>`<option value="${t}"${GovBB.D['parent-title']===t?' selected':''}>${t}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-first">First name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="parent-first" name="parent-first" data-field="parent-first" autocomplete="given-name" value="${GovBB.D['parent-first']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-surname">Surname</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="parent-surname" name="parent-surname" data-field="parent-surname" autocomplete="family-name" value="${GovBB.D['parent-surname']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-nid">National ID Number</label><p class="govbb-hint">For example, 110915-0048.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="parent-nid" name="parent-nid" data-field="parent-nid" value="${GovBB.D['parent-nid']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-rel">Relationship to the child</label><div class="govbb-select-wrapper"><select class="govbb-select" id="parent-rel" name="parent-rel" data-field="parent-rel"><option value="">Select one</option>${RELATIONSHIPS.map(r=>`<option value="${r}"${GovBB.D['parent-rel']===r?' selected':''}>${r}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-address">Home address</label><textarea class="govbb-textarea" id="parent-address" name="parent-address" data-field="parent-address" rows="3">${GovBB.D['parent-address']||''}</textarea></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-parish">Parish</label><div class="govbb-select-wrapper"><select class="govbb-select" id="parent-parish" name="parent-parish" data-field="parent-parish"><option value="">Select a parish</option>${PARISHES.map(p=>`<option value="${p}"${GovBB.D['parent-parish']===p?' selected':''}>${p}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-phone">Mobile number</label><p class="govbb-hint">For example, (246) 249 1234.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="parent-phone" name="parent-phone" data-field="parent-phone" inputmode="tel" autocomplete="tel" value="${GovBB.D['parent-phone']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parent-email">Email address</label><div class="govbb-input-wrapper"><input class="govbb-input" type="email" id="parent-email" name="parent-email" data-field="parent-email" inputmode="email" autocomplete="email" value="${GovBB.D['parent-email']||''}" /></div></div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'child-details': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About your child</h1>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-first">First name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-first" name="child-first" data-field="child-first" value="${GovBB.D['child-first']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-other">Other names (optional)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-other" name="child-other" data-field="child-other" value="${GovBB.D['child-other']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-surname">Surname</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-surname" name="child-surname" data-field="child-surname" value="${GovBB.D['child-surname']||''}" /></div></div>
+      ${dateField('child-dob','Date of birth','For example, 15 6 2015.')}
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Sex</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);"><div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="child-sex-m" name="child-sex" data-field="child-sex" value="Male"${GovBB.D['child-sex']==='Male'?' checked':''} /><label class="govbb-radio-item__label" for="child-sex-m">Male</label></div><div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="child-sex-f" name="child-sex" data-field="child-sex" value="Female"${GovBB.D['child-sex']==='Female'?' checked':''} /><label class="govbb-radio-item__label" for="child-sex-f">Female</label></div></div></fieldset>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-nid">National ID or birth certificate number</label><p class="govbb-hint">For example, 150615-0048.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-nid" name="child-nid" data-field="child-nid" value="${GovBB.D['child-nid']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-school">Current school (if any)</label><p class="govbb-hint">Leave blank if your child has never attended school.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-school" name="child-school" data-field="child-school" value="${GovBB.D['child-school']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="child-class">Last class attended (optional)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="child-class" name="child-class" data-field="child-class" value="${GovBB.D['child-class']||''}" /></div></div>
+      ${dateField('last-date','Last date attended (optional)','Leave blank if not applicable.')}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'reasons': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Reason for the exemption</h1>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Tick all reasons that apply</legend>
+        ${REASONS.map(r=>`<div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="reason-${r.key}" name="reason-${r.key}" data-field="reason-${r.key}"${GovBB.D['reason-'+r.key]?' checked':''} /><label class="govbb-checkbox-item__label" for="reason-${r.key}">${r.label}</label></div>`).join('')}
+      </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="reason-detail">Detailed reason for the exemption</label><p class="govbb-hint">Be specific. The Ministry needs enough context to make a fair decision. If the reason is medical, briefly describe the condition — you'll upload the medical report later.</p><textarea class="govbb-textarea" id="reason-detail" name="reason-detail" data-field="reason-detail" rows="6">${GovBB.D['reason-detail']||''}</textarea></div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'period': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Period of exemption requested</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Give the start and end dates of the period you are requesting an exemption for. The Ministry may grant a shorter period than you request.</p>
+      ${dateField('start-date','Start date','For example, 1 9 2026.')}
+      ${dateField('end-date','End date','For example, 30 6 2027.')}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'arrangements': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">How will your child's education continue?</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">An exemption from <em>attendance</em> is not an exemption from <em>education</em>. Describe how your child will continue to learn during the period you've requested.</p>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="arrangements">Alternative education arrangements</label><p class="govbb-hint">For example, hospital teaching, tutoring at home, an overseas school during a family relocation, or a structured home-schooling curriculum.</p><textarea class="govbb-textarea" id="arrangements" name="arrangements" data-field="arrangements" rows="6">${GovBB.D['arrangements']||''}</textarea></div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'evidence': () => `${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Upload supporting evidence</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Accepted formats: PDF, JPG, PNG, DOC. Maximum size: 10 MB per file.</p>
+      ${uploadRow('birth-cert', 'Child\'s birth certificate (required)', 'A scan or clear photo.')}
+      ${uploadRow('medical', 'Medical report (required if the reason is medical, optional otherwise)', 'Signed by a doctor or specialist.')}
+      ${uploadRow('supporting', 'Other supporting document (optional)', 'For example, evidence of a planned family relocation, a religious authority\'s letter, or a curriculum plan.')}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>`,
+
+  'declaration': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Before you submit, please confirm the following.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-accurate" name="decl-accurate" data-field="decl-accurate"${GovBB.D['decl-accurate']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-accurate">The information I have given is true and correct to the best of my knowledge.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-act" name="decl-act" data-field="decl-act"${GovBB.D['decl-act']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-act">I understand that exemption from school attendance is granted under the Education Act and may be revoked if the conditions are not met.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-changes" name="decl-changes" data-field="decl-changes"${GovBB.D['decl-changes']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-changes">I agree to inform the Ministry promptly if my child's circumstances change during the exemption period.</label></div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue to review</button></div>
+    </form>`,
+
+  'check': () => {
+    const ticked = REASONS.filter(r => GovBB.D['reason-'+r.key]).map(r => r.label);
+    return `<div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before submitting</h1>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parent or guardian</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Name', parentName(), 'parent-details')}
+        ${GovBB.summaryRow('National ID', maskNid(GovBB.D['parent-nid']), 'parent-details')}
+        ${GovBB.summaryRow('Relationship to child', GovBB.D['parent-rel'], 'parent-details')}
+        ${GovBB.summaryRow('Address', GovBB.D['parent-address'], 'parent-details')}
+        ${GovBB.summaryRow('Parish', GovBB.D['parent-parish'], 'parent-details')}
+        ${GovBB.summaryRow('Mobile', formatPhone(GovBB.D['parent-phone']), 'parent-details')}
+        ${GovBB.summaryRow('Email', GovBB.D['parent-email'], 'parent-details')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Child</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Name', childName(), 'child-details')}
+        ${GovBB.summaryRow('Date of birth', fmtDate('child-dob'), 'child-details')}
+        ${GovBB.summaryRow('Sex', GovBB.D['child-sex'], 'child-details')}
+        ${GovBB.summaryRow('NID / birth cert.', maskNid(GovBB.D['child-nid']), 'child-details')}
+        ${GovBB.summaryRow('Current school', GovBB.D['child-school'] || 'Not in school', 'child-details')}
+        ${GovBB.summaryRow('Last class attended', GovBB.D['child-class'] || 'Not provided', 'child-details')}
+        ${GovBB.summaryRow('Last date attended', fmtDate('last-date') || 'Not provided', 'child-details')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Reason</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Reasons ticked', ticked.join('; ') || 'None ticked', 'reasons')}
+        ${GovBB.summaryRow('Detail', GovBB.D['reason-detail'], 'reasons')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Period</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Start date', fmtDate('start-date'), 'period')}
+        ${GovBB.summaryRow('End date', fmtDate('end-date'), 'period')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Alternative arrangements</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">${GovBB.summaryRow('Description', GovBB.D['arrangements'], 'arrangements')}</dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Supporting evidence</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${[{key:'birth-cert',label:'Birth certificate'},{key:'medical',label:'Medical report'},{key:'supporting',label:'Other supporting document'}].map(function(d){var f=GovBB.D['upload-'+d.key];return GovBB.summaryRow(d.label, f?escapeHtml(f.name)+' ('+formatBytes(f.size)+')':'Not uploaded', 'evidence');}).join('')}
+      </dl>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="if(this.disabled)return;this.disabled=true;this.textContent='Submitting…';next();">Submit application</button></div>
+    </div>`;
+  },
+
+  'confirmation': () => {
+    if (!window.__refNumber) {
+      const refYear = new Date().getFullYear();
+      const refNum = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
+      window.__refNumber = `EXP-${refYear}-${refNum}`;
+    }
+    const ref = window.__refNumber;
+    if(document.title.indexOf('Error: ')===0)document.title=document.title.substring('Error: '.length);
+    document.title='Application submitted — '+FORM_NAME;
+    return `<div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Application submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${ref}</p>
+      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">An Education Officer will review your application and may contact you for more information.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Chief Education Officer approves or declines the certificate.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You will be told the outcome within <strong>6 weeks</strong> by letter and email.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We've sent a copy of your application to ${GovBB.D['parent-email']||'the address you provided'}.</li>
+      </ul>
+      <div style="display:flex;gap:var(--spacing-m);flex-wrap:wrap;margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="window.print()">Print this page</button>
+        <a class="govbb-btn--link" href="../forms.html">Return to all forms</a>
+      </div>
+    </div>`;
+  }
+};
+
+function validate(pageId){
+  const D=GovBB.D,errors=[];
+  const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/,NID_RE=/^\d{6}-\d{4}$/;
+  function req(id,msg){if(!D[id]||String(D[id]).trim()==='')errors.push({id:id,msg:msg});}
+  function reqNid(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!NID_RE.test(v))errors.push({id:id,msg:label+' must be in the format 110915-0048'});}
+  function reqPhone(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}var digits=v.replace(/[\s\-()+]/g,'');if(!/^\d{7,15}$/.test(digits))errors.push({id:id,msg:label+' must contain 7 to 15 digits'});}
+  function reqEmail(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!EMAIL_RE.test(v))errors.push({id:id,msg:label+' must be in the format you@example.com'});}
+  function reqDate(prefix,label){const d=D[prefix+'-day'],m=D[prefix+'-month'],y=D[prefix+'-year'];if(!d||!m||!y){errors.push({id:prefix+'-day',msg:label+' — enter a complete date.'});return null;}const dt=parseDate(prefix);if(dt===false){errors.push({id:prefix+'-day',msg:label+' — enter a real date.'});return null;}return dt;}
+
+  if(pageId==='parent-details'){
+    req('parent-title','Select a title');
+    req('parent-first','Enter your first name');
+    req('parent-surname','Enter your surname');
+    reqNid('parent-nid','National ID Number','Enter your National ID Number');
+    req('parent-rel','Select your relationship to the child');
+    req('parent-address','Enter your home address');
+    req('parent-parish','Select your parish');
+    reqPhone('parent-phone','Mobile number','Enter your mobile number');
+    reqEmail('parent-email','Email address','Enter your email address');
+  }
+  if(pageId==='child-details'){
+    req('child-first','Enter your child\'s first name');
+    req('child-surname','Enter your child\'s surname');
+    const dob=reqDate('child-dob','Date of birth');
+    if(dob){const today=new Date();today.setHours(0,0,0,0);const age=today.getFullYear()-dob.getFullYear();if(dob>=today)errors.push({id:'child-dob-day',msg:'Date of birth must be in the past.'});else if(age<3||age>18)errors.push({id:'child-dob-day',msg:'Date of birth — exemptions are for compulsory school-age children (5 to 16). Check the date.'});}
+    if(!D['child-sex'])errors.push({id:'child-sex-m',msg:'Select your child\'s sex'});
+    reqNid('child-nid','Child\'s NID or birth certificate number','Enter your child\'s NID or birth certificate number');
+  }
+  if(pageId==='reasons'){
+    var any = REASONS.some(function(r){return D['reason-'+r.key];});
+    if(!any)errors.push({id:'reason-medical',msg:'Tick at least one reason'});
+    var rd=(D['reason-detail']||'').trim();
+    if(!rd)errors.push({id:'reason-detail',msg:'Describe the reason for the exemption'});
+    else if(rd.length<60)errors.push({id:'reason-detail',msg:'Add more detail — the Ministry needs enough context to make a fair decision. At least 60 characters.'});
+  }
+  if(pageId==='period'){
+    const sd=reqDate('start-date','Start date');
+    const ed=reqDate('end-date','End date');
+    if(sd&&ed&&sd>ed)errors.push({id:'end-date-day',msg:'End date — must be after the start date'});
+  }
+  if(pageId==='arrangements'){
+    var a=(D['arrangements']||'').trim();
+    if(!a)errors.push({id:'arrangements',msg:'Describe how your child\'s education will continue'});
+    else if(a.length<60)errors.push({id:'arrangements',msg:'Add more detail — at least one short paragraph.'});
+  }
+  if(pageId==='evidence'){
+    if(!D['upload-birth-cert'])errors.push({id:'upload-birth-cert',msg:'Upload your child\'s birth certificate'});
+    if(D['reason-medical']&&!D['upload-medical'])errors.push({id:'upload-medical',msg:'Upload a medical report (you ticked "medical or health condition" as a reason)'});
+  }
+  if(pageId==='declaration'){
+    ['accurate','act','changes'].forEach(function(k){if(!D['decl-'+k])errors.push({id:'decl-'+k,msg:'Tick the box to confirm'});});
+  }
+  return errors;
+}
+
+GovBB.init({formName:FORM_NAME,flow:FLOW,pages:PAGES,validate:validate});
+</script>
+</body>
+</html>

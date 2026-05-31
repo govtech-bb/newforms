@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claim a refund of examination fees (private candidates) – Ministry of Educational Transformation</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+<div class="govbb-official-banner"><div class="govbb-container govbb-official-banner__inner"><div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div><div class="govbb-official-banner__text"><span>Official government website</span></div></div></div>
+<header class="govbb-header"><div class="govbb-container govbb-header__inner"><a href="/" aria-label="Go to the alpha.gov.bb homepage"><img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" /></a></div></header>
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite"><div class="govbb-container"><p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p></div></div>
+  <div class="govbb-container"><div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div></div>
+</main>
+<footer class="govbb-footer"><div class="govbb-container govbb-footer__inner"><nav class="govbb-footer__nav" aria-label="Footer"><a class="govbb-footer__link" href="#">Home</a><a class="govbb-footer__link" href="#">Privacy</a><a class="govbb-footer__link" href="#">Terms &amp; Conditions</a><a class="govbb-footer__link" href="#">Accessibility</a></nav><hr class="govbb-footer__divider" aria-hidden="true" /><div class="govbb-footer__end"><img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" /><p class="govbb-footer__copy">© 2025 Government of Barbados</p></div></div></footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors=function(){var s=document.getElementById('error-summary');if(s)s.remove();document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});};
+GovBB.showErrors=function(errors){GovBB.clearErrors();if(!errors||!errors.length)return;var html='<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';errors.forEach(function(e){html+='<li><a class="govbb-error-summary__link" href="#'+e.id+'" onclick="GovBB.focusError(\''+e.id+'\');return false;">'+e.msg+'</a></li>';});html+='</ul></div>';var app=document.getElementById('app');var h1=app.querySelector('h1');if(h1)h1.insertAdjacentHTML('afterend',html);else app.insertAdjacentHTML('afterbegin',html);document.getElementById('error-summary').focus();errors.forEach(function(e){var el=document.getElementById(e.id);if(!el)return;var errId='err-'+e.id;el.setAttribute('aria-invalid','true');el.setAttribute('aria-describedby',errId);var msg=document.createElement('p');msg.className='govbb-error-message';msg.id=errId;msg.textContent=e.msg;var group=el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;if(group)group.appendChild(msg);});if(!document.title.startsWith('Error:'))document.title='Error: '+document.title;};
+GovBB.summaryRow=function(label,value,changeTo){var link=changeTo?'<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>':'';return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';};
+</script>
+<script>
+function next(){GovBB.next();}function back(){GovBB.back();}function nav(p){GovBB.nav(p);}
+
+const FORM_NAME='Claim a refund of examination fees (private candidates)';
+const CAPTION='Ministry of Educational Transformation';
+const TITLES=['Mr','Mrs','Miss','Dr','Rev','Pastor','Hon','Prof'];
+const PARISHES=['Christ Church','St. Andrew','St. George','St. James','St. John','St. Joseph','St. Lucy','St. Michael','St. Peter','St. Philip','St. Thomas'];
+const RELATIONSHIPS=['Mother','Father','Grandmother','Grandfather','Aunt','Uncle','Legal guardian','Sibling','Other'];
+const CANDIDATE_STATUS=['Part-time','Full-time','Other'];
+const EXAM_SERIES=['2025 January','2025 May/June','2026 January','2026 May/June'];
+const BANKS=['Bank of Nova Scotia','Royal Bank of Canada','Republic Bank Barbados Ltd','First Citizens Bank','CIBC FirstCaribbean International','Sagicor Bank (Barbados) Ltd','City of Bridgetown Co-operative Credit Union','Barbados Public Workers\' Co-op Credit Union','Barbados Workers\' Union Co-op Credit Union','Barbados Teachers\' Co-op Credit Union','Other'];
+const ACCOUNT_TYPES=['Savings','Chequing'];
+const MAX_SUBJECTS=8;
+
+const FLOW=['start','claimant-details','guardian-details','subjects-count','subjects-data','reason','banking','evidence','declaration','check','confirmation'];
+
+function caption(){return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+CAPTION+'</p>';}
+function maskNid(nid){if(!nid)return '';var m=String(nid).trim().match(/^(\d{6})-(\d{4})$/);return m?'••••••-'+m[2]:String(nid).trim();}
+function maskAccount(num){if(!num)return '';const digits=String(num).replace(/[\s\-]/g,'');if(digits.length<=4)return digits;return '••••••'+digits.slice(-4);}
+function formatPhone(p){if(!p)return '';var digits=String(p).replace(/[^\d]/g,'');if(digits.length===10&&digits.indexOf('246')===0)return '(246) '+digits.substring(3,6)+' '+digits.substring(6);return String(p).trim();}
+function fmtDate(prefix){const d=GovBB.D[prefix+'-day'],m=GovBB.D[prefix+'-month'],y=GovBB.D[prefix+'-year'];if(!d&&!m&&!y)return '';return [d,m,y].filter(Boolean).join(' / ');}
+function parseDate(prefix){const d=parseInt(GovBB.D[prefix+'-day'],10),m=parseInt(GovBB.D[prefix+'-month'],10),y=parseInt(GovBB.D[prefix+'-year'],10);if(!d||!m||!y)return null;if(d<1||d>31||m<1||m>12||y<1900||y>2100)return false;const dt=new Date(y,m-1,d);if(dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d)return false;return dt;}
+function claimantName(){return [GovBB.D['title'],GovBB.D['first-name'],GovBB.D['surname']].filter(Boolean).join(' ');}
+function isMinor(){const dob=parseDate('dob');if(!dob||dob===false)return false;const today=new Date();today.setHours(0,0,0,0);let age=today.getFullYear()-dob.getFullYear();if(today.getMonth()<dob.getMonth()||(today.getMonth()===dob.getMonth()&&today.getDate()<dob.getDate()))age--;return age<18;}
+function subjectCount(){const n=parseInt(GovBB.D['subject-count'],10);if(isNaN(n)||n<1)return 1;if(n>MAX_SUBJECTS)return MAX_SUBJECTS;return n;}
+function totalCents(){var sum=0;for(let i=1;i<=subjectCount();i++){var raw=String(GovBB.D['subj-'+i+'-amount']||'').replace(/,/g,'').trim();if(!raw)continue;var m=raw.match(/^(\d+)(?:\.(\d{1,2}))?$/);if(!m)continue;var dollars=parseInt(m[1],10);var cents=m[2]?parseInt((m[2]+'00').slice(0,2),10):0;sum+=dollars*100+cents;}return sum;}
+function totalDisplay(){var c=totalCents();return '$'+Math.floor(c/100).toLocaleString()+'.'+String(c%100).padStart(2,'0');}
+
+function handleUpload(key,input){const file=input.files&&input.files[0];if(!file)return;if(file.size>10*1024*1024){alert('File is larger than 10 MB.');input.value='';return;}GovBB.D['upload-'+key]={name:file.name,size:file.size,type:file.type};GovBB.render();}
+function removeUpload(key){delete GovBB.D['upload-'+key];GovBB.render();}
+function formatBytes(n){if(n<1024)return n+' B';if(n<1024*1024)return (n/1024).toFixed(1)+' KB';return (n/(1024*1024)).toFixed(1)+' MB';}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function uploadRow(key,label,hint){var file=GovBB.D['upload-'+key];if(file){return `<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);border-left:4px solid var(--color-green-00);background:var(--color-white-00);margin-bottom:var(--spacing-s);"><div style="min-width:0;"><p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">${label}</p>${hint?`<p class="govbb-hint" style="margin:0;">${hint}</p>`:''}<p class="govbb-text-body" style="margin:0;font-size:var(--font-size-caption);color:var(--color-mid-grey-00);word-break:break-all;"><span aria-hidden="true">✓ </span>${escapeHtml(file.name)} (${formatBytes(file.size)})</p></div><button type="button" class="govbb-btn--link" style="flex-shrink:0;" onclick="removeUpload('${key}')">Remove<span class="govbb-visually-hidden"> ${label}</span></button></div>`;}return `<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);background:var(--color-white-00);margin-bottom:var(--spacing-s);"><div style="min-width:0;flex:1;"><p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">${label}</p>${hint?`<p class="govbb-hint" style="margin:0;">${hint}</p>`:''}</div><label for="upload-${key}" class="govbb-btn--secondary" style="flex-shrink:0;cursor:pointer;margin:0;">Upload file</label><input type="file" id="upload-${key}" accept=".pdf,.jpg,.jpeg,.png" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" onchange="handleUpload('${key}', this)" /></div>`;}
+
+function dateField(prefix,legend,hint){return `<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">${legend}</legend>${hint?`<p class="govbb-hint">${hint}</p>`:''}<div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;"><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-day">Day</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-day" name="${prefix}-day" data-field="${prefix}-day" inputmode="numeric" value="${GovBB.D[prefix+'-day']||''}" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-month">Month</label><div class="govbb-date-input-wrapper"><input class="govbb-date-input" type="text" id="${prefix}-month" name="${prefix}-month" data-field="${prefix}-month" inputmode="numeric" value="${GovBB.D[prefix+'-month']||''}" /></div></div><div class="govbb-date-input__part"><label class="govbb-date-input__label" for="${prefix}-year">Year</label><div class="govbb-date-input-wrapper govbb-date-input-wrapper--year"><input class="govbb-date-input" type="text" id="${prefix}-year" name="${prefix}-year" data-field="${prefix}-year" inputmode="numeric" value="${GovBB.D[prefix+'-year']||''}" /></div></div></div></fieldset>`;}
+
+const PAGES = {
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);"><ol class="govbb-breadcrumbs__list"><li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li><li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Examinations</a></li></ol></nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Claim a refund of examination fees</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Last updated on 29 May 2026 · Private candidates</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-s);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If you paid CSEC or CAPE examination fees as a private candidate and the exam did not happen, or you were unable to sit it, you may be eligible to claim a refund.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Apply online. No fee. Takes about <strong>15 to 20 minutes</strong>.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start claim</button></div>
+
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Refunds are not automatic.</strong> Each claim is reviewed by the Examinations Unit against CXC's refund rules. Some fees — for example, administrative or late-registration fees — are non-refundable.</p>
+      </div>
+
+      <div style="border-left:4px solid var(--color-yellow-100);padding:var(--spacing-s) var(--spacing-m);background:var(--color-yellow-40);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Claim deadlines apply.</strong> Refund claims must be submitted within 6 months of the original payment. Late claims will not be considered.</p>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The candidate's name, NID, date of birth, sex, and contact details</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A parent or guardian's name and contact details (if the candidate is under 18)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">For each subject being claimed: name, sitting (e.g. May/June 2025), and amount paid in $BBD</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Bank or credit union details for the refund deposit</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A scan or photo of: the original payment receipt(s), your photo ID, and the candidate's birth certificate (if a minor)</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Examinations Unit verifies the payment and checks the claim against CXC's refund rules.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Senior Officer (Exams) and Deputy Permanent Secretary approve the refund.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Approved refunds are paid into the bank account you provided within <strong>8 weeks</strong>.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If any part of the claim is declined, you will be told why in writing.</li>
+      </ul>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start claim</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Call the Examinations Unit on <strong>(246) 535-0600</strong> or email <a class="govbb-link" href="mailto:exams@mes.gov.bb">exams@mes.gov.bb</a>.</p>
+    </div>`,
+
+  'claimant-details': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About the candidate</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">The person who paid the examination fees and is claiming the refund.</p>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="title">Title</label><div class="govbb-select-wrapper"><select class="govbb-select" id="title" name="title" data-field="title"><option value="">Select a title</option>${TITLES.map(t=>`<option value="${t}"${GovBB.D['title']===t?' selected':''}>${t}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="surname">Surname</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="surname" name="surname" data-field="surname" autocomplete="family-name" value="${GovBB.D['surname']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="first-name">First name(s)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="first-name" name="first-name" data-field="first-name" autocomplete="given-name" value="${GovBB.D['first-name']||''}" /></div></div>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Sex</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);"><div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="sex-m" name="sex" data-field="sex" value="Male"${GovBB.D['sex']==='Male'?' checked':''} /><label class="govbb-radio-item__label" for="sex-m">Male</label></div><div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="sex-f" name="sex" data-field="sex" value="Female"${GovBB.D['sex']==='Female'?' checked':''} /><label class="govbb-radio-item__label" for="sex-f">Female</label></div></div></fieldset>
+      ${dateField('dob','Date of birth','For example, 15 6 2005.')}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="nid">National ID Number</label><p class="govbb-hint">For example, 050615-0048.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="nid" name="nid" data-field="nid" value="${GovBB.D['nid']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="address">Home address</label><textarea class="govbb-textarea" id="address" name="address" data-field="address" rows="3">${GovBB.D['address']||''}</textarea></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="parish">Parish</label><div class="govbb-select-wrapper"><select class="govbb-select" id="parish" name="parish" data-field="parish"><option value="">Select a parish</option>${PARISHES.map(p=>`<option value="${p}"${GovBB.D['parish']===p?' selected':''}>${p}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="phone">Mobile number</label><p class="govbb-hint">For example, (246) 249 1234.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="phone" name="phone" data-field="phone" inputmode="tel" autocomplete="tel" value="${GovBB.D['phone']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="email">Email address</label><div class="govbb-input-wrapper"><input class="govbb-input" type="email" id="email" name="email" data-field="email" inputmode="email" autocomplete="email" value="${GovBB.D['email']||''}" /></div></div>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Candidate status</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
+        ${CANDIDATE_STATUS.map((s,i)=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="status-${i}" name="candidate-status" data-field="candidate-status" value="${s}"${GovBB.D['candidate-status']===s?' checked':''} /><label class="govbb-radio-item__label" for="status-${i}">${s}</label></div>`).join('')}
+      </div></fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'guardian-details': () => {
+    if (!isMinor()) {
+      /* Skip this page if not a minor — auto-advance */
+      setTimeout(function(){ GovBB.next(); }, 0);
+      return `<p class="govbb-text-body" style="text-align:center;color:var(--color-mid-grey-00);padding:var(--spacing-l);">Loading next step…</p>`;
+    }
+    return `<form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Parent or guardian details</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">The candidate is under 18. Please give a parent or guardian as the primary contact, and a secondary contact.</p>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Primary contact</h2>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-name">Full name</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="guardian-name" name="guardian-name" data-field="guardian-name" autocomplete="name" value="${GovBB.D['guardian-name']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-rel">Relationship</label><div class="govbb-select-wrapper"><select class="govbb-select" id="guardian-rel" name="guardian-rel" data-field="guardian-rel"><option value="">Select one</option>${RELATIONSHIPS.map(r=>`<option value="${r}"${GovBB.D['guardian-rel']===r?' selected':''}>${r}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-phone">Mobile number</label><div class="govbb-input-wrapper"><input class="govbb-input" type="tel" id="guardian-phone" name="guardian-phone" data-field="guardian-phone" inputmode="tel" value="${GovBB.D['guardian-phone']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="guardian-email">Email address</label><div class="govbb-input-wrapper"><input class="govbb-input" type="email" id="guardian-email" name="guardian-email" data-field="guardian-email" inputmode="email" value="${GovBB.D['guardian-email']||''}" /></div></div>
+
+      <h2 class="govbb-text-h2" style="margin-top:var(--spacing-l);margin-bottom:var(--spacing-s);">Secondary contact (optional)</h2>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Optional. Useful if the Unit cannot reach the primary contact.</p>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="secondary-name">Full name (optional)</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="secondary-name" name="secondary-name" data-field="secondary-name" value="${GovBB.D['secondary-name']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="secondary-rel">Relationship (optional)</label><div class="govbb-select-wrapper"><select class="govbb-select" id="secondary-rel" name="secondary-rel" data-field="secondary-rel"><option value="">Select one</option>${RELATIONSHIPS.map(r=>`<option value="${r}"${GovBB.D['secondary-rel']===r?' selected':''}>${r}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`;
+  },
+
+  'subjects-count': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">How many subjects are you claiming for?</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Choose how many subjects this refund claim covers (up to ${MAX_SUBJECTS}).</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Number of subjects</legend><div style="display:flex;flex-wrap:wrap;gap:var(--spacing-xs);">
+        ${Array.from({length:MAX_SUBJECTS},(_,i)=>i+1).map(n=>`<div class="govbb-radio-item" style="margin-right:var(--spacing-s);"><input class="govbb-radio" type="radio" id="subject-count-${n}" name="subject-count" data-field="subject-count" value="${n}"${String(GovBB.D['subject-count'])===String(n)?' checked':''} /><label class="govbb-radio-item__label" for="subject-count-${n}">${n}</label></div>`).join('')}
+      </div></fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'subjects-data': () => {
+    const count = subjectCount();
+    for (let i = count + 1; i <= MAX_SUBJECTS; i++) {
+      ['name','series','amount'].forEach(f=>delete GovBB.D['subj-'+i+'-'+f]);
+    }
+    let sections = '';
+    for (let i = 1; i <= count; i++) {
+      sections += `
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-l);border-top:2px solid var(--color-grey-00);padding-top:var(--spacing-m);">
+        <legend class="govbb-fieldset__legend govbb-text-h2" style="padding:0 var(--spacing-s);">Subject ${i}</legend>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="subj-${i}-name">Subject name</label><p class="govbb-hint">For example, "Mathematics", "Pure Mathematics Unit 1".</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="subj-${i}-name" name="subj-${i}-name" data-field="subj-${i}-name" value="${GovBB.D['subj-'+i+'-name']||''}" /></div></div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="subj-${i}-series">Examination series</label><div class="govbb-select-wrapper"><select class="govbb-select" id="subj-${i}-series" name="subj-${i}-series" data-field="subj-${i}-series"><option value="">Select a series</option>${EXAM_SERIES.map(s=>`<option value="${s}"${GovBB.D['subj-'+i+'-series']===s?' selected':''}>${s}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="subj-${i}-amount">Amount paid ($BBD)</label><p class="govbb-hint">The fee you paid for this subject.</p><div class="govbb-input-wrapper" style="max-width:10rem;"><input class="govbb-input" type="text" id="subj-${i}-amount" name="subj-${i}-amount" data-field="subj-${i}-amount" data-trigger-render="1" inputmode="decimal" value="${GovBB.D['subj-'+i+'-amount']||''}" /></div></div>
+      </fieldset>`;
+    }
+    return `<form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">${count===1?'Subject being claimed':'Subjects being claimed ('+count+')'}</h1>
+      ${sections}
+      <p class="govbb-text-body" style="margin-top:var(--spacing-m);background:var(--color-grey-10);padding:var(--spacing-s) var(--spacing-m);border-left:4px solid var(--color-blue-40);"><strong>Total amount being claimed: ${totalDisplay()}</strong></p>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`;
+  },
+
+  'reason': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Reason for the refund</h1>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="refund-reason">Why are you claiming a refund?</label><p class="govbb-hint">Be specific. For example, "the examination was cancelled by CXC", "I was unable to sit the exam due to illness — medical certificate attached", "I withdrew before the deadline".</p><textarea class="govbb-textarea" id="refund-reason" name="refund-reason" data-field="refund-reason" rows="6">${GovBB.D['refund-reason']||''}</textarea></div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'banking': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Where to deposit the refund</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Approved refunds are paid by direct deposit. Make sure the account is in your name (or, for a minor, the parent/guardian's name).</p>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bank-name">Bank or credit union</label><div class="govbb-select-wrapper"><select class="govbb-select" id="bank-name" name="bank-name" data-field="bank-name" data-trigger-render="1"><option value="">Select one</option>${BANKS.map(b=>`<option value="${b}"${GovBB.D['bank-name']===b?' selected':''}>${b}</option>`).join('')}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>
+      ${GovBB.D['bank-name']==='Other'?`<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);"><label class="govbb-label" for="bank-name-other">Name of bank or credit union</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="bank-name-other" name="bank-name-other" data-field="bank-name-other" value="${GovBB.D['bank-name-other']||''}" /></div></div>`:''}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="bank-branch">Branch</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="bank-branch" name="bank-branch" data-field="bank-branch" value="${GovBB.D['bank-branch']||''}" /></div></div>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">Account type</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">${ACCOUNT_TYPES.map((t,i)=>`<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="account-type-${i}" name="account-type" data-field="account-type" value="${t}"${GovBB.D['account-type']===t?' checked':''} /><label class="govbb-radio-item__label" for="account-type-${i}">${t}</label></div>`).join('')}</div></fieldset>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="account-no">Account number</label><p class="govbb-hint">6 to 16 digits.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="account-no" name="account-no" data-field="account-no" inputmode="numeric" autocomplete="off" value="${GovBB.D['account-no']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="account-no-confirm">Re-enter your account number</label><p class="govbb-hint">Type it from your bank statement — don't copy from the field above.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="account-no-confirm" name="account-no-confirm" data-field="account-no-confirm" inputmode="numeric" autocomplete="off" onpaste="event.preventDefault();alert('Type your account number — don\\'t paste it.');" value="${GovBB.D['account-no-confirm']||''}" /></div></div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="account-holder">Name on the account</label><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="account-holder" name="account-holder" data-field="account-holder" value="${GovBB.D['account-holder']||''}" /></div></div>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>
+    </form>`,
+
+  'evidence': () => {
+    const minor = isMinor();
+    return `${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Upload supporting documents</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Accepted formats: PDF, JPG, PNG. Maximum size: 10 MB per file.</p>
+      ${uploadRow('receipts', 'Original payment receipt(s) (required)', 'A scan or clear photo of the receipt(s) from when you paid the fees.')}
+      ${uploadRow('photo-id', 'Government-issued photo ID (required)', 'For example, driver\'s licence, passport, or national ID card.')}
+      ${minor ? uploadRow('birth-cert', 'Candidate\'s birth certificate (required — candidate is under 18)', '') : ''}
+      ${uploadRow('supporting', 'Other supporting document (optional)', 'For example, a medical certificate if you were unable to sit the exam.')}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue</button></div>`;
+  },
+
+  'declaration': () => `
+    <form novalidate>${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Before you submit, please confirm the following.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-accurate" name="decl-accurate" data-field="decl-accurate"${GovBB.D['decl-accurate']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-accurate">The information I have given is true and correct to the best of my knowledge.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-paid" name="decl-paid" data-field="decl-paid"${GovBB.D['decl-paid']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-paid">I paid the fees I am claiming a refund for, and the receipts I have uploaded are originals.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-rules" name="decl-rules" data-field="decl-rules"${GovBB.D['decl-rules']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-rules">I understand that refunds are subject to CXC's refund rules and some fees may not be refundable.</label></div>
+        <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-checkbox" type="checkbox" id="decl-false" name="decl-false" data-field="decl-false"${GovBB.D['decl-false']?' checked':''} /><label class="govbb-checkbox-item__label" for="decl-false">I understand that providing false information may result in the claim being refused or the money being recovered.</label></div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">Continue to review</button></div>
+    </form>`,
+
+  'check': () => {
+    const count = subjectCount();
+    let subjRows = '';
+    for (let i = 1; i <= count; i++) {
+      var bits = [];
+      bits.push(GovBB.D['subj-'+i+'-name']||'No name');
+      bits.push(GovBB.D['subj-'+i+'-series']||'No series');
+      var amt=parseFloat(String(GovBB.D['subj-'+i+'-amount']||'').replace(/,/g,''));
+      bits.push(isNaN(amt)?'$0.00':'$'+amt.toFixed(2));
+      subjRows += GovBB.summaryRow('Subject '+i, bits.join(' · '), 'subjects-data');
+    }
+    const minor = isMinor();
+    return `<div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before submitting</h1>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Candidate</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Name', claimantName(), 'claimant-details')}
+        ${GovBB.summaryRow('Sex', GovBB.D['sex'], 'claimant-details')}
+        ${GovBB.summaryRow('Date of birth', fmtDate('dob'), 'claimant-details')}
+        ${GovBB.summaryRow('National ID', maskNid(GovBB.D['nid']), 'claimant-details')}
+        ${GovBB.summaryRow('Address', GovBB.D['address'], 'claimant-details')}
+        ${GovBB.summaryRow('Parish', GovBB.D['parish'], 'claimant-details')}
+        ${GovBB.summaryRow('Mobile', formatPhone(GovBB.D['phone']), 'claimant-details')}
+        ${GovBB.summaryRow('Email', GovBB.D['email'], 'claimant-details')}
+        ${GovBB.summaryRow('Status', GovBB.D['candidate-status'], 'claimant-details')}
+      </dl>
+      ${minor?`<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parent or guardian (candidate is a minor)</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Primary name', GovBB.D['guardian-name'], 'guardian-details')}
+        ${GovBB.summaryRow('Relationship', GovBB.D['guardian-rel'], 'guardian-details')}
+        ${GovBB.summaryRow('Mobile', formatPhone(GovBB.D['guardian-phone']), 'guardian-details')}
+        ${GovBB.summaryRow('Email', GovBB.D['guardian-email'], 'guardian-details')}
+        ${GovBB.summaryRow('Secondary contact', GovBB.D['secondary-name']?(GovBB.D['secondary-name']+(GovBB.D['secondary-rel']?' ('+GovBB.D['secondary-rel']+')':'')):'Not provided', 'guardian-details')}
+      </dl>`:''}
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Subjects being claimed (${count})</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${subjRows}
+        ${GovBB.summaryRow('Total claimed', totalDisplay(), null)}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Reason</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">${GovBB.summaryRow('Reason', GovBB.D['refund-reason'], 'reason')}</dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Banking</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Bank', GovBB.D['bank-name']==='Other'?(GovBB.D['bank-name-other']||'Other'):GovBB.D['bank-name'], 'banking')}
+        ${GovBB.summaryRow('Branch', GovBB.D['bank-branch'], 'banking')}
+        ${GovBB.summaryRow('Account type', GovBB.D['account-type'], 'banking')}
+        ${GovBB.summaryRow('Account number', maskAccount(GovBB.D['account-no']), 'banking')}
+        ${GovBB.summaryRow('Name on account', GovBB.D['account-holder'], 'banking')}
+      </dl>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Documents</h2>
+      <dl style="border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-l);">
+        ${[{key:'receipts',label:'Payment receipt(s)'},{key:'photo-id',label:'Photo ID'},minor?{key:'birth-cert',label:'Birth certificate'}:null,{key:'supporting',label:'Other supporting document'}].filter(Boolean).map(function(d){var f=GovBB.D['upload-'+d.key];return GovBB.summaryRow(d.label, f?escapeHtml(f.name)+' ('+formatBytes(f.size)+')':'Not uploaded', 'evidence');}).join('')}
+      </dl>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="if(this.disabled)return;this.disabled=true;this.textContent='Submitting…';next();">Submit claim</button></div>
+    </div>`;
+  },
+
+  'confirmation': () => {
+    if (!window.__refNumber) {
+      const refYear = new Date().getFullYear();
+      const refNum = String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
+      window.__refNumber = `ERF-${refYear}-${refNum}`;
+    }
+    const ref = window.__refNumber;
+    if(document.title.indexOf('Error: ')===0)document.title=document.title.substring('Error: '.length);
+    document.title='Claim submitted — '+FORM_NAME;
+    return `<div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Claim submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${ref}</p>
+      </div>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Total claimed: <strong>${totalDisplay()}</strong> across ${subjectCount()} subject${subjectCount()===1?'':'s'}.</p>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Examinations Unit verifies the payment and checks the claim against CXC's refund rules.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Senior Officer (Exams) and Deputy Permanent Secretary approve the refund.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Approved refunds are paid into the account you provided within <strong>8 weeks</strong>.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If any part of the claim is declined, you will be told why in writing.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We've sent a copy of your claim to ${GovBB.D['email']||'the address you provided'}.</li>
+      </ul>
+      <div style="display:flex;gap:var(--spacing-m);flex-wrap:wrap;margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="window.print()">Print this page</button>
+        <a class="govbb-btn--link" href="../forms.html">Return to all forms</a>
+      </div>
+    </div>`;
+  }
+};
+
+function validate(pageId){
+  const D=GovBB.D,errors=[];
+  const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]+$/,NID_RE=/^\d{6}-\d{4}$/;
+  function req(id,msg){if(!D[id]||String(D[id]).trim()==='')errors.push({id:id,msg:msg});}
+  function reqNid(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!NID_RE.test(v))errors.push({id:id,msg:label+' must be in the format 110915-0048'});}
+  function reqPhone(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}var digits=v.replace(/[\s\-()+]/g,'');if(!/^\d{7,15}$/.test(digits))errors.push({id:id,msg:label+' must contain 7 to 15 digits'});}
+  function reqEmail(id,label,emptyMsg){var v=(D[id]||'').trim();if(!v){errors.push({id:id,msg:emptyMsg});return;}if(!EMAIL_RE.test(v))errors.push({id:id,msg:label+' must be in the format you@example.com'});}
+  function reqDate(prefix,label){const d=D[prefix+'-day'],m=D[prefix+'-month'],y=D[prefix+'-year'];if(!d||!m||!y){errors.push({id:prefix+'-day',msg:label+' — enter a complete date.'});return null;}const dt=parseDate(prefix);if(dt===false){errors.push({id:prefix+'-day',msg:label+' — enter a real date.'});return null;}return dt;}
+
+  if(pageId==='claimant-details'){
+    req('title','Select a title');
+    req('surname','Enter your surname');
+    req('first-name','Enter your first name');
+    if(!D['sex'])errors.push({id:'sex-m',msg:'Select the candidate\'s sex'});
+    const dob=reqDate('dob','Date of birth');
+    if(dob){const today=new Date();today.setHours(0,0,0,0);if(dob>=today)errors.push({id:'dob-day',msg:'Date of birth must be in the past.'});}
+    reqNid('nid','National ID Number','Enter the National ID Number');
+    req('address','Enter the home address');
+    req('parish','Select a parish');
+    reqPhone('phone','Mobile number','Enter a mobile number');
+    reqEmail('email','Email address','Enter an email address');
+    if(!D['candidate-status'])errors.push({id:'status-0',msg:'Select the candidate\'s status'});
+  }
+  if(pageId==='guardian-details'){
+    if(!isMinor())return errors; /* skip — auto-advances */
+    req('guardian-name','Enter the parent or guardian\'s name');
+    req('guardian-rel','Select the relationship');
+    reqPhone('guardian-phone','Mobile number','Enter the parent or guardian\'s mobile number');
+    reqEmail('guardian-email','Email address','Enter the parent or guardian\'s email address');
+  }
+  if(pageId==='subjects-count'){
+    if(!D['subject-count'])errors.push({id:'subject-count-1',msg:'Choose how many subjects you are claiming for'});
+  }
+  if(pageId==='subjects-data'){
+    for(let i=1;i<=subjectCount();i++){
+      req('subj-'+i+'-name','Subject '+i+' — enter the subject name');
+      req('subj-'+i+'-series','Subject '+i+' — select the examination series');
+      var amt=(D['subj-'+i+'-amount']||'').trim();
+      if(!amt){errors.push({id:'subj-'+i+'-amount',msg:'Subject '+i+' — enter the amount paid'});}
+      else if(!/^\d+(\.\d{1,2})?$/.test(amt.replace(/,/g,''))){errors.push({id:'subj-'+i+'-amount',msg:'Subject '+i+' — amount must be a number, for example 250 or 250.50'});}
+      else{var n=parseFloat(amt.replace(/,/g,''));if(n<=0)errors.push({id:'subj-'+i+'-amount',msg:'Subject '+i+' — amount must be more than $0'});else if(n>5000)errors.push({id:'subj-'+i+'-amount',msg:'Subject '+i+' — amount over $5,000 is unusual. Check the value.'});}
+    }
+  }
+  if(pageId==='reason'){
+    var r=(D['refund-reason']||'').trim();
+    if(!r)errors.push({id:'refund-reason',msg:'Explain why you are claiming the refund'});
+    else if(r.length<40)errors.push({id:'refund-reason',msg:'Add more detail — the Unit needs enough context to assess the claim. At least 40 characters.'});
+  }
+  if(pageId==='banking'){
+    req('bank-name','Select your bank or credit union');
+    if(D['bank-name']==='Other')req('bank-name-other','Enter the name of your bank');
+    req('bank-branch','Enter the branch');
+    if(!D['account-type'])errors.push({id:'account-type-0',msg:'Select an account type'});
+    var acct=(D['account-no']||'').trim(),acct2=(D['account-no-confirm']||'').trim();
+    if(!acct){errors.push({id:'account-no',msg:'Enter your account number'});}else if(!/^\d{6,16}$/.test(acct.replace(/[\s\-]/g,''))){errors.push({id:'account-no',msg:'Account number must be 6 to 16 digits'});}
+    if(!acct2){errors.push({id:'account-no-confirm',msg:'Re-enter your account number to confirm'});}else if(acct&&acct.replace(/[\s\-]/g,'')!==acct2.replace(/[\s\-]/g,''))errors.push({id:'account-no-confirm',msg:'Account numbers do not match — check the digits and try again'});
+    req('account-holder','Enter the name on the account');
+  }
+  if(pageId==='evidence'){
+    if(!D['upload-receipts'])errors.push({id:'upload-receipts',msg:'Upload your original payment receipt(s)'});
+    if(!D['upload-photo-id'])errors.push({id:'upload-photo-id',msg:'Upload your government-issued photo ID'});
+    if(isMinor()&&!D['upload-birth-cert'])errors.push({id:'upload-birth-cert',msg:'Upload the candidate\'s birth certificate (candidate is under 18)'});
+  }
+  if(pageId==='declaration'){
+    ['accurate','paid','rules','false'].forEach(function(k){if(!D['decl-'+k])errors.push({id:'decl-'+k,msg:'Tick the box to confirm'});});
+  }
+  return errors;
+}
+
+GovBB.init({formName:FORM_NAME,flow:FLOW,pages:PAGES,validate:validate});
+</script>
+</body>
+</html>
