@@ -61,6 +61,9 @@ GovBB.clearErrors = function() {
   if (s) s.remove();
   document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
   document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+  /* Drop the "Error: " prefix showErrors adds to the tab title, so it does not
+     stick around after the user fixes the problem and moves on. */
+  if (document.title.indexOf('Error: ') === 0) document.title = document.title.slice(7);
 };
 GovBB.showErrors = function(errors) {
   GovBB.clearErrors();
@@ -87,8 +90,17 @@ GovBB.showErrors = function(errors) {
     el.setAttribute('aria-describedby',errId);
     var msg = document.createElement('p');
     msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    /* Place the inline message after the label/hint and BEFORE the input
+       (or, for fieldsets, before the options) so it reads in the GDS order:
+       label → hint → error → control. */
     var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
-    if (group) group.appendChild(msg);
+    if (group) {
+      var anchor = group.querySelector('.govbb-hint')
+                || group.querySelector('.govbb-label')
+                || group.querySelector('legend');
+      if (anchor) anchor.insertAdjacentElement('afterend', msg);
+      else group.insertBefore(msg, group.firstChild);
+    }
   });
   if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
 };
@@ -278,7 +290,7 @@ const PAGES = {
       <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
 
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to register your child for the National Summer Camp Programme. The camp is open to children aged <strong>4 to 15 years</strong>.</p>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply online. The camp is free and registration takes about <strong>10 minutes</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply online. The camp is free and registration takes about <strong>15 minutes</strong>.</p>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start registration</button></div>
 
@@ -334,7 +346,7 @@ const PAGES = {
       </fieldset>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
-        <label class="govbb-label" for="nid">National ID Number</label>
+        <label class="govbb-label" for="nid">National ID Number (NRN)</label>
         <p class="govbb-hint">You can find this on your child's national ID card. For example, 110915-0048.</p>
         <div class="govbb-input-wrapper">
           <input class="govbb-input" type="text" id="nid" name="nid" data-field="nid" value="${GovBB.D['nid']||''}" />
@@ -648,21 +660,25 @@ const PAGES = {
         </div>
       </fieldset>
 
-      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
-        <label class="govbb-label" for="dietary">Dietary restrictions</label>
-        <div class="govbb-select-wrapper">
-          <select class="govbb-select" id="dietary" name="dietary" data-field="dietary" data-trigger-render="1">
-            <option value="">Select one</option>
-            ${['None','Vegetarian','Vegan','Gluten-free','Other'].map(o=>`<option value="${o}"${GovBB.D['dietary']===o?' selected':''}>${o}</option>`).join('')}
-          </select>
-          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
-        </div>
-      </div>
-      <div data-show-when-name="dietary" data-show-when-value="Other" style="display:${GovBB.D['dietary']==='Other'?'block':'none'};padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+      <!-- Dietary restrictions only matter if the child is eating camp meals. -->
+      <div data-show-when-name="meals-provided" data-show-when-value="Yes" style="display:${GovBB.D['meals-provided']==='Yes'?'block':'none'};">
         <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
-          <label class="govbb-label" for="dietary-other">Please describe the dietary restriction</label>
-          <div class="govbb-input-wrapper">
-            <input class="govbb-input" type="text" id="dietary-other" name="dietary-other" data-field="dietary-other" value="${GovBB.D['dietary-other']||''}" />
+          <label class="govbb-label" for="dietary">Dietary restrictions (optional)</label>
+          <p class="govbb-hint">Leave this blank if your child has no dietary restrictions.</p>
+          <div class="govbb-select-wrapper">
+            <select class="govbb-select" id="dietary" name="dietary" data-field="dietary" data-trigger-render="1">
+              <option value="">Select one</option>
+              ${['Vegetarian','Vegan','Gluten-free','Other'].map(o=>`<option value="${o}"${GovBB.D['dietary']===o?' selected':''}>${o}</option>`).join('')}
+            </select>
+            <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+          </div>
+        </div>
+        <div data-show-when-name="dietary" data-show-when-value="Other" style="display:${GovBB.D['dietary']==='Other'?'block':'none'};padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">
+          <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+            <label class="govbb-label" for="dietary-other">Please describe the dietary restriction</label>
+            <div class="govbb-input-wrapper">
+              <input class="govbb-input" type="text" id="dietary-other" name="dietary-other" data-field="dietary-other" value="${GovBB.D['dietary-other']||''}" />
+            </div>
           </div>
         </div>
       </div>
@@ -707,7 +723,7 @@ const PAGES = {
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
         <legend class="govbb-fieldset__legend">Are you the emergency contact?</legend>
-        <p class="govbb-hint">If yes, we will use your contact details above in an emergency.</p>
+        <p class="govbb-hint">If yes, we'll reach you on the contact details you give us. If no, we'll ask for a separate emergency contact.</p>
         <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
           <div class="govbb-radio-item">
             <input class="govbb-radio" type="radio" id="guardian-is-emergency-yes" name="guardian-is-emergency" data-field="guardian-is-emergency" value="Yes"${GovBB.D['guardian-is-emergency']==='Yes'?' checked':''} />
@@ -951,7 +967,9 @@ const PAGES = {
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Nutrition</h2>
       <dl style="margin-bottom:var(--spacing-m);">
         ${GovBB.summaryRow('Will eat camp meals?', GovBB.D['meals-provided'] || '', 'nutrition')}
-        ${GovBB.summaryRow('Dietary restrictions', GovBB.D['dietary'] === 'Other' ? (GovBB.D['dietary-other'] || 'Other') : (GovBB.D['dietary'] || ''), 'nutrition')}
+        ${GovBB.summaryRow('Dietary restrictions', GovBB.D['meals-provided'] === 'No'
+            ? 'Not applicable (will not eat camp meals)'
+            : (GovBB.D['dietary'] === 'Other' ? (GovBB.D['dietary-other'] || 'Other') : (GovBB.D['dietary'] || 'None given')), 'nutrition')}
       </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Parent or guardian</h2>
@@ -1102,8 +1120,11 @@ function validate(pageId) {
   }
 
   if (pageId === 'camp') {
-    if (!D['camp-parish'])  errors.push({ id: 'camp-parish', msg: 'Select the parish of the camp' });
-    if (!D['camp-name'])    errors.push({ id: 'camp-name',   msg: 'Select the name of the camp' });
+    /* The camp-name dropdown only renders once a parish is chosen, so only
+       validate it after a parish is selected — otherwise the error summary
+       would link to a field that is not on the page yet. */
+    if (!D['camp-parish'])    errors.push({ id: 'camp-parish', msg: 'Select the parish of the camp' });
+    else if (!D['camp-name']) errors.push({ id: 'camp-name',   msg: 'Select the name of the camp' });
     const anyTopic = D['curriculum-arts'] || D['curriculum-innovation'] || D['curriculum-youth'] ||
                      D['curriculum-health'] || D['curriculum-self'] || D['curriculum-finance'] || D['curriculum-agriculture'];
     if (!anyTopic) errors.push({ id: 'curriculum-arts', msg: 'Choose at least one topic that interests your child' });
@@ -1116,8 +1137,9 @@ function validate(pageId) {
 
   if (pageId === 'nutrition') {
     if (!D['meals-provided'])  errors.push({ id: 'meals-provided-yes', msg: 'Select yes or no for camp meals' });
-    if (!D['dietary'])          errors.push({ id: 'dietary', msg: 'Select a dietary option' });
-    if (D['dietary'] === 'Other' && (!D['dietary-other'] || !D['dietary-other'].trim()))
+    /* Dietary restrictions are optional, and only relevant when the child eats
+       camp meals. Only the "Other" description is required, and only if shown. */
+    if (D['meals-provided'] === 'Yes' && D['dietary'] === 'Other' && (!D['dietary-other'] || !D['dietary-other'].trim()))
       errors.push({ id: 'dietary-other', msg: 'Dietary restrictions – Describe the dietary restriction' });
   }
 
@@ -1179,6 +1201,7 @@ GovBB.init({
     const triggers = [
       'guardian-is-emergency',
       'has-activity-exemptions',
+      'meals-provided',
       'illness',
       'medication',
       'disability',
