@@ -44,7 +44,7 @@
   };
 
   /* ── Navigation ── */
-  GovBB.render = function () {
+  GovBB.render = function (preserveScroll) {
     var flow = _getFlow ? _getFlow() : _flow;
     var pageId = flow[_current];
     var el = document.getElementById(_appEl);
@@ -53,14 +53,12 @@
     if (!fn) { el.innerHTML = '<p>Page not found: ' + pageId + '</p>'; return; }
     el.innerHTML = fn();
     _injectProgressIndicator(pageId, flow);
-    /* Previous button is shown on every form step (including the first) so
-       users can navigate back to the start page if they want to re-read the
-       intro or eligibility. */
     _bindInputs();
     _bindRadios();
     _bindCheckboxes();
     _initSignaturePads();
-    window.scrollTo(0, 0);
+    _hidePreviousOnFirstStep(pageId, flow);
+    if (!preserveScroll) window.scrollTo(0, 0);
   };
 
   /* Pages that are not counted as form steps for the progress indicator. */
@@ -187,15 +185,89 @@
       // Restore saved value
       if (GovBB.D[field] !== undefined) {
         if (el.type === 'checkbox') el.checked = !!GovBB.D[field];
+        else if (el.type === 'radio') el.checked = (GovBB.D[field] === el.value);
         else el.value = GovBB.D[field];
       }
-      var ev = (el.tagName === 'SELECT' || el.type === 'checkbox') ? 'change' : 'input';
+      var ev = (el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'radio') ? 'change' : 'input';
       el.addEventListener(ev, function () {
         if (el.type === 'checkbox') GovBB.D[field] = el.checked;
+        else if (el.type === 'radio') { if (el.checked) GovBB.D[field] = el.value; }
         else GovBB.D[field] = el.value;
-        if (el.getAttribute('data-trigger-render')) GovBB.render();
+        _clearFieldError(el);
+        if (el.getAttribute('data-trigger-render')) {
+          var focusId = el.id;
+          GovBB.render(true);
+          if (focusId) {
+            try {
+              var refocus = document.getElementById(focusId);
+              if (refocus && refocus.focus) refocus.focus({ preventScroll: true });
+            } catch (e) {}
+          }
+        }
       });
     });
+  }
+
+  /* Clear inline + summary errors for a field once the user has provided
+     input. Handles radio groups by clearing errors targeting any radio in
+     the same group. */
+  function _clearFieldError(el) {
+    var ids = [];
+    if (el.type === 'radio' && el.name) {
+      var group = document.querySelectorAll('input[type="radio"][name="' + el.name + '"]');
+      group.forEach(function (r) { if (r.id) ids.push(r.id); });
+    } else if (el.id) {
+      ids.push(el.id);
+    }
+    if (!ids.length) return;
+    /* Clear inline messages + aria-invalid on every input that matches an
+       id (so all radios in the group lose the invalid styling at once). */
+    ids.forEach(function (id) {
+      var node = document.getElementById(id);
+      if (!node) return;
+      if (node.getAttribute('aria-invalid') === 'true') {
+        node.removeAttribute('aria-invalid');
+        node.removeAttribute('aria-describedby');
+      }
+      /* The inline `<p class="govbb-error-message">` is appended to the
+         closest form-group / fieldset / parent. Remove any matching one
+         with id `err-<id>`. */
+      var errMsg = document.getElementById('err-' + id);
+      if (errMsg && errMsg.parentNode) errMsg.parentNode.removeChild(errMsg);
+      /* Remove the corresponding error-summary list item, if any. */
+      var summary = document.getElementById('error-summary');
+      if (summary) {
+        var link = summary.querySelector('a[href="#' + id + '"]');
+        if (link) {
+          var li = link.closest('li');
+          if (li && li.parentNode) li.parentNode.removeChild(li);
+        }
+      }
+    });
+    /* Also strip any stray .govbb-error-message left next to the input
+       (in case it doesn't carry an id). */
+    var group = el.closest('.govbb-form-group') || el.closest('fieldset') || el.parentElement;
+    if (group) {
+      var stray = group.querySelectorAll('.govbb-error-message');
+      stray.forEach(function (m) {
+        /* Only remove messages whose id matches one of our cleared ids
+           (or has no id at all and the input has no remaining error). */
+        if (!m.id || ids.indexOf(m.id.replace(/^err-/, '')) !== -1) {
+          if (m.parentNode) m.parentNode.removeChild(m);
+        }
+      });
+    }
+    /* If the summary list is now empty, remove the whole summary block. */
+    var summary2 = document.getElementById('error-summary');
+    if (summary2) {
+      var remaining = summary2.querySelectorAll('li');
+      if (!remaining.length) {
+        if (summary2.parentNode) summary2.parentNode.removeChild(summary2);
+        if (document.title.indexOf('Error: ') === 0) {
+          document.title = document.title.substring('Error: '.length);
+        }
+      }
+    }
   }
 
   /* ── Radio binding ── */
