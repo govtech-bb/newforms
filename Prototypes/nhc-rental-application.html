@@ -101,6 +101,7 @@ const FORM_NAME = 'Application for an NHC Rental Unit or Lot';
 
 const FLOW = [
   'start',
+  'eligibility',
   'applicant-about',
   'applicant-contact',
   'applicant-work',
@@ -232,16 +233,27 @@ function contactBlock(prefix) {
     + textField(prefix + 'phone-cell', 'Mobile number', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' })
     + textField(prefix + 'email', 'Email address (optional)', { type: 'email', inputmode: 'email', hint: 'For example, you@example.com.' });
 }
-function workBlock(prefix) {
+function workBlock(prefix, includeIncome) {
   return radioGroup(prefix + 'marital', 'Marital status', MARITAL)
     + textField(prefix + 'citizenship', 'Citizenship')
     + textField(prefix + 'country-residence', 'Country of residence')
     + textField(prefix + 'employer', 'Employer')
     + textField(prefix + 'occupation', 'Occupation')
     + textField(prefix + 'employment-period', 'Period of employment', { hint: 'How long you have worked there. For example, 3 years.' })
-    + textField(prefix + 'salary', 'Salary', { hint: 'Your pay before deductions.', inputmode: 'decimal' })
-    + radioGroup(prefix + 'pay-period', 'Pay period', PAYPERIOD)
+    + (includeIncome
+        ? textField(prefix + 'salary', 'Salary', { hint: 'Their pay before deductions.', inputmode: 'decimal' }) + radioGroup(prefix + 'pay-period', 'Pay period', PAYPERIOD)
+        : '')
     + radioGroup(prefix + 'employment-status', 'Employment status', EMPSTATUS);
+}
+
+/* Eligibility gate (soft): checks the applicant's income up front. */
+function checkEligibility() {
+  var errs = validate('eligibility');
+  if (errs.length) { GovBB.showErrors(errs); return; }
+  GovBB.clearErrors();
+  var m = monthlyIncome('');
+  if (m !== null && m > 3000) { GovBB.D['__elig-over'] = true; GovBB.render(); }
+  else { GovBB.D['__elig-over'] = false; next(); }
 }
 
 /* ── Intended occupants (dynamic list) ── */
@@ -336,6 +348,27 @@ const PAGES = {
       </ul>
     </div>`,
 
+  'eligibility': () => {
+    var over = GovBB.D['__elig-over'] === true;
+    return `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Check if you can apply</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">You may apply if your income does not exceed <strong>$3,000.00 a month</strong>. Tell us your income to check before you start. If you are applying with a co-applicant, we will add their income later.</p>
+      ${textField('salary', 'Your income', { hint: 'Your pay before deductions.', inputmode: 'decimal' })}
+      ${radioGroup('pay-period', 'How often are you paid?', PAYPERIOD)}
+      ${over ? `<div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>You may not be eligible.</strong></p>
+        <p class="govbb-text-body">Based on the income you entered, your income may be above the $3,000.00 a month limit. The NHC makes the final decision and exceptions may apply. You can change your income above and select Continue to check again, continue anyway if you think you may still qualify, or go back to leave.</p>
+      </div>` : ''}
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="checkEligibility()">Continue</button>
+        ${over ? '<button type="button" class="govbb-btn--secondary" onclick="next()">Continue anyway</button>' : ''}
+      </div>
+    </form>`;
+  },
+
   'applicant-about': () => `
     <form novalidate>
       ${caption()}
@@ -357,7 +390,7 @@ const PAGES = {
     <form novalidate>
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your circumstances and employment</h1>
-      ${workBlock('')}
+      ${workBlock('', false)}
       ${btns()}
     </form>`,
 
@@ -390,7 +423,7 @@ const PAGES = {
     <form novalidate>
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Co-applicant circumstances and employment</h1>
-      ${workBlock('co-')}
+      ${workBlock('co-', true)}
       ${btns()}
     </form>`,
 
@@ -458,7 +491,7 @@ const PAGES = {
         ${GovBB.summaryRow('Marital status', GovBB.D['marital'] || '', 'applicant-work')}
         ${GovBB.summaryRow('Employer', GovBB.D['employer'] || '', 'applicant-work')}
         ${GovBB.summaryRow('Occupation', GovBB.D['occupation'] || '', 'applicant-work')}
-        ${GovBB.summaryRow('Salary', GovBB.D['salary'] ? (GovBB.D['salary'] + ' (' + (GovBB.D['pay-period'] || '') + ')') : '', 'applicant-work')}
+        ${GovBB.summaryRow('Income', GovBB.D['salary'] ? (GovBB.D['salary'] + ' (' + (GovBB.D['pay-period'] || '') + ')') : '', 'eligibility')}
         ${GovBB.summaryRow('Employment status', GovBB.D['employment-status'] || '', 'applicant-work')}
       </dl>
 
@@ -606,14 +639,16 @@ function validate(pageId) {
     reqPhone('phone-cell', 'a mobile number', true);
     optEmail('email');
   }
+  if (pageId === 'eligibility') {
+    reqSalary('salary', 'Enter your income');
+    reqRadio('pay-period', 'Select how often you are paid');
+  }
   if (pageId === 'applicant-work') {
     reqRadio('marital', 'Select your marital status');
     reqText('citizenship', 'Enter your citizenship');
     reqText('country-residence', 'Enter your country of residence');
     reqText('employer', 'Enter your employer');
     reqText('occupation', 'Enter your occupation');
-    reqSalary('salary', 'Enter your salary');
-    reqRadio('pay-period', 'Select your pay period');
     reqRadio('employment-status', 'Select your employment status');
   }
   if (pageId === 'co-applicant-question') {
