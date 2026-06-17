@@ -196,6 +196,21 @@ function fmtDate(prefix) {
   if (!d && !m && !y) return '';
   return [d, m, y].filter(Boolean).join(' / ');
 }
+/* Best-effort monthly income for a soft eligibility hint. Bi-monthly is
+   treated as twice a month. Returns null if the salary is not a number. */
+function monthlyIncome(prefix) {
+  var s = String(GovBB.D[prefix + 'salary'] || '').replace(/[$,\s]/g, '');
+  if (!/^\d+(\.\d+)?$/.test(s)) return null;
+  var amt = parseFloat(s), pp = GovBB.D[prefix + 'pay-period'];
+  if (pp === 'Weekly') return amt * 52 / 12;
+  if (pp === 'Bi-monthly') return amt * 2;
+  return amt;
+}
+function householdSize() {
+  var a = parseInt(GovBB.D['family-adults'] || '', 10), c = parseInt(GovBB.D['family-children'] || '', 10);
+  if (isNaN(a) && isNaN(c)) return '';
+  return String((isNaN(a) ? 0 : a) + (isNaN(c) ? 0 : c));
+}
 
 /* ── Reusable applicant field blocks (used for applicant + co-applicant) ── */
 function nameBlock(prefix) {
@@ -285,7 +300,8 @@ const PAGES = {
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">You can apply on your own, or with a co-applicant (for example, your spouse).</p>
 
       <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body"><strong>Who can apply:</strong> applicants whose income does not exceed <strong>$3,000.00 a month</strong>.</p>
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Who can apply:</strong> you may apply if your income does not exceed <strong>$3,000.00 a month</strong>.</p>
+        <p class="govbb-text-body">If you apply with a co-applicant, this limit applies to your combined income. The NHC will confirm your eligibility.</p>
       </div>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
@@ -404,8 +420,8 @@ const PAGES = {
     return `
     <form novalidate>
       ${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">People who will live in the unit</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">List everyone who intends to live in the unit, including yourself.</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Other people who will live in the unit</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">List everyone else who will live in the unit with you. You do not need to add yourself. If you will live alone, continue without adding anyone.</p>
       ${rows}
       <div style="margin-bottom:var(--spacing-m);"><button type="button" class="govbb-btn--secondary" onclick="addOccupant()">Add another person</button></div>
       ${btns()}
@@ -424,6 +440,11 @@ const PAGES = {
     return `
     <div>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+      ${(function(){
+        var total = (monthlyIncome('') || 0) + (GovBB.D['has-co-applicant'] === 'Yes' ? (monthlyIncome('co-') || 0) : 0);
+        return total > 3000 ? '<div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);"><p class="govbb-text-body">Based on the income you entered, your monthly income may be above the <strong>$3,000.00</strong> limit for this programme. You can still submit — the NHC will confirm your eligibility.</p></div>' : '';
+      })()}
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Applicant</h2>
       <dl style="margin-bottom:var(--spacing-m);">
@@ -446,12 +467,13 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Household</h2>
       <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Size of family', householdSize(), 'household')}
         ${GovBB.summaryRow('Adults', GovBB.D['family-adults'] || '', 'household')}
         ${GovBB.summaryRow('Children', GovBB.D['family-children'] || '', 'household')}
         ${GovBB.summaryRow('Owns land or property?', GovBB.D['owns-property'] === 'Yes' ? ('Yes — ' + (GovBB.D['property-address'] || '')) : (GovBB.D['owns-property'] || ''), 'household')}
         ${GovBB.summaryRow('Indebted to NHC or other?', GovBB.D['indebted'] === 'Yes' ? ('Yes — ' + (GovBB.D['indebted-details'] || '')) : (GovBB.D['indebted'] || ''), 'household')}
         ${GovBB.summaryRow('Ever occupied an NHC unit?', GovBB.D['occupied-unit'] === 'Yes' ? ('Yes — ' + (GovBB.D['occupied-where'] || '')) : (GovBB.D['occupied-unit'] || ''), 'household')}
-        ${GovBB.summaryRow('Intended occupants', occupantsSummary(), 'occupants')}
+        ${GovBB.summaryRow('Other occupants', occupantsSummary() || 'None', 'occupants')}
       </dl>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
@@ -552,6 +574,22 @@ function validate(pageId) {
       errors.push({ id: prefix + '-day', msg: who + ' – The date of birth must be in the past' });
     }
   }
+  function reqPhone(id, label, required) {
+    var v = (D[id] || '').trim();
+    if (!v) { if (required) errors.push({ id: id, msg: 'Enter ' + label }); return; }
+    var digits = v.replace(/[\s\-()+]/g, '');
+    if (!/^\d{7,15}$/.test(digits)) errors.push({ id: id, msg: 'Enter ' + label + ' using 7 to 15 digits, for example (246) 249 1234' });
+  }
+  function reqSalary(id, emptyMsg) {
+    var v = (D[id] || '').trim();
+    if (!v) { errors.push({ id: id, msg: emptyMsg }); return; }
+    if (!/^\d+(\.\d{1,2})?$/.test(v.replace(/[$,\s]/g, ''))) errors.push({ id: id, msg: 'Enter the amount in dollars, for example 2500' });
+  }
+  function reqNumber(id, emptyMsg) {
+    var v = (D[id] || '').trim();
+    if (!v) { errors.push({ id: id, msg: emptyMsg }); return; }
+    if (!/^\d+$/.test(v)) errors.push({ id: id, msg: 'Enter a whole number, for example 2' });
+  }
 
   if (pageId === 'applicant-about') {
     reqRadio('title', 'Select a title');
@@ -563,7 +601,9 @@ function validate(pageId) {
   }
   if (pageId === 'applicant-contact') {
     reqText('address', 'Enter your address');
-    reqText('phone-cell', 'Enter a mobile number');
+    reqPhone('phone-home', 'a home telephone number', false);
+    reqPhone('phone-work', 'a work telephone number', false);
+    reqPhone('phone-cell', 'a mobile number', true);
     optEmail('email');
   }
   if (pageId === 'applicant-work') {
@@ -572,12 +612,17 @@ function validate(pageId) {
     reqText('country-residence', 'Enter your country of residence');
     reqText('employer', 'Enter your employer');
     reqText('occupation', 'Enter your occupation');
-    reqText('salary', 'Enter your salary');
+    reqSalary('salary', 'Enter your salary');
     reqRadio('pay-period', 'Select your pay period');
     reqRadio('employment-status', 'Select your employment status');
   }
   if (pageId === 'co-applicant-question') {
     reqRadio('has-co-applicant', 'Select yes or no');
+    /* Clear any co-applicant data if the user switches to "No" so it does not
+       linger in the submission. */
+    if (D['has-co-applicant'] === 'No') {
+      Object.keys(D).forEach(function (k) { if (k.indexOf('co-') === 0) delete D[k]; });
+    }
   }
   if (pageId === 'co-applicant-about') {
     reqRadio('co-title', "Select the co-applicant's title");
@@ -589,7 +634,9 @@ function validate(pageId) {
   }
   if (pageId === 'co-applicant-contact') {
     reqText('co-address', "Enter the co-applicant's address");
-    reqText('co-phone-cell', "Enter the co-applicant's mobile number");
+    reqPhone('co-phone-home', "a home telephone number for the co-applicant", false);
+    reqPhone('co-phone-work', "a work telephone number for the co-applicant", false);
+    reqPhone('co-phone-cell', "a mobile number for the co-applicant", true);
     optEmail('co-email');
   }
   if (pageId === 'co-applicant-work') {
@@ -598,22 +645,19 @@ function validate(pageId) {
     reqText('co-country-residence', "Enter the co-applicant's country of residence");
     reqText('co-employer', "Enter the co-applicant's employer");
     reqText('co-occupation', "Enter the co-applicant's occupation");
-    reqText('co-salary', "Enter the co-applicant's salary");
+    reqSalary('co-salary', "Enter the co-applicant's salary");
     reqRadio('co-pay-period', "Select the co-applicant's pay period");
     reqRadio('co-employment-status', "Select the co-applicant's employment status");
   }
   if (pageId === 'household') {
-    reqText('family-adults', 'Enter the number of adults');
-    reqText('family-children', 'Enter the number of children');
+    reqNumber('family-adults', 'Enter the number of adults');
+    reqNumber('family-children', 'Enter the number of children');
     reqRadio('owns-property', 'Select yes or no for owning land or property');
     if (D['owns-property'] === 'Yes') reqText('property-address', 'Enter the address of the land or property');
     reqRadio('indebted', 'Select yes or no for being indebted');
     if (D['indebted'] === 'Yes') reqText('indebted-details', 'Give details of the debt');
     reqRadio('occupied-unit', 'Select yes or no for occupying an NHC unit');
     if (D['occupied-unit'] === 'Yes') reqText('occupied-where', 'Enter where you occupied an NHC unit');
-  }
-  if (pageId === 'occupants') {
-    if (!D['occ-0-name'] || !D['occ-0-name'].trim()) errors.push({ id: 'occ-0-name', msg: 'Enter the name of at least one person who will live in the unit' });
   }
   if (pageId === 'declaration') {
     if (!D['declare-agree']) errors.push({ id: 'declare-agree', msg: 'Tick the box to declare the information is true and complete' });
