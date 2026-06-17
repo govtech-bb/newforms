@@ -299,7 +299,7 @@ const PAGES = {
       </dl>
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
         <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
-        <button type="button" class="govbb-btn" onclick="next()">Continue to declaration</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue to your notice</button>
       </div>
     </div>`,
 
@@ -308,15 +308,15 @@ const PAGES = {
     return `
     <form novalidate>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Housing Corporation</p>
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Check your notice</h1>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Your notice</h1>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">This is the notice that will be created. Check it carefully before you create it.</p>
 
       ${formalNotice()}
       <p class="govbb-text-body" style="margin-top:var(--spacing-s);margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">You will date and sign the notice by hand when you serve it on your landlord.</p>
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
-        <label class="govbb-label" for="contact-email">Your email address</label>
-        <p class="govbb-hint">We'll send you a copy of this notice. For example, you@example.com.</p>
+        <label class="govbb-label" for="contact-email">Your email address (optional)</label>
+        <p class="govbb-hint">If you want a copy emailed to you. You do not need an email — you can print or save the notice on the next page. For example, you@example.com.</p>
         <div class="govbb-input-wrapper">
           <input class="govbb-input" type="email" id="contact-email" name="contact-email" data-field="contact-email" inputmode="email" value="${GovBB.D['contact-email']||''}" />
         </div>
@@ -349,7 +349,7 @@ const PAGES = {
         <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
       </div>
 
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">We have sent a copy of your notice to <strong>${escapeHtml(GovBB.D['contact-email'] || 'the email you provided')}</strong>.</p>
+      ${GovBB.D['contact-email'] ? `<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">We have sent a copy of your notice to <strong>${escapeHtml(GovBB.D['contact-email'])}</strong>.</p>` : ''}
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your notice</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);color:var(--color-mid-grey-00);">This is your notice. Print it, then sign and date it by hand before serving it.</p>
@@ -401,8 +401,8 @@ function validate(pageId) {
 
   if (pageId === 'declaration') {
     const email = (D['contact-email'] || '').trim();
-    if (!email) errors.push({ id: 'contact-email', msg: 'Enter your email address' });
-    else if (!EMAIL_RE.test(email)) errors.push({ id: 'contact-email', msg: 'Email address must be in the format you@example.com' });
+    /* Email is optional. Only validate the format when one is given. */
+    if (email && !EMAIL_RE.test(email)) errors.push({ id: 'contact-email', msg: 'Enter an email address in the format you@example.com' });
     if (!D['decl-agree']) errors.push({ id: 'decl-agree', msg: 'Tick the box to confirm the notice is correct' });
   }
 
