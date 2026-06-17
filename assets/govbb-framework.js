@@ -187,11 +187,16 @@
       // Restore saved value
       if (GovBB.D[field] !== undefined) {
         if (el.type === 'checkbox') el.checked = !!GovBB.D[field];
+        // For radios, restore which option is selected — do NOT overwrite the
+        // radio's own value (that would clobber every option to the stored
+        // value and make the group unchangeable).
+        else if (el.type === 'radio') el.checked = (GovBB.D[field] === el.value);
         else el.value = GovBB.D[field];
       }
-      var ev = (el.tagName === 'SELECT' || el.type === 'checkbox') ? 'change' : 'input';
+      var ev = (el.tagName === 'SELECT' || el.type === 'checkbox' || el.type === 'radio') ? 'change' : 'input';
       el.addEventListener(ev, function () {
         if (el.type === 'checkbox') GovBB.D[field] = el.checked;
+        else if (el.type === 'radio') { if (el.checked) GovBB.D[field] = el.value; }
         else GovBB.D[field] = el.value;
         if (el.getAttribute('data-trigger-render')) GovBB.render();
       });
