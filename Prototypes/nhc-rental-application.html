@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for an NHC rental unit or lot – National Housing Corporation</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
+  </div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+  if (document.title.indexOf('Error: ') === 0) document.title = document.title.slice(7);
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  var app = document.getElementById('app');
+  var h1 = app.querySelector('h1');
+  if (h1) { h1.insertAdjacentHTML('afterend', html); } else { app.insertAdjacentHTML('afterbegin', html); }
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) {
+      var anchor = group.querySelector('.govbb-hint') || group.querySelector('.govbb-label') || group.querySelector('legend');
+      if (anchor) anchor.insertAdjacentElement('afterend', msg);
+      else group.insertBefore(msg, group.firstChild);
+    }
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+/* ───────── Form configuration ───────── */
+const FORM_NAME = 'Application for an NHC Rental Unit or Lot';
+
+const FLOW = [
+  'start',
+  'applicant-about',
+  'applicant-contact',
+  'applicant-work',
+  'co-applicant-question',
+  'co-applicant-about',
+  'co-applicant-contact',
+  'co-applicant-work',
+  'household',
+  'occupants',
+  'check',
+  'declaration',
+  'confirmation'
+];
+
+const CO_PAGES = ['co-applicant-about','co-applicant-contact','co-applicant-work'];
+
+const TITLES   = ['Mr', 'Miss', 'Mrs'];
+const MARITAL  = ['Single', 'Married', 'Widowed', 'Divorced', 'Separated'];
+const PAYPERIOD = ['Weekly', 'Bi-monthly', 'Monthly'];
+const EMPSTATUS = ['Government', 'Private', 'Self-employed'];
+
+/* ───────── Helpers ───────── */
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function val(id) { return escapeHtml(GovBB.D[id] || ''); }
+
+function textField(id, label, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var type = opts.type || 'text';
+  var im = opts.inputmode ? ' inputmode="' + opts.inputmode + '"' : '';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>'
+    + hint
+    + '<div class="govbb-input-wrapper"><input class="govbb-input" type="' + type + '" id="' + id + '" name="' + id + '" data-field="' + id + '"' + im + ' value="' + val(id) + '" /></div>'
+    + '</div>';
+}
+
+function radioGroup(name, legend, labels, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var tr = opts.trigger ? ' data-trigger-render="1"' : '';
+  var items = labels.map(function (l, i) {
+    var id = name + '-' + i;
+    var checked = GovBB.D[name] === l ? ' checked' : '';
+    return '<div class="govbb-radio-item" style="margin-bottom:var(--spacing-xs);">'
+      + '<input class="govbb-radio" type="radio" id="' + id + '" name="' + name + '" data-field="' + name + '" value="' + escapeHtml(l) + '"' + checked + tr + ' />'
+      + '<label class="govbb-radio-item__label" for="' + id + '">' + l + '</label></div>';
+  }).join('');
+  return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">'
+    + '<legend class="govbb-fieldset__legend">' + legend + '</legend>' + hint
+    + '<div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">' + items + '</div></fieldset>';
+}
+
+function dateField(prefix, legend, hint) {
+  hint = hint || 'For example, 27 3 1990.';
+  function part(suffix, label, wide) {
+    return '<div class="govbb-date-input__part">'
+      + '<label class="govbb-date-input__label" for="' + prefix + '-' + suffix + '">' + label + '</label>'
+      + '<div class="govbb-date-input-wrapper' + (wide ? ' govbb-date-input-wrapper--year' : '') + '">'
+      + '<input class="govbb-date-input" type="text" id="' + prefix + '-' + suffix + '" name="' + prefix + '-' + suffix + '" data-field="' + prefix + '-' + suffix + '" inputmode="numeric" value="' + val(prefix + '-' + suffix) + '" /></div></div>';
+  }
+  return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">'
+    + '<legend class="govbb-fieldset__legend">' + legend + '</legend>'
+    + '<p class="govbb-hint">' + hint + '</p>'
+    + '<div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">'
+    + part('day', 'Day') + part('month', 'Month') + part('year', 'Year', true) + '</div></fieldset>';
+}
+
+function btns(submitLabel) {
+  return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);">'
+    + '<button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>'
+    + '<button type="button" class="govbb-btn" onclick="next()">' + (submitLabel || 'Continue') + '</button></div>';
+}
+
+function caption() {
+  return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Housing Corporation</p>';
+}
+
+function conditional(name, showValue, inner) {
+  var show = GovBB.D[name] === showValue;
+  return '<div data-show-when-name="' + name + '" data-show-when-value="' + showValue + '" style="display:' + (show ? 'block' : 'none') + ';padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">' + inner + '</div>';
+}
+
+function fullName(prefix) {
+  var t = GovBB.D[prefix + 'title'] ? GovBB.D[prefix + 'title'] + ' ' : '';
+  var parts = [GovBB.D[prefix + 'first-name'], GovBB.D[prefix + 'middle-name'], GovBB.D[prefix + 'surname']].filter(Boolean).join(' ');
+  return (t + parts).trim();
+}
+function fmtDate(prefix) {
+  var d = GovBB.D[prefix + '-day'], m = GovBB.D[prefix + '-month'], y = GovBB.D[prefix + '-year'];
+  if (!d && !m && !y) return '';
+  return [d, m, y].filter(Boolean).join(' / ');
+}
+
+/* ── Reusable applicant field blocks (used for applicant + co-applicant) ── */
+function nameBlock(prefix) {
+  return radioGroup(prefix + 'title', 'Title', TITLES)
+    + textField(prefix + 'surname', 'Surname')
+    + textField(prefix + 'first-name', 'First name')
+    + textField(prefix + 'middle-name', 'Middle name (optional)')
+    + textField(prefix + 'maiden-name', 'Maiden name (optional)', { hint: 'If applicable.' });
+}
+function idBlock(prefix) {
+  return textField(prefix + 'nrn', 'National Registration Number', { hint: 'On your national ID card. For example, 110915-0048.' })
+    + dateField(prefix + 'dob', 'Date of birth')
+    + textField(prefix + 'tamis', 'TAMIS number', { hint: 'Your Barbados Revenue Authority TAMIS taxpayer number.' });
+}
+function contactBlock(prefix) {
+  return textField(prefix + 'address', 'Address')
+    + textField(prefix + 'phone-home', 'Home telephone (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 433 1234.' })
+    + textField(prefix + 'phone-work', 'Work telephone (optional)', { type: 'tel', inputmode: 'tel' })
+    + textField(prefix + 'phone-cell', 'Mobile number', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' })
+    + textField(prefix + 'email', 'Email address (optional)', { type: 'email', inputmode: 'email', hint: 'For example, you@example.com.' });
+}
+function workBlock(prefix) {
+  return radioGroup(prefix + 'marital', 'Marital status', MARITAL)
+    + textField(prefix + 'citizenship', 'Citizenship')
+    + textField(prefix + 'country-residence', 'Country of residence')
+    + textField(prefix + 'employer', 'Employer')
+    + textField(prefix + 'occupation', 'Occupation')
+    + textField(prefix + 'employment-period', 'Period of employment', { hint: 'How long you have worked there. For example, 3 years.' })
+    + textField(prefix + 'salary', 'Salary', { hint: 'Your pay before deductions.', inputmode: 'decimal' })
+    + radioGroup(prefix + 'pay-period', 'Pay period', PAYPERIOD)
+    + radioGroup(prefix + 'employment-status', 'Employment status', EMPSTATUS);
+}
+
+/* ── Intended occupants (dynamic list) ── */
+function occupantCount() { return Math.max(1, parseInt(GovBB.D['occupant-count'] || '1', 10)); }
+function addOccupant() { GovBB.D['occupant-count'] = occupantCount() + 1; GovBB.render(); }
+function removeOccupant(idx) {
+  var n = occupantCount(), rows = [];
+  for (var i = 0; i < n; i++) rows.push({
+    name: GovBB.D['occ-' + i + '-name'], relation: GovBB.D['occ-' + i + '-relation'],
+    age: GovBB.D['occ-' + i + '-age'], occupation: GovBB.D['occ-' + i + '-occupation'], income: GovBB.D['occ-' + i + '-income']
+  });
+  rows.splice(idx, 1);
+  for (var j = 0; j < n; j++) ['name','relation','age','occupation','income'].forEach(function (f) { delete GovBB.D['occ-' + j + '-' + f]; });
+  rows.forEach(function (r, i) {
+    GovBB.D['occ-' + i + '-name'] = r.name || ''; GovBB.D['occ-' + i + '-relation'] = r.relation || '';
+    GovBB.D['occ-' + i + '-age'] = r.age || ''; GovBB.D['occ-' + i + '-occupation'] = r.occupation || ''; GovBB.D['occ-' + i + '-income'] = r.income || '';
+  });
+  GovBB.D['occupant-count'] = Math.max(1, rows.length);
+  GovBB.render();
+}
+function occupantRow(i) {
+  var heading = 'Person ' + (i + 1);
+  var removeBtn = occupantCount() > 1
+    ? '<button type="button" class="govbb-btn--link" style="margin-bottom:var(--spacing-s);" onclick="removeOccupant(' + i + ')">Remove ' + heading + '</button>' : '';
+  return '<div style="border:2px solid var(--color-grey-00);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">'
+    + '<h2 class="govbb-text-h2" style="font-size:var(--font-size-h3);margin-bottom:var(--spacing-s);">' + heading + '</h2>'
+    + textField('occ-' + i + '-name', 'Name')
+    + textField('occ-' + i + '-relation', 'Relationship to applicant', { hint: 'For example, son, daughter, spouse.' })
+    + textField('occ-' + i + '-age', 'Age', { inputmode: 'numeric' })
+    + textField('occ-' + i + '-occupation', 'Occupation or school', { hint: 'Where they work or go to school. Enter "None" if not applicable.' })
+    + textField('occ-' + i + '-income', 'Monthly income (optional)', { inputmode: 'decimal', hint: 'Leave blank if they have no income.' })
+    + removeBtn + '</div>';
+}
+function occupantsSummary() {
+  var n = occupantCount(), names = [];
+  for (var i = 0; i < n; i++) if (GovBB.D['occ-' + i + '-name']) names.push(GovBB.D['occ-' + i + '-name']);
+  return names.length ? names.join(', ') : '';
+}
+
+/* ───────── Pages ───────── */
+const PAGES = {
+
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Housing and property</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Apply for an NHC rental unit or lot</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on May 2025</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to apply to the National Housing Corporation (NHC) for a rental unit or lot.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">You can apply on your own, or with a co-applicant (for example, your spouse).</p>
+
+      <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Who can apply:</strong> applicants whose income does not exceed <strong>$3,000.00 a month</strong>.</p>
+      </div>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National Registration Number (NRN) and TAMIS number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your date of birth and contact details</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your employer, occupation, and salary</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The same details for your co-applicant, if you have one</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Details of everyone who will live in the unit</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Documents you'll need to provide</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">You will need to provide these to the NHC to support your application:</p>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Two recent pay slips</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">One form of national ID</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">One job letter</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">One passport-size photo</li>
+      </ul>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Contact the National Housing Corporation if you need help with your application.</p>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12465365300" class="govbb-link">1 (246) 536-5300</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Email: <a href="mailto:NHC.CustomerService@barbados.gov.bb" class="govbb-link">NHC.CustomerService@barbados.gov.bb</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">"The Garden", Country Road, St. Michael</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Monday to Friday, 8:15am to 4:30pm</li>
+      </ul>
+    </div>`,
+
+  'applicant-about': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About you</h1>
+      ${nameBlock('')}
+      ${idBlock('')}
+      ${btns()}
+    </form>`,
+
+  'applicant-contact': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your contact details</h1>
+      ${contactBlock('')}
+      ${btns()}
+    </form>`,
+
+  'applicant-work': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your circumstances and employment</h1>
+      ${workBlock('')}
+      ${btns()}
+    </form>`,
+
+  'co-applicant-question': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Co-applicant</h1>
+      ${radioGroup('has-co-applicant', 'Are you applying with a co-applicant?', ['Yes', 'No'], { trigger: true, hint: 'A co-applicant applies together with you, for example your spouse.' })}
+      ${btns()}
+    </form>`,
+
+  'co-applicant-about': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About your co-applicant</h1>
+      ${nameBlock('co-')}
+      ${idBlock('co-')}
+      ${btns()}
+    </form>`,
+
+  'co-applicant-contact': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Co-applicant contact details</h1>
+      ${contactBlock('co-')}
+      ${btns()}
+    </form>`,
+
+  'co-applicant-work': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Co-applicant circumstances and employment</h1>
+      ${workBlock('co-')}
+      ${btns()}
+    </form>`,
+
+  'household': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your household</h1>
+
+      ${textField('family-adults', 'Number of adults in your family', { inputmode: 'numeric' })}
+      ${textField('family-children', 'Number of children in your family', { inputmode: 'numeric' })}
+
+      ${radioGroup('owns-property', 'Do you or your spouse own land or property?', ['Yes', 'No'], { trigger: true })}
+      ${conditional('owns-property', 'Yes', textField('property-address', 'Address of the land or property'))}
+
+      ${radioGroup('indebted', 'Are you indebted to the NHC or any other financial institution?', ['Yes', 'No'], { trigger: true })}
+      ${conditional('indebted', 'Yes', textField('indebted-details', 'Please give details'))}
+
+      ${radioGroup('occupied-unit', 'Have you ever occupied an NHC unit?', ['Yes', 'No'], { trigger: true })}
+      ${conditional('occupied-unit', 'Yes', textField('occupied-where', 'Where?'))}
+
+      ${btns()}
+    </form>`,
+
+  'occupants': () => {
+    var n = occupantCount(), rows = '';
+    for (var i = 0; i < n; i++) rows += occupantRow(i);
+    return `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">People who will live in the unit</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">List everyone who intends to live in the unit, including yourself.</p>
+      ${rows}
+      <div style="margin-bottom:var(--spacing-m);"><button type="button" class="govbb-btn--secondary" onclick="addOccupant()">Add another person</button></div>
+      ${btns()}
+    </form>`;
+  },
+
+  'check': () => {
+    var coRows = GovBB.D['has-co-applicant'] === 'Yes'
+      ? `<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Co-applicant</h2>
+         <dl style="margin-bottom:var(--spacing-m);">
+           ${GovBB.summaryRow('Name', fullName('co-'), 'co-applicant-about')}
+           ${GovBB.summaryRow('National Registration Number', GovBB.D['co-nrn'] || '', 'co-applicant-about')}
+           ${GovBB.summaryRow('Employer', GovBB.D['co-employer'] || '', 'co-applicant-work')}
+         </dl>`
+      : '';
+    return `
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Applicant</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Name', fullName(''), 'applicant-about')}
+        ${GovBB.summaryRow('National Registration Number', GovBB.D['nrn'] || '', 'applicant-about')}
+        ${GovBB.summaryRow('Date of birth', fmtDate('dob'), 'applicant-about')}
+        ${GovBB.summaryRow('TAMIS number', GovBB.D['tamis'] || '', 'applicant-about')}
+        ${GovBB.summaryRow('Address', GovBB.D['address'] || '', 'applicant-contact')}
+        ${GovBB.summaryRow('Mobile', GovBB.D['phone-cell'] || '', 'applicant-contact')}
+        ${GovBB.summaryRow('Email', GovBB.D['email'] || 'Not provided', 'applicant-contact')}
+        ${GovBB.summaryRow('Marital status', GovBB.D['marital'] || '', 'applicant-work')}
+        ${GovBB.summaryRow('Employer', GovBB.D['employer'] || '', 'applicant-work')}
+        ${GovBB.summaryRow('Occupation', GovBB.D['occupation'] || '', 'applicant-work')}
+        ${GovBB.summaryRow('Salary', GovBB.D['salary'] ? (GovBB.D['salary'] + ' (' + (GovBB.D['pay-period'] || '') + ')') : '', 'applicant-work')}
+        ${GovBB.summaryRow('Employment status', GovBB.D['employment-status'] || '', 'applicant-work')}
+      </dl>
+
+      ${GovBB.summaryRow('Applying with a co-applicant?', GovBB.D['has-co-applicant'] || '', 'co-applicant-question')}
+      ${coRows}
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Household</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Adults', GovBB.D['family-adults'] || '', 'household')}
+        ${GovBB.summaryRow('Children', GovBB.D['family-children'] || '', 'household')}
+        ${GovBB.summaryRow('Owns land or property?', GovBB.D['owns-property'] === 'Yes' ? ('Yes — ' + (GovBB.D['property-address'] || '')) : (GovBB.D['owns-property'] || ''), 'household')}
+        ${GovBB.summaryRow('Indebted to NHC or other?', GovBB.D['indebted'] === 'Yes' ? ('Yes — ' + (GovBB.D['indebted-details'] || '')) : (GovBB.D['indebted'] || ''), 'household')}
+        ${GovBB.summaryRow('Ever occupied an NHC unit?', GovBB.D['occupied-unit'] === 'Yes' ? ('Yes — ' + (GovBB.D['occupied-where'] || '')) : (GovBB.D['occupied-unit'] || ''), 'household')}
+        ${GovBB.summaryRow('Intended occupants', occupantsSummary(), 'occupants')}
+      </dl>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue to declaration</button>
+      </div>
+    </div>`;
+  },
+
+  'declaration': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Declaration</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Please confirm the information you have given is correct before you submit your application.</p>
+
+      <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Before you submit, make sure you can provide:</strong></p>
+        <ul style="list-style:disc;padding-left:var(--spacing-m);margin:0;">
+          <li class="govbb-text-body">Two recent pay slips</li>
+          <li class="govbb-text-body">One form of national ID</li>
+          <li class="govbb-text-body">One job letter</li>
+          <li class="govbb-text-body">One passport-size photo</li>
+        </ul>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
+          <input class="govbb-checkbox" type="checkbox" id="declare-agree" name="declare-agree" data-field="declare-agree"${GovBB.D['declare-agree']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="declare-agree">I declare that the information I have given in this application is true and complete.</label>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
+      </div>
+    </form>`,
+
+  'confirmation': () => {
+    window.__refNumber = window.__refNumber || ('NHC-RENT-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+    if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    return `
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Application submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+
+      ${GovBB.D['email'] ? `<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">We have sent a copy of your application to <strong>${escapeHtml(GovBB.D['email'])}</strong>.</p>` : ''}
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The NHC will review your application. Incomplete applications cannot be processed.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Provide your supporting documents to the NHC: two recent pay slips, one form of national ID, one job letter, and one passport-size photo.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number for any follow-up.</li>
+      </ul>
+
+      <p style="margin-bottom:var(--spacing-l);"><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.D={};window.__refNumber=null;GovBB.nav('start');">Start another application</a></p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12465365300" class="govbb-link">1 (246) 536-5300</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Email: <a href="mailto:NHC.CustomerService@barbados.gov.bb" class="govbb-link">NHC.CustomerService@barbados.gov.bb</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">"The Garden", Country Road, St. Michael</li>
+      </ul>
+    </div>`;
+  }
+
+};
+
+/* ───────── Validation ───────── */
+function validate(pageId) {
+  const D = GovBB.D;
+  const errors = [];
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function reqText(id, msg) { if (!D[id] || !String(D[id]).trim()) errors.push({ id: id, msg: msg }); }
+  function reqRadio(name, msg) { if (!D[name]) errors.push({ id: name + '-0', msg: msg }); }
+  function reqNrn(id, msg) {
+    var v = (D[id] || '').trim();
+    if (!v) { errors.push({ id: id, msg: msg }); return; }
+    if (!/^\d{6}-\d{4}$/.test(v)) errors.push({ id: id, msg: 'National Registration Number must be in the format 110915-0048' });
+  }
+  function optEmail(id) {
+    var v = (D[id] || '').trim();
+    if (v && !EMAIL_RE.test(v)) errors.push({ id: id, msg: 'Enter an email address in the format you@example.com' });
+  }
+  function reqDob(prefix, who) {
+    var d = D[prefix + '-day'], m = D[prefix + '-month'], y = D[prefix + '-year'];
+    if (!d || !m || !y) { errors.push({ id: prefix + '-day', msg: who + ' – Enter a complete date of birth' }); return; }
+    var day = parseInt(d, 10), month = parseInt(m, 10), year = parseInt(y, 10);
+    var parsed = new Date(year, month - 1, day);
+    if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) {
+      errors.push({ id: prefix + '-day', msg: who + ' – Enter a real date, for example 15 6 1990' });
+    } else if (parsed >= new Date()) {
+      errors.push({ id: prefix + '-day', msg: who + ' – The date of birth must be in the past' });
+    }
+  }
+
+  if (pageId === 'applicant-about') {
+    reqRadio('title', 'Select a title');
+    reqText('surname', 'Enter your surname');
+    reqText('first-name', 'Enter your first name');
+    reqNrn('nrn', 'Enter your National Registration Number');
+    reqDob('dob', 'Date of birth');
+    reqText('tamis', 'Enter your TAMIS number');
+  }
+  if (pageId === 'applicant-contact') {
+    reqText('address', 'Enter your address');
+    reqText('phone-cell', 'Enter a mobile number');
+    optEmail('email');
+  }
+  if (pageId === 'applicant-work') {
+    reqRadio('marital', 'Select your marital status');
+    reqText('citizenship', 'Enter your citizenship');
+    reqText('country-residence', 'Enter your country of residence');
+    reqText('employer', 'Enter your employer');
+    reqText('occupation', 'Enter your occupation');
+    reqText('salary', 'Enter your salary');
+    reqRadio('pay-period', 'Select your pay period');
+    reqRadio('employment-status', 'Select your employment status');
+  }
+  if (pageId === 'co-applicant-question') {
+    reqRadio('has-co-applicant', 'Select yes or no');
+  }
+  if (pageId === 'co-applicant-about') {
+    reqRadio('co-title', "Select the co-applicant's title");
+    reqText('co-surname', "Enter the co-applicant's surname");
+    reqText('co-first-name', "Enter the co-applicant's first name");
+    reqNrn('co-nrn', "Enter the co-applicant's National Registration Number");
+    reqDob('co-dob', "Co-applicant's date of birth");
+    reqText('co-tamis', "Enter the co-applicant's TAMIS number");
+  }
+  if (pageId === 'co-applicant-contact') {
+    reqText('co-address', "Enter the co-applicant's address");
+    reqText('co-phone-cell', "Enter the co-applicant's mobile number");
+    optEmail('co-email');
+  }
+  if (pageId === 'co-applicant-work') {
+    reqRadio('co-marital', "Select the co-applicant's marital status");
+    reqText('co-citizenship', "Enter the co-applicant's citizenship");
+    reqText('co-country-residence', "Enter the co-applicant's country of residence");
+    reqText('co-employer', "Enter the co-applicant's employer");
+    reqText('co-occupation', "Enter the co-applicant's occupation");
+    reqText('co-salary', "Enter the co-applicant's salary");
+    reqRadio('co-pay-period', "Select the co-applicant's pay period");
+    reqRadio('co-employment-status', "Select the co-applicant's employment status");
+  }
+  if (pageId === 'household') {
+    reqText('family-adults', 'Enter the number of adults');
+    reqText('family-children', 'Enter the number of children');
+    reqRadio('owns-property', 'Select yes or no for owning land or property');
+    if (D['owns-property'] === 'Yes') reqText('property-address', 'Enter the address of the land or property');
+    reqRadio('indebted', 'Select yes or no for being indebted');
+    if (D['indebted'] === 'Yes') reqText('indebted-details', 'Give details of the debt');
+    reqRadio('occupied-unit', 'Select yes or no for occupying an NHC unit');
+    if (D['occupied-unit'] === 'Yes') reqText('occupied-where', 'Enter where you occupied an NHC unit');
+  }
+  if (pageId === 'occupants') {
+    if (!D['occ-0-name'] || !D['occ-0-name'].trim()) errors.push({ id: 'occ-0-name', msg: 'Enter the name of at least one person who will live in the unit' });
+  }
+  if (pageId === 'declaration') {
+    if (!D['declare-agree']) errors.push({ id: 'declare-agree', msg: 'Tick the box to declare the information is true and complete' });
+  }
+
+  return errors;
+}
+
+/* ───────── Init ───────── */
+GovBB.init({
+  formName: FORM_NAME,
+  getFlow: function () {
+    if (GovBB.D['has-co-applicant'] === 'Yes') return FLOW;
+    return FLOW.filter(function (p) { return CO_PAGES.indexOf(p) === -1; });
+  },
+  pages: PAGES,
+  validate: validate,
+  onRadioChange: function (name) {
+    if (['has-co-applicant', 'owns-property', 'indebted', 'occupied-unit'].indexOf(name) !== -1) GovBB.render();
+  }
+});
+</script>
+
+<!-- Comment World feedback widget -->
+<script>window.CommentWidget = { siteId: "3f6a568d-ae7b-47a9-bef0-beace3e0b197" };</script>
+<script async src="https://comment-world-dashboard.vercel.app/widget.js"></script>
+</body>
+</html>
