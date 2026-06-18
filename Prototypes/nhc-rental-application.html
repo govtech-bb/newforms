@@ -367,7 +367,7 @@ const PAGES = {
       </ul>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Documents you'll need</h2>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">You can upload these in the application, or bring them to the NHC:</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">You'll need to upload these in the application:</p>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Two recent pay slips</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">One form of national ID</li>
@@ -504,7 +504,7 @@ const PAGES = {
     <form novalidate>
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Upload your documents</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">Upload these documents to support your application. Accepted formats: PDF, JPG, PNG. Maximum size: 10 MB each. You can upload them now, or bring them to the NHC later.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">Upload these documents to support your application. All are required — incomplete applications cannot be processed. Accepted formats: PDF, JPG, PNG. Maximum size: 10 MB each.</p>
       ${uploadField('payslip-1', 'Recent pay slip 1')}
       ${uploadField('payslip-2', 'Recent pay slip 2')}
       ${uploadField('id', 'National ID')}
@@ -742,6 +742,13 @@ function validate(pageId) {
     if (D['indebted'] === 'Yes') reqText('indebted-details', 'Give details of the debt');
     reqRadio('occupied-unit', 'Select yes or no for occupying an NHC unit');
     if (D['occupied-unit'] === 'Yes') reqText('occupied-where', 'Enter where you occupied an NHC unit');
+  }
+  if (pageId === 'documents') {
+    if (!D['upload-payslip-1']) errors.push({ id: 'upload-payslip-1', msg: 'Upload your first recent pay slip' });
+    if (!D['upload-payslip-2']) errors.push({ id: 'upload-payslip-2', msg: 'Upload your second recent pay slip' });
+    if (!D['upload-id']) errors.push({ id: 'upload-id', msg: 'Upload a form of national ID' });
+    if (!D['upload-job-letter']) errors.push({ id: 'upload-job-letter', msg: 'Upload your job letter' });
+    if (!D['upload-photo']) errors.push({ id: 'upload-photo', msg: 'Upload a passport-size photo' });
   }
   if (pageId === 'declaration') {
     if (!D['declare-agree']) errors.push({ id: 'declare-agree', msg: 'Tick the box to declare the information is true and complete' });
