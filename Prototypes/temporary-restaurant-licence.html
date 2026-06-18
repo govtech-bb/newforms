@@ -247,7 +247,9 @@ const PAGES = {
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your details</h1>
 
-      ${textField('applicant-name', 'Full name')}
+      ${textField('applicant-first-name', 'First name')}
+      ${textField('applicant-middle-name', 'Middle name (optional)')}
+      ${textField('applicant-surname', 'Last name')}
       ${textField('applicant-line1', 'Address line 1')}
       ${textField('applicant-line2', 'Address line 2 (optional)')}
       ${selectField('applicant-parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
@@ -300,7 +302,7 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Applicant</h2>
       <dl style="margin-bottom:var(--spacing-m);">
-        ${GovBB.summaryRow('Full name', GovBB.D['applicant-name'] || '', 'applicant-details')}
+        ${GovBB.summaryRow('Full name', [GovBB.D['applicant-first-name'], GovBB.D['applicant-middle-name'], GovBB.D['applicant-surname']].filter(Boolean).join(' '), 'applicant-details')}
         ${GovBB.summaryRow('Address', fmtAddress('applicant'), 'applicant-details')}
         ${GovBB.summaryRow('Mobile', GovBB.D['phone-cell'] || '', 'applicant-details')}
         ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'] || 'Not provided', 'applicant-details')}
@@ -405,7 +407,8 @@ function validate(pageId) {
   }
 
   if (pageId === 'applicant-details') {
-    reqText('applicant-name', 'Enter your full name');
+    reqText('applicant-first-name', 'Enter your first name');
+    reqText('applicant-surname', 'Enter your last name');
     reqText('applicant-line1', 'Enter your address');
     reqText('applicant-parish', 'Select your parish');
     reqPhone('phone-home', 'a home telephone number', false);
