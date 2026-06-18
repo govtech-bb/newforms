@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for a licence to operate a temporary restaurant – Ministry of Health</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
+  </div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+  if (document.title.indexOf('Error: ') === 0) document.title = document.title.slice(7);
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  var app = document.getElementById('app');
+  var h1 = app.querySelector('h1');
+  if (h1) { h1.insertAdjacentHTML('afterend', html); } else { app.insertAdjacentHTML('afterbegin', html); }
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) {
+      var anchor = group.querySelector('.govbb-hint') || group.querySelector('.govbb-label') || group.querySelector('legend');
+      if (anchor) anchor.insertAdjacentElement('afterend', msg);
+      else group.insertBefore(msg, group.firstChild);
+    }
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);white-space:pre-wrap;">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+/* ───────── Form configuration ───────── */
+const FORM_NAME = 'Application for a Licence to Operate a Temporary Restaurant';
+const SERVICE_NAME = 'Apply for a licence to operate a temporary restaurant';
+
+const FLOW = [
+  'start',
+  'applicant-details',
+  'event-details',
+  'food-details',
+  'check',
+  'declaration',
+  'confirmation'
+];
+
+/* The nine polyclinics. Source: govtech-bb/find-a-polyclinic. */
+const POLYCLINICS = [
+  'Branford Taitt Polyclinic',
+  'David Thompson Health & Social Services Complex',
+  'Edgar Cochrane Polyclinic',
+  'Eunice Gibson Polyclinic',
+  'Frederick Miller Polyclinic',
+  'Maurice Byer Polyclinic',
+  'Randal Phillips Polyclinic',
+  'Sir Winston Scott Polyclinic',
+  'St. Philip Polyclinic'
+];
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+/* ───────── Helpers ───────── */
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function val(id) { return escapeHtml(GovBB.D[id] || ''); }
+
+function caption() {
+  return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">' + SERVICE_NAME + '</p>';
+}
+
+function textField(id, label, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var type = opts.type || 'text';
+  var im = opts.inputmode ? ' inputmode="' + opts.inputmode + '"' : '';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-input-wrapper"><input class="govbb-input" type="' + type + '" id="' + id + '" name="' + id + '" data-field="' + id + '"' + im + ' value="' + val(id) + '" /></div></div>';
+}
+
+function textareaField(id, label, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<textarea class="govbb-textarea" id="' + id + '" name="' + id + '" data-field="' + id + '" rows="' + (opts.rows || 4) + '" style="width:100%;">' + val(id) + '</textarea></div>';
+}
+
+function selectField(id, label, options, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var tr = opts.trigger ? ' data-trigger-render="1"' : '';
+  var ops = '<option value="">' + (opts.placeholder || 'Select an option') + '</option>'
+    + options.map(function (o) { return '<option value="' + escapeHtml(o) + '"' + (GovBB.D[id] === o ? ' selected' : '') + '>' + escapeHtml(o) + '</option>'; }).join('');
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-select-wrapper"><select class="govbb-select" id="' + id + '" name="' + id + '" data-field="' + id + '"' + tr + '>' + ops + '</select>'
+    + '<span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>';
+}
+
+function radioGroup(name, legend, labels, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var tr = opts.trigger ? ' data-trigger-render="1"' : '';
+  var items = labels.map(function (l, i) {
+    var id = name + '-' + i;
+    var checked = GovBB.D[name] === l ? ' checked' : '';
+    return '<div class="govbb-radio-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-radio" type="radio" id="' + id + '" name="' + name + '" data-field="' + name + '" value="' + escapeHtml(l) + '"' + checked + tr + ' /><label class="govbb-radio-item__label" for="' + id + '">' + l + '</label></div>';
+  }).join('');
+  return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">' + legend + '</legend>' + hint
+    + '<div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">' + items + '</div></fieldset>';
+}
+
+function dateField(prefix, legend, hint) {
+  hint = hint || 'For example, 27 6 2025.';
+  function part(suffix, label, wide) {
+    return '<div class="govbb-date-input__part"><label class="govbb-date-input__label" for="' + prefix + '-' + suffix + '">' + label + '</label>'
+      + '<div class="govbb-date-input-wrapper' + (wide ? ' govbb-date-input-wrapper--year' : '') + '"><input class="govbb-date-input" type="text" id="' + prefix + '-' + suffix + '" name="' + prefix + '-' + suffix + '" data-field="' + prefix + '-' + suffix + '" inputmode="numeric" value="' + val(prefix + '-' + suffix) + '" /></div></div>';
+  }
+  return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">' + legend + '</legend><p class="govbb-hint">' + hint + '</p>'
+    + '<div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">' + part('day', 'Day') + part('month', 'Month') + part('year', 'Year', true) + '</div></fieldset>';
+}
+
+function conditional(name, showValue, inner) {
+  var show = GovBB.D[name] === showValue;
+  return '<div data-show-when-name="' + name + '" data-show-when-value="' + showValue + '" style="display:' + (show ? 'block' : 'none') + ';padding-left:var(--spacing-m);border-left:4px solid var(--color-blue-40);margin-bottom:var(--spacing-m);">' + inner + '</div>';
+}
+
+function btns(label) {
+  return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">' + (label || 'Continue') + '</button></div>';
+}
+
+function fmtDate(prefix) {
+  var d = GovBB.D[prefix + '-day'], m = GovBB.D[prefix + '-month'], y = GovBB.D[prefix + '-year'];
+  if (!d && !m && !y) return '';
+  return [d, m, y].filter(Boolean).join(' / ');
+}
+function fmtAddress(prefix) {
+  return [GovBB.D[prefix + '-line1'], GovBB.D[prefix + '-line2'], GovBB.D[prefix + '-parish']].filter(Boolean).join(', ');
+}
+
+/* ───────── Pages ───────── */
+const PAGES = {
+
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Business and trade</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Apply for a licence to operate a temporary restaurant</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on May 2025</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to apply to the Medical Officer of Health for a licence to operate a temporary restaurant — for example, to sell or serve food at an event.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Licences are issued under the <strong>Health Services (Restaurant) Regulations, 1969</strong>. Apply to the polyclinic for the area where the event will be held.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your name, address, and contact numbers</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The name and address of the event</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The dates the temporary restaurant will operate</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The types of food you will serve and where you will get them</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The organiser's details, if the event is organised by someone else</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">The Environmental Health team at the polyclinic you choose will review your application and may arrange an inspection before issuing the licence. Apply in good time before your event.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Contact the Environmental Health Department, or the polyclinic for the area where your event will be held, if you need help with your application.</p>
+    </div>`,
+
+  'applicant-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your details</h1>
+
+      ${textField('applicant-name', 'Full name')}
+      ${textField('applicant-line1', 'Address line 1')}
+      ${textField('applicant-line2', 'Address line 2 (optional)')}
+      ${selectField('applicant-parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
+
+      ${textField('phone-home', 'Home telephone (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 433 1234.' })}
+      ${textField('phone-cell', 'Mobile number', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' })}
+      ${textField('phone-work', 'Work telephone (optional)', { type: 'tel', inputmode: 'tel' })}
+      ${textField('email', 'Email address (optional)', { type: 'email', inputmode: 'email', hint: 'If you want a copy emailed to you. For example, you@example.com.' })}
+
+      ${btns()}
+    </form>`,
+
+  'event-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About the event</h1>
+
+      ${textField('event-name', 'Name of event')}
+      ${textField('event-line1', 'Event address line 1')}
+      ${textField('event-line2', 'Event address line 2 (optional)')}
+      ${selectField('event-parish', 'Parish of event', GovBB.PARISHES, { placeholder: 'Select a parish' })}
+
+      ${dateField('event-from', 'Start date', 'The first day the temporary restaurant will operate. For example, 27 6 2025.')}
+      ${dateField('event-to', 'End date', 'The last day the temporary restaurant will operate.')}
+
+      ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the event will be held. The Medical Officer of Health there will process your application.' })}
+
+      ${btns()}
+    </form>`,
+
+  'food-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Food and event organiser</h1>
+
+      ${textareaField('food-type', 'Type of foods and source', { rows: 4, hint: 'List the types of food you will serve and where you will get them from. For example, "Fish cakes and rotis — fish from Oistins market; flour and oil from a wholesaler".' })}
+
+      ${radioGroup('organiser-different', 'Is the event organised by someone other than you?', ['Yes', 'No'], { trigger: true })}
+      ${conditional('organiser-different', 'Yes',
+        textField('organiser-name', "Organiser's name") +
+        textField('organiser-contact', "Organiser's contact information", { hint: 'A phone number or email for the organiser.' })
+      )}
+
+      ${btns()}
+    </form>`,
+
+  'check': () => `
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Applicant</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Full name', GovBB.D['applicant-name'] || '', 'applicant-details')}
+        ${GovBB.summaryRow('Address', fmtAddress('applicant'), 'applicant-details')}
+        ${GovBB.summaryRow('Mobile', GovBB.D['phone-cell'] || '', 'applicant-details')}
+        ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'] || 'Not provided', 'applicant-details')}
+        ${GovBB.summaryRow('Work phone', GovBB.D['phone-work'] || 'Not provided', 'applicant-details')}
+        ${GovBB.summaryRow('Email', GovBB.D['email'] || 'Not provided', 'applicant-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Event</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Name of event', GovBB.D['event-name'] || '', 'event-details')}
+        ${GovBB.summaryRow('Address of event', fmtAddress('event'), 'event-details')}
+        ${GovBB.summaryRow('Operating from', fmtDate('event-from'), 'event-details')}
+        ${GovBB.summaryRow('Operating to', fmtDate('event-to'), 'event-details')}
+        ${GovBB.summaryRow('Polyclinic', GovBB.D['polyclinic'] || '', 'event-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food and organiser</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Type of foods and source', GovBB.D['food-type'] || '', 'food-details')}
+        ${GovBB.summaryRow('Organised by someone else?', GovBB.D['organiser-different'] || '', 'food-details')}
+        ${GovBB.D['organiser-different'] === 'Yes' ? GovBB.summaryRow('Organiser', [GovBB.D['organiser-name'], GovBB.D['organiser-contact']].filter(Boolean).join(' — '), 'food-details') : ''}
+      </dl>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue to declaration</button>
+      </div>
+    </div>`,
+
+  'declaration': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Declaration</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Please confirm the information you have given is correct before you submit your application.</p>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
+          <input class="govbb-checkbox" type="checkbox" id="declare-agree" name="declare-agree" data-field="declare-agree"${GovBB.D['declare-agree']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="declare-agree">I declare that the information I have given is true, and that I will operate the temporary restaurant in accordance with the Health Services (Restaurant) Regulations, 1969.</label>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
+      </div>
+    </form>`,
+
+  'confirmation': () => {
+    window.__refNumber = window.__refNumber || ('EH-TR-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+    if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    return `
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Application submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If you added your email, a copy of your application has been sent to you.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Environmental Health team at <strong>${escapeHtml(GovBB.D['polyclinic'] || 'your chosen polyclinic')}</strong> will review your application.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">They may arrange an inspection before issuing the licence.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number for any follow-up.</li>
+      </ul>
+
+      <p style="margin-bottom:var(--spacing-l);"><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.D={};window.__refNumber=null;GovBB.nav('start');">Start another application</a></p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Contact the Environmental Health Department, or the polyclinic you applied to, if you need help.</p>
+    </div>`;
+  }
+
+};
+
+/* ───────── Validation ───────── */
+function validate(pageId) {
+  const D = GovBB.D;
+  const errors = [];
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function reqText(id, msg) { if (!D[id] || !String(D[id]).trim()) errors.push({ id: id, msg: msg }); }
+  function reqPhone(id, label, required) {
+    var v = (D[id] || '').trim();
+    if (!v) { if (required) errors.push({ id: id, msg: 'Enter ' + label }); return; }
+    var digits = v.replace(/[\s\-()+]/g, '');
+    if (!/^\d{7,15}$/.test(digits)) errors.push({ id: id, msg: 'Enter ' + label + ' using 7 to 15 digits, for example (246) 249 1234' });
+  }
+  /* Returns a Date if complete + real, else pushes an error and returns null. */
+  function reqDate(prefix, label) {
+    var d = D[prefix + '-day'], m = D[prefix + '-month'], y = D[prefix + '-year'];
+    if (!d || !m || !y) { errors.push({ id: prefix + '-day', msg: label + ' – Enter a complete date' }); return null; }
+    var day = parseInt(d, 10), month = parseInt(m, 10), year = parseInt(y, 10);
+    var parsed = new Date(year, month - 1, day);
+    if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) {
+      errors.push({ id: prefix + '-day', msg: label + ' – Enter a real date, for example 27 6 2025' }); return null;
+    }
+    return parsed;
+  }
+
+  if (pageId === 'applicant-details') {
+    reqText('applicant-name', 'Enter your full name');
+    reqText('applicant-line1', 'Enter your address');
+    reqText('applicant-parish', 'Select your parish');
+    reqPhone('phone-home', 'a home telephone number', false);
+    reqPhone('phone-cell', 'a mobile number', true);
+    reqPhone('phone-work', 'a work telephone number', false);
+    var email = (D['email'] || '').trim();
+    if (email && !EMAIL_RE.test(email)) errors.push({ id: 'email', msg: 'Enter an email address in the format you@example.com' });
+  }
+
+  if (pageId === 'event-details') {
+    reqText('event-name', 'Enter the name of the event');
+    reqText('event-line1', 'Enter the address of the event');
+    reqText('event-parish', 'Select the parish of the event');
+    var from = reqDate('event-from', 'Start date');
+    var to = reqDate('event-to', 'End date');
+    if (from && to && to < from) errors.push({ id: 'event-to-day', msg: 'The end date must be the same as or after the start date' });
+    reqText('polyclinic', 'Select the polyclinic you are applying to');
+  }
+
+  if (pageId === 'food-details') {
+    reqText('food-type', 'Enter the types of food and where you will get them');
+    if (!D['organiser-different']) errors.push({ id: 'organiser-different-0', msg: 'Select yes or no' });
+    if (D['organiser-different'] === 'Yes') {
+      reqText('organiser-name', "Enter the organiser's name");
+      reqText('organiser-contact', "Enter the organiser's contact information");
+    }
+  }
+
+  if (pageId === 'declaration') {
+    if (!D['declare-agree']) errors.push({ id: 'declare-agree', msg: 'Tick the box to declare the information is true' });
+  }
+
+  return errors;
+}
+
+/* ───────── Init ───────── */
+GovBB.init({
+  formName: FORM_NAME,
+  getFlow: function () { return FLOW; },
+  pages: PAGES,
+  validate: validate
+});
+</script>
+
+<!-- Comment World feedback widget -->
+<script>window.CommentWidget = { siteId: "3f6a568d-ae7b-47a9-bef0-beace3e0b197" };</script>
+<script async src="https://comment-world-dashboard.vercel.app/widget.js"></script>
+</body>
+</html>
