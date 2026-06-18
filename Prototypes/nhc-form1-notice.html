@@ -200,7 +200,7 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your landlord's full name (a person or an organisation)</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The name of the tenantry where your lot is located</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The parish where the tenantry is located</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your email address, so we can send you a copy of the notice</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your email address, if you'd like a copy emailed to you. This is optional — you can also print or save the notice at the end.</li>
       </ul>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens after you serve the notice</h2>
@@ -237,7 +237,7 @@ const PAGES = {
 
       <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
         <label class="govbb-label" for="contact-email">Email address (optional)</label>
-        <p class="govbb-hint">If you want a copy emailed to you. You can also print or save the notice at the end. For example, you@example.com.</p>
+        <p class="govbb-hint">If you want a copy emailed to you. For example, you@example.com.</p>
         <div class="govbb-input-wrapper">
           <input class="govbb-input" type="email" id="contact-email" name="contact-email" data-field="contact-email" inputmode="email" value="${GovBB.D['contact-email']||''}" />
         </div>
@@ -357,7 +357,7 @@ const PAGES = {
         <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
       </div>
 
-      ${GovBB.D['contact-email'] ? `<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">We have sent a copy of your notice to <strong>${escapeHtml(GovBB.D['contact-email'])}</strong>.</p>` : ''}
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If you added your email, a copy of your notice has been sent to you.</p>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your notice</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);color:var(--color-mid-grey-00);">This is your notice. Print it, then sign and date it by hand before serving it.</p>
