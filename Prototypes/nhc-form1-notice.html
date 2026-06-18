@@ -25,11 +25,14 @@
     .form1-notice__sign    { margin-top: 2.5rem; }
     .form1-notice__sigline { border-bottom: 1px solid #000; width: 60%; height: 1.5rem; margin-bottom: 0.25rem; }
 
-    /* When printing, hide everything except the formal notice document. */
+    /* When printing, show only the formal notice document — on a single page.
+       Use display:none (not visibility:hidden) so hidden content does not
+       reserve height and spill onto a second page. */
     @media print {
-      body * { visibility: hidden !important; }
-      #form1-notice, #form1-notice * { visibility: visible !important; }
-      #form1-notice { position: absolute; left: 0; top: 0; width: 100%; }
+      .govbb-official-banner, .govbb-header, .govbb-footer, .govbb-status-banner { display: none !important; }
+      #confirmation-screen > *:not(#form1-notice) { display: none !important; }
+      .govbb-page__main, .govbb-container { padding: 0 !important; margin: 0 !important; }
+      #app { padding: 0 !important; }
       #form1-notice .form1-notice { border: none; padding: 0; }
     }
   </style>
@@ -350,7 +353,7 @@ const PAGES = {
     window.__refNumber = window.__refNumber || ('NHC-NOTICE-' + Math.random().toString(36).substring(2, 8).toUpperCase());
     if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
     return `
-    <div>
+    <div id="confirmation-screen">
       <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
         <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Notice created</h1>
         <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
