@@ -28,11 +28,18 @@
     /* When printing, show only the formal notice document — on a single page.
        Use display:none (not visibility:hidden) so hidden content does not
        reserve height and spill onto a second page. */
+    @page { margin: 1.5cm; }
     @media print {
-      .govbb-official-banner, .govbb-header, .govbb-footer, .govbb-status-banner { display: none !important; }
+      /* Hide every top-level element (page chrome, the comment widget, etc.),
+         then re-show only the main content path. */
+      body > * { display: none !important; }
+      body > .govbb-page__main { display: block !important; }
+      .govbb-status-banner { display: none !important; }
       #confirmation-screen > *:not(#form1-notice) { display: none !important; }
       .govbb-page__main, .govbb-container { padding: 0 !important; margin: 0 !important; }
-      #app { padding: 0 !important; }
+      /* Remove the fixed 48rem width so the notice fits the printable area
+         instead of overflowing (and clipping) on the right. */
+      #app { padding: 0 !important; max-width: none !important; }
       #form1-notice .form1-notice { border: none; padding: 0; }
     }
   </style>
