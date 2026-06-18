@@ -296,7 +296,9 @@ const PAGES = {
       ${radioGroup('organiser-different', 'Is the event organised by someone other than you?', ['Yes', 'No'], { trigger: true })}
       ${conditional('organiser-different', 'Yes',
         textField('organiser-name', "Organiser's name") +
-        textField('organiser-contact', "Organiser's contact information", { hint: 'A phone number or email for the organiser.' })
+        '<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Give a phone number or an email for the organiser.</p>' +
+        textField('organiser-phone', "Organiser's phone number", { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' }) +
+        textField('organiser-email', "Organiser's email address", { type: 'email', inputmode: 'email', hint: 'For example, organiser@example.com.' })
       )}
 
       ${btns()}
@@ -329,7 +331,9 @@ const PAGES = {
       <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Type of foods and source', GovBB.D['food-type'] || '', 'food-details')}
         ${GovBB.summaryRow('Organised by someone else?', GovBB.D['organiser-different'] || '', 'food-details')}
-        ${GovBB.D['organiser-different'] === 'Yes' ? GovBB.summaryRow('Organiser', [GovBB.D['organiser-name'], GovBB.D['organiser-contact']].filter(Boolean).join(' — '), 'food-details') : ''}
+        ${GovBB.D['organiser-different'] === 'Yes' ? GovBB.summaryRow('Organiser name', GovBB.D['organiser-name'] || '', 'food-details') : ''}
+        ${GovBB.D['organiser-different'] === 'Yes' ? GovBB.summaryRow('Organiser phone', GovBB.D['organiser-phone'] || 'Not provided', 'food-details') : ''}
+        ${GovBB.D['organiser-different'] === 'Yes' ? GovBB.summaryRow('Organiser email', GovBB.D['organiser-email'] || 'Not provided', 'food-details') : ''}
       </dl>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
@@ -448,7 +452,10 @@ function validate(pageId) {
     if (!D['organiser-different']) errors.push({ id: 'organiser-different-0', msg: 'Select yes or no' });
     if (D['organiser-different'] === 'Yes') {
       reqText('organiser-name', "Enter the organiser's name");
-      reqText('organiser-contact', "Enter the organiser's contact information");
+      reqPhone('organiser-phone', "the organiser's phone number", false);
+      var oEmail = (D['organiser-email'] || '').trim();
+      if (oEmail && !EMAIL_RE.test(oEmail)) errors.push({ id: 'organiser-email', msg: "Enter the organiser's email in the format you@example.com" });
+      if (!(D['organiser-phone'] || '').trim() && !oEmail) errors.push({ id: 'organiser-phone', msg: 'Enter a phone number or email for the organiser' });
     }
   }
 
