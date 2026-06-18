@@ -243,9 +243,10 @@ const PAGES = {
       ${textField('applicant-line2', 'Address line 2 (optional)')}
       ${selectField('applicant-parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
 
-      ${textField('phone-home', 'Home telephone (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 433 1234.' })}
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Enter at least one phone number so we can contact you.</p>
+      ${textField('phone-home', 'Home telephone', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 433 1234.' })}
       ${textField('phone-cell', 'Mobile number', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' })}
-      ${textField('phone-work', 'Work telephone (optional)', { type: 'tel', inputmode: 'tel' })}
+      ${textField('phone-work', 'Work telephone', { type: 'tel', inputmode: 'tel' })}
       ${textField('email', 'Email address (optional)', { type: 'email', inputmode: 'email', hint: 'If you want a copy emailed to you. For example, you@example.com.' })}
 
       ${btns()}
@@ -256,7 +257,8 @@ const PAGES = {
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Where and when</h1>
 
-      ${textField('event-line1', 'Address where the activity will take place — line 1')}
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Where the activity will take place</h2>
+      ${textField('event-line1', 'Address line 1')}
       ${textField('event-line2', 'Address line 2 (optional)')}
       ${selectField('event-parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
 
@@ -394,8 +396,10 @@ function validate(pageId) {
     var day = parseInt(d, 10), month = parseInt(m, 10), year = parseInt(y, 10);
     var parsed = new Date(year, month - 1, day);
     if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) {
-      errors.push({ id: prefix + '-day', msg: label + ' – Enter a real date, for example 27 6 2025' });
+      errors.push({ id: prefix + '-day', msg: label + ' – Enter a real date, for example 27 6 2025' }); return;
     }
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    if (parsed < today) errors.push({ id: prefix + '-day', msg: label + ' – Enter a date that is today or in the future' });
   }
 
   if (pageId === 'applicant-details') {
@@ -404,8 +408,10 @@ function validate(pageId) {
     reqText('applicant-line1', 'Enter your address');
     reqText('applicant-parish', 'Select your parish');
     reqPhone('phone-home', 'a home telephone number', false);
-    reqPhone('phone-cell', 'a mobile number', true);
+    reqPhone('phone-cell', 'a mobile number', false);
     reqPhone('phone-work', 'a work telephone number', false);
+    if (!(D['phone-home'] || '').trim() && !(D['phone-cell'] || '').trim() && !(D['phone-work'] || '').trim())
+      errors.push({ id: 'phone-home', msg: 'Enter at least one phone number — home, mobile, or work' });
     var email = (D['email'] || '').trim();
     if (email && !EMAIL_RE.test(email)) errors.push({ id: 'email', msg: 'Enter an email address in the format you@example.com' });
   }
