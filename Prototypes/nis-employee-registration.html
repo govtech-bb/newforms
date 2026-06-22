@@ -102,8 +102,16 @@ const SERVICE_NAME = 'Register for NIS Online Services';
 
 function getFlow() {
   return GovBB.D['residency'] === 'Overseas'
-    ? ['start', 'eligibility', 'your-details', 'contact-details', 'notary', 'check', 'declaration', 'confirmation']
-    : ['start', 'eligibility', 'your-details', 'contact-details', 'check', 'declaration', 'confirmation'];
+    ? ['start', 'have-nis', 'eligibility', 'your-details', 'contact-details', 'notary', 'check', 'declaration', 'confirmation']
+    : ['start', 'have-nis', 'eligibility', 'your-details', 'contact-details', 'check', 'declaration', 'confirmation'];
+}
+
+/* Eligibility gate: must already have an NIS number. "No" is a dead end, so
+   we render the exit page directly rather than routing it through the flow
+   (keeps it out of the step count). */
+function haveNisNext() {
+  if (GovBB.D['has-nis'] === 'No') { document.getElementById('app').innerHTML = PAGES['no-nis'](); window.scrollTo(0, 0); return; }
+  next(); // validates that an answer was given, then advances to the next step
 }
 
 /* ───────── Helpers ───────── */
@@ -321,6 +329,44 @@ const PAGES = {
       </ul>
     </div>`,
 
+  'have-nis': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Do you have a National Insurance number?</h1>
+      <p class="govbb-hint" style="margin-bottom:var(--spacing-m);">Your number is on your NIS card or on letters from the NIS.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Do you have a National Insurance number?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="has-nis" name="has-nis" value="Yes" data-field="has-nis"${GovBB.D['has-nis']==='Yes'?' checked':''} /><label class="govbb-radio-item__label" for="has-nis">Yes</label></div>
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="has-nis-1" name="has-nis" value="No" data-field="has-nis"${GovBB.D['has-nis']==='No'?' checked':''} /><label class="govbb-radio-item__label" for="has-nis-1">No</label></div>
+        </div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="haveNisNext()">Continue</button>
+      </div>
+    </form>`,
+
+  'no-nis': () => `
+    <div>
+      <span data-progress-indicator style="display:none"></span>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">You need a National Insurance number to use this service</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You can only register for NIS Online Services if you already have a National Insurance number.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you can do</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If you have never had a National Insurance number, you need to register as a member with the National Insurance Office first. Once you have your number, come back to register for online services.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Contact the National Insurance Office to register for a number, or if you are not sure whether you already have one.</p>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12464317400" class="govbb-link">1 (246) 431-7400</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
+      </ul>
+
+      <p><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.render();">Go back to the previous question</a></p>
+    </div>`,
+
   'eligibility': () => `
     <form novalidate>
       ${caption()}
@@ -504,6 +550,10 @@ function validate(pageId) {
   function reqText(id, msg) { if (!D[id] || !String(D[id]).trim()) errors.push({ id: id, msg: msg }); }
   function phoneOk(v) { return /^\d{7,15}$/.test(String(v).replace(/[\s\-()+]/g, '')); }
   function todayISO() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+
+  if (pageId === 'have-nis') {
+    if (!D['has-nis']) errors.push({ id: 'has-nis', msg: 'Select yes if you have a National Insurance number' });
+  }
 
   if (pageId === 'eligibility') {
     if (!D['residency']) errors.push({ id: 'residency', msg: 'Select where you currently live' });
