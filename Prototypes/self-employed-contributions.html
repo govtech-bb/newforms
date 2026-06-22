@@ -232,7 +232,6 @@ const PAGES = {
 
   'identity': () => `
     <form novalidate>
-      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your NIS details</h1>
 
@@ -252,14 +251,22 @@ const PAGES = {
         </div>
       </div>
 
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="se-email">Email address</label>
+        <p class="govbb-hint">We will send your payment receipt to this email address.</p>
+        <div class="govbb-input-wrapper">
+          <input class="govbb-input" type="email" id="se-email" name="se-email" data-field="se-email" inputmode="email" value="${GovBB.D['se-email']||''}" />
+        </div>
+      </div>
+
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
       </div>
     </form>`,
 
   'contributions-grid': () => `
     <form novalidate>
-      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your contributions</h1>
       <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Enter the year and the amount of contributions you owe for each year. You can add multiple years.</p>
@@ -268,6 +275,7 @@ const PAGES = {
         <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Total amount payable: <span style="color:var(--color-teal-00);">BDS$ ${getTotalPayable().toFixed(2)}</span></p>
       </div>
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
       </div>
     </form>`,
@@ -276,7 +284,6 @@ const PAGES = {
     const anyLate = hasAnyLate();
     return `
     <form novalidate>
-      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
 
@@ -301,8 +308,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
-        <button type="button" class="govbb-btn" onclick="next()">Submit certificate and pay</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
       </div>
     </form>`;
   },
@@ -316,13 +323,13 @@ const PAGES = {
     }).join('');
     return `
     <div>
-      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your NIS details</h2>
       <dl style="margin-bottom:var(--spacing-m);">
         ${GovBB.summaryRow('NIS number', GovBB.D['se-nis-number'], 'identity')}
         ${GovBB.summaryRow('Name', GovBB.D['se-name'], 'identity')}
+        ${GovBB.summaryRow('Email address', GovBB.D['se-email'], 'identity')}
       </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contributions</h2>
@@ -333,8 +340,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
-        <button type="button" class="govbb-btn" onclick="next()">Submit Certificate and Pay</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Submit certificate</button>
       </div>
     </div>`;
   },
@@ -349,7 +356,7 @@ const PAGES = {
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <ul style="margin-bottom:var(--spacing-m);padding-left:var(--spacing-m);">
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your contributions payment certificate has been recorded.</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You will receive a receipt at your registered email address.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A receipt will be sent to <strong>${GovBB.D['se-email'] || 'the email address you gave us'}</strong>.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your next contribution deadline is 15 January ${new Date().getFullYear() + 1}.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number safe.</li>
       </ul>
@@ -361,8 +368,13 @@ function validate(pageId) {
   const D = GovBB.D;
   const errors = [];
   if (pageId === 'identity') {
-    if (!D['se-nis-number']) errors.push({ id: 'se-nis-number', msg: 'NIS number – Enter your self-employed NIS number' });
+    const nis = (D['se-nis-number'] || '').trim();
+    if (!nis) errors.push({ id: 'se-nis-number', msg: 'NIS number – Enter your self-employed NIS number' });
+    else if (!/^\d{6}$/.test(nis)) errors.push({ id: 'se-nis-number', msg: 'NIS number – Enter a 6-digit number, for example 123456' });
     if (!D['se-name']) errors.push({ id: 'se-name', msg: 'Name – Enter your name as registered with NIS' });
+    const email = (D['se-email'] || '').trim();
+    if (!email) errors.push({ id: 'se-email', msg: 'Email address – Enter your email address' });
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push({ id: 'se-email', msg: 'Email address – Enter an email in the format you@example.com' });
   }
   if (pageId === 'contributions-grid') {
     const rows = getRows();

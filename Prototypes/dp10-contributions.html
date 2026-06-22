@@ -157,17 +157,17 @@ function renderEarningsGrid() {
           <input type="number" min="0" step="0.01" value="${row.earnings||''}" oninput="updateERow(${i},'earnings',this.value)" class="govbb-input" style="border:none;box-shadow:none;flex:1;">
         </div>
       </td>
-      <td class="p-2"><div class="govbb-input-wrapper"><input type="number" min="0" step="0.1" value="${row.rate||'11.1'}" oninput="updateERow(${i},'rate',this.value)" class="govbb-input" style="width:5rem;"></div></td>
+      <td class="p-2" style="color:var(--color-mid-grey-00);white-space:nowrap;">${row.rate||'11.1'}%</td>
       <td class="p-2" style="font-weight:var(--font-weight-bold);color:var(--color-teal-00);">$${row.contributions||'0.00'}</td>
       <td class="p-2">${rows.length > 1 ? `<button type="button" onclick="removeERow(${i})" class="govbb-btn--link">Remove</button>` : ''}</td>
     </tr>`;
   }).join('');
   var total = getTotalContributions();
-  return `<div>
+  return `<div id="earnings-grid">
     <table class="earnings-table" style="margin-bottom:var(--spacing-m);">
       <thead>
         <tr>
-          <th>Earnings Type</th><th>No. of Employees</th><th>Insurable Earnings (BDS$)</th><th>Rate %</th><th>Contributions Payable</th><th></th>
+          <th>Earnings Type</th><th>No. of Employees</th><th>Insurable Earnings (BDS$)</th><th>Rate</th><th>Contributions Payable</th><th></th>
         </tr>
       </thead>
       <tbody>${rowsHtml}</tbody>
@@ -221,12 +221,11 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Insurable earnings for each earnings type</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Number of employees for each earnings type</li>
       </ul>
-      <div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start</button></div>
+      <div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
     </div>`,
 
   'employer-details': () => `
     <form novalidate>
-      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your business details</h1>
 
@@ -280,8 +279,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -293,7 +292,6 @@ const PAGES = {
     });
     return `
     <form novalidate>
-      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Which month are you submitting for?</h1>
 
@@ -323,24 +321,23 @@ const PAGES = {
       ${late ? `<div class="warning-banner"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">This submission is late</p><p class="govbb-text-body">Interest of 1% per month will be added to the total amount payable.</p></div>` : ''}
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`;
   },
 
   'earnings-grid': () => `
     <form novalidate>
-      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Enter insurable earnings</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Enter earnings for each type. Contributions are calculated automatically at the rate you enter (default 11.1%).</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Enter earnings for each type. Contributions are calculated automatically at the standard NIS rate of 11.1%.</p>
 
       ${renderEarningsGrid()}
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`,
 
@@ -352,7 +349,6 @@ const PAGES = {
     GovBB.D['final-total'] = finalTotal;
     return `
     <form novalidate>
-      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Adjust for previous payments</h1>
 
@@ -381,8 +377,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Continue</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
       </div>
     </form>`;
   },
@@ -391,7 +387,6 @@ const PAGES = {
     var late = isLate();
     return `
     <form novalidate>
-      <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
       <p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">National Insurance Scheme</p>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
 
@@ -438,8 +433,8 @@ const PAGES = {
       </div>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
-        <button type="button" class="govbb-btn" onclick="next()">Submit certificate</button>
-        <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue</button>
       </div>
     </form>`;
   },
@@ -454,7 +449,6 @@ const PAGES = {
       );
     }).join('');
     return `
-    <a href="#" onclick="back();return false;" class="govbb-link" style="display:inline-block;margin-bottom:var(--spacing-m);">← Back</a>
     <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
 
     <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Employer details</h2>
@@ -482,8 +476,8 @@ const PAGES = {
     </dl>
 
     <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
-      <button type="button" class="govbb-btn" onclick="next()">Submit Certificate</button>
-      <button type="button" class="govbb-btn--link" onclick="back()">Back</button>
+      <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+      <button type="button" class="govbb-btn" onclick="next()">Submit certificate</button>
     </div>`;
   },
 
@@ -525,7 +519,14 @@ function validate(pageId) {
   }
   if (pageId === 'earnings-grid') {
     var rows = getEarningsRows();
-    if (!rows.length || !rows[0].type) errors.push({ id: 'earnings-grid', msg: 'Earnings – Add at least one earnings row' });
+    if (!rows.length || !rows[0].type) {
+      errors.push({ id: 'earnings-grid', msg: 'Earnings – Add at least one earnings row' });
+    } else {
+      rows.forEach(function(row, i) {
+        if (!row.type) errors.push({ id: 'earnings-grid', msg: 'Row ' + (i + 1) + ' – Select an earnings type' });
+        if (!row.earnings || parseFloat(row.earnings) <= 0) errors.push({ id: 'earnings-grid', msg: 'Row ' + (i + 1) + ' – Enter the insurable earnings amount' });
+      });
+    }
   }
   if (pageId === 'discrepancies') {
     var overpay = parseFloat(D['prev-overpayment']) || 0;

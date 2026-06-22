@@ -177,11 +177,45 @@ function fmtDate(iso) {
   return d + ' ' + (months[m - 1] || '') + ' ' + y;
 }
 
+function isOverseas() { return GovBB.D['residency'] === 'Overseas'; }
+
 function fmtHomeAddress() {
-  return [GovBB.D['street-address'], GovBB.D['city-district'], GovBB.D['parish'], GovBB.D['postal-code'], GovBB.D['country']].filter(Boolean).join(', ');
+  var country = isOverseas() ? GovBB.D['country'] : 'Barbados';
+  return [GovBB.D['street-address'], GovBB.D['city-district'], GovBB.D['parish'], GovBB.D['region'], GovBB.D['postal-code'], country].filter(Boolean).join(', ');
 }
 function fmtMailingAddress() {
-  return [GovBB.D['mailing-street'], GovBB.D['mailing-city'], GovBB.D['mailing-parish'], GovBB.D['mailing-postal'], GovBB.D['mailing-country']].filter(Boolean).join(', ');
+  var country = isOverseas() ? GovBB.D['mailing-country'] : 'Barbados';
+  return [GovBB.D['mailing-street'], GovBB.D['mailing-city'], GovBB.D['mailing-parish'], GovBB.D['mailing-region'], GovBB.D['mailing-postal'], country].filter(Boolean).join(', ');
+}
+
+/* Address fields branch on residency: Barbados uses the parish dropdown and
+   BB##### postal code; overseas applicants get free-text region / postal /
+   country so the form does not block them on Barbados-only rules. */
+function homeAddressFields() {
+  if (isOverseas()) {
+    return textField('street-address', 'Street address')
+      + textField('city-district', 'City, town or district (optional)')
+      + textField('region', 'State, province or region (optional)')
+      + textField('postal-code', 'Postal or ZIP code (optional)')
+      + textField('country', 'Country');
+  }
+  return textField('street-address', 'Street address')
+    + textField('city-district', 'City or district (optional)', { hint: 'For example, Worthing, Bridgetown, Holetown.' })
+    + selectField('parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })
+    + textField('postal-code', 'Postal code (optional)', { hint: 'A 7-character code. For example, BB11000.' });
+}
+function mailingAddressFields() {
+  if (isOverseas()) {
+    return textField('mailing-street', 'Street address')
+      + textField('mailing-city', 'City, town or district (optional)')
+      + textField('mailing-region', 'State, province or region (optional)')
+      + textField('mailing-postal', 'Postal or ZIP code (optional)')
+      + textField('mailing-country', 'Country');
+  }
+  return textField('mailing-street', 'Street address')
+    + textField('mailing-city', 'City or district (optional)')
+    + selectField('mailing-parish', 'Parish (optional)', GovBB.PARISHES, { placeholder: 'Select a parish' })
+    + textField('mailing-postal', 'Postal code (optional)', { hint: 'For example, BB11000.' });
 }
 
 /* Conditional ID fields, driven by the id-type chosen on the eligibility step. */
@@ -274,20 +308,12 @@ const PAGES = {
       ${idFields()}
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Home address</h2>
-      ${textField('street-address', 'Street address')}
-      ${textField('city-district', 'City or district (optional)', { hint: 'For example, Worthing, Bridgetown, Holetown.' })}
-      ${selectField('parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
-      ${textField('postal-code', 'Postal code (optional)', { hint: 'A 7-character code. For example, BB11000.' })}
-      ${textField('country', 'Country')}
+      ${homeAddressFields()}
 
       ${checkboxField('mailing-different', 'My mailing address is different from my home address', { trigger: true })}
       ${GovBB.D['mailing-different'] ? `
         <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Mailing address</h2>
-        ${textField('mailing-street', 'Street address')}
-        ${textField('mailing-city', 'City or district (optional)')}
-        ${selectField('mailing-parish', 'Parish (optional)', GovBB.PARISHES, { placeholder: 'Select a parish' })}
-        ${textField('mailing-postal', 'Postal code (optional)', { hint: 'For example, BB11000.' })}
-        ${textField('mailing-country', 'Country')}
+        ${mailingAddressFields()}
       ` : ''}
 
       ${btns()}
@@ -380,7 +406,7 @@ const PAGES = {
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Please read and confirm the declaration before you submit.</p>
 
       <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body">Any person who knowingly makes a false statement or false representation for the purpose of obtaining benefit commits a criminal offence punishable by a fine or imprisonment, or both.</p>
+        <p class="govbb-text-body">Any person who knowingly makes a false statement or false representation in connection with this registration commits a criminal offence punishable by a fine or imprisonment, or both.</p>
       </div>
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
@@ -465,16 +491,23 @@ function validate(pageId) {
     }
 
     reqText('street-address', 'Enter your street address');
-    reqText('parish', 'Select your parish');
-    reqText('country', 'Enter your country');
-    var pc = (D['postal-code'] || '').trim();
-    if (pc && !/^BB\d{5}$/i.test(pc.replace(/\s/g, ''))) errors.push({ id: 'postal-code', msg: 'Enter a valid postal code, for example BB11000' });
+    var overseas = D['residency'] === 'Overseas';
+    if (overseas) {
+      reqText('country', 'Enter your country');
+    } else {
+      reqText('parish', 'Select your parish');
+      var pc = (D['postal-code'] || '').trim();
+      if (pc && !/^BB\d{5}$/i.test(pc.replace(/\s/g, ''))) errors.push({ id: 'postal-code', msg: 'Enter a valid postal code, for example BB11000' });
+    }
 
     if (D['mailing-different']) {
       reqText('mailing-street', 'Enter your mailing street address');
-      reqText('mailing-country', 'Enter your mailing country');
-      var mpc = (D['mailing-postal'] || '').trim();
-      if (mpc && !/^BB\d{5}$/i.test(mpc.replace(/\s/g, ''))) errors.push({ id: 'mailing-postal', msg: 'Enter a valid postal code, for example BB11000' });
+      if (overseas) {
+        reqText('mailing-country', 'Enter your mailing country');
+      } else {
+        var mpc = (D['mailing-postal'] || '').trim();
+        if (mpc && !/^BB\d{5}$/i.test(mpc.replace(/\s/g, ''))) errors.push({ id: 'mailing-postal', msg: 'Enter a valid postal code, for example BB11000' });
+      }
     }
   }
 
