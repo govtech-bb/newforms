@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register an employer for NIS Online Services – National Insurance and Social Security Service</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
+  </div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+  if (document.title.indexOf('Error: ') === 0) document.title = document.title.slice(7);
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  var app = document.getElementById('app');
+  var h1 = app.querySelector('h1');
+  if (h1) { h1.insertAdjacentHTML('afterend', html); } else { app.insertAdjacentHTML('afterbegin', html); }
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) {
+      var anchor = group.querySelector('.govbb-hint') || group.querySelector('.govbb-label') || group.querySelector('legend');
+      if (anchor) anchor.insertAdjacentElement('afterend', msg);
+      else group.insertBefore(msg, group.firstChild);
+    }
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+/* ───────── Form configuration ───────── */
+const FORM_NAME = 'Employer registration for NIS Online Social Security Services';
+const SERVICE_NAME = 'Register an employer for NIS Online Services';
+
+const FLOW = [
+  'start',
+  'business-details',
+  'contact-details',
+  'check',
+  'declaration',
+  'confirmation'
+];
+
+/* ───────── Helpers ───────── */
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function val(id) { return escapeHtml(GovBB.D[id] || ''); }
+
+function caption() {
+  return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">' + SERVICE_NAME + '</p>';
+}
+
+function textField(id, label, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var type = opts.type || 'text';
+  var im = opts.inputmode ? ' inputmode="' + opts.inputmode + '"' : '';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-input-wrapper"><input class="govbb-input" type="' + type + '" id="' + id + '" name="' + id + '" data-field="' + id + '"' + im + ' value="' + val(id) + '" /></div></div>';
+}
+
+function selectField(id, label, options, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var ops = '<option value="">' + (opts.placeholder || 'Select an option') + '</option>'
+    + options.map(function (o) { return '<option value="' + escapeHtml(o) + '"' + (GovBB.D[id] === o ? ' selected' : '') + '>' + escapeHtml(o) + '</option>'; }).join('');
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-select-wrapper"><select class="govbb-select" id="' + id + '" name="' + id + '" data-field="' + id + '">' + ops + '</select>'
+    + '<span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>';
+}
+
+function btns(label) {
+  return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">' + (label || 'Continue') + '</button></div>';
+}
+
+function fmtAddress() {
+  return [GovBB.D['business-address-1'], GovBB.D['business-address-2'], GovBB.D['business-district'], GovBB.D['business-parish'], GovBB.D['business-postal-code']].filter(Boolean).join(', ');
+}
+
+/* ───────── Pages ───────── */
+const PAGES = {
+
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Business and trade</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Register an employer for NIS Online Services</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on May 2025</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to register your business for the National Insurance Online Social Security Service. This lets you manage your employer account and contributions online.</p>
+
+      <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body">You must <strong>already be registered as an employer with the NIS</strong>. If you are not yet registered, contact the NIS directly.</p>
+      </div>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your Employer National Insurance Number (from your NIS employer certificate or a D.P.10 form)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your Business Registration Number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your business name and address</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The name and phone number of a contact person at your business</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">An email address for the authorised representative — your login details will be sent here</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">NIS will review and verify your registration. A link to set your password will be sent to your registered email address. Allow up to <strong>5 working days</strong>.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Contact the National Insurance Office if you need help.</p>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12464317400" class="govbb-link">1 (246) 431-7400</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
+      </ul>
+    </div>`,
+
+  'business-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About your business</h1>
+
+      ${textField('business-name', 'Name of business')}
+      ${textField('employer-nis-number', "Employer's National Insurance Number", { inputmode: 'numeric', hint: 'The 7-digit number assigned to your business by NIS. For example, 1234567.' })}
+      ${textField('business-reg-number', 'Business Registration Number', { hint: 'Your 6-character registration number from the Corporate Affairs registry. For example, AB1234.' })}
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Business address</h2>
+      ${textField('business-address-1', 'Street address')}
+      ${textField('business-address-2', 'Address line 2 (optional)')}
+      ${textField('business-district', 'District (optional)', { hint: 'For example, Worthing, Bridgetown, Holetown.' })}
+      ${selectField('business-parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
+      ${textField('business-postal-code', 'Postal code (optional)', { hint: 'A 7-character code. For example, BB11000.' })}
+
+      ${btns()}
+    </form>`,
+
+  'contact-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Contact and login details</h1>
+
+      ${textField('contact-name', 'Contact person name', { hint: 'The person NIS should contact about this registration.' })}
+      ${textField('contact-phone', 'Contact phone number', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 535 1234.' })}
+      ${textField('contact-email', 'Email address', { type: 'email', inputmode: 'email', hint: 'Your login details will be sent to this email address.' })}
+      ${textField('confirm-email', 'Confirm email address', { type: 'email', inputmode: 'email', hint: 'Enter the email address again to confirm it.' })}
+      ${textField('authorised-person-name', 'Authorised person — full name', { hint: 'The full name of the person authorised to submit this registration on behalf of the business.' })}
+
+      ${btns()}
+    </form>`,
+
+  'check': () => `
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Business</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Name of business', GovBB.D['business-name'] || '', 'business-details')}
+        ${GovBB.summaryRow("Employer's NIS number", GovBB.D['employer-nis-number'] || '', 'business-details')}
+        ${GovBB.summaryRow('Business Registration Number', GovBB.D['business-reg-number'] || '', 'business-details')}
+        ${GovBB.summaryRow('Business address', fmtAddress(), 'business-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact and login</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Contact person', GovBB.D['contact-name'] || '', 'contact-details')}
+        ${GovBB.summaryRow('Contact phone', GovBB.D['contact-phone'] || '', 'contact-details')}
+        ${GovBB.summaryRow('Email address', GovBB.D['contact-email'] || '', 'contact-details')}
+        ${GovBB.summaryRow('Authorised person', GovBB.D['authorised-person-name'] || '', 'contact-details')}
+      </dl>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue to declaration</button>
+      </div>
+    </div>`,
+
+  'declaration': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Declaration</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Please read and confirm the declaration before you submit.</p>
+
+      <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body">Any person who knowingly makes a false statement or false representation for the purpose of obtaining benefit commits a criminal offence punishable by a fine or imprisonment, or both.</p>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
+          <input class="govbb-checkbox" type="checkbox" id="declaration-consent" name="declaration-consent" data-field="declaration-consent"${GovBB.D['declaration-consent']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="declaration-consent">I confirm that the information given in this form is true to the best of my knowledge and belief, that I am authorised to submit this registration on behalf of the business, and I agree to my login details being sent to the email address above.</label>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Submit registration</button>
+      </div>
+    </form>`,
+
+  'confirmation': () => {
+    window.__refNumber = window.__refNumber || ('NIS-EMP-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+    if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    return `
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Registration submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">NIS will review your registration and verify your details.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A link to set your password will be sent to <strong>${escapeHtml(GovBB.D['contact-email'] || 'your registered email address')}</strong>. Allow up to 5 working days.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Once you set your password, you can log in to the NIS Online Social Security Service portal to manage your employer account.</li>
+      </ul>
+
+      <p style="margin-bottom:var(--spacing-l);"><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.D={};window.__refNumber=null;GovBB.nav('start');">Register another employer</a></p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12464317400" class="govbb-link">1 (246) 431-7400</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
+      </ul>
+    </div>`;
+  }
+
+};
+
+/* ───────── Validation ───────── */
+function validate(pageId) {
+  const D = GovBB.D;
+  const errors = [];
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function reqText(id, msg) { if (!D[id] || !String(D[id]).trim()) errors.push({ id: id, msg: msg }); }
+
+  if (pageId === 'business-details') {
+    reqText('business-name', 'Enter the name of the business');
+    var nis = (D['employer-nis-number'] || '').trim();
+    if (!nis) errors.push({ id: 'employer-nis-number', msg: "Enter the employer's National Insurance Number" });
+    else if (!/^\d{7}$/.test(nis)) errors.push({ id: 'employer-nis-number', msg: 'Enter a 7-digit number, for example 1234567' });
+    var reg = (D['business-reg-number'] || '').trim();
+    if (!reg) errors.push({ id: 'business-reg-number', msg: 'Enter your Business Registration Number' });
+    else if (!/^[A-Za-z0-9]{6}$/.test(reg)) errors.push({ id: 'business-reg-number', msg: 'Enter a 6-character registration number, for example AB1234' });
+    reqText('business-address-1', 'Enter the street address of the business');
+    reqText('business-parish', 'Select the parish where the business is located');
+    var pc = (D['business-postal-code'] || '').trim();
+    if (pc && !/^BB\d{5}$/i.test(pc.replace(/\s/g, ''))) errors.push({ id: 'business-postal-code', msg: 'Enter a valid postal code, for example BB11000' });
+  }
+
+  if (pageId === 'contact-details') {
+    reqText('contact-name', 'Enter the name of the contact person');
+    var phone = (D['contact-phone'] || '').trim();
+    if (!phone) errors.push({ id: 'contact-phone', msg: 'Enter a contact phone number' });
+    else if (!/^\d{7,15}$/.test(phone.replace(/[\s\-()+]/g, ''))) errors.push({ id: 'contact-phone', msg: 'Enter a phone number using 7 to 15 digits, for example (246) 535 1234' });
+    var email = (D['contact-email'] || '').trim();
+    if (!email) errors.push({ id: 'contact-email', msg: 'Enter an email address' });
+    else if (!EMAIL_RE.test(email)) errors.push({ id: 'contact-email', msg: 'Enter an email address in the format you@example.com' });
+    var confirm = (D['confirm-email'] || '').trim();
+    if (!confirm) errors.push({ id: 'confirm-email', msg: 'Re-enter the email address to confirm it' });
+    else if (email && confirm.toLowerCase() !== email.toLowerCase()) errors.push({ id: 'confirm-email', msg: 'This does not match the email address you entered above' });
+    reqText('authorised-person-name', 'Enter the full name of the authorised person');
+  }
+
+  if (pageId === 'declaration') {
+    if (!D['declaration-consent']) errors.push({ id: 'declaration-consent', msg: 'Tick the box to confirm the declaration' });
+  }
+
+  return errors;
+}
+
+/* ───────── Init ───────── */
+GovBB.init({
+  formName: FORM_NAME,
+  getFlow: function () { return FLOW; },
+  pages: PAGES,
+  validate: validate
+});
+</script>
+
+<!-- Comment World feedback widget -->
+<script>window.CommentWidget = { siteId: "3f6a568d-ae7b-47a9-bef0-beace3e0b197" };</script>
+<script async src="https://comment-world-dashboard.vercel.app/widget.js"></script>
+</body>
+</html>
