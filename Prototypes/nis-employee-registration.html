@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register for NIS Online Services – National Insurance and Social Security Service</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
+  </div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+  if (document.title.indexOf('Error: ') === 0) document.title = document.title.slice(7);
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  var app = document.getElementById('app');
+  var h1 = app.querySelector('h1');
+  if (h1) { h1.insertAdjacentHTML('afterend', html); } else { app.insertAdjacentHTML('afterbegin', html); }
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) {
+      var anchor = group.querySelector('.govbb-hint') || group.querySelector('.govbb-label') || group.querySelector('legend');
+      if (anchor) anchor.insertAdjacentElement('afterend', msg);
+      else group.insertBefore(msg, group.firstChild);
+    }
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+/* ───────── Form configuration ───────── */
+const FORM_NAME = 'Employee registration for NIS Online Social Security Services';
+const SERVICE_NAME = 'Register for NIS Online Services';
+
+function getFlow() {
+  return GovBB.D['residency'] === 'Overseas'
+    ? ['start', 'eligibility', 'your-details', 'contact-details', 'notary', 'check', 'declaration', 'confirmation']
+    : ['start', 'eligibility', 'your-details', 'contact-details', 'check', 'declaration', 'confirmation'];
+}
+
+/* ───────── Helpers ───────── */
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function val(id) { return escapeHtml(GovBB.D[id] || ''); }
+
+function caption() {
+  return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">' + SERVICE_NAME + '</p>';
+}
+
+function textField(id, label, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var type = opts.type || 'text';
+  var im = opts.inputmode ? ' inputmode="' + opts.inputmode + '"' : '';
+  var ml = opts.maxlength ? ' maxlength="' + opts.maxlength + '"' : '';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-input-wrapper"><input class="govbb-input" type="' + type + '" id="' + id + '" name="' + id + '" data-field="' + id + '"' + im + ml + ' value="' + val(id) + '" /></div></div>';
+}
+
+function selectField(id, label, options, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var ops = '<option value="">' + (opts.placeholder || 'Select an option') + '</option>'
+    + options.map(function (o) { return '<option value="' + escapeHtml(o) + '"' + (GovBB.D[id] === o ? ' selected' : '') + '>' + escapeHtml(o) + '</option>'; }).join('');
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-select-wrapper"><select class="govbb-select" id="' + id + '" name="' + id + '" data-field="' + id + '">' + ops + '</select>'
+    + '<span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>';
+}
+
+function radioField(id, label, options, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var trigger = opts.trigger ? ' data-trigger-render="1"' : '';
+  var items = options.map(function (o, i) {
+    var rid = i === 0 ? id : id + '-' + i;
+    var checked = GovBB.D[id] === o ? ' checked' : '';
+    return '<div class="govbb-radio-item">'
+      + '<input class="govbb-radio" type="radio" id="' + rid + '" name="' + id + '" value="' + escapeHtml(o) + '" data-field="' + id + '"' + trigger + checked + ' />'
+      + '<label class="govbb-radio-item__label" for="' + rid + '">' + escapeHtml(o) + '</label></div>';
+  }).join('');
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<fieldset class="govbb-fieldset"><legend class="govbb-fieldset__legend govbb-label">' + label + '</legend>' + hint
+    + '<div style="display:flex;flex-direction:column;gap:var(--spacing-s);">' + items + '</div></fieldset></div>';
+}
+
+function checkboxField(id, label, opts) {
+  opts = opts || {};
+  var trigger = opts.trigger ? ' data-trigger-render="1"' : '';
+  var checked = GovBB.D[id] ? ' checked' : '';
+  return '<div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-m);align-items:flex-start;gap:var(--spacing-s);">'
+    + '<input class="govbb-checkbox" type="checkbox" id="' + id + '" name="' + id + '" data-field="' + id + '"' + trigger + checked + ' />'
+    + '<label class="govbb-checkbox-item__label" for="' + id + '">' + label + '</label></div>';
+}
+
+function btns(label) {
+  return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">' + (label || 'Continue') + '</button></div>';
+}
+
+function fmtDate(iso) {
+  if (!iso) return '';
+  var parts = String(iso).split('-');
+  if (parts.length !== 3) return iso;
+  var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var y = parts[0], m = parseInt(parts[1], 10), d = parseInt(parts[2], 10);
+  if (!m || !d) return iso;
+  return d + ' ' + (months[m - 1] || '') + ' ' + y;
+}
+
+function fmtHomeAddress() {
+  return [GovBB.D['street-address'], GovBB.D['city-district'], GovBB.D['parish'], GovBB.D['postal-code'], GovBB.D['country']].filter(Boolean).join(', ');
+}
+function fmtMailingAddress() {
+  return [GovBB.D['mailing-street'], GovBB.D['mailing-city'], GovBB.D['mailing-parish'], GovBB.D['mailing-postal'], GovBB.D['mailing-country']].filter(Boolean).join(', ');
+}
+
+/* Conditional ID fields, driven by the id-type chosen on the eligibility step. */
+function idFields() {
+  if (GovBB.D['id-type'] === 'Barbados National ID Card') {
+    return textField('nrn', 'National Registration Number (NRN)', { hint: 'The number on your National ID card. For example, 870315-1234.', placeholder: '870315-1234' });
+  }
+  if (GovBB.D['id-type'] === 'Passport') {
+    return textField('passport-number', 'Passport number')
+      + textField('passport-issued', 'Passport issue date', { type: 'date', hint: 'The date your passport was issued.' })
+      + textField('passport-expired', 'Passport expiry date', { type: 'date', hint: 'The date your passport expires.' })
+      + textField('passport-country', 'Country that issued the passport');
+  }
+  return '<p class="govbb-hint">Select your ID type on the previous step to continue.</p>';
+}
+
+/* ───────── Pages ───────── */
+const PAGES = {
+
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Money, tax and benefits</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Register for NIS Online Services</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on May 2025</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to register for online access to your National Insurance account. This lets you view your contributions and manage your details online.</p>
+
+      <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body">You must <strong>already have a National Insurance number</strong> to register. Your number is on your NIS card or on letters from the NIS.</p>
+      </div>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Who can use this service</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Barbados residents with a valid National Insurance number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Overseas applicants with a valid National Insurance number — your application must be witnessed by a Notary Public</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National Insurance number (6 digits)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your Barbados National ID card or a valid passport</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your home address</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">An email address — your login details will be sent here</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you live overseas: the details of a Notary Public who will witness your application</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">NIS will review and verify your registration. A link to set your password will be sent to your email address. Allow up to <strong>5 working days</strong>.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Contact the National Insurance Office if you need help.</p>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12464317400" class="govbb-link">1 (246) 431-7400</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
+      </ul>
+    </div>`,
+
+  'eligibility': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Before you start</h1>
+
+      ${radioField('residency', 'Where do you currently live?', ['In Barbados', 'Overseas'], { hint: 'If you live overseas, your application must be witnessed by a Notary Public.' })}
+      ${radioField('id-type', 'What type of ID will you use?', ['Barbados National ID Card', 'Passport'])}
+
+      ${btns()}
+    </form>`,
+
+  'your-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your details</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your name</h2>
+      ${textField('first-name', 'First name')}
+      ${textField('middle-name', 'Middle name (optional)')}
+      ${textField('last-name', 'Last name')}
+
+      ${textField('nis-number', 'National Insurance number', { inputmode: 'numeric', maxlength: '6', hint: 'Your 6-digit number, found on your NIS card or correspondence. For example, 123456.' })}
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your ID</h2>
+      ${idFields()}
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Home address</h2>
+      ${textField('street-address', 'Street address')}
+      ${textField('city-district', 'City or district (optional)', { hint: 'For example, Worthing, Bridgetown, Holetown.' })}
+      ${selectField('parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
+      ${textField('postal-code', 'Postal code (optional)', { hint: 'A 7-character code. For example, BB11000.' })}
+      ${textField('country', 'Country')}
+
+      ${checkboxField('mailing-different', 'My mailing address is different from my home address', { trigger: true })}
+      ${GovBB.D['mailing-different'] ? `
+        <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Mailing address</h2>
+        ${textField('mailing-street', 'Street address')}
+        ${textField('mailing-city', 'City or district (optional)')}
+        ${selectField('mailing-parish', 'Parish (optional)', GovBB.PARISHES, { placeholder: 'Select a parish' })}
+        ${textField('mailing-postal', 'Postal code (optional)', { hint: 'For example, BB11000.' })}
+        ${textField('mailing-country', 'Country')}
+      ` : ''}
+
+      ${btns()}
+    </form>`,
+
+  'contact-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Contact and login details</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Give us at least one phone number and the email address where we should send your login details.</p>
+
+      ${textField('phone-home', 'Home phone number (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 535 1234.' })}
+      ${textField('phone-mobile', 'Mobile number (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 245 1234.' })}
+      ${textField('phone-work', 'Work phone number (optional)', { type: 'tel', inputmode: 'tel' })}
+
+      ${textField('contact-email', 'Email address', { type: 'email', inputmode: 'email', hint: 'Your login details will be sent to this email address.' })}
+      ${textField('confirm-email', 'Confirm email address', { type: 'email', inputmode: 'email', hint: 'Enter the email address again to confirm it.' })}
+
+      ${btns()}
+    </form>`,
+
+  'notary': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Notary Public details</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Because you live overseas, your application must be witnessed by a Notary Public. Give their details below.</p>
+
+      ${textField('notary-name', 'Notary Public name')}
+      ${textField('jurisdiction', 'Jurisdiction', { hint: 'The country or state where the Notary Public is registered.' })}
+      ${textField('notarial-date', 'Date of notarisation', { type: 'date' })}
+
+      ${btns()}
+    </form>`,
+
+  'check': () => {
+    const overseas = GovBB.D['residency'] === 'Overseas';
+    const idRows = GovBB.D['id-type'] === 'Passport'
+      ? `
+        ${GovBB.summaryRow('Passport number', GovBB.D['passport-number'] || '', 'your-details')}
+        ${GovBB.summaryRow('Passport issue date', fmtDate(GovBB.D['passport-issued']), 'your-details')}
+        ${GovBB.summaryRow('Passport expiry date', fmtDate(GovBB.D['passport-expired']), 'your-details')}
+        ${GovBB.summaryRow('Country of issue', GovBB.D['passport-country'] || '', 'your-details')}`
+      : `${GovBB.summaryRow('National Registration Number', GovBB.D['nrn'] || '', 'your-details')}`;
+    return `
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Eligibility</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Where you live', GovBB.D['residency'] || '', 'eligibility')}
+        ${GovBB.summaryRow('Type of ID', GovBB.D['id-type'] || '', 'eligibility')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your details</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Name', [GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['last-name']].filter(Boolean).join(' '), 'your-details')}
+        ${GovBB.summaryRow('National Insurance number', GovBB.D['nis-number'] || '', 'your-details')}
+        ${idRows}
+        ${GovBB.summaryRow('Home address', fmtHomeAddress(), 'your-details')}
+        ${GovBB.D['mailing-different'] ? GovBB.summaryRow('Mailing address', fmtMailingAddress(), 'your-details') : ''}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact and login</h2>
+      <dl style="margin-bottom:${overseas ? 'var(--spacing-m)' : 'var(--spacing-l)'};">
+        ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'] || '', 'contact-details')}
+        ${GovBB.summaryRow('Mobile', GovBB.D['phone-mobile'] || '', 'contact-details')}
+        ${GovBB.summaryRow('Work phone', GovBB.D['phone-work'] || '', 'contact-details')}
+        ${GovBB.summaryRow('Email address', GovBB.D['contact-email'] || '', 'contact-details')}
+      </dl>
+
+      ${overseas ? `
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Overseas notarisation</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Notary Public name', GovBB.D['notary-name'] || '', 'notary')}
+        ${GovBB.summaryRow('Jurisdiction', GovBB.D['jurisdiction'] || '', 'notary')}
+        ${GovBB.summaryRow('Date of notarisation', fmtDate(GovBB.D['notarial-date']), 'notary')}
+      </dl>` : ''}
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue to declaration</button>
+      </div>
+    </div>`;
+  },
+
+  'declaration': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Declaration</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Please read and confirm the declaration before you submit.</p>
+
+      <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body">Any person who knowingly makes a false statement or false representation for the purpose of obtaining benefit commits a criminal offence punishable by a fine or imprisonment, or both.</p>
+      </div>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
+          <input class="govbb-checkbox" type="checkbox" id="declaration-consent" name="declaration-consent" data-field="declaration-consent"${GovBB.D['declaration-consent']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="declaration-consent">I hereby make an application for the National Insurance Online Social Security Service and declare that the information given in this form is true to the best of my knowledge and belief. I also agree to my username and password being sent electronically to the email address listed above.</label>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
+      </div>
+    </form>`,
+
+  'confirmation': () => {
+    window.__refNumber = window.__refNumber || ('NIS-REG-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+    if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    const overseas = GovBB.D['residency'] === 'Overseas';
+    return `
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Application submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">NIS will review your application and verify your details.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A link to set your password will be sent to <strong>${escapeHtml(GovBB.D['contact-email'] || 'your email address')}</strong>. Allow up to 5 working days.</li>
+        ${overseas ? '<li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">As you applied from overseas, we will be in touch about witnessing by a Notary Public.</li>' : ''}
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Once you set your password, you can log in to the NIS Online Social Security Service portal.</li>
+      </ul>
+
+      <p style="margin-bottom:var(--spacing-l);"><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.D={};window.__refNumber=null;GovBB.nav('start');">Start another application</a></p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12464317400" class="govbb-link">1 (246) 431-7400</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
+      </ul>
+    </div>`;
+  }
+
+};
+
+/* ───────── Validation ───────── */
+function validate(pageId) {
+  const D = GovBB.D;
+  const errors = [];
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function reqText(id, msg) { if (!D[id] || !String(D[id]).trim()) errors.push({ id: id, msg: msg }); }
+  function phoneOk(v) { return /^\d{7,15}$/.test(String(v).replace(/[\s\-()+]/g, '')); }
+  function todayISO() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+
+  if (pageId === 'eligibility') {
+    if (!D['residency']) errors.push({ id: 'residency', msg: 'Select where you currently live' });
+    if (!D['id-type']) errors.push({ id: 'id-type', msg: 'Select the type of ID you will use' });
+  }
+
+  if (pageId === 'your-details') {
+    reqText('first-name', 'Enter your first name');
+    reqText('last-name', 'Enter your last name');
+    var nis = (D['nis-number'] || '').trim();
+    if (!nis) errors.push({ id: 'nis-number', msg: 'Enter your National Insurance number' });
+    else if (!/^\d{6}$/.test(nis)) errors.push({ id: 'nis-number', msg: 'Enter a 6-digit number, for example 123456' });
+
+    if (D['id-type'] === 'Barbados National ID Card') {
+      var nrn = (D['nrn'] || '').trim();
+      if (!nrn) errors.push({ id: 'nrn', msg: 'Enter your National Registration Number' });
+      else if (!/^\d{6}-\d{4}$/.test(nrn)) errors.push({ id: 'nrn', msg: 'Enter a valid number in the format 870315-1234' });
+    } else if (D['id-type'] === 'Passport') {
+      reqText('passport-number', 'Enter your passport number');
+      if (!D['passport-issued']) errors.push({ id: 'passport-issued', msg: 'Enter the passport issue date' });
+      else if (D['passport-issued'] > todayISO()) errors.push({ id: 'passport-issued', msg: 'The issue date cannot be in the future' });
+      if (!D['passport-expired']) errors.push({ id: 'passport-expired', msg: 'Enter the passport expiry date' });
+      else if (D['passport-expired'] < todayISO()) errors.push({ id: 'passport-expired', msg: 'This passport has expired — use a valid passport' });
+      reqText('passport-country', 'Enter the country that issued the passport');
+    }
+
+    reqText('street-address', 'Enter your street address');
+    reqText('parish', 'Select your parish');
+    reqText('country', 'Enter your country');
+    var pc = (D['postal-code'] || '').trim();
+    if (pc && !/^BB\d{5}$/i.test(pc.replace(/\s/g, ''))) errors.push({ id: 'postal-code', msg: 'Enter a valid postal code, for example BB11000' });
+
+    if (D['mailing-different']) {
+      reqText('mailing-street', 'Enter your mailing street address');
+      reqText('mailing-country', 'Enter your mailing country');
+      var mpc = (D['mailing-postal'] || '').trim();
+      if (mpc && !/^BB\d{5}$/i.test(mpc.replace(/\s/g, ''))) errors.push({ id: 'mailing-postal', msg: 'Enter a valid postal code, for example BB11000' });
+    }
+  }
+
+  if (pageId === 'contact-details') {
+    var home = (D['phone-home'] || '').trim();
+    var mob = (D['phone-mobile'] || '').trim();
+    var work = (D['phone-work'] || '').trim();
+    if (!home && !mob && !work) {
+      errors.push({ id: 'phone-home', msg: 'Enter at least one phone number' });
+    } else {
+      if (home && !phoneOk(home)) errors.push({ id: 'phone-home', msg: 'Enter a phone number using 7 to 15 digits' });
+      if (mob && !phoneOk(mob)) errors.push({ id: 'phone-mobile', msg: 'Enter a phone number using 7 to 15 digits' });
+      if (work && !phoneOk(work)) errors.push({ id: 'phone-work', msg: 'Enter a phone number using 7 to 15 digits' });
+    }
+    var email = (D['contact-email'] || '').trim();
+    if (!email) errors.push({ id: 'contact-email', msg: 'Enter an email address' });
+    else if (!EMAIL_RE.test(email)) errors.push({ id: 'contact-email', msg: 'Enter an email address in the format you@example.com' });
+    var confirm = (D['confirm-email'] || '').trim();
+    if (!confirm) errors.push({ id: 'confirm-email', msg: 'Re-enter the email address to confirm it' });
+    else if (email && confirm.toLowerCase() !== email.toLowerCase()) errors.push({ id: 'confirm-email', msg: 'This does not match the email address you entered above' });
+  }
+
+  if (pageId === 'notary') {
+    reqText('notary-name', 'Enter the Notary Public name');
+    reqText('jurisdiction', 'Enter the jurisdiction');
+    if (!D['notarial-date']) errors.push({ id: 'notarial-date', msg: 'Enter the date of notarisation' });
+  }
+
+  if (pageId === 'declaration') {
+    if (!D['declaration-consent']) errors.push({ id: 'declaration-consent', msg: 'Tick the box to confirm the declaration' });
+  }
+
+  return errors;
+}
+
+/* ───────── Init ───────── */
+GovBB.init({
+  formName: FORM_NAME,
+  getFlow: getFlow,
+  pages: PAGES,
+  validate: validate
+});
+</script>
+
+<!-- Comment World feedback widget -->
+<script>window.CommentWidget = { siteId: "3f6a568d-ae7b-47a9-bef0-beace3e0b197" };</script>
+<script async src="https://comment-world-dashboard.vercel.app/widget.js"></script>
+</body>
+</html>
