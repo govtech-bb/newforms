@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pay your NIS contributions (combined concept) – National Insurance and Social Security Service</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage"><img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" /></a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
+  </div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary'); if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+  if (document.title.indexOf('Error: ') === 0) document.title = document.title.slice(7);
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors(); if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  var app = document.getElementById('app'); var h1 = app.querySelector('h1');
+  if (h1) h1.insertAdjacentHTML('afterend', html); else app.insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id); if (!el) return;
+    var errId = 'err-'+e.id; el.setAttribute('aria-invalid','true'); el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p'); msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) { var anchor = group.querySelector('.govbb-hint')||group.querySelector('.govbb-label')||group.querySelector('legend'); if (anchor) anchor.insertAdjacentElement('afterend', msg); else group.insertBefore(msg, group.firstChild); }
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+/* ───────── Combined "Pay your NIS contributions" concept ─────────
+   One service, a router, then the Self-employed (annual) or Employer (monthly
+   D.P.10) branch. */
+const FORM_NAME = 'Pay your NIS contributions';
+const SERVICE_NAME = 'Pay your NIS contributions';
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const EARNINGS_TYPES = ['Regular','Overtime','Commission','Bonus','Holiday Pay','Sick Pay','Other'];
+const ROLE_OPTIONS = ['Owner','Director','Payroll Manager','Accountant','Authorised Agent','Other'];
+const DEADLINE_MONTH = 0, DEADLINE_DAY = 15;
+
+function getFlow() {
+  var who = GovBB.D['pay-as'];
+  if (who === 'Self-employed') return ['start','who','se-identity','se-contributions','se-declaration','check','confirmation'];
+  if (who === 'Employer') return ['start','who','emp-details','emp-period','emp-earnings','emp-adjust','emp-declaration','check','confirmation'];
+  return ['start','who'];
+}
+
+/* ───────── Helpers ───────── */
+function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function val(id){ return escapeHtml(GovBB.D[id]||''); }
+function caption(){ return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+SERVICE_NAME+'</p>'; }
+function textField(id,label,opts){ opts=opts||{}; var hint=opts.hint?'<p class="govbb-hint">'+opts.hint+'</p>':''; var type=opts.type||'text'; var im=opts.inputmode?' inputmode="'+opts.inputmode+'"':''; var ml=opts.maxlength?' maxlength="'+opts.maxlength+'"':'';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="'+id+'">'+label+'</label>'+hint+'<div class="govbb-input-wrapper"><input class="govbb-input" type="'+type+'" id="'+id+'" name="'+id+'" data-field="'+id+'"'+im+ml+' value="'+val(id)+'" /></div></div>'; }
+function selectField(id,label,options,opts){ opts=opts||{}; var hint=opts.hint?'<p class="govbb-hint">'+opts.hint+'</p>':''; var ops='<option value="">'+(opts.placeholder||'Select an option')+'</option>'+options.map(function(o){var v=(typeof o==='object')?o.value:o,l=(typeof o==='object')?o.label:o; return '<option value="'+escapeHtml(v)+'"'+(GovBB.D[id]===v?' selected':'')+'>'+escapeHtml(l)+'</option>';}).join('');
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="'+id+'">'+label+'</label>'+hint+'<div class="govbb-select-wrapper"><select class="govbb-select" id="'+id+'" name="'+id+'" data-field="'+id+'">'+ops+'</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>'; }
+function btns(label,handler){ return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="'+(handler||'next()')+'">'+(label||'Continue')+'</button></div>'; }
+function radioBlock(id,options){ return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-visually-hidden">'+id+'</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-s);">'+options.map(function(o,i){var rid=i===0?id:id+'-'+i; return '<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="'+rid+'" name="'+id+'" value="'+escapeHtml(o.value)+'" data-field="'+id+'"'+(GovBB.D[id]===o.value?' checked':'')+' /><label class="govbb-radio-item__label" for="'+rid+'">'+o.label+'</label></div>';}).join('')+'</div></fieldset>'; }
+
+/* ── Self-employed: annual contribution rows ── */
+function getRows(){ if(!GovBB.D['contribution-rows']) GovBB.D['contribution-rows']=[{year:'',amount:''}]; return GovBB.D['contribution-rows']; }
+function saveRows(r){ GovBB.D['contribution-rows']=r; }
+function calcLateInterest(year,amount){ if(!year||!amount) return 0; var y=parseInt(year); var now=new Date(); var deadline=new Date(y+1,DEADLINE_MONTH,DEADLINE_DAY); if(now<=deadline) return 0; var late=(now-deadline)/(1000*60*60*24*365.25); return parseFloat((parseFloat(amount)*0.05*Math.max(1,Math.ceil(late))).toFixed(2)); }
+function isRowLate(year){ if(!year) return false; var now=new Date(); return now>new Date(parseInt(year)+1,DEADLINE_MONTH,DEADLINE_DAY); }
+function getTotalPayable(){ return getRows().reduce(function(t,r){ return t+(parseFloat(r.amount)||0)+calcLateInterest(r.year,r.amount); },0); }
+function hasAnyLate(){ return getRows().some(function(r){ return isRowLate(r.year); }); }
+function renderContribGrid(){
+  var rows=getRows(); var anyLate=false;
+  var cards=rows.map(function(row,i){
+    var interest=calcLateInterest(row.year,row.amount); var late=isRowLate(row.year); if(late) anyLate=true;
+    return `
+      <div style="border:1px solid var(--color-grey-00);border-radius:4px;padding:var(--spacing-m);margin-bottom:var(--spacing-m);${late?'border-left:4px solid var(--color-red-00);':''}">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:var(--spacing-s);">
+          <h3 class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Contribution year ${i+1}</h3>
+          ${rows.length>1?`<button type="button" onclick="removeRow(${i})" class="govbb-btn--link" style="color:var(--color-red-00);">Remove</button>`:''}
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);">
+          <label class="govbb-label" for="cyear-${i}">Year</label>
+          <div class="govbb-input-wrapper"><input id="cyear-${i}" class="govbb-input" type="text" inputmode="numeric" maxlength="4" placeholder="YYYY" value="${row.year||''}" oninput="this.value=this.value.replace(/[^0-9]/g,''); updateRow(${i},'year',this.value)" style="max-width:10rem;"></div>
+        </div>
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);">
+          <label class="govbb-label" for="camt-${i}">Contributions payable (BDS$)</label>
+          <div class="govbb-input-wrapper"><input id="camt-${i}" class="govbb-input" type="number" min="0" step="0.01" placeholder="0.00" value="${row.amount||''}" oninput="updateRow(${i},'amount',this.value)"></div>
+        </div>
+        ${late?`<p class="govbb-text-body" style="margin:0;color:var(--color-red-00);">Late interest: BDS$ ${interest.toFixed(2)}</p>`:''}
+      </div>`;
+  }).join('');
+  return `<div id="contrib-grid">
+    ${anyLate?`<div style="border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);background:var(--color-yellow-10);margin-bottom:var(--spacing-m);"><p class="govbb-text-body"><strong>Some years are past the payment deadline.</strong> A late interest fee of 5% per year applies to contributions paid after 15 January following the contribution year.</p></div>`:''}
+    ${cards}
+    <p style="margin-bottom:var(--spacing-m);"><button type="button" onclick="addRow()" class="govbb-link" style="font-size:var(--font-size-body);">+ Add another year</button></p>
+    <div style="border:2px solid var(--color-teal-00);background:var(--color-teal-10);padding:var(--spacing-m);">
+      <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Total amount payable: <span style="color:var(--color-teal-00);">BDS$ <span id="contrib-total">${getTotalPayable().toFixed(2)}</span></span></p>
+    </div>
+  </div>`;
+}
+function refreshContribGrid(){ var el=document.getElementById('contrib-grid'); if(el) el.outerHTML=renderContribGrid(); }
+function addRow(){ var r=getRows(); r.push({year:'',amount:''}); saveRows(r); refreshContribGrid(); }
+function removeRow(i){ var r=getRows(); r.splice(i,1); saveRows(r); refreshContribGrid(); }
+function updateRow(i,field,value){ var r=getRows(); r[i][field]=value; saveRows(r);
+  if(field==='amount'||field==='year'){ var t=document.getElementById('contrib-total'); if(t) t.textContent=getTotalPayable().toFixed(2); } }
+
+/* ── Employer: monthly insurable earnings (stacked, responsive, no jump) ── */
+function getEarningsRows(){ if(!GovBB.D['earnings-rows']) GovBB.D['earnings-rows']=[{type:'',employees:'',earnings:'',rate:'11.1',contributions:'0.00'}]; return GovBB.D['earnings-rows']; }
+function saveEarningsRows(r){ GovBB.D['earnings-rows']=r; }
+function calcContributions(e,rate){ return ((parseFloat(e)||0)*(parseFloat(rate)||0)/100).toFixed(2); }
+function getTotalContributions(){ return getEarningsRows().reduce(function(s,r){ return s+(parseFloat(r.contributions)||0); },0); }
+function isLate(){ var y=parseInt(GovBB.D['contrib-year']),m=parseInt(GovBB.D['contrib-month']); if(!y||!m) return false; return new Date()>new Date(y,m,15); }
+function getDueDate(){ var y=parseInt(GovBB.D['contrib-year']),m=parseInt(GovBB.D['contrib-month']); if(!y||!m) return ''; return new Date(y,m,15).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'}); }
+function getFinalTotal(){ var total=getTotalContributions(); var over=parseFloat(GovBB.D['prev-overpayment'])||0; var short=parseFloat(GovBB.D['prev-shortpayment'])||0; return Math.max(0,total-over+short); }
+function earningsCard(row,i,count){
+  var typeOpts=EARNINGS_TYPES.map(function(t){return '<option value="'+t+'"'+(row.type===t?' selected':'')+'>'+t+'</option>';}).join('');
+  var otherHidden=row.type==='Other'?'':'display:none;';
+  return `
+    <div style="border:1px solid var(--color-grey-00);border-radius:4px;padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:var(--spacing-s);">
+        <h3 class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Earnings ${i+1}</h3>
+        ${count>1?`<button type="button" onclick="removeERow(${i})" class="govbb-btn--link" style="color:var(--color-red-00);">Remove</button>`:''}
+      </div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);">
+        <label class="govbb-label" for="etype-${i}">Earnings type</label>
+        <div class="govbb-select-wrapper"><select id="etype-${i}" class="govbb-select" onchange="updateEType(${i}, this.value)"><option value="">Select an earnings type</option>${typeOpts}</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div>
+      </div>
+      <div id="etype-other-${i}" class="govbb-form-group" style="margin-bottom:var(--spacing-s);${otherHidden}">
+        <label class="govbb-label" for="etype-other-input-${i}">Describe the earnings type</label>
+        <div class="govbb-input-wrapper"><input id="etype-other-input-${i}" class="govbb-input" type="text" value="${row.typeOther||''}" oninput="updateERow(${i},'typeOther',this.value)" /></div>
+      </div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);">
+        <label class="govbb-label" for="eemp-${i}">Number of employees</label>
+        <div class="govbb-input-wrapper"><input id="eemp-${i}" class="govbb-input" type="number" min="0" inputmode="numeric" value="${row.employees||''}" oninput="updateERow(${i},'employees',this.value)" /></div>
+      </div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);">
+        <label class="govbb-label" for="eearn-${i}">Insurable earnings (BDS$)</label>
+        <div class="govbb-input-wrapper"><input id="eearn-${i}" class="govbb-input" type="number" min="0" step="0.01" inputmode="decimal" value="${row.earnings||''}" oninput="updateERow(${i},'earnings',this.value)" /></div>
+      </div>
+      <p class="govbb-text-body" style="margin:0 0 var(--spacing-xs);color:var(--color-mid-grey-00);">Rate: ${row.rate||'11.1'}%</p>
+      <p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">Contributions payable: <span style="color:var(--color-teal-00);">BDS$ <span id="contrib-${i}">${row.contributions||'0.00'}</span></span></p>
+    </div>`;
+}
+function renderEarningsGrid(){
+  var rows=getEarningsRows(); var cards=rows.map(function(r,i){return earningsCard(r,i,rows.length);}).join('');
+  return `<div id="earnings-grid">${cards}
+    <p style="margin-bottom:var(--spacing-m);"><button type="button" onclick="addERow()" class="govbb-link" style="font-size:var(--font-size-body);">+ Add another earnings type</button></p>
+    <div style="border:2px solid var(--color-teal-00);background:var(--color-teal-10);padding:var(--spacing-m);">
+      <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Total contributions payable: <span style="color:var(--color-teal-00);">BDS$ <span id="earnings-total">${getTotalContributions().toFixed(2)}</span></span></p>
+    </div></div>`;
+}
+function refreshEarningsGrid(){ var el=document.getElementById('earnings-grid'); if(el) el.outerHTML=renderEarningsGrid(); }
+function addERow(){ var r=getEarningsRows(); r.push({type:'',employees:'',earnings:'',rate:'11.1',contributions:'0.00'}); saveEarningsRows(r); refreshEarningsGrid(); }
+function removeERow(i){ var r=getEarningsRows(); r.splice(i,1); saveEarningsRows(r); refreshEarningsGrid(); }
+function updateEType(i,value){ var r=getEarningsRows(); r[i].type=value; saveEarningsRows(r); var w=document.getElementById('etype-other-'+i); if(w) w.style.display=(value==='Other')?'':'none'; }
+function updateERow(i,field,value){ var r=getEarningsRows(); r[i][field]=value;
+  if(field==='earnings'||field==='rate'){ r[i].contributions=calcContributions(r[i].earnings,r[i].rate); var c=document.getElementById('contrib-'+i); if(c) c.textContent=r[i].contributions; var t=document.getElementById('earnings-total'); if(t) t.textContent=r.reduce(function(s,x){return s+(parseFloat(x.contributions)||0);},0).toFixed(2); }
+  saveEarningsRows(r); }
+
+function fmtBusiness(){ return [GovBB.D['emp-street'],GovBB.D['emp-district'],GovBB.D['emp-parish'],GovBB.D['emp-postal']].filter(Boolean).join(', '); }
+
+/* ───────── Pages ───────── */
+const PAGES = {
+
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Money, tax and benefits</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Pay your NIS contributions</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on June 2026</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to submit a National Insurance contributions certificate and pay — whether you are self-employed or an employer.</p>
+
+      <div style="background:var(--color-blue-10);border-left:4px solid var(--color-blue-40);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body"><strong>Concept prototype.</strong> This shows the self-employed annual certificate and the employer monthly D.P.10 combined into one service with a branch.</p>
+      </div>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Who can use this service</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Self-employed people paying their annual contributions</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Employers submitting their monthly D.P.10 certificate</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your certificate is recorded.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You pay the total shown at any NIS office or by bank transfer.</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12464317400" class="govbb-link">1 (246) 431-7400</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
+      </ul>
+    </div>`,
+
+  'who': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Are you paying as a self-employed person or as an employer?</h1>
+      ${radioBlock('pay-as', [
+        { value: 'Self-employed', label: 'Self-employed — paying my own annual contributions' },
+        { value: 'Employer', label: 'An employer — submitting a monthly D.P.10 for my employees' }
+      ])}
+      ${btns()}
+    </form>`,
+
+  /* ── Self-employed branch ── */
+  'se-identity': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your details</h1>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your name</h2>
+      ${textField('se-name','Full name',{hint:'Enter your full name. If you can, use the name as it appears on your NIS card or correspondence so we can match your record.'})}
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact details</h2>
+      ${textField('se-email','Email address',{type:'email',inputmode:'email',hint:'We will send your payment receipt to this email address.'})}
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your NIS number</h2>
+      ${textField('se-nis-number','Self-employed NIS number',{inputmode:'numeric',maxlength:'6',hint:'Your 6-digit NIS number as registered under self-employment.'})}
+      ${btns()}
+    </form>`,
+
+  'se-contributions': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your contributions</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Enter the year and the amount of contributions you owe for each year. You can add multiple years.</p>
+      ${renderContribGrid()}
+      ${btns()}
+    </form>`,
+
+  'se-declaration': () => {
+    var anyLate = hasAnyLate();
+    return `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body">I declare that the contributions stated in this certificate are due and payable by me as a self-employed person registered with the National Insurance Scheme. I understand that providing false information may result in prosecution.</p>
+      </div>
+      ${anyLate ? `<div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-s);align-items:flex-start;gap:var(--spacing-s);"><input class="govbb-checkbox" type="checkbox" id="late-interest-consent" name="late-interest-consent" data-field="late-interest-consent"${GovBB.D['late-interest-consent']?' checked':''} /><label class="govbb-checkbox-item__label" for="late-interest-consent">I understand that late interest fees apply to contributions paid after the 15 January deadline and I agree to pay the total amount including interest.</label></div>` : ''}
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-s);align-items:flex-start;gap:var(--spacing-s);"><input class="govbb-checkbox" type="checkbox" id="declaration-agree" name="declaration-agree" data-field="declaration-agree"${GovBB.D['declaration-agree']?' checked':''} /><label class="govbb-checkbox-item__label" for="declaration-agree">I declare that the information given is true to the best of my knowledge and belief.</label></div>
+      ${btns()}
+    </form>`;
+  },
+
+  /* ── Employer (D.P.10) branch ── */
+  'emp-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your business details</h1>
+      ${textField('emp-reg','Employer registration number',{hint:'Your NIS employer registration number.'})}
+      ${textField('business-name','Business name')}
+      ${textField('emp-street','Street address')}
+      ${textField('emp-district','District (optional)')}
+      ${selectField('emp-parish','Parish',GovBB.PARISHES,{placeholder:'Select a parish'})}
+      ${textField('emp-postal','Postal code (optional)',{hint:'For example, BB11000.'})}
+      ${btns()}
+    </form>`,
+
+  'emp-period': () => {
+    var due=getDueDate(), late=isLate();
+    return `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Which month are you submitting for?</h1>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="contrib-year">Contribution year</label>
+        <p class="govbb-hint">For example, 2026</p>
+        <div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="contrib-year" name="contrib-year" data-field="contrib-year" inputmode="numeric" maxlength="4" value="${GovBB.D['contrib-year']||''}" style="max-width:10rem;" oninput="this.value=this.value.replace(/[^0-9]/g,'')" /></div>
+      </div>
+      ${selectField('contrib-month','Contribution month', MONTHS.map(function(m,i){return {value:String(i+1),label:m};}), {placeholder:'Select a month'})}
+      ${due?`<div style="background:var(--color-blue-10);border-left:4px solid var(--color-blue-40);padding:var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Payment due date</p><p class="govbb-text-body" style="margin:0;">${due}</p></div>`:''}
+      ${late?`<div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">This submission is late</p><p class="govbb-text-body" style="margin:0;">Interest of 1% per month will be added to the total amount payable.</p></div>`:''}
+      ${btns()}
+    </form>`;
+  },
+
+  'emp-earnings': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Enter insurable earnings</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Enter earnings for each type. Contributions are calculated automatically at the standard NIS rate of 11.1%.</p>
+      ${renderEarningsGrid()}
+      ${btns()}
+    </form>`,
+
+  'emp-adjust': () => {
+    var total=getTotalContributions();
+    return `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Adjust for previous payments</h1>
+      <div style="background:var(--color-blue-10);padding:var(--spacing-m);border-radius:4px;margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;"><strong>Total contributions from earnings:</strong> <span style="color:var(--color-teal-00);">BDS$ ${total.toFixed(2)}</span></p></div>
+      ${textField('prev-overpayment','Less: previous overpayment (BDS$)',{inputmode:'decimal',hint:'Enter 0 if there is none.'})}
+      ${textField('prev-shortpayment','Add: previous shortpayment (BDS$)',{inputmode:'decimal',hint:'Enter 0 if there is none.'})}
+      <div style="border:2px solid var(--color-teal-00);background:var(--color-teal-10);padding:var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Total amount payable: <span style="color:var(--color-teal-00);">BDS$ ${getFinalTotal().toFixed(2)}</span></p></div>
+      ${btns()}
+    </form>`;
+  },
+
+  'emp-declaration': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <div style="border-left:4px solid var(--color-blue-40);padding:var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body">I declare that the information in this certificate is true and correct. I understand that providing false information may result in prosecution.</p></div>
+      ${textField('signatory-name','Authorised signatory name')}
+      ${selectField('signatory-role','Role or title', ROLE_OPTIONS, {placeholder:'Select a role'})}
+      <div class="govbb-checkbox-item" style="margin-bottom:var(--spacing-s);align-items:flex-start;gap:var(--spacing-s);"><input class="govbb-checkbox" type="checkbox" id="declaration-agree" name="declaration-agree" data-field="declaration-agree"${GovBB.D['declaration-agree']?' checked':''} /><label class="govbb-checkbox-item__label" for="declaration-agree">I declare that the above information is true and correct, and the above amounts accurately represent the Insurable Earnings of ALL employees.</label></div>
+      ${btns()}
+    </form>`,
+
+  /* ── Shared ── */
+  'check': () => {
+    const emp = GovBB.D['pay-as'] === 'Employer';
+    if (emp) {
+      var rows=getEarningsRows();
+      var earnHtml=rows.map(function(r){ return GovBB.summaryRow((r.type==='Other'?(r.typeOther||'Other'):(r.type||'Unnamed type')), (r.employees||0)+' employees — BDS$ '+(r.earnings||'0')+' @ '+(r.rate||'11.1')+'% = BDS$ '+(r.contributions||'0.00'), 'emp-earnings'); }).join('');
+      return `
+      <div>
+        <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+        <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Employer</h2>
+        <dl style="margin-bottom:var(--spacing-m);">
+          ${GovBB.summaryRow('Paying as','An employer (monthly D.P.10)','who')}
+          ${GovBB.summaryRow('Registration number',GovBB.D['emp-reg'],'emp-details')}
+          ${GovBB.summaryRow('Business name',GovBB.D['business-name'],'emp-details')}
+          ${GovBB.summaryRow('Address',fmtBusiness(),'emp-details')}
+        </dl>
+        <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contribution period</h2>
+        <dl style="margin-bottom:var(--spacing-m);">
+          ${GovBB.summaryRow('Year',GovBB.D['contrib-year'],'emp-period')}
+          ${GovBB.summaryRow('Month',MONTHS[(parseInt(GovBB.D['contrib-month'])||1)-1],'emp-period')}
+          ${GovBB.summaryRow('Payment due',getDueDate(),'emp-period')}
+        </dl>
+        <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Earnings</h2>
+        <dl style="margin-bottom:var(--spacing-m);">${earnHtml}</dl>
+        <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Adjustments</h2>
+        <dl style="margin-bottom:var(--spacing-m);">
+          ${GovBB.summaryRow('Previous overpayment','BDS$ '+(GovBB.D['prev-overpayment']||'0'),'emp-adjust')}
+          ${GovBB.summaryRow('Previous shortpayment','BDS$ '+(GovBB.D['prev-shortpayment']||'0'),'emp-adjust')}
+          ${GovBB.summaryRow('Total amount payable','BDS$ '+getFinalTotal().toFixed(2),'emp-adjust')}
+        </dl>
+        ${checkButtons('Submit certificate')}
+      </div>`;
+    }
+    var crows=getRows();
+    var crowsHtml=crows.map(function(r){ var late=isRowLate(r.year),interest=calcLateInterest(r.year,r.amount); return GovBB.summaryRow(r.year||'Year not set','BDS$ '+parseFloat(r.amount||0).toFixed(2)+(late?(' + BDS$ '+interest.toFixed(2)+' interest'):''),'se-contributions'); }).join('');
+    return `
+      <div>
+        <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+        <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your details</h2>
+        <dl style="margin-bottom:var(--spacing-m);">
+          ${GovBB.summaryRow('Paying as','Self-employed (annual)','who')}
+          ${GovBB.summaryRow('Full name',GovBB.D['se-name'],'se-identity')}
+          ${GovBB.summaryRow('Email address',GovBB.D['se-email'],'se-identity')}
+          ${GovBB.summaryRow('Self-employed NIS number',GovBB.D['se-nis-number'],'se-identity')}
+        </dl>
+        <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contributions</h2>
+        <dl style="margin-bottom:var(--spacing-m);">${crowsHtml}</dl>
+        <div style="border:2px solid var(--color-teal-00);background:var(--color-teal-10);padding:var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Total amount payable: <span style="color:var(--color-teal-00);">BDS$ ${getTotalPayable().toFixed(2)}</span></p></div>
+        ${checkButtons('Submit certificate')}
+      </div>`;
+  },
+
+  'confirmation': () => {
+    window.__refNumber = window.__refNumber || ('NIS-PAY-' + Math.random().toString(36).substring(2,8).toUpperCase());
+    if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    const emp = GovBB.D['pay-as'] === 'Employer';
+    const total = emp ? getFinalTotal().toFixed(2) : getTotalPayable().toFixed(2);
+    return `
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Certificate submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference: <strong>${window.__refNumber}</strong></p>
+      </div>
+      <div style="background:var(--color-blue-10);padding:var(--spacing-m);border-radius:4px;margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Total amount due: BDS$ ${total}</p></div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your contributions certificate has been recorded.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Pay the total amount due at any NIS office or by bank transfer.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number for your records.</li>
+      </ul>
+      <p style="margin-bottom:var(--spacing-l);"><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.D={};window.__refNumber=null;GovBB.nav('start');">Submit another certificate</a></p>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12464317400" class="govbb-link">1 (246) 431-7400</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
+      </ul>
+    </div>`;
+  }
+};
+
+function checkButtons(label){ return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">'+(label||'Continue')+'</button></div>'; }
+
+/* ───────── Validation ───────── */
+function validate(pageId) {
+  const D = GovBB.D; const errors = []; const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function req(id,msg){ if(!D[id]||!String(D[id]).trim()) errors.push({id:id,msg:msg}); }
+  const yearNow = new Date().getFullYear();
+
+  if (pageId === 'who') { if(!D['pay-as']) errors.push({id:'pay-as',msg:'Select whether you are paying as a self-employed person or an employer'}); }
+
+  if (pageId === 'se-identity') {
+    req('se-name','Enter your full name');
+    var e=(D['se-email']||'').trim(); if(!e) errors.push({id:'se-email',msg:'Enter your email address'}); else if(!EMAIL_RE.test(e)) errors.push({id:'se-email',msg:'Enter an email in the format you@example.com'});
+    var n=(D['se-nis-number']||'').trim(); if(!n) errors.push({id:'se-nis-number',msg:'Enter your NIS number'}); else if(!/^\d{6}$/.test(n)) errors.push({id:'se-nis-number',msg:'Enter a 6-digit number, for example 123456'});
+  }
+  if (pageId === 'se-contributions') {
+    getRows().forEach(function(row,i){ var yr=String(row.year||'').trim();
+      if(!yr) errors.push({id:'contrib-grid',msg:'Row '+(i+1)+' – Enter the contribution year'});
+      else if(!/^\d{4}$/.test(yr)) errors.push({id:'contrib-grid',msg:'Row '+(i+1)+' – Enter the year as 4 digits, for example 2024'});
+      else if(parseInt(yr)>yearNow) errors.push({id:'contrib-grid',msg:'Row '+(i+1)+' – Year cannot be in the future'});
+      else if(parseInt(yr)<1967) errors.push({id:'contrib-grid',msg:'Row '+(i+1)+' – Enter a year from 1967 onwards'});
+      if(!row.amount||parseFloat(row.amount)<=0) errors.push({id:'contrib-grid',msg:'Row '+(i+1)+' – Enter a valid contribution amount'});
+    });
+  }
+  if (pageId === 'se-declaration') {
+    if(hasAnyLate() && !D['late-interest-consent']) errors.push({id:'late-interest-consent',msg:'You must agree to pay the late interest fees'});
+    if(!D['declaration-agree']) errors.push({id:'declaration-agree',msg:'You must confirm the declaration to continue'});
+  }
+
+  if (pageId === 'emp-details') {
+    req('emp-reg','Enter your employer registration number'); req('business-name','Enter your business name'); req('emp-street','Enter your street address'); req('emp-parish','Select your parish');
+    var bpc=(D['emp-postal']||'').trim(); if(bpc&&!/^BB\d{5}$/i.test(bpc.replace(/\s/g,''))) errors.push({id:'emp-postal',msg:'Enter a valid postal code, for example BB11000'});
+  }
+  if (pageId === 'emp-period') {
+    var cy=(D['contrib-year']||'').trim();
+    if(!cy) errors.push({id:'contrib-year',msg:'Contribution year – Enter the contribution year'});
+    else if(!/^\d{4}$/.test(cy)) errors.push({id:'contrib-year',msg:'Contribution year – Enter the year as 4 digits, for example 2026'});
+    else if(parseInt(cy)>yearNow) errors.push({id:'contrib-year',msg:'Contribution year – Year cannot be in the future'});
+    else if(parseInt(cy)<1967) errors.push({id:'contrib-year',msg:'Contribution year – Enter a year from 1967 onwards'});
+    if(!D['contrib-month']) errors.push({id:'contrib-month',msg:'Select the contribution month'});
+  }
+  if (pageId === 'emp-earnings') {
+    var rows=getEarningsRows();
+    if(!rows.length||!rows[0].type) errors.push({id:'earnings-grid',msg:'Add at least one earnings row'});
+    else rows.forEach(function(r,i){ if(!r.type) errors.push({id:'earnings-grid',msg:'Row '+(i+1)+' – Select an earnings type'}); if(!r.earnings||parseFloat(r.earnings)<=0) errors.push({id:'earnings-grid',msg:'Row '+(i+1)+' – Enter the insurable earnings amount'}); });
+  }
+  if (pageId === 'emp-adjust') {
+    var over=parseFloat(D['prev-overpayment'])||0; if(over>getTotalContributions()) errors.push({id:'prev-overpayment',msg:'Previous overpayment cannot be more than total contributions'});
+  }
+  if (pageId === 'emp-declaration') {
+    req('signatory-name','Enter the authorised signatory name'); if(!D['signatory-role']) errors.push({id:'signatory-role',msg:'Select the signatory role'}); if(!D['declaration-agree']) errors.push({id:'declaration-agree',msg:'You must confirm the declaration to continue'});
+  }
+  return errors;
+}
+
+GovBB.init({ formName: FORM_NAME, getFlow: getFlow, pages: PAGES, validate: validate });
+</script>
+
+<!-- Comment World feedback widget -->
+<script>window.CommentWidget = { siteId: "3f6a568d-ae7b-47a9-bef0-beace3e0b197" };</script>
+<script async src="https://comment-world-dashboard.vercel.app/widget.js"></script>
+</body>
+</html>
