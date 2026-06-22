@@ -138,6 +138,36 @@ function selectField(id, label, options, opts) {
     + '<span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>';
 }
 
+/* Country list — Barbados first (the common case), then alphabetical. */
+const COUNTRIES = ['Barbados',
+  'Afghanistan','Albania','Algeria','Andorra','Angola','Antigua and Barbuda','Argentina','Armenia','Australia','Austria','Azerbaijan',
+  'Bahamas','Bahrain','Bangladesh','Belarus','Belgium','Belize','Benin','Bhutan','Bolivia','Bosnia and Herzegovina','Botswana','Brazil','Brunei','Bulgaria','Burkina Faso','Burundi',
+  'Cabo Verde','Cambodia','Cameroon','Canada','Central African Republic','Chad','Chile','China','Colombia','Comoros','Congo','Costa Rica','Côte d’Ivoire','Croatia','Cuba','Cyprus','Czechia',
+  'Democratic Republic of the Congo','Denmark','Djibouti','Dominica','Dominican Republic',
+  'Ecuador','Egypt','El Salvador','Equatorial Guinea','Eritrea','Estonia','Eswatini','Ethiopia',
+  'Fiji','Finland','France','Gabon','Gambia','Georgia','Germany','Ghana','Greece','Grenada','Guatemala','Guinea','Guinea-Bissau','Guyana',
+  'Haiti','Honduras','Hungary','Iceland','India','Indonesia','Iran','Iraq','Ireland','Israel','Italy','Jamaica','Japan','Jordan',
+  'Kazakhstan','Kenya','Kiribati','Kuwait','Kyrgyzstan','Laos','Latvia','Lebanon','Lesotho','Liberia','Libya','Liechtenstein','Lithuania','Luxembourg',
+  'Madagascar','Malawi','Malaysia','Maldives','Mali','Malta','Marshall Islands','Mauritania','Mauritius','Mexico','Micronesia','Moldova','Monaco','Mongolia','Montenegro','Morocco','Mozambique','Myanmar',
+  'Namibia','Nauru','Nepal','Netherlands','New Zealand','Nicaragua','Niger','Nigeria','North Korea','North Macedonia','Norway','Oman',
+  'Pakistan','Palau','Panama','Papua New Guinea','Paraguay','Peru','Philippines','Poland','Portugal','Qatar','Romania','Russia','Rwanda',
+  'Saint Kitts and Nevis','Saint Lucia','Saint Vincent and the Grenadines','Samoa','San Marino','Sao Tome and Principe','Saudi Arabia','Senegal','Serbia','Seychelles','Sierra Leone','Singapore','Slovakia','Slovenia','Solomon Islands','Somalia','South Africa','South Korea','South Sudan','Spain','Sri Lanka','Sudan','Suriname','Sweden','Switzerland','Syria',
+  'Taiwan','Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tonga','Trinidad and Tobago','Tunisia','Turkey','Turkmenistan','Tuvalu',
+  'Uganda','Ukraine','United Arab Emirates','United Kingdom','United States','Uruguay','Uzbekistan','Vanuatu','Vatican City','Venezuela','Vietnam','Yemen','Zambia','Zimbabwe',
+  'Other'];
+
+function countryField(id, label, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var cur = GovBB.D[id] || opts.preselect || '';
+  var ops = '<option value="">' + (opts.placeholder || 'Select a country') + '</option>'
+    + COUNTRIES.map(function (c) { return '<option value="' + escapeHtml(c) + '"' + (cur === c ? ' selected' : '') + '>' + escapeHtml(c) + '</option>'; }).join('');
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-select-wrapper"><select class="govbb-select" id="' + id + '" name="' + id + '" data-field="' + id + '">' + ops + '</select>'
+    + '<span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>';
+}
+
 function radioField(id, label, options, opts) {
   opts = opts || {};
   var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
@@ -180,12 +210,12 @@ function fmtDate(iso) {
 function isOverseas() { return GovBB.D['residency'] === 'Overseas'; }
 
 function fmtHomeAddress() {
-  var country = isOverseas() ? GovBB.D['country'] : 'Barbados';
-  return [GovBB.D['street-address'], GovBB.D['city-district'], GovBB.D['parish'], GovBB.D['region'], GovBB.D['postal-code'], country].filter(Boolean).join(', ');
+  if (isOverseas()) return [GovBB.D['street-address'], GovBB.D['city-district'], GovBB.D['region'], GovBB.D['postal-code'], GovBB.D['country']].filter(Boolean).join(', ');
+  return [GovBB.D['street-address'], GovBB.D['city-district'], GovBB.D['parish'], GovBB.D['postal-code'], GovBB.D['country'] || 'Barbados'].filter(Boolean).join(', ');
 }
 function fmtMailingAddress() {
-  var country = isOverseas() ? GovBB.D['mailing-country'] : 'Barbados';
-  return [GovBB.D['mailing-street'], GovBB.D['mailing-city'], GovBB.D['mailing-parish'], GovBB.D['mailing-region'], GovBB.D['mailing-postal'], country].filter(Boolean).join(', ');
+  if (isOverseas()) return [GovBB.D['mailing-street'], GovBB.D['mailing-city'], GovBB.D['mailing-region'], GovBB.D['mailing-postal'], GovBB.D['mailing-country']].filter(Boolean).join(', ');
+  return [GovBB.D['mailing-street'], GovBB.D['mailing-city'], GovBB.D['mailing-parish'], GovBB.D['mailing-postal'], GovBB.D['mailing-country'] || 'Barbados'].filter(Boolean).join(', ');
 }
 
 /* Address fields branch on residency: Barbados uses the parish dropdown and
@@ -193,29 +223,39 @@ function fmtMailingAddress() {
    country so the form does not block them on Barbados-only rules. */
 function homeAddressFields() {
   if (isOverseas()) {
+    delete GovBB.D['parish'];                                   // no Barbados parish on the overseas path
+    if (GovBB.D['country'] === 'Barbados') delete GovBB.D['country']; // drop a leaked Barbados default
     return textField('street-address', 'Street address')
       + textField('city-district', 'City, town or district (optional)')
       + textField('region', 'State, province or region (optional)')
       + textField('postal-code', 'Postal or ZIP code (optional)')
-      + textField('country', 'Country');
+      + countryField('country', 'Country');
   }
+  delete GovBB.D['region'];                                     // region only applies overseas
+  if (!GovBB.D['country']) GovBB.D['country'] = 'Barbados';      // pre-select Barbados for residents
   return textField('street-address', 'Street address')
     + textField('city-district', 'City or district (optional)', { hint: 'For example, Worthing, Bridgetown, Holetown.' })
     + selectField('parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })
-    + textField('postal-code', 'Postal code (optional)', { hint: 'A 7-character code. For example, BB11000.' });
+    + textField('postal-code', 'Postal code (optional)', { hint: 'A 7-character code. For example, BB11000.' })
+    + countryField('country', 'Country', { preselect: 'Barbados' });
 }
 function mailingAddressFields() {
   if (isOverseas()) {
+    delete GovBB.D['mailing-parish'];
+    if (GovBB.D['mailing-country'] === 'Barbados') delete GovBB.D['mailing-country'];
     return textField('mailing-street', 'Street address')
       + textField('mailing-city', 'City, town or district (optional)')
       + textField('mailing-region', 'State, province or region (optional)')
       + textField('mailing-postal', 'Postal or ZIP code (optional)')
-      + textField('mailing-country', 'Country');
+      + countryField('mailing-country', 'Country');
   }
+  delete GovBB.D['mailing-region'];
+  if (!GovBB.D['mailing-country']) GovBB.D['mailing-country'] = 'Barbados';
   return textField('mailing-street', 'Street address')
     + textField('mailing-city', 'City or district (optional)')
     + selectField('mailing-parish', 'Parish (optional)', GovBB.PARISHES, { placeholder: 'Select a parish' })
-    + textField('mailing-postal', 'Postal code (optional)', { hint: 'For example, BB11000.' });
+    + textField('mailing-postal', 'Postal code (optional)', { hint: 'For example, BB11000.' })
+    + countryField('mailing-country', 'Country', { preselect: 'Barbados' });
 }
 
 /* Conditional ID fields, driven by the id-type chosen on the eligibility step. */
@@ -227,7 +267,7 @@ function idFields() {
     return textField('passport-number', 'Passport number')
       + textField('passport-issued', 'Passport issue date', { type: 'date', hint: 'The date your passport was issued.' })
       + textField('passport-expired', 'Passport expiry date', { type: 'date', hint: 'The date your passport expires.' })
-      + textField('passport-country', 'Country that issued the passport');
+      + countryField('passport-country', 'Country that issued the passport');
   }
   return '<p class="govbb-hint">Select your ID type on the previous step to continue.</p>';
 }
@@ -487,14 +527,13 @@ function validate(pageId) {
       else if (D['passport-issued'] > todayISO()) errors.push({ id: 'passport-issued', msg: 'The issue date cannot be in the future' });
       if (!D['passport-expired']) errors.push({ id: 'passport-expired', msg: 'Enter the passport expiry date' });
       else if (D['passport-expired'] < todayISO()) errors.push({ id: 'passport-expired', msg: 'This passport has expired — use a valid passport' });
-      reqText('passport-country', 'Enter the country that issued the passport');
+      reqText('passport-country', 'Select the country that issued the passport');
     }
 
     reqText('street-address', 'Enter your street address');
+    reqText('country', 'Select your country');
     var overseas = D['residency'] === 'Overseas';
-    if (overseas) {
-      reqText('country', 'Enter your country');
-    } else {
+    if (!overseas) {
       reqText('parish', 'Select your parish');
       var pc = (D['postal-code'] || '').trim();
       if (pc && !/^BB\d{5}$/i.test(pc.replace(/\s/g, ''))) errors.push({ id: 'postal-code', msg: 'Enter a valid postal code, for example BB11000' });
@@ -502,9 +541,8 @@ function validate(pageId) {
 
     if (D['mailing-different']) {
       reqText('mailing-street', 'Enter your mailing street address');
-      if (overseas) {
-        reqText('mailing-country', 'Enter your mailing country');
-      } else {
+      reqText('mailing-country', 'Select your mailing country');
+      if (!overseas) {
         var mpc = (D['mailing-postal'] || '').trim();
         if (mpc && !/^BB\d{5}$/i.test(mpc.replace(/\s/g, ''))) errors.push({ id: 'mailing-postal', msg: 'Enter a valid postal code, for example BB11000' });
       }
