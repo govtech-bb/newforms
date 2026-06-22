@@ -102,12 +102,21 @@ const SERVICE_NAME = 'Register an employer for NIS Online Services';
 
 const FLOW = [
   'start',
+  'employer-gate',
   'business-details',
   'contact-details',
   'check',
   'declaration',
   'confirmation'
 ];
+
+/* Eligibility gate: the business must already be a registered NIS employer.
+   "No" is a dead end, so render the exit page directly (keeps it out of the
+   step count). */
+function employerGateNext() {
+  if (GovBB.D['employer-registered'] === 'No') { document.getElementById('app').innerHTML = PAGES['no-employer-reg'](); window.scrollTo(0, 0); return; }
+  next(); // validates that an answer was given, then advances
+}
 
 /* ───────── Helpers ───────── */
 function escapeHtml(s) {
@@ -193,6 +202,44 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12464317400" class="govbb-link">1 (246) 431-7400</a></li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
       </ul>
+    </div>`,
+
+  'employer-gate': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Is your business registered as an employer with the NIS?</h1>
+      <p class="govbb-hint" style="margin-bottom:var(--spacing-m);">Your business is registered as an employer if it already pays National Insurance contributions for its employees.</p>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Is your business registered as an employer with the NIS?</legend>
+        <div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="employer-registered" name="employer-registered" value="Yes" data-field="employer-registered"${GovBB.D['employer-registered']==='Yes'?' checked':''} /><label class="govbb-radio-item__label" for="employer-registered">Yes</label></div>
+          <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="employer-registered-1" name="employer-registered" value="No" data-field="employer-registered"${GovBB.D['employer-registered']==='No'?' checked':''} /><label class="govbb-radio-item__label" for="employer-registered-1">No</label></div>
+        </div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="employerGateNext()">Continue</button>
+      </div>
+    </form>`,
+
+  'no-employer-reg': () => `
+    <div>
+      <span data-progress-indicator style="display:none"></span>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your business needs to be registered as an employer to use this service</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You can only register for NIS Online Services once your business is registered as an employer with the National Insurance Office.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you can do</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If your business is not yet registered as an employer, contact the National Insurance Office to register first. Once your business is registered, come back to register for online services.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Contact the National Insurance Office to register your business as an employer, or if you are not sure whether it is already registered.</p>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12464317400" class="govbb-link">1 (246) 431-7400</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
+      </ul>
+
+      <p><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.render();">Go back to the previous question</a></p>
     </div>`,
 
   'business-details': () => `
@@ -315,6 +362,10 @@ function validate(pageId) {
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   function reqText(id, msg) { if (!D[id] || !String(D[id]).trim()) errors.push({ id: id, msg: msg }); }
+
+  if (pageId === 'employer-gate') {
+    if (!D['employer-registered']) errors.push({ id: 'employer-registered', msg: 'Select yes if your business is registered as an employer' });
+  }
 
   if (pageId === 'business-details') {
     reqText('business-name', 'Enter the name of the business');
