@@ -134,75 +134,99 @@ function getDueDate() {
   return due.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
+/* Responsive stacked layout (a labelled block per earnings type) instead of a
+   data-entry table — fixes truncation + mobile reflow. Totals update in place
+   on input so the page never re-renders/jumps while typing. */
 function renderEarningsGrid() {
+  if (!GovBB.D['earnings-rows']) GovBB.D['earnings-rows'] = [{ type: '', employees: '', earnings: '', rate: '11.1', contributions: '0.00' }];
   var rows = getEarningsRows();
-  var rowsHtml = rows.map(function(row, i) {
-    var typeOpts = EARNINGS_TYPES.map(function(t) {
-      return '<option value="' + t + '"' + (row.type === t ? ' selected' : '') + '>' + t + '</option>';
-    }).join('');
-    return `<tr>
-      <td class="p-2">
-        <div class="govbb-select-wrapper">
-          <select onchange="updateERow(${i},'type',this.value)" class="govbb-select">
-            <option value="">Select</option>${typeOpts}
-          </select>
-          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
-        </div>
-        ${row.type === 'Other' ? `<div class="govbb-input-wrapper" style="margin-top:var(--spacing-xs);"><input type="text" class="govbb-input" placeholder="Describe..." value="${row.typeOther||''}" oninput="updateERow(${i},'typeOther',this.value)"></div>` : ''}
-      </td>
-      <td class="p-2"><div class="govbb-input-wrapper"><input type="number" min="0" value="${row.employees||''}" oninput="updateERow(${i},'employees',this.value)" class="govbb-input"></div></td>
-      <td class="p-2">
-        <div class="govbb-input-wrapper" style="display:flex;align-items:center;">
-          <span style="padding-left:var(--spacing-xs);color:var(--color-mid-grey-00);">$</span>
-          <input type="number" min="0" step="0.01" value="${row.earnings||''}" oninput="updateERow(${i},'earnings',this.value)" class="govbb-input" style="border:none;box-shadow:none;flex:1;">
-        </div>
-      </td>
-      <td class="p-2" style="color:var(--color-mid-grey-00);white-space:nowrap;">${row.rate||'11.1'}%</td>
-      <td class="p-2" style="font-weight:var(--font-weight-bold);color:var(--color-teal-00);">$${row.contributions||'0.00'}</td>
-      <td class="p-2">${rows.length > 1 ? `<button type="button" onclick="removeERow(${i})" class="govbb-btn--link">Remove</button>` : ''}</td>
-    </tr>`;
-  }).join('');
+  var cards = rows.map(function(row, i) { return earningsCard(row, i, rows.length); }).join('');
   var total = getTotalContributions();
   return `<div id="earnings-grid">
-    <table class="earnings-table" style="margin-bottom:var(--spacing-m);">
-      <thead>
-        <tr>
-          <th>Earnings Type</th><th>No. of Employees</th><th>Insurable Earnings (BDS$)</th><th>Rate</th><th>Contributions Payable</th><th></th>
-        </tr>
-      </thead>
-      <tbody>${rowsHtml}</tbody>
-      <tfoot>
-        <tr>
-          <td colspan="4" style="font-weight:var(--font-weight-bold);">Total Contributions Payable</td>
-          <td style="font-weight:var(--font-weight-bold);color:var(--color-teal-00);">$${total.toFixed(2)}</td>
-          <td></td>
-        </tr>
-      </tfoot>
-    </table>
-    <button type="button" onclick="addERow()" class="govbb-link" style="display:inline-block;font-size:var(--font-size-body);">+ Add row</button>
+    ${cards}
+    <p style="margin-bottom:var(--spacing-m);"><button type="button" onclick="addERow()" class="govbb-link" style="font-size:var(--font-size-body);">+ Add another earnings type</button></p>
+    <div style="border:2px solid var(--color-teal-00);background:var(--color-teal-10);padding:var(--spacing-m);">
+      <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Total contributions payable: <span style="color:var(--color-teal-00);">BDS$ <span id="earnings-total">${total.toFixed(2)}</span></span></p>
+    </div>
   </div>`;
 }
 
+function earningsCard(row, i, count) {
+  var typeOpts = EARNINGS_TYPES.map(function(t) {
+    return '<option value="' + t + '"' + (row.type === t ? ' selected' : '') + '>' + t + '</option>';
+  }).join('');
+  var otherHidden = row.type === 'Other' ? '' : 'display:none;';
+  return `
+    <div style="border:1px solid var(--color-grey-00);border-radius:4px;padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--spacing-s);margin-bottom:var(--spacing-s);">
+        <h3 class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin:0;">Earnings ${i + 1}</h3>
+        ${count > 1 ? `<button type="button" onclick="removeERow(${i})" class="govbb-btn--link" style="color:var(--color-red-00);">Remove</button>` : ''}
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);">
+        <label class="govbb-label" for="etype-${i}">Earnings type</label>
+        <div class="govbb-select-wrapper">
+          <select id="etype-${i}" class="govbb-select" onchange="updateEType(${i}, this.value)">
+            <option value="">Select an earnings type</option>${typeOpts}
+          </select>
+          <span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span>
+        </div>
+      </div>
+
+      <div id="etype-other-${i}" class="govbb-form-group" style="margin-bottom:var(--spacing-s);${otherHidden}">
+        <label class="govbb-label" for="etype-other-input-${i}">Describe the earnings type</label>
+        <div class="govbb-input-wrapper"><input id="etype-other-input-${i}" class="govbb-input" type="text" value="${row.typeOther || ''}" oninput="updateERow(${i},'typeOther',this.value)" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);">
+        <label class="govbb-label" for="eemp-${i}">Number of employees</label>
+        <div class="govbb-input-wrapper"><input id="eemp-${i}" class="govbb-input" type="number" min="0" inputmode="numeric" value="${row.employees || ''}" oninput="updateERow(${i},'employees',this.value)" /></div>
+      </div>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-s);">
+        <label class="govbb-label" for="eearn-${i}">Insurable earnings (BDS$)</label>
+        <div class="govbb-input-wrapper"><input id="eearn-${i}" class="govbb-input" type="number" min="0" step="0.01" inputmode="decimal" value="${row.earnings || ''}" oninput="updateERow(${i},'earnings',this.value)" /></div>
+      </div>
+
+      <p class="govbb-text-body" style="margin:0 0 var(--spacing-xs);color:var(--color-mid-grey-00);">Rate: ${row.rate || '11.1'}%</p>
+      <p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">Contributions payable: <span style="color:var(--color-teal-00);">BDS$ <span id="contrib-${i}">${row.contributions || '0.00'}</span></span></p>
+    </div>`;
+}
+
+function refreshEarningsGrid() {
+  var el = document.getElementById('earnings-grid');
+  if (el) el.outerHTML = renderEarningsGrid(); // re-render only the grid — no page scroll/jump
+}
 function addERow() {
   var rows = getEarningsRows();
   rows.push({ type: '', employees: '', earnings: '', rate: '11.1', contributions: '0.00' });
   saveEarningsRows(rows);
-  GovBB.render();
+  refreshEarningsGrid();
 }
 function removeERow(i) {
   var rows = getEarningsRows();
   rows.splice(i, 1);
   saveEarningsRows(rows);
-  GovBB.render();
+  refreshEarningsGrid();
+}
+function updateEType(i, value) {
+  var rows = getEarningsRows();
+  rows[i].type = value;
+  saveEarningsRows(rows);
+  var wrap = document.getElementById('etype-other-' + i);
+  if (wrap) wrap.style.display = (value === 'Other') ? '' : 'none';
 }
 function updateERow(i, field, value) {
   var rows = getEarningsRows();
   rows[i][field] = value;
   if (field === 'earnings' || field === 'rate') {
     rows[i].contributions = calcContributions(rows[i].earnings, rows[i].rate);
+    var c = document.getElementById('contrib-' + i);
+    if (c) c.textContent = rows[i].contributions;
+    var tot = document.getElementById('earnings-total');
+    if (tot) tot.textContent = rows.reduce(function(s, r) { return s + (parseFloat(r.contributions) || 0); }, 0).toFixed(2);
   }
   saveEarningsRows(rows);
-  GovBB.render();
 }
 
 const PAGES = {
