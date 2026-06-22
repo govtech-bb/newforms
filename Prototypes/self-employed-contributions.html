@@ -216,11 +216,14 @@ const PAGES = {
   'start': () => `
     <div>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Pay your annual NIS contributions as a self-employed person</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If you are self-employed, you must pay your NIS contributions every year. Use this form to submit your payment certificate.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">If you are self-employed, you must pay your NIS contributions every year. Use this online form to submit your payment certificate.</p>
       <div style="border-left:4px solid var(--color-red-00);padding:var(--spacing-s);background:var(--color-red-10);margin-bottom:var(--spacing-m);">
         <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);margin-bottom:var(--spacing-xs);">Payment deadline: 15 January each year</p>
         <p class="govbb-text-body" style="margin:0;">If you pay after 15 January, a late interest fee of 5% per year will be added to your contributions.</p>
       </div>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you will need</h2>
       <ul style="list-style:disc;margin-bottom:var(--spacing-l);padding-left:var(--spacing-m);">
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your self-employed NIS number</li>
@@ -229,9 +232,7 @@ const PAGES = {
       </ul>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">When you submit, your payment certificate is recorded and a receipt is emailed to you with the total amount to pay. Your next contribution deadline is 15 January each year.</p>
-
-      <div style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">When you submit, your payment certificate is recorded and a receipt is emailed to you with the total amount to pay. You can pay at any NIS office or by bank transfer. Your next contribution deadline is 15 January each year.</p>
     </div>`,
 
   'identity': () => `
