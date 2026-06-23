@@ -266,6 +266,18 @@ const PAGES = {
           <label class="govbb-checkbox-item__label" for="decl-agree">I hereby certify that the information provided is true and correct to the best of my knowledge.</label>
         </div>
       </fieldset>
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="signature">Sign here to confirm your declaration</label>
+        <p class="govbb-hint">Use your mouse, trackpad or finger to sign in the box below.</p>
+        <div style="border:2px solid var(--color-text);border-radius:var(--radius-sm);background:#fff;display:inline-block;line-height:0;max-width:100%;">
+          <canvas id="signature" class="sig-canvas" data-field="signature" width="640" height="160" style="display:block;touch-action:none;cursor:crosshair;"></canvas>
+        </div>
+        <div style="margin-top:var(--spacing-xs);">
+          <button type="button" class="govbb-btn--link" data-clear-sig="signature">Clear signature</button>
+        </div>
+      </div>
+
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
         <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
@@ -288,6 +300,7 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Ministry of Housing, Lands and Maintenance will review your application and contact you within <strong>10 working days</strong>.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A confirmation will be sent to <strong>${escapeHtml(GovBB.D['email']||'the email address you gave us')}</strong>.</li>
       </ul>
+      ${GovBB.D['signature'] ? `<h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your signature</h2><img src="${GovBB.D['signature']}" alt="Your signature" style="border:1px solid var(--color-grey-00);border-radius:var(--radius-sm);background:#fff;max-width:100%;margin-bottom:var(--spacing-m);" />` : ''}
       <p style="margin-bottom:var(--spacing-m);"><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.D={};window.__refNumber=null;GovBB.nav('start');">Start another application</a></p>
     </div>`;
   }
@@ -335,6 +348,7 @@ function validate(pageId) {
 
   if (pageId === 'declaration') {
     if (!D['decl-agree']) errors.push({id:'decl-agree',msg:'You must agree to the declaration to continue'});
+    if (!D['signature']) errors.push({id:'signature',msg:'Sign in the box to confirm your declaration'});
   }
   return errors;
 }
