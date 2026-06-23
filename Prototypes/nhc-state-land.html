@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply to Use State Land – Ministry of Housing, Lands and Maintenance</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" /></div>
+    <div class="govbb-official-banner__text"><span>Official government website</span></div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage"><img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" /></a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
+  </div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary'); if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+  if (document.title.indexOf('Error: ') === 0) document.title = document.title.slice(7);
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors(); if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  var app = document.getElementById('app'); var h1 = app.querySelector('h1');
+  if (h1) h1.insertAdjacentHTML('afterend', html); else app.insertAdjacentHTML('afterbegin', html);
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id); if (!el) return;
+    var errId = 'err-'+e.id; el.setAttribute('aria-invalid','true'); el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p'); msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) { var anchor = group.querySelector('.govbb-hint')||group.querySelector('.govbb-label')||group.querySelector('legend'); if (anchor) anchor.insertAdjacentElement('afterend', msg); else group.insertBefore(msg, group.firstChild); }
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);white-space:pre-wrap;">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+/* ───────── Application to Use State Land (rebuilt in current design) ───────── */
+const FORM_NAME = 'Application to Use State Land';
+const SERVICE_NAME = 'Apply to use State Land';
+const FLOW = ['start','eligibility','applicant-details','land-use','check','declaration','confirmation'];
+
+function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+function val(id){ return escapeHtml(GovBB.D[id]||''); }
+function caption(){ return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+SERVICE_NAME+'</p>'; }
+
+function textField(id,label,opts){ opts=opts||{}; var hint=opts.hint?'<p class="govbb-hint">'+opts.hint+'</p>':''; var type=opts.type||'text'; var im=opts.inputmode?' inputmode="'+opts.inputmode+'"':'';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="'+id+'">'+label+'</label>'+hint+'<div class="govbb-input-wrapper"><input class="govbb-input" type="'+type+'" id="'+id+'" name="'+id+'" data-field="'+id+'"'+im+' value="'+val(id)+'" /></div></div>'; }
+
+function textareaField(id,label,opts){ opts=opts||{}; var hint=opts.hint?'<p class="govbb-hint">'+opts.hint+'</p>':'';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="'+id+'">'+label+'</label>'+hint+'<div class="govbb-textarea-wrapper"><textarea class="govbb-textarea" id="'+id+'" name="'+id+'" data-field="'+id+'" rows="'+(opts.rows||4)+'">'+val(id)+'</textarea></div></div>'; }
+
+function selectField(id,label,options,opts){ opts=opts||{}; var hint=opts.hint?'<p class="govbb-hint">'+opts.hint+'</p>':''; var ops='<option value="">'+(opts.placeholder||'Select an option')+'</option>'+options.map(function(o){return '<option value="'+escapeHtml(o)+'"'+(GovBB.D[id]===o?' selected':'')+'>'+escapeHtml(o)+'</option>';}).join('');
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="'+id+'">'+label+'</label>'+hint+'<div class="govbb-select-wrapper"><select class="govbb-select" id="'+id+'" name="'+id+'" data-field="'+id+'">'+ops+'</select><span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>'; }
+
+function radioField(id,label,options,opts){ opts=opts||{}; var hint=opts.hint?'<p class="govbb-hint">'+opts.hint+'</p>':''; var trig=opts.trigger?' data-trigger-render="1"':'';
+  var items=options.map(function(o,i){ var rid=i===0?id:id+'-'+i; return '<div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="'+rid+'" name="'+id+'" value="'+escapeHtml(o)+'" data-field="'+id+'"'+trig+(GovBB.D[id]===o?' checked':'')+' /><label class="govbb-radio-item__label" for="'+rid+'">'+escapeHtml(o)+'</label></div>'; }).join('');
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><fieldset class="govbb-fieldset"><legend class="govbb-fieldset__legend govbb-label">'+label+'</legend>'+hint+'<div style="display:flex;flex-direction:column;gap:var(--spacing-s);">'+items+'</div></fieldset></div>'; }
+
+function btns(label){ return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">'+(label||'Continue')+'</button></div>'; }
+
+function fmtDate(iso){ if(!iso) return ''; var p=String(iso).split('-'); if(p.length!==3) return iso; var m=['January','February','March','April','May','June','July','August','September','October','November','December']; var d=parseInt(p[2],10),mm=parseInt(p[1],10); if(!d||!mm) return iso; return d+' '+(m[mm-1]||'')+' '+p[0]; }
+
+/* ───────── Pages ───────── */
+const PAGES = {
+
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Housing and land</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Apply to use State Land</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on June 2026</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to apply for permission to use state-owned land managed by the Ministry of Housing, Lands and Maintenance. Both individuals and registered organisations may apply.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Who can apply</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Barbadian citizens or permanent residents</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Registered organisations operating in Barbados</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National Registration Number</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The location of the land you want to use, including GPS coordinates if you have them</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A description of what you plan to do on the land</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your desired start and end dates</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Ministry of Housing, Lands and Maintenance reviews your application.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">It contacts you within <strong>10 working days</strong>.</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Contact the Ministry of Housing, Lands and Maintenance if you need help with your application.</p>
+    </div>`,
+
+  'eligibility': () => {
+    const D = GovBB.D;
+    const isInd = D['applicant-type'] === 'Individual';
+    const isOrg = D['applicant-type'] === 'Organisation';
+    const notResident = isInd && D['is-resident'] === 'No';
+    const notRegistered = isOrg && D['is-registered'] === 'No';
+    const ineligible = notResident || notRegistered;
+    let notice = '';
+    if (notResident) notice = `<div id="ineligible-notice" style="background:var(--color-red-10);border-left:4px solid var(--color-red-00);padding:var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);color:var(--color-red-00);margin-bottom:var(--spacing-xs);">You cannot use this service</p><p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You must be a Barbadian citizen or permanent resident to apply as an individual.</p><p class="govbb-text-body" style="margin:0;">If you think this is wrong, contact the Ministry of Housing, Lands and Maintenance.</p></div>`;
+    else if (notRegistered) notice = `<div id="ineligible-notice" style="background:var(--color-red-10);border-left:4px solid var(--color-red-00);padding:var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);color:var(--color-red-00);margin-bottom:var(--spacing-xs);">You cannot use this service</p><p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your organisation must be registered in Barbados to apply.</p><p class="govbb-text-body" style="margin:0;">If you think this is wrong, contact the Ministry of Housing, Lands and Maintenance.</p></div>`;
+    return `
+      <form novalidate>
+        ${caption()}
+        <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check if you can apply</h1>
+        ${radioField('applicant-type','Are you applying as an individual or on behalf of an organisation?',['Individual','Organisation'],{trigger:true})}
+        ${isInd ? radioField('is-resident','Are you a Barbadian citizen or permanent resident?',['Yes','No'],{trigger:true}) : ''}
+        ${isOrg ? radioField('is-registered','Is your organisation registered in Barbados?',['Yes','No'],{trigger:true}) : ''}
+        ${notice}
+        ${ineligible
+          ? '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button></div>'
+          : btns()}
+      </form>`;
+  },
+
+  'applicant-details': () => {
+    const isOrg = GovBB.D['applicant-type'] === 'Organisation';
+    return `
+      <form novalidate>
+        ${caption()}
+        <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your details</h1>
+        ${isOrg ? textField('org-name','Name of organisation') : ''}
+        ${textField('first-name', isOrg ? 'Contact person first name' : 'First name')}
+        ${textField('last-name', isOrg ? 'Contact person last name' : 'Last name')}
+        ${textField('nrn','National Registration Number',{hint:'You can find this on your national ID card. For example, 870315-1234.',placeholder:'870315-1234'})}
+        ${radioField('gender','Gender',['Male','Female','Prefer not to say'])}
+        ${selectField('parish','Parish',GovBB.PARISHES,{placeholder:'Select a parish'})}
+        ${textareaField('address','Address',{hint:'Street address and village or district.'})}
+        ${textField('phone','Telephone number',{type:'tel',inputmode:'tel',hint:'For example, (246) 535 1234.'})}
+        ${textField('cell','Mobile number (optional)',{type:'tel',inputmode:'tel'})}
+        ${textField('email','Email address',{type:'email',inputmode:'email',hint:'We will use this to send you a confirmation.'})}
+        ${btns()}
+      </form>`;
+  },
+
+  'land-use': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Details of the land you want to use</h1>
+      ${textareaField('land-location','Location of the land',{hint:'Describe the location as precisely as possible.'})}
+      ${textField('gps-coordinates','GPS coordinates (optional)',{hint:'For example, 13.1132° N, 59.5988° W.'})}
+      ${textareaField('proposed-activities','What do you plan to do on the land?',{hint:'Describe your proposed activities.'})}
+      ${textField('start-date','Start date',{type:'date'})}
+      ${textField('end-date','End date',{type:'date'})}
+      ${btns()}
+    </form>`,
+
+  'check': () => {
+    const D = GovBB.D;
+    const isOrg = D['applicant-type'] === 'Organisation';
+    return `
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before sending your application</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Eligibility</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Applying as', D['applicant-type'], 'eligibility')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your details</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${isOrg ? GovBB.summaryRow('Organisation name', D['org-name'], 'applicant-details') : ''}
+        ${GovBB.summaryRow(isOrg ? 'Contact first name' : 'First name', D['first-name'], 'applicant-details')}
+        ${GovBB.summaryRow(isOrg ? 'Contact last name' : 'Last name', D['last-name'], 'applicant-details')}
+        ${GovBB.summaryRow('National Registration Number', D['nrn'], 'applicant-details')}
+        ${GovBB.summaryRow('Gender', D['gender'], 'applicant-details')}
+        ${GovBB.summaryRow('Parish', D['parish'], 'applicant-details')}
+        ${GovBB.summaryRow('Address', D['address'], 'applicant-details')}
+        ${GovBB.summaryRow('Telephone number', D['phone'], 'applicant-details')}
+        ${D['cell'] ? GovBB.summaryRow('Mobile number', D['cell'], 'applicant-details') : ''}
+        ${GovBB.summaryRow('Email address', D['email'], 'applicant-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Land use details</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Location of the land', D['land-location'], 'land-use')}
+        ${D['gps-coordinates'] ? GovBB.summaryRow('GPS coordinates', D['gps-coordinates'], 'land-use') : ''}
+        ${GovBB.summaryRow('Planned activities', D['proposed-activities'], 'land-use')}
+        ${GovBB.summaryRow('Start date', fmtDate(D['start-date']), 'land-use')}
+        ${GovBB.summaryRow('End date', fmtDate(D['end-date']), 'land-use')}
+      </dl>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue to declaration</button>
+      </div>
+    </div>`;
+  },
+
+  'declaration': () => {
+    const d = new Date();
+    const date = String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
+    return `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <div style="margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Applicant's name:</strong> ${escapeHtml([GovBB.D['first-name'],GovBB.D['last-name']].filter(Boolean).join(' ') || '—')}</p>
+        <p class="govbb-text-body"><strong>Date:</strong> ${date}</p>
+      </div>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
+          <input class="govbb-checkbox" type="checkbox" id="decl-agree" name="decl-agree" data-field="decl-agree"${GovBB.D['decl-agree']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="decl-agree">I hereby certify that the information provided is true and correct to the best of my knowledge.</label>
+        </div>
+      </fieldset>
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
+      </div>
+    </form>`;
+  },
+
+  'confirmation': () => {
+    window.__refNumber = window.__refNumber || ('SLU-' + Math.random().toString(36).substring(2,8).toUpperCase());
+    if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    return `
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Application submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Ministry of Housing, Lands and Maintenance will review your application and contact you within <strong>10 working days</strong>.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A confirmation will be sent to <strong>${escapeHtml(GovBB.D['email']||'the email address you gave us')}</strong>.</li>
+      </ul>
+      <p style="margin-bottom:var(--spacing-m);"><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.D={};window.__refNumber=null;GovBB.nav('start');">Start another application</a></p>
+    </div>`;
+  }
+};
+
+/* ───────── Validation ───────── */
+function validate(pageId) {
+  const D = GovBB.D; const errors = []; const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function req(id,msg){ if(!D[id]||!String(D[id]).trim()) errors.push({id:id,msg:msg}); }
+  function phoneOk(v){ return /^\d{7,15}$/.test(String(v).replace(/[\s\-()+]/g,'')); }
+
+  if (pageId === 'eligibility') {
+    if (!D['applicant-type']) errors.push({id:'applicant-type',msg:'Tell us if you are applying as an individual or on behalf of an organisation'});
+    else if (D['applicant-type']==='Individual') {
+      if (!D['is-resident']) errors.push({id:'is-resident',msg:'Tell us if you are a Barbadian citizen or permanent resident'});
+      else if (D['is-resident']==='No') errors.push({id:'is-resident',msg:'You must be a Barbadian citizen or permanent resident to apply'});
+    } else if (D['applicant-type']==='Organisation') {
+      if (!D['is-registered']) errors.push({id:'is-registered',msg:'Tell us if your organisation is registered in Barbados'});
+      else if (D['is-registered']==='No') errors.push({id:'is-registered',msg:'Your organisation must be registered in Barbados to apply'});
+    }
+  }
+
+  if (pageId === 'applicant-details') {
+    if (D['applicant-type']==='Organisation') req('org-name','Enter the name of your organisation');
+    req('first-name', D['applicant-type']==='Organisation' ? 'Enter the contact person first name' : 'Enter your first name');
+    req('last-name', D['applicant-type']==='Organisation' ? 'Enter the contact person last name' : 'Enter your last name');
+    var nrn=(D['nrn']||'').trim();
+    if (!nrn) errors.push({id:'nrn',msg:'Enter your National Registration Number'});
+    else if (!/^\d{6}-\d{4}$/.test(nrn)) errors.push({id:'nrn',msg:'Enter a valid National Registration Number, for example 870315-1234'});
+    if (!D['gender']) errors.push({id:'gender',msg:'Select your gender'});
+    if (!D['parish']) errors.push({id:'parish',msg:'Select your parish'});
+    req('address','Enter your address');
+    var ph=(D['phone']||'').trim(); if(!ph) errors.push({id:'phone',msg:'Enter your telephone number'}); else if(!phoneOk(ph)) errors.push({id:'phone',msg:'Enter a telephone number using 7 to 15 digits'});
+    var cell=(D['cell']||'').trim(); if(cell && !phoneOk(cell)) errors.push({id:'cell',msg:'Enter a mobile number using 7 to 15 digits'});
+    var em=(D['email']||'').trim(); if(!em) errors.push({id:'email',msg:'Enter your email address'}); else if(!EMAIL_RE.test(em)) errors.push({id:'email',msg:'Enter a valid email address, for example name@example.com'});
+  }
+
+  if (pageId === 'land-use') {
+    req('land-location','Describe the location of the land');
+    req('proposed-activities','Describe what you plan to do on the land');
+    if (!D['start-date']) errors.push({id:'start-date',msg:'Enter the start date'});
+    if (!D['end-date']) errors.push({id:'end-date',msg:'Enter the end date'});
+    else if (D['start-date'] && D['end-date'] && D['end-date'] < D['start-date']) errors.push({id:'end-date',msg:'The end date must be the same as or after the start date'});
+  }
+
+  if (pageId === 'declaration') {
+    if (!D['decl-agree']) errors.push({id:'decl-agree',msg:'You must agree to the declaration to continue'});
+  }
+  return errors;
+}
+
+GovBB.init({ formName: FORM_NAME, getFlow: function(){ return FLOW; }, pages: PAGES, validate: validate });
+</script>
+
+<!-- Comment World feedback widget -->
+<script>window.CommentWidget = { siteId: "3f6a568d-ae7b-47a9-bef0-beace3e0b197" };</script>
+<script async src="https://comment-world-dashboard.vercel.app/widget.js"></script>
+</body>
+</html>
