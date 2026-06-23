@@ -154,6 +154,16 @@ function elig(){
   var c=document.getElementById('elig-continue'); if(c) c.style.display=(notResident||notRegistered)?'none':'';
 }
 
+/* Land-use page: toggle the address vs description blocks in place when the
+   "does the land have an address?" radio changes (no full re-render → no jump). */
+function landAddr(){
+  var v=(document.querySelector('input[name="land-has-address"]:checked')||{}).value||'';
+  GovBB.D['land-has-address']=v;
+  var dev=document.getElementById('land-dev'), und=document.getElementById('land-undev');
+  if(dev) dev.style.display=(v==='Yes')?'':'none';
+  if(und) und.style.display=(v==='No')?'':'none';
+}
+
 /* ───────── Pages ───────── */
 const PAGES = {
 
@@ -182,7 +192,7 @@ const PAGES = {
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your National Registration Number (if you are applying as an individual)</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The location of the land you want to use, including GPS coordinates if you have them</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The parish and location of the land you want to use — its address if it has one, or a description, GPS coordinates or a map link if it does not</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A description of what you plan to do on the land</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your desired start and end dates</li>
       </ul>
@@ -281,12 +291,35 @@ const PAGES = {
       </form>`;
   },
 
-  'land-use': () => `
+  'land-use': () => {
+    const D = GovBB.D;
+    const hasAddr = D['land-has-address'];
+    return `
     <form novalidate>
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Details of the land you want to use</h1>
-      ${textareaField('land-location','Location of the land',{hint:'Describe the location as precisely as possible.'})}
+      ${selectField('land-parish','In which parish is the land?',GovBB.PARISHES,{placeholder:'Select a parish'})}
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <fieldset class="govbb-fieldset"><legend class="govbb-fieldset__legend govbb-label">Does the land have a street address?</legend>
+          <p class="govbb-hint">Many state land parcels are undeveloped and have no formal address.</p>
+          <div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+            <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="land-has-address" name="land-has-address" value="Yes" data-field="land-has-address" onchange="landAddr()"${hasAddr==='Yes'?' checked':''} /><label class="govbb-radio-item__label" for="land-has-address">Yes, it has a street address</label></div>
+            <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="land-has-address-no" name="land-has-address" value="No" data-field="land-has-address" onchange="landAddr()"${hasAddr==='No'?' checked':''} /><label class="govbb-radio-item__label" for="land-has-address-no">No, it is undeveloped or has no address</label></div>
+          </div>
+        </fieldset>
+      </div>
+
+      <div id="land-dev" style="${hasAddr==='Yes'?'':'display:none;'}">
+        ${textareaField('land-address','Address of the land',{hint:'Include the street, and the lot or building number if there is one.'})}
+      </div>
+      <div id="land-undev" style="${hasAddr==='No'?'':'display:none;'}">
+        ${textareaField('land-description','Describe where the land is',{hint:'Describe the location as precisely as you can — for example, nearby landmarks, roads or directions.'})}
+      </div>
+
       ${textField('gps-coordinates','GPS coordinates (optional)',{hint:'For example, 13.1132° N, 59.5988° W.'})}
+      ${textField('land-map-link','Google Maps link or pin (optional)',{hint:'Paste a Google Maps link or dropped pin if you have one.'})}
+
       ${textareaField('proposed-activities','What do you plan to do on the land?',{hint:'Describe your proposed activities.'})}
       ${textField('start-date','Start date',{type:'date',onchange:'updateDuration()'})}
       ${textField('end-date','End date',{type:'date',onchange:'updateDuration()'})}
@@ -296,7 +329,8 @@ const PAGES = {
         <p class="govbb-hint" style="margin-top:var(--spacing-xs);">Calculated automatically from your start and end dates.</p>
       </div>
       ${btns()}
-    </form>`,
+    </form>`;
+  },
 
   'check': () => {
     const D = GovBB.D;
@@ -327,8 +361,10 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Land use details</h2>
       <dl style="margin-bottom:var(--spacing-l);">
-        ${GovBB.summaryRow('Location of the land', D['land-location'], 'land-use')}
+        ${GovBB.summaryRow('Parish', D['land-parish'], 'land-use')}
+        ${D['land-has-address']==='Yes' ? GovBB.summaryRow('Address of the land', D['land-address'], 'land-use') : GovBB.summaryRow('Location description', D['land-description'], 'land-use')}
         ${D['gps-coordinates'] ? GovBB.summaryRow('GPS coordinates', D['gps-coordinates'], 'land-use') : ''}
+        ${D['land-map-link'] ? GovBB.summaryRow('Google Maps link', D['land-map-link'], 'land-use') : ''}
         ${GovBB.summaryRow('Planned activities', D['proposed-activities'], 'land-use')}
         ${GovBB.summaryRow('Start date', fmtDate(D['start-date']), 'land-use')}
         ${GovBB.summaryRow('End date', fmtDate(D['end-date']), 'land-use')}
@@ -426,7 +462,10 @@ function validate(pageId) {
   }
 
   if (pageId === 'land-use') {
-    req('land-location','Describe the location of the land');
+    if (!D['land-parish']) errors.push({id:'land-parish',msg:'Select the parish where the land is'});
+    if (!D['land-has-address']) errors.push({id:'land-has-address',msg:'Tell us whether the land has a street address'});
+    else if (D['land-has-address']==='Yes') req('land-address','Enter the address of the land');
+    else if (D['land-has-address']==='No') req('land-description','Describe where the land is');
     req('proposed-activities','Describe what you plan to do on the land');
     var today=(function(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');})();
     if (!D['start-date']) errors.push({id:'start-date',msg:'Enter the start date'});
