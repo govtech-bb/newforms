@@ -180,9 +180,10 @@ const PAGES = {
         <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your details</h1>
         ${isOrg ? textField('org-name','Name of organisation') : ''}
         ${textField('first-name', isOrg ? 'Contact person first name' : 'First name')}
+        ${textField('middle-name', 'Middle name (optional)')}
         ${textField('last-name', isOrg ? 'Contact person last name' : 'Last name')}
         ${textField('nrn','National Registration Number',{hint:'You can find this on your national ID card. For example, 870315-1234.',placeholder:'870315-1234'})}
-        ${radioField('gender','Gender',['Male','Female','Prefer not to say'])}
+        ${radioField('gender','Gender',['Male','Female'])}
         ${selectField('parish','Parish',GovBB.PARISHES,{placeholder:'Select a parish'})}
         ${textareaField('address','Address',{hint:'Street address and village or district.'})}
         ${textField('phone','Telephone number',{type:'tel',inputmode:'tel',hint:'For example, (246) 535 1234.'})}
@@ -220,6 +221,7 @@ const PAGES = {
       <dl style="margin-bottom:var(--spacing-m);">
         ${isOrg ? GovBB.summaryRow('Organisation name', D['org-name'], 'applicant-details') : ''}
         ${GovBB.summaryRow(isOrg ? 'Contact first name' : 'First name', D['first-name'], 'applicant-details')}
+        ${D['middle-name'] ? GovBB.summaryRow('Middle name', D['middle-name'], 'applicant-details') : ''}
         ${GovBB.summaryRow(isOrg ? 'Contact last name' : 'Last name', D['last-name'], 'applicant-details')}
         ${GovBB.summaryRow('National Registration Number', D['nrn'], 'applicant-details')}
         ${GovBB.summaryRow('Gender', D['gender'], 'applicant-details')}
@@ -254,7 +256,7 @@ const PAGES = {
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
       <div style="margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Applicant's name:</strong> ${escapeHtml([GovBB.D['first-name'],GovBB.D['last-name']].filter(Boolean).join(' ') || '—')}</p>
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Applicant's name:</strong> ${escapeHtml([GovBB.D['first-name'],GovBB.D['middle-name'],GovBB.D['last-name']].filter(Boolean).join(' ') || '—')}</p>
         <p class="govbb-text-body"><strong>Date:</strong> ${date}</p>
       </div>
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
