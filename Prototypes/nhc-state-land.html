@@ -105,6 +105,23 @@ function btns(label){ return '<div class="govbb-btn-group" style="margin-top:var
 
 function fmtDate(iso){ if(!iso) return ''; var p=String(iso).split('-'); if(p.length!==3) return iso; var m=['January','February','March','April','May','June','July','August','September','October','November','December']; var d=parseInt(p[2],10),mm=parseInt(p[1],10); if(!d||!mm) return iso; return d+' '+(m[mm-1]||'')+' '+p[0]; }
 
+/* Eligibility page: toggle the conditional questions / notices in place so
+   selecting a radio does NOT trigger a full re-render (which would scroll the
+   page to the top). */
+function elig(){
+  var D=GovBB.D;
+  var at=(document.querySelector('input[name="applicant-type"]:checked')||{}).value||'';
+  var res=(document.querySelector('input[name="is-resident"]:checked')||{}).value||'';
+  var reg=(document.querySelector('input[name="is-registered"]:checked')||{}).value||'';
+  D['applicant-type']=at; D['is-resident']=res; D['is-registered']=reg;
+  var isInd=at==='Individual', isOrg=at==='Organisation';
+  var notResident=isInd&&res==='No', notRegistered=isOrg&&reg==='No';
+  function show(id,on){ var el=document.getElementById(id); if(el) el.style.display=on?'':'none'; }
+  show('q-resident',isInd); show('q-registered',isOrg);
+  show('notice-resident',notResident); show('notice-registered',notRegistered);
+  var c=document.getElementById('elig-continue'); if(c) c.style.display=(notResident||notRegistered)?'none':'';
+}
+
 /* ───────── Pages ───────── */
 const PAGES = {
 
@@ -160,20 +177,54 @@ const PAGES = {
     const notResident = isInd && D['is-resident'] === 'No';
     const notRegistered = isOrg && D['is-registered'] === 'No';
     const ineligible = notResident || notRegistered;
-    let notice = '';
-    if (notResident) notice = `<div id="ineligible-notice" style="background:var(--color-red-10);border-left:4px solid var(--color-red-00);padding:var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);color:var(--color-red-00);margin-bottom:var(--spacing-xs);">You cannot use this service</p><p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You must be a Barbadian citizen or permanent resident to apply as an individual.</p><p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you think this is wrong, or to ask about applying another way, contact the Ministry of Housing, Lands and Maintenance:</p><ul style="list-style:none;padding:0;margin:0;"><li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12465365000" class="govbb-link">1 (246) 536-5000</a></li><li class="govbb-text-body" style="margin:0;">Email: <a href="mailto:minhousing@barbados.gov.bb" class="govbb-link">minhousing@barbados.gov.bb</a></li></ul></div>`;
-    else if (notRegistered) notice = `<div id="ineligible-notice" style="background:var(--color-red-10);border-left:4px solid var(--color-red-00);padding:var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="font-weight:var(--font-weight-bold);color:var(--color-red-00);margin-bottom:var(--spacing-xs);">You cannot use this service</p><p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your organisation must be registered in Barbados to apply.</p><p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you think this is wrong, or to ask about applying another way, contact the Ministry of Housing, Lands and Maintenance:</p><ul style="list-style:none;padding:0;margin:0;"><li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12465365000" class="govbb-link">1 (246) 536-5000</a></li><li class="govbb-text-body" style="margin:0;">Email: <a href="mailto:minhousing@barbados.gov.bb" class="govbb-link">minhousing@barbados.gov.bb</a></li></ul></div>`;
+    const contactLines = `<p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you think this is wrong, or to ask about applying another way, contact the Ministry of Housing, Lands and Maintenance:</p><ul style="list-style:none;padding:0;margin:0;"><li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12465365000" class="govbb-link">1 (246) 536-5000</a></li><li class="govbb-text-body" style="margin:0;">Email: <a href="mailto:minhousing@barbados.gov.bb" class="govbb-link">minhousing@barbados.gov.bb</a></li></ul>`;
     return `
       <form novalidate>
         ${caption()}
         <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check if you can apply</h1>
-        ${radioField('applicant-type','Are you applying as an individual or on behalf of an organisation?',['Individual','Organisation'],{trigger:true})}
-        ${isInd ? radioField('is-resident','Are you a Barbadian citizen or permanent resident?',['Yes','No'],{trigger:true}) : ''}
-        ${isOrg ? radioField('is-registered','Is your organisation registered in Barbados?',['Yes','No'],{trigger:true}) : ''}
-        ${notice}
-        ${ineligible
-          ? '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button></div>'
-          : btns()}
+
+        <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+          <fieldset class="govbb-fieldset"><legend class="govbb-fieldset__legend govbb-label">Are you applying as an individual or on behalf of an organisation?</legend>
+            <div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+              <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="applicant-type" name="applicant-type" value="Individual" data-field="applicant-type" onchange="elig()"${isInd?' checked':''} /><label class="govbb-radio-item__label" for="applicant-type">Individual</label></div>
+              <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="applicant-type-org" name="applicant-type" value="Organisation" data-field="applicant-type" onchange="elig()"${isOrg?' checked':''} /><label class="govbb-radio-item__label" for="applicant-type-org">Organisation</label></div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div id="q-resident" class="govbb-form-group" style="margin-bottom:var(--spacing-m);${isInd?'':'display:none;'}">
+          <fieldset class="govbb-fieldset"><legend class="govbb-fieldset__legend govbb-label">Are you a Barbadian citizen or permanent resident?</legend>
+            <div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+              <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="is-resident" name="is-resident" value="Yes" data-field="is-resident" onchange="elig()"${D['is-resident']==='Yes'?' checked':''} /><label class="govbb-radio-item__label" for="is-resident">Yes</label></div>
+              <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="is-resident-no" name="is-resident" value="No" data-field="is-resident" onchange="elig()"${D['is-resident']==='No'?' checked':''} /><label class="govbb-radio-item__label" for="is-resident-no">No</label></div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div id="q-registered" class="govbb-form-group" style="margin-bottom:var(--spacing-m);${isOrg?'':'display:none;'}">
+          <fieldset class="govbb-fieldset"><legend class="govbb-fieldset__legend govbb-label">Is your organisation registered in Barbados?</legend>
+            <div style="display:flex;flex-direction:column;gap:var(--spacing-s);">
+              <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="is-registered" name="is-registered" value="Yes" data-field="is-registered" onchange="elig()"${D['is-registered']==='Yes'?' checked':''} /><label class="govbb-radio-item__label" for="is-registered">Yes</label></div>
+              <div class="govbb-radio-item"><input class="govbb-radio" type="radio" id="is-registered-no" name="is-registered" value="No" data-field="is-registered" onchange="elig()"${D['is-registered']==='No'?' checked':''} /><label class="govbb-radio-item__label" for="is-registered-no">No</label></div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div id="notice-resident" style="${notResident?'':'display:none;'}background:var(--color-red-10);border-left:4px solid var(--color-red-00);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+          <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);color:var(--color-red-00);margin-bottom:var(--spacing-xs);">You cannot use this service</p>
+          <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You must be a Barbadian citizen or permanent resident to apply as an individual.</p>
+          ${contactLines}
+        </div>
+        <div id="notice-registered" style="${notRegistered?'':'display:none;'}background:var(--color-red-10);border-left:4px solid var(--color-red-00);padding:var(--spacing-m);margin-bottom:var(--spacing-m);">
+          <p class="govbb-text-body" style="font-weight:var(--font-weight-bold);color:var(--color-red-00);margin-bottom:var(--spacing-xs);">You cannot use this service</p>
+          <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your organisation must be registered in Barbados to apply.</p>
+          ${contactLines}
+        </div>
+
+        <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+          <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+          <button type="button" id="elig-continue" class="govbb-btn" onclick="next()" style="${ineligible?'display:none;':''}">Continue</button>
+        </div>
       </form>`;
   },
 
