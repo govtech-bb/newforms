@@ -88,8 +88,8 @@ function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(
 function val(id){ return escapeHtml(GovBB.D[id]||''); }
 function caption(){ return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">'+SERVICE_NAME+'</p>'; }
 
-function textField(id,label,opts){ opts=opts||{}; var hint=opts.hint?'<p class="govbb-hint">'+opts.hint+'</p>':''; var type=opts.type||'text'; var im=opts.inputmode?' inputmode="'+opts.inputmode+'"':'';
-  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="'+id+'">'+label+'</label>'+hint+'<div class="govbb-input-wrapper"><input class="govbb-input" type="'+type+'" id="'+id+'" name="'+id+'" data-field="'+id+'"'+im+' value="'+val(id)+'" /></div></div>'; }
+function textField(id,label,opts){ opts=opts||{}; var hint=opts.hint?'<p class="govbb-hint">'+opts.hint+'</p>':''; var type=opts.type||'text'; var im=opts.inputmode?' inputmode="'+opts.inputmode+'"':''; var oc=opts.onchange?' onchange="'+opts.onchange+'"':'';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="'+id+'">'+label+'</label>'+hint+'<div class="govbb-input-wrapper"><input class="govbb-input" type="'+type+'" id="'+id+'" name="'+id+'" data-field="'+id+'"'+im+oc+' value="'+val(id)+'" /></div></div>'; }
 
 function textareaField(id,label,opts){ opts=opts||{}; var hint=opts.hint?'<p class="govbb-hint">'+opts.hint+'</p>':'';
   return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="'+id+'">'+label+'</label>'+hint+'<textarea class="govbb-textarea" id="'+id+'" name="'+id+'" data-field="'+id+'" rows="'+(opts.rows||4)+'" style="width:100%;">'+val(id)+'</textarea></div>'; }
@@ -104,6 +104,38 @@ function radioField(id,label,options,opts){ opts=opts||{}; var hint=opts.hint?'<
 function btns(label){ return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">'+(label||'Continue')+'</button></div>'; }
 
 function fmtDate(iso){ if(!iso) return ''; var p=String(iso).split('-'); if(p.length!==3) return iso; var m=['January','February','March','April','May','June','July','August','September','October','November','December']; var d=parseInt(p[2],10),mm=parseInt(p[1],10); if(!d||!mm) return iso; return d+' '+(m[mm-1]||'')+' '+p[0]; }
+
+/* Human-readable duration between two ISO (YYYY-MM-DD) dates. Parses parts
+   manually to avoid UTC/local timezone day-shift. Returns '' if invalid. */
+function durationText(s,e){
+  if(!s||!e) return '';
+  var sp=String(s).split('-'), ep=String(e).split('-');
+  if(sp.length!==3||ep.length!==3) return '';
+  var a=new Date(+sp[0],+sp[1]-1,+sp[2]), b=new Date(+ep[0],+ep[1]-1,+ep[2]);
+  if(isNaN(a)||isNaN(b)||b<a) return '';
+  // Count whole months by advancing from the start, clamping the day to the
+  // end of each target month (so 31 Jan + 1 month = 28 Feb, never overflows).
+  var anchor=a.getDate();
+  function addMonths(n){ var y=a.getFullYear(), m=a.getMonth()+n, last=new Date(y,m+1,0).getDate(); return new Date(y,m,Math.min(anchor,last)); }
+  var months=0; while(addMonths(months+1)<=b) months++;
+  var days=Math.round((b-addMonths(months))/86400000);
+  var years=Math.floor(months/12); months=months%12;
+  var parts=[];
+  if(years) parts.push(years+(years===1?' year':' years'));
+  if(months) parts.push(months+(months===1?' month':' months'));
+  if(days) parts.push(days+(days===1?' day':' days'));
+  if(!parts.length) return 'Same day';
+  return parts.join(', ');
+}
+
+/* Recompute the read-only duration on the land-use page when a date changes. */
+function updateDuration(){
+  var s=(document.getElementById('start-date')||{}).value||'';
+  var e=(document.getElementById('end-date')||{}).value||'';
+  var el=document.getElementById('duration'); if(!el) return;
+  var txt=durationText(s,e);
+  el.textContent = txt || (s&&e ? 'End date must be on or after the start date' : 'Enter your start and end dates to see the duration');
+}
 
 /* Eligibility page: toggle the conditional questions / notices in place so
    selecting a radio does NOT trigger a full re-render (which would scroll the
@@ -256,8 +288,13 @@ const PAGES = {
       ${textareaField('land-location','Location of the land',{hint:'Describe the location as precisely as possible.'})}
       ${textField('gps-coordinates','GPS coordinates (optional)',{hint:'For example, 13.1132° N, 59.5988° W.'})}
       ${textareaField('proposed-activities','What do you plan to do on the land?',{hint:'Describe your proposed activities.'})}
-      ${textField('start-date','Start date',{type:'date'})}
-      ${textField('end-date','End date',{type:'date'})}
+      ${textField('start-date','Start date',{type:'date',onchange:'updateDuration()'})}
+      ${textField('end-date','End date',{type:'date',onchange:'updateDuration()'})}
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <p class="govbb-label" style="margin-bottom:var(--spacing-xs);">Duration</p>
+        <p class="govbb-text-body" id="duration" style="margin:0;color:var(--color-mid-grey-00);">${durationText(GovBB.D['start-date'],GovBB.D['end-date']) || 'Enter your start and end dates to see the duration'}</p>
+        <p class="govbb-hint" style="margin-top:var(--spacing-xs);">Calculated automatically from your start and end dates.</p>
+      </div>
       ${btns()}
     </form>`,
 
@@ -295,6 +332,7 @@ const PAGES = {
         ${GovBB.summaryRow('Planned activities', D['proposed-activities'], 'land-use')}
         ${GovBB.summaryRow('Start date', fmtDate(D['start-date']), 'land-use')}
         ${GovBB.summaryRow('End date', fmtDate(D['end-date']), 'land-use')}
+        ${GovBB.summaryRow('Duration', durationText(D['start-date'],D['end-date']))}
       </dl>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
@@ -339,6 +377,9 @@ const PAGES = {
         <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
         <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
       </div>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your requested usage period</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">${fmtDate(GovBB.D['start-date'])} to ${fmtDate(GovBB.D['end-date'])}${durationText(GovBB.D['start-date'],GovBB.D['end-date']) ? ' (<strong>'+durationText(GovBB.D['start-date'],GovBB.D['end-date'])+'</strong>)' : ''}</p>
+
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Ministry of Housing, Lands and Maintenance will review your application and contact you within <strong>10 working days</strong>.</li>
