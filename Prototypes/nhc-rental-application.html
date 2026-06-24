@@ -351,8 +351,8 @@ const PAGES = {
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">You can apply on your own, or with a co-applicant (for example, your spouse).</p>
 
       <div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Who can apply:</strong> you may apply if your income does not exceed <strong>$3,000.00 a month</strong>.</p>
-        <p class="govbb-text-body">If you apply with a co-applicant, this limit applies to your combined income. The NHC will confirm your eligibility.</p>
+        <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Who can apply:</strong> your monthly income must not exceed <strong>$3,000</strong>. This applies to the primary applicant, not total household income.</p>
+        <p class="govbb-text-body">The NHC will confirm your eligibility.</p>
       </div>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
@@ -393,12 +393,12 @@ const PAGES = {
     <form novalidate>
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Check if you can apply</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">You may apply if your income does not exceed <strong>$3,000.00 a month</strong>. Tell us your income to check before you start. If you are applying with a co-applicant, we will add their income later.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);color:var(--color-mid-grey-00);">Your monthly income must not exceed <strong>$3,000</strong>. This applies to you as the primary applicant, not total household income. Tell us your income to check before you start.</p>
       ${textField('salary', 'Your income', { hint: 'Your pay before deductions.', inputmode: 'decimal' })}
       ${radioGroup('pay-period', 'How often are you paid?', PAYPERIOD)}
       ${over ? `<div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);">
         <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>You may not be eligible.</strong></p>
-        <p class="govbb-text-body">Based on the income you entered, your income may be above the $3,000.00 a month limit. The NHC makes the final decision and exceptions may apply. You can change your income above and select Continue to check again, continue anyway if you think you may still qualify, or go back to leave.</p>
+        <p class="govbb-text-body">Based on the income you entered, your income may be above the $3,000 a month limit. The NHC makes the final decision and exceptions may apply. You can change your income above and select Continue to check again, continue anyway if you think you may still qualify, or go back to leave.</p>
       </div>` : ''}
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
         <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
@@ -527,8 +527,8 @@ const PAGES = {
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
 
       ${(function(){
-        var total = (monthlyIncome('') || 0) + (GovBB.D['has-co-applicant'] === 'Yes' ? (monthlyIncome('co-') || 0) : 0);
-        return total > 3000 ? '<div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);"><p class="govbb-text-body">Based on the income you entered, your monthly income may be above the <strong>$3,000.00</strong> limit for this programme. You can still submit — the NHC will confirm your eligibility.</p></div>' : '';
+        var primary = monthlyIncome('') || 0;
+        return primary > 3000 ? '<div style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-s);margin-bottom:var(--spacing-m);"><p class="govbb-text-body">Based on the income you entered, your monthly income may be above the <strong>$3,000</strong> limit for this programme. The limit applies to you as the primary applicant. You can still submit — the NHC will confirm your eligibility.</p></div>' : '';
       })()}
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Applicant</h2>
