@@ -307,8 +307,7 @@ const PAGES = {
         ${textareaField('land-description','Describe where the land is',{hint:'Describe the location as precisely as you can — for example, nearby landmarks, roads or directions.'})}
       </div>
 
-      ${textField('gps-coordinates','GPS coordinates (optional)',{hint:'For example, 13.1132° N, 59.5988° W.'})}
-      ${textField('land-map-link','Google Maps link or pin (optional)',{hint:'Paste a Google Maps link or dropped pin if you have one.'})}
+      ${textField('land-pin','Google Maps link or GPS coordinates (optional)',{hint:'Paste a Google Maps link or dropped pin, or enter GPS coordinates — for example, 13.1132° N, 59.5988° W.'})}
 
       ${textareaField('proposed-activities','What do you plan to do on the land?',{hint:'Describe your proposed activities.'})}
       ${textField('start-date','Start date',{type:'date',onchange:'updateDuration()'})}
@@ -355,8 +354,7 @@ const PAGES = {
       <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Parish', D['land-parish'], 'land-use')}
         ${D['land-has-address']==='Yes' ? GovBB.summaryRow('Address of the land', D['land-address'], 'land-use') : GovBB.summaryRow('Location description', D['land-description'], 'land-use')}
-        ${D['gps-coordinates'] ? GovBB.summaryRow('GPS coordinates', D['gps-coordinates'], 'land-use') : ''}
-        ${D['land-map-link'] ? GovBB.summaryRow('Google Maps link', D['land-map-link'], 'land-use') : ''}
+        ${D['land-pin'] ? GovBB.summaryRow('Map link or GPS coordinates', D['land-pin'], 'land-use') : ''}
         ${GovBB.summaryRow('Planned activities', D['proposed-activities'], 'land-use')}
         ${GovBB.summaryRow('Start date', fmtDate(D['start-date']), 'land-use')}
         ${GovBB.summaryRow('End date', fmtDate(D['end-date']), 'land-use')}
