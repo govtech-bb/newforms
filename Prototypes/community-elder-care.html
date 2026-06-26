@@ -455,31 +455,71 @@ const PAGES = {
 
   'start': () => `
     <div class="space-y-8">
+      <nav aria-label="Breadcrumb" class="text-[1rem]">
+        <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <li><a href="#" class="text-bb-teal-00 underline underline-offset-2 hover:no-underline">Home</a></li>
+          <li class="text-bb-mid-grey-00" aria-hidden="true">›</li>
+          <li><a href="#" class="text-bb-teal-00 underline underline-offset-2 hover:no-underline">Benefits and support</a></li>
+        </ol>
+      </nav>
+
       <div>
-        <p class="text-[1rem] text-bb-mid-grey-00 mb-2">Social Empowerment Agency</p>
         <h1 class="font-bold text-[3.5rem] leading-[1.15]">Application for Companion Assistance</h1>
-        <p class="text-[1.25rem] text-bb-mid-grey-00 mt-2">Community Elder Care Programme</p>
+        <p class="text-[1.25rem] text-bb-mid-grey-00 mt-2">Community Elder Care Programme — Social Empowerment Agency</p>
         <p class="text-[1rem] text-bb-mid-grey-00 mt-1">Last updated: April 2026</p>
       </div>
-      <p class="text-[1.25rem]">Use this form to apply for companion assistance under the Community Elder Care Programme. A companion can help elderly people with light household tasks, personal care, and everyday activities so they can continue to live at home.</p>
-      <p class="text-[1.25rem]">This programme is managed by the Social Empowerment Agency (SEA), under the Ministry of People Empowerment and Elder Affairs.</p>
 
-      <div>
-        <h2 class="font-bold text-[2rem] leading-[1.25] mb-4">How to apply</h2>
-        <p class="text-[1.25rem] mb-6">Fill in the form below. It takes about 20 minutes to complete.</p>
-        ${GovBB.startBtn()}
+      <hr class="border-0 border-t border-bb-grey-00">
+
+      <p class="text-[1.25rem]">Use this service to apply for companion assistance under the Community Elder Care Programme. A companion can help an elderly person with light household tasks, personal care and everyday activities so they can keep living at home.</p>
+
+      <div class="bg-bb-yellow-10 border-l-4 border-bb-yellow-00 p-5 rounded-sm">
+        <p class="text-[1.25rem]">You can apply <strong>on behalf of someone else</strong> — for example, as a family member, neighbour or carer.</p>
       </div>
 
       <div>
-        <h2 class="font-bold text-[2rem] leading-[1.25] mb-4">What you will need</h2>
+        ${GovBB.startBtn('Start now')}
+        <p class="text-[1rem] text-bb-mid-grey-00 mt-2">Takes about 20 minutes to complete.</p>
+      </div>
+
+      <div>
+        <h2 class="font-bold text-[2rem] leading-[1.25] mb-4">Who can use this service</h2>
+        <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
+          <li>Elderly residents of Barbados who need help with daily living to remain at home</li>
+          <li>Family members, neighbours or carers applying on someone's behalf</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="font-bold text-[2rem] leading-[1.25] mb-4">What you'll need</h2>
         <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
           <li>The recipient's full name and date of birth</li>
           <li>The recipient's National Registration Number (found on their national ID card)</li>
           <li>Home address and contact details</li>
-          <li>Details of the recipient's income (welfare grant, pension, etc.)</li>
+          <li>Details of the recipient's income (welfare grant, pension, and so on)</li>
           <li>Details of everyone living in the household</li>
           <li>Information about the recipient's physical and mental health</li>
-          <li>Your email address to receive a confirmation</li>
+          <li>An email address to receive a confirmation</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="font-bold text-[2rem] leading-[1.25] mb-4">What happens next</h2>
+        <ul class="list-disc pl-6 space-y-2 text-[1.25rem]">
+          <li>The Social Empowerment Agency will review the application.</li>
+          <li>A member of the team will contact you within <strong>10 working days</strong>.</li>
+          <li>A social worker may visit the recipient at home to assess their needs before a companion is assigned.</li>
+          <li>You will receive a confirmation by email.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="font-bold text-[2rem] leading-[1.25] mb-4">Contact us</h2>
+        <p class="text-[1.25rem] mb-2">Contact the Social Empowerment Agency if you need help.</p>
+        <ul class="list-none p-0 space-y-2 text-[1.25rem]">
+          <li>Telephone: <a href="tel:+12465353131" class="text-bb-teal-00 underline underline-offset-2 hover:no-underline">(246) 535-3131</a></li>
+          <li>Email: <a href="mailto:sea.department@barbados.gov.bb" class="text-bb-teal-00 underline underline-offset-2 hover:no-underline">sea.department@barbados.gov.bb</a></li>
+          <li>Murrell House, Country Road, St. Michael</li>
         </ul>
       </div>
     </div>`,
