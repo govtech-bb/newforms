@@ -124,6 +124,11 @@ function formatDate(prefix) {
   if (!d && !m && !y) return '—';
   return [d, m, y].filter(Boolean).join(' / ');
 }
+/* The application date is always today (not asked of the applicant). */
+function todayApplicationDate() {
+  const d = new Date();
+  return d.getDate() + ' / ' + (d.getMonth() + 1) + ' / ' + d.getFullYear();
+}
 
 function checkboxSummary(keys) {
   const checked = keys.filter(([k]) => GovBB.D[k]).map(([, label]) => label);
@@ -434,7 +439,6 @@ const PAGES = {
         ${GovBB.textField('former-occupation', 'Former occupation', { hint: 'Optional' })}
         ${GovBB.textField('social-interests', 'Social interests', { hint: 'For example, gardening, church, dominoes (optional)' })}
         ${GovBB.textField('referred-by', 'Referred by', { hint: 'Who referred this person to the programme? (optional)' })}
-        ${GovBB.dateField('application-date', 'Date of application')}
         <div class="mt-8 flex gap-4">
           <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-white-00 text-bb-black-00 border-2 border-bb-black-00 hover:bg-bb-grey-00 active:bg-bb-grey-00 px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
           <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">Continue</button>
@@ -613,7 +617,7 @@ const PAGES = {
           ${D['other-income-summary'] ? GovBB.summaryRow('Other income', D['other-income-summary'], 'income') : ''}
           ${D['former-occupation'] ? GovBB.summaryRow('Former occupation', D['former-occupation'], 'income') : ''}
           ${D['referred-by'] ? GovBB.summaryRow('Referred by', D['referred-by'], 'income') : ''}
-          ${GovBB.summaryRow('Date of application', [D['application-date-day'], D['application-date-month'], D['application-date-year']].filter(Boolean).join('/') || '—', 'income')}
+          ${GovBB.summaryRow('Date of application', todayApplicationDate())}
         </dl>
       </div>
 
@@ -824,7 +828,7 @@ const PAGES = {
                 <div class="mda-data-row"><div class="mda-data-label">Former occupation</div><div class="mda-data-value">${D['former-occupation'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Social interests</div><div class="mda-data-value">${D['social-interests'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Referred by</div><div class="mda-data-value">${D['referred-by'] || '—'}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Date of application</div><div class="mda-data-value">${formatDate('application-date')}</div></div>
+                <div class="mda-data-row"><div class="mda-data-label">Date of application</div><div class="mda-data-value">${todayApplicationDate()}</div></div>
               </div>
             </div>
 
@@ -928,13 +932,6 @@ function validate(pageId) {
     if (!D['contact-name'] || !D['contact-name'].trim()) errors.push({ id: 'contact-name', msg: 'Contact person – Enter the name of the contact person' });
     if (!D['tel-home'] && !D['tel-mobile']) errors.push({ id: 'tel-home', msg: 'Telephone – Enter at least a home or mobile telephone number' });
     if (!D['marital-status']) errors.push({ id: 'marital-status', msg: 'Marital status – Select the recipient\'s marital status' });
-  }
-
-  if (pageId === 'income') {
-    const appDay = D['application-date-day'], appMonth = D['application-date-month'], appYear = D['application-date-year'];
-    if (!appDay || !appMonth || !appYear) {
-      errors.push({ id: 'application-date-day', msg: 'Date of application – Enter the date of application' });
-    }
   }
 
   if (pageId === 'physical-condition') {
