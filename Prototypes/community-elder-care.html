@@ -159,46 +159,67 @@ const FLOW = [
 /* ───────── Household members state ───────── */
 let householdMembers = [];
 
+function syncHouseholdMembers() {
+  GovBB.D['household-members'] = householdMembers.map(function (m) {
+    var name = [m.first, m.middle, m.last].filter(Boolean).join(' ');
+    return [name, m.dob, m.rel].filter(Boolean).join(' — ');
+  }).filter(function (s) { return s && s.trim(); }).join(' | ');
+}
+
 function addHouseholdMember() {
-  householdMembers.push('');
+  householdMembers.push({ first: '', middle: '', last: '', dob: '', rel: '' });
+  syncHouseholdMembers();
   GovBB.render();
-  const inputs = document.querySelectorAll('[data-household-input]');
-  if (inputs.length > 0) inputs[inputs.length - 1].focus();
+  var inputs = document.querySelectorAll('[data-household-input]');
+  var firstOfNew = inputs[(householdMembers.length - 1) * 5];
+  if (firstOfNew) { try { firstOfNew.focus({ preventScroll: true }); } catch (e) { firstOfNew.focus(); } }
 }
 
 function removeHouseholdMember(idx) {
   householdMembers.splice(idx, 1);
-  GovBB.D['household-members'] = householdMembers.filter(Boolean).join(' | ');
+  syncHouseholdMembers();
   GovBB.render();
 }
 
-function updateHouseholdMember(idx, val) {
-  householdMembers[idx] = val;
-  GovBB.D['household-members'] = householdMembers.filter(Boolean).join(' | ');
+function updateHouseholdMember(idx, field, val) {
+  if (!householdMembers[idx]) return;
+  householdMembers[idx][field] = val;
+  syncHouseholdMembers();
+}
+
+function hhInput(i, field, label, hint) {
+  var v = String((householdMembers[i] && householdMembers[i][field]) || '').replace(/"/g, '&quot;');
+  return `
+    <div class="flex flex-col gap-xs w-full">
+      <label class="block text-[1.25rem] font-bold text-bb-black-00">${label}</label>
+      ${hint ? `<p class="text-[1.25rem] text-bb-mid-grey-00">${hint}</p>` : ''}
+      <div class="relative inline-flex w-full rounded-sm border-2 border-bb-black-00 items-center transition-all bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
+        <input type="text" data-household-input value="${v}"
+          oninput="updateHouseholdMember(${i}, '${field}', this.value)"
+          class="w-full min-w-0 p-s outline-none rounded-[inherit]" />
+      </div>
+    </div>`;
 }
 
 function renderHouseholdMembers() {
   if (householdMembers.length === 0) {
-    return `<p class="text-[1.25rem] text-bb-mid-grey-00">No household members added yet.</p>`;
+    return `<p class="text-[1.25rem] text-bb-mid-grey-00">No one else added yet.</p>`;
   }
-  return householdMembers.map((m, i) => `
-    <div class="flex gap-4 items-start">
-      <div class="flex-1 relative inline-flex w-full rounded-sm border-2 border-bb-black-00 items-center gap-2 transition-all bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
-        <input
-          type="text"
-          data-household-input
-          value="${m.replace(/"/g, '&quot;')}"
-          placeholder="Name, date of birth, age, relationship to recipient"
-          oninput="updateHouseholdMember(${i}, this.value)"
-          class="w-full min-w-0 p-s outline-none rounded-[inherit] placeholder:text-bb-black-00/60"
-        />
+  return householdMembers.map(function (m, i) {
+    return `
+    <div class="border-2 border-bb-grey-00 rounded-sm p-5 flex flex-col gap-4">
+      <div class="flex justify-between items-center">
+        <p class="text-[1.25rem] font-bold text-bb-black-00">Person ${i + 1}</p>
+        <button type="button" onclick="removeHouseholdMember(${i})"
+          class="text-bb-teal-00 underline underline-offset-2 hover:no-underline text-[1.25rem] whitespace-nowrap">Remove</button>
       </div>
-      <button type="button" onclick="removeHouseholdMember(${i})"
-        class="mt-2 text-bb-teal-00 underline underline-offset-2 hover:no-underline text-[1.25rem] whitespace-nowrap">
-        Remove
-      </button>
-    </div>
-  `).join('');
+      ${hhInput(i, 'first', 'First name')}
+      ${hhInput(i, 'middle', 'Middle name (optional)')}
+      ${hhInput(i, 'last', 'Last name')}
+      ${hhInput(i, 'dob', 'Date of birth', 'For example, 27 03 1950')}
+      ${hhInput(i, 'rel', 'Relationship to recipient', 'For example, daughter, neighbour')}
+    </div>`;
+  }).join('');
 }
 
 /* ───────── Income rows state ───────── */
@@ -451,7 +472,7 @@ const PAGES = {
       ${GovBB.caption()}
       <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Who else lives in the household?</h1>
       <div class="space-y-8">
-        <p class="text-[1.25rem] text-bb-mid-grey-00">For each person, enter their name, date of birth, age, and relationship to the recipient. If no one else lives there, continue without adding anyone.</p>
+        <p class="text-[1.25rem] text-bb-mid-grey-00">For each person, enter their name, date of birth, and relationship to the recipient. If no one else lives there, you can continue without adding anyone.</p>
         <div id="error-summary"></div>
         <div class="space-y-4">
           ${renderHouseholdMembers()}
@@ -959,6 +980,24 @@ function validate(pageId) {
 }
 
 /* ───────── Init ───────── */
+/* Keep the page from jumping to the top when a radio/checkbox/repeating row
+   re-renders. GovBB.render() scrolls to (0,0); preserve the scroll position on
+   in-place re-renders, and only scroll to top on real navigation. */
+(function () {
+  var _render = GovBB.render;
+  GovBB.render = function () {
+    var y = window.scrollY || window.pageYOffset || 0;
+    _render.call(GovBB);
+    window.scrollTo(0, y);
+  };
+  ['nav', 'next', 'back'].forEach(function (m) {
+    var orig = GovBB[m];
+    if (typeof orig === 'function') {
+      GovBB[m] = function () { var r = orig.apply(GovBB, arguments); window.scrollTo(0, 0); return r; };
+    }
+  });
+})();
+
 GovBB.init({
   formName: FORM_NAME,
   flow: FLOW,
