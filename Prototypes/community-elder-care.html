@@ -403,7 +403,8 @@ function customRadioGroup(name, label, options, otherFieldId) {
 }
 
 /* ───────── Multi-checkbox group helper ───────── */
-function checkboxGroup(groupLabel, name, options, hint) {
+function checkboxGroup(groupLabel, name, options, hint, onToggle) {
+  const handler = onToggle || 'GovBB.toggleCheckbox';
   return `
     <div id="${name}" class="flex flex-col gap-s items-start w-full">
       <p class="text-[1.25rem] leading-normal font-bold text-bb-black-00">${groupLabel}</p>
@@ -414,7 +415,7 @@ function checkboxGroup(groupLabel, name, options, hint) {
         return `
           <div class="flex gap-5 items-center">
             <button type="button" role="checkbox" aria-checked="${checked}"
-              onclick="GovBB.toggleCheckbox('${key}')"
+              onclick="${handler}('${key}')"
               class="relative inline-flex size-12 shrink-0 items-center justify-center bg-bb-white-00 border-2 border-bb-black-00 rounded-sm transition-all outline-none hover:cursor-pointer hover:shadow-form-hover focus-visible:ring-4 focus-visible:ring-bb-teal-100">
               ${checked ? '<svg class="w-6 h-6 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
             </button>
@@ -431,6 +432,22 @@ function getCheckedOptions(name, options) {
     const key = name + '-' + opt.toLowerCase().replace(/[^a-z0-9]/g, '-');
     return !!GovBB.D[key];
   });
+}
+
+/* Illness checkboxes: "No known conditions" is an exclusive option —
+   ticking it clears the conditions, and ticking any condition clears it. */
+const ILLNESS_KEYS = ['illness-hypertension', 'illness-diabetes', 'illness-arthritis', 'illness-heart-condition', 'illness-other', 'illness-no-known-conditions'];
+const ILLNESS_NONE = 'illness-no-known-conditions';
+function toggleIllness(key) {
+  var willBe = !GovBB.D[key];
+  if (key === ILLNESS_NONE) {
+    ILLNESS_KEYS.forEach(function (k) { GovBB.D[k] = false; });
+    GovBB.D[ILLNESS_NONE] = willBe;
+  } else {
+    GovBB.D[key] = willBe;
+    if (willBe) GovBB.D[ILLNESS_NONE] = false;
+  }
+  GovBB.render();
 }
 
 /* ───────── Pages ───────── */
@@ -594,22 +611,20 @@ const PAGES = {
         <h2 class="font-bold text-[2rem] leading-[1.25]">Sight and hearing</h2>
         ${GovBB.radioGroup('sight', 'Sight', ['Normal', 'Visual Impairment', 'Blind', 'Uses Spectacles'])}
         ${GovBB.radioGroup('hearing', 'Hearing', ['Normal', 'Hearing Impairment', 'Speech', 'Deaf', 'Abnormal'])}
-        ${GovBB.textareaField('physical-condition-description', 'Notes on sight or hearing', { hint: 'Optional', rows: 3 })}
 
         <h2 class="font-bold text-[2rem] leading-[1.25] pt-4">Build and mobility</h2>
         ${GovBB.radioGroup('height', 'Height', ['Short', 'Medium', 'Tall'])}
         ${GovBB.radioGroup('size', 'Build', ['Slim', 'Medium', 'Obese'])}
         ${GovBB.radioGroup('mobility', 'Mobility', ['Normal', 'Cane', 'Zimmer Frame', 'Wheel Chair'])}
-        ${GovBB.textareaField('disability-details', 'Details of any disabilities', { hint: 'Optional', rows: 3 })}
 
         <h2 class="font-bold text-[2rem] leading-[1.25] pt-4">Illnesses or conditions</h2>
         ${checkboxGroup(
           'Is the recipient affected by any of the following illnesses or conditions?',
           'illness',
-          ['Hypertension', 'Diabetes', 'Arthritis', 'Heart Condition', 'Visual Impairment', 'Other', 'Applicant is healthy'],
-          'Tick all that apply'
+          ['Hypertension', 'Diabetes', 'Arthritis', 'Heart Condition', 'Other', 'No known conditions'],
+          'Tick all that apply',
+          'toggleIllness'
         )}
-        ${GovBB.textareaField('illness-details', 'Details of illnesses or conditions', { hint: 'Optional. Give any extra information about the conditions ticked above.', rows: 3 })}
 
         <div class="mt-8 flex gap-4">
           <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-white-00 text-bb-black-00 border-2 border-bb-black-00 hover:bg-bb-grey-00 active:bg-bb-grey-00 px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
@@ -625,9 +640,8 @@ const PAGES = {
       <div class="space-y-8">
         <div id="error-summary"></div>
         ${customRadioGroup('behaviour', 'Behaviour', ['Normal', 'Abnormal'], 'behaviour-other')}
-        ${GovBB.textareaField('behaviour-description', 'Brief description of behaviour', { hint: 'Optional', rows: 3 })}
         ${customRadioGroup('memory', 'Memory', ['Normal', 'Fair'], 'memory-other')}
-        ${GovBB.textareaField('memory-description', 'Brief description of memory', { hint: 'Optional', rows: 3 })}
+        ${GovBB.textareaField('health-notes', 'Anything else about the recipient\'s health we should know?', { hint: 'Optional. For example, recent changes, medication, or care needs.', rows: 4 })}
         <div class="mt-8 flex gap-4">
           <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-white-00 text-bb-black-00 border-2 border-bb-black-00 hover:bg-bb-grey-00 active:bg-bb-grey-00 px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
           <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">Continue</button>
@@ -685,7 +699,7 @@ const PAGES = {
   'check': () => {
     const D = GovBB.D;
     const recipientName = [D['first-name'], D['initial'], D['last-name']].filter(Boolean).join(' ') || '—';
-    const illnessOptions = ['Hypertension', 'Diabetes', 'Arthritis', 'Heart Condition', 'Visual Impairment', 'Other', 'Applicant is healthy'];
+    const illnessOptions = ['Hypertension', 'Diabetes', 'Arthritis', 'Heart Condition', 'Other', 'No known conditions'];
     const assistOptions = ['Light Cleaning', 'Preparation of Light Meal', 'Washing if Home Care is not available', 'Light Errands', 'Supervision of Bathing', 'Grooming', 'Reminding of Appointments'];
     return `
     <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Check your answers before sending your application</h1>
@@ -745,7 +759,6 @@ const PAGES = {
           ${GovBB.summaryRow('Build', D['size'] || '—', 'physical-condition')}
           ${GovBB.summaryRow('Mobility', D['mobility'] || '—', 'physical-condition')}
           ${GovBB.summaryRow('Illnesses / conditions', getCheckedOptions('illness', illnessOptions).join(', ') || 'None selected', 'physical-condition')}
-          ${D['disability-details'] ? GovBB.summaryRow('Disability details', D['disability-details'], 'physical-condition') : ''}
         </dl>
       </div>
 
@@ -754,6 +767,7 @@ const PAGES = {
         <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
           ${GovBB.summaryRow('Behaviour', D['behaviour'] === 'Other' ? ('Other – ' + (D['behaviour-other'] || '')) : (D['behaviour'] || '—'), 'mental-status')}
           ${GovBB.summaryRow('Memory', D['memory'] === 'Other' ? ('Other – ' + (D['memory-other'] || '')) : (D['memory'] || '—'), 'mental-status')}
+          ${D['health-notes'] ? GovBB.summaryRow('Other health notes', D['health-notes'], 'mental-status') : ''}
         </dl>
       </div>
 
@@ -860,8 +874,7 @@ const PAGES = {
     const illnessKeys = [
       ['illness-hypertension','Hypertension'],['illness-diabetes','Diabetes'],
       ['illness-arthritis','Arthritis'],['illness-heart-condition','Heart Condition'],
-      ['illness-visual-impairment','Visual Impairment'],['illness-other','Other'],
-      ['illness-applicant-is-healthy','Applicant is healthy']
+      ['illness-other','Other'],['illness-no-known-conditions','No known conditions']
     ];
     const assistKeys = [
       ['assist-light-cleaning','Light Cleaning'],
@@ -950,13 +963,10 @@ const PAGES = {
               <div class="mda-data-table">
                 <div class="mda-data-row"><div class="mda-data-label">Sight</div><div class="mda-data-value">${D['sight'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Hearing</div><div class="mda-data-value">${D['hearing'] || '—'}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Sight/hearing notes</div><div class="mda-data-value">${D['physical-condition-description'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Height</div><div class="mda-data-value">${D['height'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Build</div><div class="mda-data-value">${D['size'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Mobility</div><div class="mda-data-value">${D['mobility'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Illnesses / conditions</div><div class="mda-data-value">${checkboxSummary(illnessKeys)}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Illness details</div><div class="mda-data-value">${D['illness-details'] || '—'}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Disability details</div><div class="mda-data-value">${D['disability-details'] || '—'}</div></div>
               </div>
             </div>
 
@@ -964,9 +974,8 @@ const PAGES = {
               <p class="mda-section-h2">Mental status</p>
               <div class="mda-data-table">
                 <div class="mda-data-row"><div class="mda-data-label">Behaviour</div><div class="mda-data-value">${D['behaviour'] === 'Other' ? ('Other – ' + (D['behaviour-other'] || '')) : (D['behaviour'] || '—')}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Behaviour description</div><div class="mda-data-value">${D['behaviour-description'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Memory</div><div class="mda-data-value">${D['memory'] === 'Other' ? ('Other – ' + (D['memory-other'] || '')) : (D['memory'] || '—')}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Memory description</div><div class="mda-data-value">${D['memory-description'] || '—'}</div></div>
+                <div class="mda-data-row"><div class="mda-data-label">Other health notes</div><div class="mda-data-value">${D['health-notes'] || '—'}</div></div>
               </div>
             </div>
 
@@ -1047,8 +1056,8 @@ function validate(pageId) {
     if (!D['height']) errors.push({ id: 'height', msg: 'Height – Select the recipient\'s height' });
     if (!D['size']) errors.push({ id: 'size', msg: 'Build – Select the recipient\'s build' });
     if (!D['mobility']) errors.push({ id: 'mobility', msg: 'Mobility – Select the recipient\'s mobility' });
-    if (getCheckedOptions('illness', ['Hypertension', 'Diabetes', 'Arthritis', 'Heart Condition', 'Visual Impairment', 'Other', 'Applicant is healthy']).length === 0) {
-      errors.push({ id: 'illness', msg: 'Illnesses or conditions – Select at least one option (tick \'Applicant is healthy\' if none apply)' });
+    if (getCheckedOptions('illness', ['Hypertension', 'Diabetes', 'Arthritis', 'Heart Condition', 'Other', 'No known conditions']).length === 0) {
+      errors.push({ id: 'illness', msg: 'Illnesses or conditions – Select at least one option (tick \'No known conditions\' if none apply)' });
     }
   }
 
