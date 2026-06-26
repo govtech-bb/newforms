@@ -406,7 +406,7 @@ function customRadioGroup(name, label, options, otherFieldId) {
 /* ───────── Multi-checkbox group helper ───────── */
 function checkboxGroup(groupLabel, name, options, hint) {
   return `
-    <div class="flex flex-col gap-s items-start w-full">
+    <div id="${name}" class="flex flex-col gap-s items-start w-full">
       <p class="text-[1.25rem] leading-normal font-bold text-bb-black-00">${groupLabel}</p>
       ${hint ? `<p class="text-[1.25rem] leading-normal text-bb-mid-grey-00">${hint}</p>` : ''}
       ${options.map(opt => {
@@ -1058,6 +1058,9 @@ function validate(pageId) {
     if (!D['height']) errors.push({ id: 'height', msg: 'Height – Select the recipient\'s height' });
     if (!D['size']) errors.push({ id: 'size', msg: 'Build – Select the recipient\'s build' });
     if (!D['mobility']) errors.push({ id: 'mobility', msg: 'Mobility – Select the recipient\'s mobility' });
+    if (getCheckedOptions('illness', ['Hypertension', 'Diabetes', 'Arthritis', 'Heart Condition', 'Visual Impairment', 'Other', 'Applicant is healthy']).length === 0) {
+      errors.push({ id: 'illness', msg: 'Illnesses or conditions – Select at least one option (tick \'Applicant is healthy\' if none apply)' });
+    }
   }
 
   if (pageId === 'mental-status') {
