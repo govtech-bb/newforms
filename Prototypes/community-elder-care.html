@@ -433,6 +433,16 @@ function getCheckedOptions(name, options) {
   });
 }
 
+/* ───────── Format validators ───────── */
+function isValidEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v).trim());
+}
+function isValidPhone(v) {
+  v = String(v).trim();
+  var digits = v.replace(/\D/g, '');
+  return /^[0-9()+\s-]+$/.test(v) && digits.length >= 7 && digits.length <= 11;
+}
+
 /* Illness checkboxes: "No known conditions" is an exclusive option —
    ticking it clears the conditions, and ticking any condition clears it. */
 const ILLNESS_KEYS = ['illness-hypertension', 'illness-diabetes', 'illness-arthritis', 'illness-heart-condition', 'illness-other', 'illness-no-known-conditions'];
@@ -507,7 +517,7 @@ const PAGES = {
           <li>Details of the recipient's income (welfare grant, pension, and so on)</li>
           <li>Details of everyone living in the household</li>
           <li>Information about the recipient's physical and mental health</li>
-          <li>An email address to receive a confirmation</li>
+          <li>An email address (required) — your confirmation will be sent here</li>
         </ul>
       </div>
 
@@ -587,7 +597,7 @@ const PAGES = {
         ${GovBB.telField('tel-home', 'Home telephone', { hint: 'For example, 246-555-1234 (optional)', placeholder: '246-555-1234' })}
         ${GovBB.telField('tel-office', 'Office telephone', { hint: 'Optional', placeholder: '246-555-1234' })}
         ${GovBB.telField('tel-mobile', 'Mobile telephone', { hint: 'Optional', placeholder: '246-555-1234' })}
-        ${GovBB.emailField('contact-email', 'Email address', { hint: 'Optional. We will send your confirmation here.' })}
+        ${GovBB.emailField('contact-email', 'Email address', { hint: 'Optional. The contact person\'s email, if they have one.' })}
         <div class="mt-8 flex gap-4">
           <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-white-00 text-bb-black-00 border-2 border-bb-black-00 hover:bg-bb-grey-00 active:bg-bb-grey-00 px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
           <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">Continue</button>
@@ -1091,12 +1101,23 @@ function validate(pageId) {
       errors.push({ id: 'dob-day', msg: 'Date of birth – Enter a valid date of birth' });
     }
     if (!D['gender']) errors.push({ id: 'gender', msg: 'Gender – Select the recipient\'s gender' });
+    if (!D['nrn'] || !D['nrn'].trim()) {
+      errors.push({ id: 'nrn', msg: 'National Registration Number – Enter the recipient\'s National Registration Number' });
+    } else if (D['nrn'].replace(/\D/g, '').length !== 10) {
+      errors.push({ id: 'nrn', msg: 'National Registration Number – Enter a valid number, for example 870315-1234' });
+    }
     if (!D['marital-status']) errors.push({ id: 'marital-status', msg: 'Marital status – Select the recipient\'s marital status' });
   }
 
   if (pageId === 'contact-person') {
     if (!D['contact-name'] || !D['contact-name'].trim()) errors.push({ id: 'contact-name', msg: 'Contact person – Enter the name of the contact person' });
     if (!D['tel-home'] && !D['tel-mobile']) errors.push({ id: 'tel-home', msg: 'Telephone – Enter at least a home or mobile telephone number' });
+    [['tel-home', 'Home telephone'], ['tel-office', 'Office telephone'], ['tel-mobile', 'Mobile telephone']].forEach(function (f) {
+      var v = D[f[0]];
+      if (v && v.trim() && !isValidPhone(v)) {
+        errors.push({ id: f[0], msg: f[1] + ' – Enter a telephone number using only digits, for example 246-555-1234' });
+      }
+    });
   }
 
   if (pageId === 'physical-condition') {
@@ -1118,8 +1139,19 @@ function validate(pageId) {
     if (!D['memory']) errors.push({ id: 'memory', msg: 'Memory – Select the recipient\'s memory' });
   }
 
+  if (pageId === 'assistance') {
+    var assistOpts = ['Light Cleaning', 'Preparation of Light Meal', 'Washing if Home Care is not available', 'Light Errands', 'Supervision of Bathing', 'Grooming', 'Reminding of Appointments'];
+    if (getCheckedOptions('assist', assistOpts).length === 0 && (!D['assistance-other'] || !D['assistance-other'].trim())) {
+      errors.push({ id: 'assist', msg: 'Areas of assistance – Select at least one area, or describe the help needed under \'If other\'' });
+    }
+  }
+
   if (pageId === 'declaration') {
-    if (!D['decl-email'] || !D['decl-email'].trim()) errors.push({ id: 'decl-email', msg: 'Email address – Enter your email address' });
+    if (!D['decl-email'] || !D['decl-email'].trim()) {
+      errors.push({ id: 'decl-email', msg: 'Email address – Enter your email address' });
+    } else if (!isValidEmail(D['decl-email'])) {
+      errors.push({ id: 'decl-email', msg: 'Email address – Enter an email address in the correct format, like name@example.com' });
+    }
     if (!D['decl-agree']) errors.push({ id: 'decl-agree', msg: 'Declaration – You must agree to the declaration before submitting' });
   }
 
@@ -1131,10 +1163,23 @@ function validate(pageId) {
    re-renders. GovBB.render() scrolls to (0,0); preserve the scroll position on
    in-place re-renders, and only scroll to top on real navigation. */
 (function () {
+  /* Real user-facing form steps. The framework's built-in step counter also
+     counts the review, the email preview and the MDA record view; correct the
+     indicator here so the count reflects only the steps the applicant fills in. */
+  var FORM_STEPS = ['recipient-name', 'recipient-details', 'contact-person', 'income', 'household', 'physical-condition', 'mental-status', 'assistance', 'declaration'];
+  function fixProgress() {
+    var flow = GovBB.getFlow();
+    var pageId = flow[GovBB.getCurrentIndex()];
+    var el = document.querySelector('[data-progress-indicator]');
+    var idx = FORM_STEPS.indexOf(pageId);
+    if (idx === -1) { if (el) el.remove(); return; }
+    if (el) el.textContent = 'Step ' + (idx + 1) + ' of ' + FORM_STEPS.length;
+  }
   var _render = GovBB.render;
   GovBB.render = function () {
     var y = window.scrollY || window.pageYOffset || 0;
     _render.call(GovBB);
+    fixProgress();
     window.scrollTo(0, y);
   };
   ['nav', 'next', 'back'].forEach(function (m) {
