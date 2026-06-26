@@ -146,7 +146,6 @@ const FLOW = [
   'income',
   'household',
   'physical-condition',
-  'physical-details',
   'mental-status',
   'assistance',
   'declaration',
@@ -588,29 +587,22 @@ const PAGES = {
   'physical-condition': () => `
     <form novalidate>
       ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Physical condition — sight and hearing</h1>
+      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Physical health</h1>
       <div class="space-y-8">
         <div id="error-summary"></div>
+
+        <h2 class="font-bold text-[2rem] leading-[1.25]">Sight and hearing</h2>
         ${GovBB.radioGroup('sight', 'Sight', ['Normal', 'Visual Impairment', 'Blind', 'Uses Spectacles'])}
         ${GovBB.radioGroup('hearing', 'Hearing', ['Normal', 'Hearing Impairment', 'Speech', 'Deaf', 'Abnormal'])}
-        ${GovBB.textareaField('physical-condition-description', 'Brief description', { hint: 'Optional. Give any extra details about sight or hearing.', rows: 3 })}
-        <div class="mt-8 flex gap-4">
-          <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-white-00 text-bb-black-00 border-2 border-bb-black-00 hover:bg-bb-grey-00 active:bg-bb-grey-00 px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
-          <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">Continue</button>
-        </div>
-      </div>
-    </form>`,
+        ${GovBB.textareaField('physical-condition-description', 'Notes on sight or hearing', { hint: 'Optional', rows: 3 })}
 
-  'physical-details': () => `
-    <form novalidate>
-      ${GovBB.caption()}
-      <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Physical condition — build and mobility</h1>
-      <div class="space-y-8">
-        <div id="error-summary"></div>
+        <h2 class="font-bold text-[2rem] leading-[1.25] pt-4">Build and mobility</h2>
         ${GovBB.radioGroup('height', 'Height', ['Short', 'Medium', 'Tall'])}
         ${GovBB.radioGroup('size', 'Build', ['Slim', 'Medium', 'Obese'])}
         ${GovBB.radioGroup('mobility', 'Mobility', ['Normal', 'Cane', 'Zimmer Frame', 'Wheel Chair'])}
         ${GovBB.textareaField('disability-details', 'Details of any disabilities', { hint: 'Optional', rows: 3 })}
+
+        <h2 class="font-bold text-[2rem] leading-[1.25] pt-4">Illnesses or conditions</h2>
         ${checkboxGroup(
           'Is the recipient affected by any of the following illnesses or conditions?',
           'illness',
@@ -618,6 +610,7 @@ const PAGES = {
           'Tick all that apply'
         )}
         ${GovBB.textareaField('illness-details', 'Details of illnesses or conditions', { hint: 'Optional. Give any extra information about the conditions ticked above.', rows: 3 })}
+
         <div class="mt-8 flex gap-4">
           <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-white-00 text-bb-black-00 border-2 border-bb-black-00 hover:bg-bb-grey-00 active:bg-bb-grey-00 px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
           <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">Continue</button>
@@ -744,15 +737,15 @@ const PAGES = {
       </div>
 
       <div>
-        <h2 class="font-bold text-[2rem] leading-[1.25] mb-4">Physical condition</h2>
+        <h2 class="font-bold text-[2rem] leading-[1.25] mb-4">Physical health</h2>
         <dl class="divide-y divide-bb-grey-00 border-t border-bb-grey-00">
           ${GovBB.summaryRow('Sight', D['sight'] || '—', 'physical-condition')}
           ${GovBB.summaryRow('Hearing', D['hearing'] || '—', 'physical-condition')}
-          ${GovBB.summaryRow('Height', D['height'] || '—', 'physical-details')}
-          ${GovBB.summaryRow('Build', D['size'] || '—', 'physical-details')}
-          ${GovBB.summaryRow('Mobility', D['mobility'] || '—', 'physical-details')}
-          ${GovBB.summaryRow('Illnesses / conditions', getCheckedOptions('illness', illnessOptions).join(', ') || 'None selected', 'physical-details')}
-          ${D['disability-details'] ? GovBB.summaryRow('Disability details', D['disability-details'], 'physical-details') : ''}
+          ${GovBB.summaryRow('Height', D['height'] || '—', 'physical-condition')}
+          ${GovBB.summaryRow('Build', D['size'] || '—', 'physical-condition')}
+          ${GovBB.summaryRow('Mobility', D['mobility'] || '—', 'physical-condition')}
+          ${GovBB.summaryRow('Illnesses / conditions', getCheckedOptions('illness', illnessOptions).join(', ') || 'None selected', 'physical-condition')}
+          ${D['disability-details'] ? GovBB.summaryRow('Disability details', D['disability-details'], 'physical-condition') : ''}
         </dl>
       </div>
 
@@ -953,7 +946,7 @@ const PAGES = {
             </div>
 
             <div>
-              <p class="mda-section-h2">Physical condition</p>
+              <p class="mda-section-h2">Physical health</p>
               <div class="mda-data-table">
                 <div class="mda-data-row"><div class="mda-data-label">Sight</div><div class="mda-data-value">${D['sight'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Hearing</div><div class="mda-data-value">${D['hearing'] || '—'}</div></div>
@@ -1051,9 +1044,6 @@ function validate(pageId) {
   if (pageId === 'physical-condition') {
     if (!D['sight']) errors.push({ id: 'sight', msg: 'Sight – Select the recipient\'s sight condition' });
     if (!D['hearing']) errors.push({ id: 'hearing', msg: 'Hearing – Select the recipient\'s hearing condition' });
-  }
-
-  if (pageId === 'physical-details') {
     if (!D['height']) errors.push({ id: 'height', msg: 'Height – Select the recipient\'s height' });
     if (!D['size']) errors.push({ id: 'size', msg: 'Build – Select the recipient\'s build' });
     if (!D['mobility']) errors.push({ id: 'mobility', msg: 'Mobility – Select the recipient\'s mobility' });
