@@ -517,6 +517,8 @@ const PAGES = {
         ${GovBB.textField('place-of-birth', 'Place of birth', { hint: 'For example, Bridgetown, Barbados (optional)' })}
         ${GovBB.selectField('marital-status', 'Marital status', ['Single', 'Married', 'Divorced', 'Widowed', 'Separated'])}
         <h2 class="font-bold text-[2rem] leading-[1.25] pt-4">Background</h2>
+        ${GovBB.textField('religion', 'Religion', { hint: 'Optional' })}
+        ${GovBB.textField('church-social-group', 'Church or social group', { hint: 'For example, a church, club, or community group they belong to (optional)' })}
         ${GovBB.textField('former-occupation', 'Former occupation', { hint: 'Optional' })}
         ${GovBB.textField('social-interests', 'Social interests', { hint: 'For example, gardening, church, dominoes (optional)' })}
         <div class="mt-8 flex gap-4">
@@ -716,6 +718,8 @@ const PAGES = {
           ${GovBB.summaryRow('Home address', recipientAddress() || '—', 'recipient-details')}
           ${D['location-of-house'] ? GovBB.summaryRow('Location of house', D['location-of-house'], 'recipient-details') : ''}
           ${GovBB.summaryRow('Marital status', D['marital-status'] || '—', 'recipient-details')}
+          ${D['religion'] ? GovBB.summaryRow('Religion', D['religion'], 'recipient-details') : ''}
+          ${D['church-social-group'] ? GovBB.summaryRow('Church or social group', D['church-social-group'], 'recipient-details') : ''}
           ${D['former-occupation'] ? GovBB.summaryRow('Former occupation', D['former-occupation'], 'recipient-details') : ''}
           ${D['social-interests'] ? GovBB.summaryRow('Social interests', D['social-interests'], 'recipient-details') : ''}
         </dl>
@@ -923,6 +927,8 @@ const PAGES = {
                 <div class="mda-data-row"><div class="mda-data-label">Home address</div><div class="mda-data-value">${recipientAddress() || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Location of house</div><div class="mda-data-value">${D['location-of-house'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Marital status</div><div class="mda-data-value">${D['marital-status'] || '—'}</div></div>
+                <div class="mda-data-row"><div class="mda-data-label">Religion</div><div class="mda-data-value">${D['religion'] || '—'}</div></div>
+                <div class="mda-data-row"><div class="mda-data-label">Church or social group</div><div class="mda-data-value">${D['church-social-group'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Former occupation</div><div class="mda-data-value">${D['former-occupation'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Social interests</div><div class="mda-data-value">${D['social-interests'] || '—'}</div></div>
               </div>
