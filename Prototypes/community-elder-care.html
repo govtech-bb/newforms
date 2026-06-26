@@ -1154,6 +1154,118 @@ GovBB.init({
   pages: PAGES,
   validate: validate
 });
+
+/* ───────── Auto-fill (demo helper) ─────────
+   A floating button that fills the CURRENT page with realistic sample
+   data, so reviewers can see how the form behaves without typing. */
+(function () {
+  function fillCurrentPage() {
+    var D = GovBB.D;
+    var flow = GovBB.getFlow();
+    var pageId = flow[GovBB.getCurrentIndex()];
+
+    switch (pageId) {
+      case 'recipient-name':
+        D['first-name'] = 'Mabel'; D['initial'] = 'R'; D['last-name'] = 'Greaves';
+        break;
+      case 'recipient-details':
+        D['address-line-1'] = '12 Bay Street';
+        D['address-line-2'] = '';
+        D['parish'] = 'St. Michael';
+        D['location-of-house'] = 'Pink house beside the rum shop';
+        D['dob-day'] = '14'; D['dob-month'] = '03'; D['dob-year'] = '1938';
+        D['gender'] = 'Female';
+        D['nrn'] = '380314-1234';
+        D['place-of-birth'] = 'Bridgetown, Barbados';
+        D['marital-status'] = 'Widowed';
+        D['religion'] = 'Anglican';
+        D['church-social-group'] = "St. Mary's Church";
+        D['former-occupation'] = 'Seamstress';
+        D['social-interests'] = 'Gardening, church, dominoes';
+        break;
+      case 'contact-person':
+        D['contact-name'] = 'Janet Greaves';
+        D['contact-address'] = '';
+        D['tel-home'] = '246-426-1234';
+        D['tel-office'] = '';
+        D['tel-mobile'] = '246-255-9876';
+        D['contact-email'] = 'janet.greaves@example.com';
+        break;
+      case 'income':
+        D['income-welfare'] = '200';
+        D['income-nis'] = '350';
+        D['income-oap'] = '525';
+        D['income-overseas'] = '';
+        otherIncomeRows = [{ source: 'Rent from a room', amount: '150' }];
+        syncIncomeRows();
+        break;
+      case 'household':
+        householdMembers = [
+          { first: 'Janet', middle: '', last: 'Greaves', dobDay: '02', dobMonth: '11', dobYear: '1972', rel: 'Daughter', relOther: '' },
+          { first: 'Kofi', middle: '', last: 'Greaves', dobDay: '19', dobMonth: '07', dobYear: '2008', rel: 'Grandchild', relOther: '' }
+        ];
+        syncHouseholdMembers();
+        break;
+      case 'physical-condition':
+        D['sight'] = 'Uses Spectacles';
+        D['hearing'] = 'Hearing Impairment';
+        D['height'] = 'Medium';
+        D['size'] = 'Slim';
+        D['mobility'] = 'Cane';
+        ILLNESS_KEYS.forEach(function (k) { D[k] = false; });
+        D['illness-hypertension'] = true;
+        D['illness-arthritis'] = true;
+        D['illness-other-detail'] = '';
+        break;
+      case 'mental-status':
+        D['behaviour'] = 'Normal';
+        D['memory'] = 'Fair';
+        D['health-notes'] = 'Needs help remembering to take her medication. Lives alone.';
+        break;
+      case 'assistance':
+        ['assist-light-cleaning', 'assist-preparation-of-light-meal', 'assist-light-errands', 'assist-reminding-of-appointments'].forEach(function (k) { D[k] = true; });
+        D['assistance-other'] = '';
+        break;
+      case 'declaration':
+        D['decl-email'] = 'janet.greaves@example.com';
+        D['decl-agree'] = true;
+        break;
+      default:
+        return false;
+    }
+    GovBB.render();
+    return true;
+  }
+
+  function buildButton() {
+    if (document.getElementById('cec-autofill-btn')) return;
+    var btn = document.createElement('button');
+    btn.id = 'cec-autofill-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Auto-fill this page with sample data');
+    btn.setAttribute('title', 'Fill this page with sample data');
+    btn.style.cssText = [
+      'position:fixed', 'bottom:1.5rem', 'left:1.5rem', 'z-index:9999',
+      'display:inline-flex', 'align-items:center', 'gap:0.5rem',
+      'padding:0.5rem 0.875rem', 'border-radius:9999px',
+      'border:2px solid #00267f', 'background:#00267f', 'color:#ffffff',
+      'font-family:inherit', 'font-size:0.875rem', 'font-weight:600', 'line-height:1.4',
+      'cursor:pointer', 'box-shadow:0 2px 8px rgba(0,0,0,0.18)'
+    ].join(';');
+    var label = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Auto-fill page';
+    btn.innerHTML = label;
+    btn.addEventListener('click', function () {
+      if (!fillCurrentPage()) {
+        btn.innerHTML = 'Nothing to fill here';
+        setTimeout(function () { btn.innerHTML = label; }, 1200);
+      }
+    });
+    document.body.appendChild(btn);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', buildButton);
+  else buildButton();
+})();
 </script>
 
 <!-- Comment World feedback widget -->
