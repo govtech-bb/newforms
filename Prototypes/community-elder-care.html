@@ -447,7 +447,16 @@ function toggleIllness(key) {
     GovBB.D[key] = willBe;
     if (willBe) GovBB.D[ILLNESS_NONE] = false;
   }
+  // If "Other" is no longer ticked, drop any text typed into its specify box.
+  if (!GovBB.D['illness-other']) GovBB.D['illness-other-detail'] = '';
   GovBB.render();
+}
+
+const ILLNESS_OPTIONS = ['Hypertension', 'Diabetes', 'Arthritis', 'Heart Condition', 'Other', 'No known conditions'];
+function illnessSummaryText() {
+  return getCheckedOptions('illness', ILLNESS_OPTIONS).map(function (o) {
+    return (o === 'Other' && GovBB.D['illness-other-detail']) ? ('Other – ' + GovBB.D['illness-other-detail']) : o;
+  }).join(', ');
 }
 
 /* ───────── Pages ───────── */
@@ -667,6 +676,7 @@ const PAGES = {
           'Tick all that apply',
           'toggleIllness'
         )}
+        ${GovBB.D['illness-other'] ? `<div class="pl-16">${GovBB.textField('illness-other-detail', 'Please specify the other illness or condition')}</div>` : ''}
 
         <div class="mt-8 flex gap-4">
           <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-white-00 text-bb-black-00 border-2 border-bb-black-00 hover:bg-bb-grey-00 active:bg-bb-grey-00 px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
@@ -741,7 +751,6 @@ const PAGES = {
   'check': () => {
     const D = GovBB.D;
     const recipientName = [D['first-name'], D['initial'], D['last-name']].filter(Boolean).join(' ') || '—';
-    const illnessOptions = ['Hypertension', 'Diabetes', 'Arthritis', 'Heart Condition', 'Other', 'No known conditions'];
     const assistOptions = ['Light Cleaning', 'Preparation of Light Meal', 'Washing if Home Care is not available', 'Light Errands', 'Supervision of Bathing', 'Grooming', 'Reminding of Appointments'];
     return `
     <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">Check your answers before sending your application</h1>
@@ -802,7 +811,7 @@ const PAGES = {
           ${GovBB.summaryRow('Height', D['height'] || '—', 'physical-condition')}
           ${GovBB.summaryRow('Build', D['size'] || '—', 'physical-condition')}
           ${GovBB.summaryRow('Mobility', D['mobility'] || '—', 'physical-condition')}
-          ${GovBB.summaryRow('Illnesses / conditions', getCheckedOptions('illness', illnessOptions).join(', ') || 'None selected', 'physical-condition')}
+          ${GovBB.summaryRow('Illnesses / conditions', illnessSummaryText() || 'None selected', 'physical-condition')}
         </dl>
       </div>
 
@@ -915,11 +924,6 @@ const PAGES = {
   'mda-email': () => {
     const D = GovBB.D;
     const recipientName = [D['first-name'], D['initial'], D['last-name']].filter(Boolean).join(' ') || '—';
-    const illnessKeys = [
-      ['illness-hypertension','Hypertension'],['illness-diabetes','Diabetes'],
-      ['illness-arthritis','Arthritis'],['illness-heart-condition','Heart Condition'],
-      ['illness-other','Other'],['illness-no-known-conditions','No known conditions']
-    ];
     const assistKeys = [
       ['assist-light-cleaning','Light Cleaning'],
       ['assist-preparation-of-light-meal','Preparation of Light Meal'],
@@ -1012,7 +1016,7 @@ const PAGES = {
                 <div class="mda-data-row"><div class="mda-data-label">Height</div><div class="mda-data-value">${D['height'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Build</div><div class="mda-data-value">${D['size'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Mobility</div><div class="mda-data-value">${D['mobility'] || '—'}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Illnesses / conditions</div><div class="mda-data-value">${checkboxSummary(illnessKeys)}</div></div>
+                <div class="mda-data-row"><div class="mda-data-label">Illnesses / conditions</div><div class="mda-data-value">${illnessSummaryText() || '—'}</div></div>
               </div>
             </div>
 
@@ -1104,6 +1108,9 @@ function validate(pageId) {
     if (!D['mobility']) errors.push({ id: 'mobility', msg: 'Mobility – Select the recipient\'s mobility' });
     if (getCheckedOptions('illness', ['Hypertension', 'Diabetes', 'Arthritis', 'Heart Condition', 'Other', 'No known conditions']).length === 0) {
       errors.push({ id: 'illness', msg: 'Illnesses or conditions – Select at least one option (tick \'No known conditions\' if none apply)' });
+    }
+    if (D['illness-other'] && (!D['illness-other-detail'] || !D['illness-other-detail'].trim())) {
+      errors.push({ id: 'illness-other-detail', msg: 'Other illness or condition – Say what the other illness or condition is' });
     }
   }
 
