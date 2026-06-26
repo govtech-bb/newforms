@@ -499,6 +499,10 @@ const PAGES = {
         ${GovBB.radioGroup('gender', 'Gender', ['Male', 'Female'])}
         ${GovBB.textField('nrn', 'National Registration Number', { hint: 'You can find this on the national ID card. For example, 870315-1234' })}
         ${GovBB.textField('place-of-birth', 'Place of birth', { hint: 'For example, Bridgetown, Barbados (optional)' })}
+        ${GovBB.selectField('marital-status', 'Marital status', ['Single', 'Married', 'Divorced', 'Widowed', 'Separated'])}
+        <h2 class="font-bold text-[2rem] leading-[1.25] pt-4">Background</h2>
+        ${GovBB.textField('former-occupation', 'Former occupation', { hint: 'Optional' })}
+        ${GovBB.textField('social-interests', 'Social interests', { hint: 'For example, gardening, church, dominoes (optional)' })}
         <div class="mt-8 flex gap-4">
           <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-white-00 text-bb-black-00 border-2 border-bb-black-00 hover:bg-bb-grey-00 active:bg-bb-grey-00 px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
           <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">Continue</button>
@@ -518,7 +522,6 @@ const PAGES = {
         ${GovBB.telField('tel-office', 'Office telephone', { hint: 'Optional', placeholder: '246-555-1234' })}
         ${GovBB.telField('tel-mobile', 'Mobile telephone', { hint: 'Optional', placeholder: '246-555-1234' })}
         ${GovBB.emailField('contact-email', 'Email address', { hint: 'Optional. We will send your confirmation here.' })}
-        ${GovBB.selectField('marital-status', 'Marital status', ['Single', 'Married', 'Divorced', 'Widowed', 'Separated'])}
         <div class="mt-8 flex gap-4">
           <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-white-00 text-bb-black-00 border-2 border-bb-black-00 hover:bg-bb-grey-00 active:bg-bb-grey-00 px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
           <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">Continue</button>
@@ -552,9 +555,6 @@ const PAGES = {
           </div>
         </div>
 
-        ${GovBB.textField('former-occupation', 'Former occupation', { hint: 'Optional' })}
-        ${GovBB.textField('social-interests', 'Social interests', { hint: 'For example, gardening, church, dominoes (optional)' })}
-        ${GovBB.textField('referred-by', 'Referred by', { hint: 'Who referred this person to the programme? (optional)' })}
         <div class="mt-8 flex gap-4">
           <button type="button" onclick="back()" class="relative inline-flex items-center justify-center gap-2 text-[20px] whitespace-nowrap transition-[background-color,box-shadow] duration-200 outline-none bg-bb-white-00 text-bb-black-00 border-2 border-bb-black-00 hover:bg-bb-grey-00 active:bg-bb-grey-00 px-xm py-s rounded-sm leading-[1.7] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-1 focus-visible:ring-bb-teal-100">Back</button>
           <button type="button" onclick="next()" class="${GovBB.BTN_CLS}">Continue</button>
@@ -708,6 +708,9 @@ const PAGES = {
           ${GovBB.summaryRow('Place of birth', D['place-of-birth'] || '—', 'recipient-details')}
           ${GovBB.summaryRow('Home address', recipientAddress() || '—', 'recipient-details')}
           ${D['location-of-house'] ? GovBB.summaryRow('Location of house', D['location-of-house'], 'recipient-details') : ''}
+          ${GovBB.summaryRow('Marital status', D['marital-status'] || '—', 'recipient-details')}
+          ${D['former-occupation'] ? GovBB.summaryRow('Former occupation', D['former-occupation'], 'recipient-details') : ''}
+          ${D['social-interests'] ? GovBB.summaryRow('Social interests', D['social-interests'], 'recipient-details') : ''}
         </dl>
       </div>
 
@@ -719,7 +722,6 @@ const PAGES = {
           ${GovBB.summaryRow('Home telephone', D['tel-home'] || '—', 'contact-person')}
           ${D['tel-mobile'] ? GovBB.summaryRow('Mobile telephone', D['tel-mobile'], 'contact-person') : ''}
           ${D['contact-email'] ? GovBB.summaryRow('Email address', D['contact-email'], 'contact-person') : ''}
-          ${GovBB.summaryRow('Marital status', D['marital-status'] || '—', 'contact-person')}
         </dl>
       </div>
 
@@ -731,8 +733,6 @@ const PAGES = {
           ${D['income-oap'] ? GovBB.summaryRow('Old Age Pension', 'BDS$' + D['income-oap'], 'income') : ''}
           ${D['income-overseas'] ? GovBB.summaryRow('Overseas pension', 'BDS$' + D['income-overseas'], 'income') : ''}
           ${D['other-income-summary'] ? GovBB.summaryRow('Other income', D['other-income-summary'], 'income') : ''}
-          ${D['former-occupation'] ? GovBB.summaryRow('Former occupation', D['former-occupation'], 'income') : ''}
-          ${D['referred-by'] ? GovBB.summaryRow('Referred by', D['referred-by'], 'income') : ''}
         </dl>
       </div>
 
@@ -917,6 +917,8 @@ const PAGES = {
                 <div class="mda-data-row"><div class="mda-data-label">Home address</div><div class="mda-data-value">${recipientAddress() || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Location of house</div><div class="mda-data-value">${D['location-of-house'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Marital status</div><div class="mda-data-value">${D['marital-status'] || '—'}</div></div>
+                <div class="mda-data-row"><div class="mda-data-label">Former occupation</div><div class="mda-data-value">${D['former-occupation'] || '—'}</div></div>
+                <div class="mda-data-row"><div class="mda-data-label">Social interests</div><div class="mda-data-value">${D['social-interests'] || '—'}</div></div>
               </div>
             </div>
 
@@ -940,9 +942,6 @@ const PAGES = {
                 <div class="mda-data-row"><div class="mda-data-label">Old Age Pension</div><div class="mda-data-value">${D['income-oap'] ? 'BDS$' + D['income-oap'] : '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Overseas pension</div><div class="mda-data-value">${D['income-overseas'] ? 'BDS$' + D['income-overseas'] : '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Other income</div><div class="mda-data-value">${D['other-income-summary'] || '—'}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Former occupation</div><div class="mda-data-value">${D['former-occupation'] || '—'}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Social interests</div><div class="mda-data-value">${D['social-interests'] || '—'}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Referred by</div><div class="mda-data-value">${D['referred-by'] || '—'}</div></div>
               </div>
             </div>
 
@@ -1041,12 +1040,12 @@ function validate(pageId) {
       errors.push({ id: 'dob-day', msg: 'Date of birth – Enter a valid date of birth' });
     }
     if (!D['gender']) errors.push({ id: 'gender', msg: 'Gender – Select the recipient\'s gender' });
+    if (!D['marital-status']) errors.push({ id: 'marital-status', msg: 'Marital status – Select the recipient\'s marital status' });
   }
 
   if (pageId === 'contact-person') {
     if (!D['contact-name'] || !D['contact-name'].trim()) errors.push({ id: 'contact-name', msg: 'Contact person – Enter the name of the contact person' });
     if (!D['tel-home'] && !D['tel-mobile']) errors.push({ id: 'tel-home', msg: 'Telephone – Enter at least a home or mobile telephone number' });
-    if (!D['marital-status']) errors.push({ id: 'marital-status', msg: 'Marital status – Select the recipient\'s marital status' });
   }
 
   if (pageId === 'physical-condition') {
