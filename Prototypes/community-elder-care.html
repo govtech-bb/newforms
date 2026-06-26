@@ -159,19 +159,23 @@ const FLOW = [
 /* ───────── Household members state ───────── */
 let householdMembers = [];
 
+var HH_RELATIONSHIPS = ['Spouse', 'Son', 'Daughter', 'Grandchild', 'Grandparent', 'Sibling', 'Parent', 'Other relative', 'Friend', 'Neighbour', 'Carer / helper', 'Other'];
+
 function syncHouseholdMembers() {
   GovBB.D['household-members'] = householdMembers.map(function (m) {
     var name = [m.first, m.middle, m.last].filter(Boolean).join(' ');
-    return [name, m.dob, m.rel].filter(Boolean).join(' — ');
+    var rel = (m.rel === 'Other') ? (m.relOther || 'Other') : m.rel;
+    return [name, m.dob, rel].filter(Boolean).join(' — ');
   }).filter(function (s) { return s && s.trim(); }).join(' | ');
 }
 
 function addHouseholdMember() {
-  householdMembers.push({ first: '', middle: '', last: '', dob: '', rel: '' });
+  householdMembers.push({ first: '', middle: '', last: '', dob: '', rel: '', relOther: '' });
   syncHouseholdMembers();
   GovBB.render();
-  var inputs = document.querySelectorAll('[data-household-input]');
-  var firstOfNew = inputs[(householdMembers.length - 1) * 5];
+  var cards = document.querySelectorAll('[data-hh-card]');
+  var lastCard = cards[cards.length - 1];
+  var firstOfNew = lastCard && lastCard.querySelector('input');
   if (firstOfNew) { try { firstOfNew.focus({ preventScroll: true }); } catch (e) { firstOfNew.focus(); } }
 }
 
@@ -201,13 +205,42 @@ function hhInput(i, field, label, hint) {
     </div>`;
 }
 
+function hhRelSelect(i) {
+  var m = householdMembers[i] || {};
+  var val = m.rel || '';
+  var other = String(m.relOther || '').replace(/"/g, '&quot;');
+  var opts = HH_RELATIONSHIPS.map(function (o) {
+    return `<option value="${o}"${val === o ? ' selected' : ''}>${o}</option>`;
+  }).join('');
+  return `
+    <div class="flex flex-col gap-xs w-full">
+      <label class="block text-[1.25rem] font-bold text-bb-black-00">Relationship to recipient</label>
+      <div class="relative inline-flex w-full rounded-sm border-2 border-bb-black-00 items-center transition-all bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
+        <select onchange="updateHouseholdMember(${i}, 'rel', this.value); GovBB.render();"
+          class="w-full min-w-0 p-s outline-none rounded-[inherit] cursor-pointer bg-bb-white-00">
+          <option value="">Select one</option>
+          ${opts}
+        </select>
+      </div>
+      ${val === 'Other' ? `
+        <div class="flex flex-col gap-xs w-full mt-2">
+          <label class="block text-[1.25rem] font-bold text-bb-black-00">Please specify the relationship</label>
+          <div class="relative inline-flex w-full rounded-sm border-2 border-bb-black-00 items-center transition-all bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
+            <input type="text" data-household-input value="${other}"
+              oninput="updateHouseholdMember(${i}, 'relOther', this.value)"
+              class="w-full min-w-0 p-s outline-none rounded-[inherit]" />
+          </div>
+        </div>` : ''}
+    </div>`;
+}
+
 function renderHouseholdMembers() {
   if (householdMembers.length === 0) {
     return `<p class="text-[1.25rem] text-bb-mid-grey-00">No one else added yet.</p>`;
   }
   return householdMembers.map(function (m, i) {
     return `
-    <div class="border-2 border-bb-grey-00 rounded-sm p-5 flex flex-col gap-4">
+    <div data-hh-card class="border-2 border-bb-grey-00 rounded-sm p-5 flex flex-col gap-4">
       <div class="flex justify-between items-center">
         <p class="text-[1.25rem] font-bold text-bb-black-00">Person ${i + 1}</p>
         <button type="button" onclick="removeHouseholdMember(${i})"
@@ -217,9 +250,42 @@ function renderHouseholdMembers() {
       ${hhInput(i, 'middle', 'Middle name (optional)')}
       ${hhInput(i, 'last', 'Last name')}
       ${hhInput(i, 'dob', 'Date of birth', 'For example, 27 03 1950')}
-      ${hhInput(i, 'rel', 'Relationship to recipient', 'For example, daughter, neighbour')}
+      ${hhRelSelect(i)}
     </div>`;
   }).join('');
+}
+
+/* ───────── Recipient address (composite) ───────── */
+function recipientAddress() {
+  var D = GovBB.D;
+  return [D['address-line-1'], D['address-line-2'], D['parish']]
+    .filter(function (s) { return s && String(s).trim(); })
+    .join(', ');
+}
+
+/* ───────── Money input (numbers only) ───────── */
+function sanitizeMoney(s) {
+  s = String(s).replace(/[^0-9.]/g, '');
+  var firstDot = s.indexOf('.');
+  if (firstDot !== -1) {
+    s = s.slice(0, firstDot + 1) + s.slice(firstDot + 1).replace(/\./g, '');
+  }
+  var m = s.match(/^(\d*)(\.\d{0,2})?/);
+  return m ? (m[1] + (m[2] || '')) : s;
+}
+
+function moneyField(id, label, hint) {
+  var v = String(GovBB.D[id] || '').replace(/"/g, '&quot;');
+  return `
+    <div class="field-group flex flex-col gap-xs w-full items-start">
+      <label for="${id}" class="block text-[1.25rem] leading-normal font-bold text-bb-black-00">${label}</label>
+      ${hint ? `<p class="text-[1.25rem] leading-normal text-bb-mid-grey-00 mt-xs">${hint}</p>` : ''}
+      <div class="input-wrap ${GovBB.INPUT_WRAP_CLS}">
+        <input type="text" id="${id}" name="${id}" inputmode="decimal" value="${v}"
+          oninput="this.value=sanitizeMoney(this.value);GovBB.D['${id}']=this.value"
+          class="${GovBB.INPUT_CLS}" />
+      </div>
+    </div>`;
 }
 
 /* ───────── Income rows state ───────── */
@@ -264,7 +330,7 @@ function renderIncomeRows() {
       <div class="flex flex-col gap-xs" style="width:12rem">
         <label class="block text-[1.25rem] font-bold text-bb-black-00">Amount (BDS$)</label>
         <div class="relative inline-flex w-full rounded-sm border-2 border-bb-black-00 items-center transition-all bg-bb-white-00 hover:shadow-form-hover focus-within:ring-4 focus-within:ring-bb-teal-100">
-          <input type="text" inputmode="decimal" value="${row.amount.replace(/"/g,'&quot;')}" oninput="updateIncomeRow(${i},'amount',this.value)"
+          <input type="text" inputmode="decimal" value="${row.amount.replace(/"/g,'&quot;')}" oninput="this.value=sanitizeMoney(this.value);updateIncomeRow(${i},'amount',this.value)"
             class="w-full min-w-0 p-s outline-none rounded-[inherit]" />
         </div>
       </div>
@@ -398,7 +464,9 @@ const PAGES = {
       <h1 class="font-bold text-[3.5rem] leading-[1.15] mb-8">About the recipient</h1>
       <div class="space-y-8">
         <div id="error-summary"></div>
-        ${GovBB.textareaField('address', 'Home address', { hint: 'Include house number or name, street, and parish', rows: 3 })}
+        ${GovBB.textField('address-line-1', 'Address line 1', { hint: 'House number or name and street' })}
+        ${GovBB.textField('address-line-2', 'Address line 2 (optional)')}
+        ${GovBB.selectField('parish', 'Parish', GovBB.PARISHES)}
         ${GovBB.textareaField('location-of-house', 'Location of house', { hint: 'Any extra directions to help find the property (optional)', rows: 2 })}
         ${GovBB.dateField('dob', 'Date of birth')}
         ${GovBB.radioGroup('gender', 'Gender', ['Male', 'Female'])}
@@ -438,10 +506,10 @@ const PAGES = {
       <div class="space-y-8">
         <p class="text-[1.25rem] text-bb-mid-grey-00">Enter the monthly amount for each income source. Leave blank if it does not apply.</p>
         <div id="error-summary"></div>
-        ${GovBB.textField('income-welfare', 'Welfare grant (BDS$)', { hint: 'Monthly amount', inputmode: 'decimal' })}
-        ${GovBB.textField('income-nis', 'National Insurance benefit (BDS$)', { hint: 'Monthly amount', inputmode: 'decimal' })}
-        ${GovBB.textField('income-oap', 'Old Age Pension – O.A.P. (BDS$)', { hint: 'Monthly amount', inputmode: 'decimal' })}
-        ${GovBB.textField('income-overseas', 'Overseas pension (BDS$)', { hint: 'Monthly amount', inputmode: 'decimal' })}
+        ${moneyField('income-welfare', 'Welfare grant (BDS$)', 'Monthly amount')}
+        ${moneyField('income-nis', 'National Insurance benefit (BDS$)', 'Monthly amount')}
+        ${moneyField('income-oap', 'Old Age Pension – O.A.P. (BDS$)', 'Monthly amount')}
+        ${moneyField('income-overseas', 'Overseas pension (BDS$)', 'Monthly amount')}
 
         <div class="flex flex-col gap-s">
           <p class="text-[1.25rem] font-bold text-bb-black-00">Other sources of income</p>
@@ -611,7 +679,7 @@ const PAGES = {
           ${GovBB.summaryRow('Gender', D['gender'] || '—', 'recipient-details')}
           ${GovBB.summaryRow('National Registration Number', D['nrn'] || '—', 'recipient-details')}
           ${GovBB.summaryRow('Place of birth', D['place-of-birth'] || '—', 'recipient-details')}
-          ${GovBB.summaryRow('Home address', D['address'] || '—', 'recipient-details')}
+          ${GovBB.summaryRow('Home address', recipientAddress() || '—', 'recipient-details')}
           ${D['location-of-house'] ? GovBB.summaryRow('Location of house', D['location-of-house'], 'recipient-details') : ''}
         </dl>
       </div>
@@ -638,7 +706,6 @@ const PAGES = {
           ${D['other-income-summary'] ? GovBB.summaryRow('Other income', D['other-income-summary'], 'income') : ''}
           ${D['former-occupation'] ? GovBB.summaryRow('Former occupation', D['former-occupation'], 'income') : ''}
           ${D['referred-by'] ? GovBB.summaryRow('Referred by', D['referred-by'], 'income') : ''}
-          ${GovBB.summaryRow('Date of application', todayApplicationDate())}
         </dl>
       </div>
 
@@ -820,7 +887,7 @@ const PAGES = {
                 <div class="mda-data-row"><div class="mda-data-label">Gender</div><div class="mda-data-value">${D['gender'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">NRN</div><div class="mda-data-value">${D['nrn'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Place of birth</div><div class="mda-data-value">${D['place-of-birth'] || '—'}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Home address</div><div class="mda-data-value">${D['address'] || '—'}</div></div>
+                <div class="mda-data-row"><div class="mda-data-label">Home address</div><div class="mda-data-value">${recipientAddress() || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Location of house</div><div class="mda-data-value">${D['location-of-house'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Marital status</div><div class="mda-data-value">${D['marital-status'] || '—'}</div></div>
               </div>
@@ -849,7 +916,6 @@ const PAGES = {
                 <div class="mda-data-row"><div class="mda-data-label">Former occupation</div><div class="mda-data-value">${D['former-occupation'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Social interests</div><div class="mda-data-value">${D['social-interests'] || '—'}</div></div>
                 <div class="mda-data-row"><div class="mda-data-label">Referred by</div><div class="mda-data-value">${D['referred-by'] || '—'}</div></div>
-                <div class="mda-data-row"><div class="mda-data-label">Date of application</div><div class="mda-data-value">${todayApplicationDate()}</div></div>
               </div>
             </div>
 
@@ -939,7 +1005,8 @@ function validate(pageId) {
   }
 
   if (pageId === 'recipient-details') {
-    if (!D['address'] || !D['address'].trim()) errors.push({ id: 'address', msg: 'Home address – Enter the recipient\'s home address' });
+    if (!D['address-line-1'] || !D['address-line-1'].trim()) errors.push({ id: 'address-line-1', msg: 'Address line 1 – Enter the house number or name and street' });
+    if (!D['parish']) errors.push({ id: 'parish', msg: 'Parish – Select the parish' });
     const day = parseInt(D['dob-day']), month = parseInt(D['dob-month']), year = parseInt(D['dob-year']);
     if (!D['dob-day'] || !D['dob-month'] || !D['dob-year']) {
       errors.push({ id: 'dob-day', msg: 'Date of birth – Enter the recipient\'s date of birth' });
