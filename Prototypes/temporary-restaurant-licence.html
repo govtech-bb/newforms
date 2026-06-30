@@ -111,16 +111,18 @@ const FLOW = [
   'confirmation'
 ];
 
-/* The nine polyclinics. Source: govtech-bb/find-a-polyclinic. */
+/* Environmental Health Department offices (catchment division map).
+   Edgar Cochrane and Frederick Miller have no Environmental Health Department:
+   the Edgar Cochrane area is served by Sir Winston Scott, and the Frederick
+   Miller area by Six Roads — so those two are not selectable processing offices. */
 const POLYCLINICS = [
   'Branford Taitt Polyclinic',
   'David Thompson Health & Social Services Complex',
-  'Edgar Cochrane Polyclinic',
   'Eunice Gibson Polyclinic',
-  'Frederick Miller Polyclinic',
   'Maurice Byer Polyclinic',
   'Randal Phillips Polyclinic',
   'Sir Winston Scott Polyclinic',
+  'Six Roads Polyclinic',
   'St. Philip Polyclinic'
 ];
 
@@ -299,7 +301,7 @@ const PAGES = {
       ${dateField('event-from', 'Start date', 'The first day the temporary restaurant will operate. You must apply at least two weeks before this date. For example, 27 6 2025.')}
       ${dateField('event-to', 'End date', 'The last day the temporary restaurant will operate.')}
 
-      ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the event will be held. The Medical Officer of Health there will process your application.' })}
+      ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the event will be held — the Medical Officer of Health (Environmental Health) there will process your application. The Edgar Cochrane area is served by Sir Winston Scott, and the Frederick Miller area by Six Roads.' })}
 
       ${btns()}
     </form>`,
