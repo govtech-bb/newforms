@@ -386,6 +386,7 @@ const PAGES = {
           <label class="govbb-checkbox-item__label" for="decl-agree">I hereby certify that the information provided is true and correct to the best of my knowledge.</label>
         </div>
       </fieldset>
+      ${textField('signature','Signature',{hint:'Type your full name to sign this declaration. Typing your name in this box has the same legal effect as a handwritten signature.'})}
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
         <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
         <button type="button" class="govbb-btn" onclick="next()">Submit application</button>
@@ -396,6 +397,8 @@ const PAGES = {
   'confirmation': () => {
     window.__refNumber = window.__refNumber || ('SLU-' + Math.random().toString(36).substring(2,8).toUpperCase());
     if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    const sd = new Date();
+    const signedDate = String(sd.getDate()).padStart(2,'0')+'/'+String(sd.getMonth()+1).padStart(2,'0')+'/'+sd.getFullYear();
     return `
     <div>
       <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
@@ -403,6 +406,7 @@ const PAGES = {
         <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
         <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
       </div>
+      ${GovBB.D['signature'] ? '<p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">Declaration signed by <strong>'+escapeHtml(GovBB.D['signature'])+'</strong> on '+signedDate+'.</p>' : ''}
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your requested usage period</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">${fmtDate(GovBB.D['start-date'])} to ${fmtDate(GovBB.D['end-date'])}${durationText(GovBB.D['start-date'],GovBB.D['end-date']) ? ' (<strong>'+durationText(GovBB.D['start-date'],GovBB.D['end-date'])+'</strong>)' : ''}</p>
 
@@ -470,6 +474,7 @@ function validate(pageId) {
 
   if (pageId === 'declaration') {
     if (!D['decl-agree']) errors.push({id:'decl-agree',msg:'You must agree to the declaration to continue'});
+    req('signature','Type your full name to sign the declaration');
   }
   return errors;
 }
