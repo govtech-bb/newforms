@@ -518,6 +518,77 @@ GovBB.init({
   pages: PAGES,
   validate: validate
 });
+
+/* ───────── Auto-fill (demo helper) ─────────
+   Floating button that fills the CURRENT page with realistic sample data,
+   so reviewers can see how the form behaves without typing. */
+(function () {
+  function futParts(days){ var dt=new Date(); dt.setDate(dt.getDate()+days); return { d:String(dt.getDate()), m:String(dt.getMonth()+1), y:String(dt.getFullYear()) }; }
+  function fillCurrentPage() {
+    var D = GovBB.D;
+    var flow = GovBB.getFlow();
+    var pageId = flow[GovBB.getCurrentIndex()];
+    switch (pageId) {
+      case 'applicant-details':
+        D['applicant-first-name'] = 'Marcus'; D['applicant-middle-name'] = ''; D['applicant-surname'] = 'Browne';
+        D['applicant-line1'] = '12 Bay Street'; D['applicant-line2'] = ''; D['applicant-parish'] = 'St. Michael';
+        D['phone-home'] = ''; D['phone-cell'] = '(246) 249 1234'; D['phone-work'] = '';
+        D['email'] = 'marcus.browne@example.com';
+        break;
+      case 'event-details':
+        D['event-name'] = 'Oistins Fish Festival pop-up';
+        D['event-line1'] = 'Oistins Bay Garden'; D['event-line2'] = ''; D['event-parish'] = 'Christ Church';
+        var f = futParts(21), t = futParts(22);
+        D['event-from-day'] = f.d; D['event-from-month'] = f.m; D['event-from-year'] = f.y;
+        D['event-to-day'] = t.d; D['event-to-month'] = t.m; D['event-to-year'] = t.y;
+        D['polyclinic'] = 'Maurice Byer Polyclinic';
+        break;
+      case 'food-details':
+        D['food-type'] = 'Fish cakes and rotis — fish from Oistins market; flour and oil from a wholesaler.';
+        if (!D['organiser-different']) D['organiser-different'] = 'No';
+        if (D['organiser-different'] === 'Yes') {
+          D['organiser-name'] = 'Sandra Clarke';
+          D['organiser-phone'] = '(246) 249 5678';
+          D['organiser-email'] = 'sandra.clarke@example.com';
+        }
+        break;
+      case 'documents':
+        D['upload-food-licence'] = { name: 'food-business-licence.pdf', size: 248000, type: 'application/pdf' };
+        D['upload-medical-certs'] = { name: 'staff-medical-certificates.pdf', size: 512000, type: 'application/pdf' };
+        break;
+      case 'declaration':
+        D['declare-agree'] = true;
+        break;
+      default:
+        return false;
+    }
+    GovBB.render();
+    return true;
+  }
+  function buildButton() {
+    if (document.getElementById('trl-autofill-btn')) return;
+    var btn = document.createElement('button');
+    btn.id = 'trl-autofill-btn'; btn.type = 'button';
+    btn.setAttribute('aria-label', 'Auto-fill this page with sample data');
+    btn.setAttribute('title', 'Fill this page with sample data');
+    btn.style.cssText = [
+      'position:fixed', 'bottom:6.5rem', 'right:1.5rem', 'z-index:9999',
+      'display:inline-flex', 'align-items:center', 'gap:0.5rem',
+      'padding:0.5rem 0.875rem', 'border-radius:9999px',
+      'border:2px solid #00267f', 'background:#00267f', 'color:#ffffff',
+      'font-family:inherit', 'font-size:0.875rem', 'font-weight:600', 'line-height:1.4',
+      'cursor:pointer', 'box-shadow:0 2px 8px rgba(0,0,0,0.18)'
+    ].join(';');
+    var label = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Auto-fill page';
+    btn.innerHTML = label;
+    btn.addEventListener('click', function () {
+      if (!fillCurrentPage()) { btn.innerHTML = 'Nothing to fill here'; setTimeout(function () { btn.innerHTML = label; }, 1200); }
+    });
+    document.body.appendChild(btn);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', buildButton);
+  else buildButton();
+})();
 </script>
 
 <!-- Comment World feedback widget -->
