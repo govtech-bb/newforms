@@ -144,9 +144,10 @@ function textField(id, label, opts) {
   var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
   var type = opts.type || 'text';
   var im = opts.inputmode ? ' inputmode="' + opts.inputmode + '"' : '';
+  var oc = opts.numeric ? ' oninput="this.value=this.value.replace(/[^0-9]/g,\'\')"' : '';
   return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
     + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
-    + '<div class="govbb-input-wrapper"><input class="govbb-input" type="' + type + '" id="' + id + '" name="' + id + '" data-field="' + id + '"' + im + ' value="' + val(id) + '" /></div></div>';
+    + '<div class="govbb-input-wrapper"><input class="govbb-input" type="' + type + '" id="' + id + '" name="' + id + '" data-field="' + id + '"' + im + oc + ' value="' + val(id) + '" /></div></div>';
 }
 
 function textareaField(id, label, opts) {
@@ -399,8 +400,8 @@ const PAGES = {
       ${conditional('has-food-licence', 'No', '<p class="govbb-text-body" style="margin:0;">Because you do not have a licensed food business, an Environmental Health Officer will inspect your set-up before the licence is issued.</p>')}
 
       <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">Food handlers</h2>
-      ${textField('handlers-male', 'Number of male food handlers', { inputmode: 'numeric' })}
-      ${textField('handlers-female', 'Number of female food handlers', { inputmode: 'numeric' })}
+      ${textField('handlers-male', 'Number of male food handlers', { inputmode: 'numeric', numeric: true })}
+      ${textField('handlers-female', 'Number of female food handlers', { inputmode: 'numeric', numeric: true })}
 
       <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">Water and sanitation</h2>
       ${textField('water-source', 'Water source', { hint: 'Where will safe water come from? For example, mains supply, a water tank, or bottled water.' })}
@@ -409,8 +410,8 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">Event size</h2>
       <p class="govbb-hint" style="margin-bottom:var(--spacing-s);">Ask the event organiser if you are not sure.</p>
-      ${textField('num-patrons', 'Expected number of patrons', { inputmode: 'numeric' })}
-      ${textField('num-stalls', 'Number of food stalls', { inputmode: 'numeric' })}
+      ${textField('num-patrons', 'Expected number of patrons', { inputmode: 'numeric', numeric: true })}
+      ${textField('num-stalls', 'Number of food stalls', { inputmode: 'numeric', numeric: true })}
 
       ${btns()}
     </form>`,
