@@ -261,6 +261,8 @@ const PAGES = {
     const D = GovBB.D;
     const isOrg = D['applicant-type'] === 'Organisation';
     const isIntlInd = !isOrg && D['is-resident'] === 'No';
+    const isIntlOrg = isOrg && D['is-registered'] === 'No';
+    const isOverseas = isIntlInd || isIntlOrg;
     const nrnBlock = `<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);"><label class="govbb-label" for="nrn">National Registration Number</label><p class="govbb-hint">You can find this on your national ID card. For example, 870315-1234.</p><div class="govbb-input-wrapper"><input class="govbb-input" type="text" id="nrn" name="nrn" data-field="nrn" inputmode="numeric" maxlength="11" placeholder="870315-1234" value="${val('nrn')}" oninput="var v=this.value.replace(/[^0-9]/g,'').slice(0,10); if(v.length>6) v=v.slice(0,6)+'-'+v.slice(6); this.value=v;" /></div></div>`;
     return `
       <form novalidate>
@@ -272,8 +274,8 @@ const PAGES = {
         ${textField('last-name', isOrg ? 'Contact person last name' : 'Last name')}
         ${isOrg ? '' : (isIntlInd ? textField('passport-id','Passport or national ID number',{hint:'Enter the number shown on your passport or national identity document.'}) : nrnBlock)}
         ${isOrg ? '' : radioField('gender','Gender',['Male','Female'])}
-        ${textareaField('address','Address',{hint: isIntlInd ? 'Your full postal address.' : 'Street address and village or district.'})}
-        ${isIntlInd ? selectField('country','Country',COUNTRIES,{placeholder:'Select a country',hint:'The country where you live.'}) : selectField('parish','Parish',GovBB.PARISHES,{placeholder:'Select a parish'})}
+        ${textareaField('address','Address',{hint: isOverseas ? 'Your full postal address.' : 'Street address and village or district.'})}
+        ${isOverseas ? selectField('country','Country',COUNTRIES,{placeholder:'Select a country',hint: isOrg ? 'The country where your organisation or company is based.' : 'The country where you live.'}) : selectField('parish','Parish',GovBB.PARISHES,{placeholder:'Select a parish'})}
         ${textField('phone','Telephone number',{type:'tel',inputmode:'tel',hint:'For example, (246) 535 1234.'})}
         ${textField('cell','Mobile number (optional)',{type:'tel',inputmode:'tel'})}
         ${textField('email','Email address',{type:'email',inputmode:'email',hint:'We will use this to send you a confirmation.'})}
@@ -325,6 +327,7 @@ const PAGES = {
     const D = GovBB.D;
     const isOrg = D['applicant-type'] === 'Organisation';
     const isIntlInd = !isOrg && D['is-resident'] === 'No';
+    const isOverseas = isIntlInd || (isOrg && D['is-registered'] === 'No');
     return `
     <div>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers before sending your application</h1>
@@ -343,7 +346,7 @@ const PAGES = {
         ${GovBB.summaryRow(isOrg ? 'Contact last name' : 'Last name', D['last-name'], 'applicant-details')}
         ${isOrg ? '' : (isIntlInd ? GovBB.summaryRow('Passport or national ID number', D['passport-id'], 'applicant-details') : GovBB.summaryRow('National Registration Number', D['nrn'], 'applicant-details'))}
         ${isOrg ? '' : GovBB.summaryRow('Gender', D['gender'], 'applicant-details')}
-        ${isIntlInd ? GovBB.summaryRow('Country', D['country'], 'applicant-details') : GovBB.summaryRow('Parish', D['parish'], 'applicant-details')}
+        ${isOverseas ? GovBB.summaryRow('Country', D['country'], 'applicant-details') : GovBB.summaryRow('Parish', D['parish'], 'applicant-details')}
         ${GovBB.summaryRow('Address', D['address'], 'applicant-details')}
         ${GovBB.summaryRow('Telephone number', D['phone'], 'applicant-details')}
         ${D['cell'] ? GovBB.summaryRow('Mobile number', D['cell'], 'applicant-details') : ''}
@@ -438,6 +441,7 @@ function validate(pageId) {
   if (pageId === 'applicant-details') {
     var isOrg = D['applicant-type']==='Organisation';
     var isIntlInd = !isOrg && D['is-resident']==='No';
+    var isOverseas = isIntlInd || (isOrg && D['is-registered']==='No');
     if (isOrg) req('org-name','Enter the name of your organisation or company');
     req('first-name', isOrg ? 'Enter the contact person first name' : 'Enter your first name');
     req('last-name', isOrg ? 'Enter the contact person last name' : 'Enter your last name');
@@ -451,7 +455,7 @@ function validate(pageId) {
       }
       if (!D['gender']) errors.push({id:'gender',msg:'Select your gender'});
     }
-    if (isIntlInd) req('country','Enter the country where you live');
+    if (isOverseas) req('country', isOrg ? 'Enter the country where your organisation or company is based' : 'Enter the country where you live');
     else if (!D['parish']) errors.push({id:'parish',msg:'Select your parish'});
     req('address','Enter your address');
     var ph=(D['phone']||'').trim(); if(!ph) errors.push({id:'phone',msg:'Enter your telephone number'}); else if(!phoneOk(ph)) errors.push({id:'phone',msg:'Enter a telephone number using 7 to 15 digits'});
@@ -498,9 +502,13 @@ GovBB.init({ formName: FORM_NAME, getFlow: function(){ return FLOW; }, pages: PA
       case 'applicant-details':
         if (D['applicant-type'] === 'Organisation') {
           D['org-name'] = 'Bridgetown Community Trust';
-          D['is-registered'] = 'Yes';
           D['first-name'] = 'Andrea'; D['middle-name'] = ''; D['last-name'] = 'Holder';
-          D['address'] = '2 Roebuck Street, Bridgetown'; D['parish'] = 'St. Michael';
+          if (D['is-registered'] === 'No') {
+            D['address'] = '500 King Street West, Toronto, ON, Canada'; D['country'] = 'Canada';
+          } else {
+            D['is-registered'] = 'Yes';
+            D['address'] = '2 Roebuck Street, Bridgetown'; D['parish'] = 'St. Michael';
+          }
         } else if (D['is-resident'] === 'No') {
           D['first-name'] = 'Andrea'; D['middle-name'] = 'M'; D['last-name'] = 'Holder';
           D['passport-id'] = 'X1234567'; D['gender'] = 'Female';
