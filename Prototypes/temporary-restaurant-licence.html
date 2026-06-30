@@ -237,18 +237,28 @@ const FOOD_CATEGORIES = [
 ];
 function fslug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
 function foodKey(catKey, item) { return 'food-' + catKey + '-' + fslug(item); }
+function catKeyFor(cat) { return 'food-cat-' + cat.key; }
 function foodSelector() {
   return FOOD_CATEGORIES.map(function (cat) {
+    var catKey = catKeyFor(cat);
+    var open = !!GovBB.D[catKey];
     var badge = cat.risk ? ' <span style="display:inline-block;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);background:var(--color-yellow-10);border:1px solid var(--color-yellow-00);border-radius:4px;padding:1px 8px;margin-left:6px;">Higher-risk</span>' : '';
-    var items = cat.items.map(function (it) {
-      var key = foodKey(cat.key, it);
-      return '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="' + key + '" name="' + key + '" data-field="' + key + '"' + (GovBB.D[key] ? ' checked' : '') + ' /><label class="govbb-checkbox-item__label" for="' + key + '">' + escapeHtml(it) + '</label></div>';
-    }).join('');
-    return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">' + escapeHtml(cat.label) + badge + '</legend><div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">' + items + '</div></fieldset>';
+    var catBox = '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="' + catKey + '" name="' + catKey + '" data-field="' + catKey + '" data-trigger-render="1"' + (open ? ' checked' : '') + ' /><label class="govbb-checkbox-item__label" for="' + catKey + '">' + escapeHtml(cat.label) + badge + '</label></div>';
+    var items = '';
+    if (open) {
+      items = '<div style="padding-left:var(--spacing-l);border-left:4px solid var(--color-blue-40);margin:var(--spacing-xs) 0 var(--spacing-m);display:flex;flex-direction:column;gap:var(--spacing-xs);">'
+        + cat.items.map(function (it) {
+            var key = foodKey(cat.key, it);
+            return '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="' + key + '" name="' + key + '" data-field="' + key + '"' + (GovBB.D[key] ? ' checked' : '') + ' /><label class="govbb-checkbox-item__label" for="' + key + '">' + escapeHtml(it) + '</label></div>';
+          }).join('')
+        + '</div>';
+    }
+    return '<div style="margin-bottom:var(--spacing-s);">' + catBox + items + '</div>';
   }).join('');
 }
+/* Items only count when their category is expanded (ticked). */
 function getSelectedFoods() {
-  return FOOD_CATEGORIES.map(function (cat) {
+  return FOOD_CATEGORIES.filter(function (cat) { return !!GovBB.D[catKeyFor(cat)]; }).map(function (cat) {
     return { label: cat.label, items: cat.items.filter(function (it) { return !!GovBB.D[foodKey(cat.key, it)]; }) };
   }).filter(function (c) { return c.items.length; });
 }
@@ -368,6 +378,11 @@ const PAGES = {
         return '<div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">Environmental Health Department, ' + escapeHtml(GovBB.D['polyclinic']) + '<br>Telephone: ' + escapeHtml(c.phone) + '<br>Email: ' + escapeHtml(c.email) + '</p></div>';
       })()}
 
+      <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">Event size</h2>
+      <p class="govbb-hint" style="margin-bottom:var(--spacing-s);">Ask the event organiser if you are not sure.</p>
+      ${textField('num-patrons', 'Expected number of patrons', { inputmode: 'numeric', numeric: true })}
+      ${textField('num-stalls', 'Number of food stalls', { inputmode: 'numeric', numeric: true })}
+
       ${btns()}
     </form>`,
 
@@ -376,7 +391,7 @@ const PAGES = {
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Food and event organiser</h1>
 
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Tick every type of food you plan to serve. Foods marked <strong>Higher-risk</strong> need extra care to keep safe and may affect how your set-up is inspected.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Tick a food category to see its items, then tick the specific foods you plan to serve. Categories marked <strong>Higher-risk</strong> need extra care to keep safe and may affect how your set-up is inspected.</p>
       ${foodSelector()}
       ${textareaField('food-source', 'Where will you get the food from?', { rows: 3, hint: 'List your suppliers or sources. For example, "fish from Oistins market; flour and oil from a wholesaler".' })}
 
@@ -394,7 +409,7 @@ const PAGES = {
   'food-safety': () => `
     <form novalidate>
       ${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Food safety and event size</h1>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Food safety</h1>
 
       ${radioGroup('has-food-licence', 'Do you already have a valid food business licence?', ['Yes', 'No'], { trigger: true, hint: 'A current licence for your own food business or premises.' })}
       ${conditional('has-food-licence', 'No', '<p class="govbb-text-body" style="margin:0;">Because you do not have a licensed food business, an Environmental Health Officer will inspect your set-up before the licence is issued.</p>')}
@@ -407,11 +422,6 @@ const PAGES = {
       ${textField('water-source', 'Water source', { hint: 'Where will safe water come from? For example, mains supply, a water tank, or bottled water.' })}
       ${textField('handwashing', 'Handwashing arrangements', { hint: 'For example, a portable handwashing station with soap and paper towels.' })}
       ${textField('waste-disposal', 'Waste disposal', { hint: 'How will food waste and rubbish be stored and removed?' })}
-
-      <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">Event size</h2>
-      <p class="govbb-hint" style="margin-bottom:var(--spacing-s);">Ask the event organiser if you are not sure.</p>
-      ${textField('num-patrons', 'Expected number of patrons', { inputmode: 'numeric', numeric: true })}
-      ${textField('num-stalls', 'Number of food stalls', { inputmode: 'numeric', numeric: true })}
 
       ${btns()}
     </form>`,
@@ -456,6 +466,8 @@ const PAGES = {
         ${GovBB.summaryRow('Operating from', fmtDate('event-from'), 'event-details')}
         ${GovBB.summaryRow('Operating to', fmtDate('event-to'), 'event-details')}
         ${GovBB.summaryRow('Polyclinic', GovBB.D['polyclinic'] || '', 'event-details')}
+        ${GovBB.summaryRow('Expected patrons', GovBB.D['num-patrons'] || '', 'event-details')}
+        ${GovBB.summaryRow('Food stalls', GovBB.D['num-stalls'] || '', 'event-details')}
       </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food and organiser</h2>
@@ -468,15 +480,13 @@ const PAGES = {
         ${GovBB.D['organiser-different'] === 'Yes' ? GovBB.summaryRow('Organiser email', GovBB.D['organiser-email'] || 'Not provided', 'food-details') : ''}
       </dl>
 
-      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food safety and event size</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food safety</h2>
       <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Already has a food business licence?', GovBB.D['has-food-licence'] || '', 'food-safety')}
         ${GovBB.summaryRow('Food handlers', 'Male: ' + (GovBB.D['handlers-male'] || '0') + ', Female: ' + (GovBB.D['handlers-female'] || '0'), 'food-safety')}
         ${GovBB.summaryRow('Water source', GovBB.D['water-source'] || '', 'food-safety')}
         ${GovBB.summaryRow('Handwashing', GovBB.D['handwashing'] || '', 'food-safety')}
         ${GovBB.summaryRow('Waste disposal', GovBB.D['waste-disposal'] || '', 'food-safety')}
-        ${GovBB.summaryRow('Expected patrons', GovBB.D['num-patrons'] || '', 'food-safety')}
-        ${GovBB.summaryRow('Food stalls', GovBB.D['num-stalls'] || '', 'food-safety')}
       </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Supporting documents</h2>
@@ -500,9 +510,13 @@ const PAGES = {
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
         <legend class="govbb-visually-hidden">Declaration</legend>
-        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);margin-bottom:var(--spacing-s);">
           <input class="govbb-checkbox" type="checkbox" id="declare-agree" name="declare-agree" data-field="declare-agree"${GovBB.D['declare-agree']?' checked':''} />
           <label class="govbb-checkbox-item__label" for="declare-agree">I declare that the information I have given is true, and that I will operate the temporary restaurant in accordance with the Health Services (Restaurant) Regulations, 1969.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
+          <input class="govbb-checkbox" type="checkbox" id="declare-overtime" name="declare-overtime" data-field="declare-overtime"${GovBB.D['declare-overtime']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="declare-overtime">I understand that the event organiser is responsible for the overtime costs of the Environmental Health Officers who provide public health surveillance and inspection during the event.</label>
         </div>
       </fieldset>
 
@@ -613,10 +627,12 @@ function validate(pageId) {
     }
     if (from && to && to < from) errors.push({ id: 'event-to-day', msg: 'The end date must be the same as or after the start date' });
     reqText('polyclinic', 'Select the polyclinic you are applying to');
+    reqNum('num-patrons', 'the expected number of patrons');
+    reqNum('num-stalls', 'the number of food stalls');
   }
 
   if (pageId === 'food-details') {
-    if (foodCount() === 0) errors.push({ id: foodKey('meat', 'Chicken'), msg: 'Select at least one type of food you will serve' });
+    if (foodCount() === 0) errors.push({ id: 'food-cat-meat', msg: 'Select at least one type of food you will serve' });
     reqText('food-source', 'Enter where you will get the food from');
     if (!D['organiser-different']) errors.push({ id: 'organiser-different-0', msg: 'Select yes or no' });
     if (D['organiser-different'] === 'Yes') {
@@ -635,8 +651,6 @@ function validate(pageId) {
     reqText('water-source', 'Enter the water source for the event');
     reqText('handwashing', 'Describe the handwashing arrangements');
     reqText('waste-disposal', 'Describe how waste will be disposed of');
-    reqNum('num-patrons', 'the expected number of patrons');
-    reqNum('num-stalls', 'the number of food stalls');
   }
 
   if (pageId === 'documents') {
@@ -646,12 +660,30 @@ function validate(pageId) {
 
   if (pageId === 'declaration') {
     if (!D['declare-agree']) errors.push({ id: 'declare-agree', msg: 'Tick the box to declare the information is true' });
+    if (!D['declare-overtime']) errors.push({ id: 'declare-overtime', msg: 'Tick the box to confirm you understand the overtime cost responsibility' });
   }
 
   return errors;
 }
 
 /* ───────── Init ───────── */
+/* Preserve scroll position on in-place re-renders (e.g. expanding a food
+   category), and only scroll to top on real navigation. */
+(function () {
+  var _render = GovBB.render;
+  GovBB.render = function () {
+    var y = window.scrollY || window.pageYOffset || 0;
+    _render.call(GovBB);
+    window.scrollTo(0, y);
+  };
+  ['nav', 'next', 'back'].forEach(function (m) {
+    var orig = GovBB[m];
+    if (typeof orig === 'function') {
+      GovBB[m] = function () { var r = orig.apply(GovBB, arguments); window.scrollTo(0, 0); return r; };
+    }
+  });
+})();
+
 GovBB.init({
   formName: FORM_NAME,
   getFlow: function () { return FLOW; },
@@ -683,8 +715,10 @@ GovBB.init({
         D['event-from-day'] = f.d; D['event-from-month'] = f.m; D['event-from-year'] = f.y;
         D['event-to-day'] = t.d; D['event-to-month'] = t.m; D['event-to-year'] = t.y;
         D['polyclinic'] = 'Maurice Byer Polyclinic';
+        D['num-patrons'] = '300'; D['num-stalls'] = '1';
         break;
       case 'food-details':
+        D['food-cat-seafood'] = true; D['food-cat-starch'] = true; D['food-cat-drinks'] = true;
         D[foodKey('seafood', 'Fish')] = true;
         D[foodKey('seafood', 'Fish cakes')] = true;
         D[foodKey('starch', 'Rice')] = true;
@@ -703,7 +737,6 @@ GovBB.init({
         D['water-source'] = 'Mains supply with a 50-gallon backup tank';
         D['handwashing'] = 'Portable handwashing station with soap and paper towels';
         D['waste-disposal'] = 'Covered bins, emptied to the event skip each evening';
-        D['num-patrons'] = '300'; D['num-stalls'] = '1';
         break;
       case 'documents':
         D['upload-medical-certs'] = { name: 'staff-medical-certificates.pdf', size: 512000, type: 'application/pdf' };
@@ -712,6 +745,7 @@ GovBB.init({
         break;
       case 'declaration':
         D['declare-agree'] = true;
+        D['declare-overtime'] = true;
         break;
       default:
         return false;
