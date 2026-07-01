@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask about your plantation tenantry lot – Ministry of Housing, Lands and Maintenance</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
+  </div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+  if (document.title.indexOf('Error: ') === 0) document.title = document.title.slice(7);
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  var app = document.getElementById('app');
+  var h1 = app.querySelector('h1');
+  if (h1) { h1.insertAdjacentHTML('afterend', html); } else { app.insertAdjacentHTML('afterbegin', html); }
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) {
+      var anchor = group.querySelector('.govbb-hint') || group.querySelector('.govbb-label') || group.querySelector('legend');
+      if (anchor) anchor.insertAdjacentElement('afterend', msg);
+      else group.insertBefore(msg, group.firstChild);
+    }
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);white-space:pre-wrap;">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+/* ───────── Form configuration ───────── */
+const FORM_NAME = 'Plantation Tenants Query Form';
+const SERVICE_NAME = 'Ask about your plantation tenantry lot';
+
+const FLOW = [
+  'start',
+  'your-details',
+  'contact',
+  'tenancy',
+  'query',
+  'check',
+  'confirmation'
+];
+
+const TITLES = ['Mr', 'Mrs', 'Miss', 'Ms', 'Dr'];
+
+/* ───────── Helpers ───────── */
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function val(id) { return escapeHtml(GovBB.D[id] || ''); }
+
+function caption() {
+  return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">' + SERVICE_NAME + '</p>';
+}
+
+function textField(id, label, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var type = opts.type || 'text';
+  var im = opts.inputmode ? ' inputmode="' + opts.inputmode + '"' : '';
+  var extra = opts.width ? ' style="max-width:' + opts.width + ';"' : '';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-input-wrapper"' + extra + '><input class="govbb-input" type="' + type + '" id="' + id + '" name="' + id + '" data-field="' + id + '"' + im + ' value="' + val(id) + '" /></div></div>';
+}
+
+function textareaField(id, label, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<textarea class="govbb-textarea" id="' + id + '" name="' + id + '" data-field="' + id + '" rows="' + (opts.rows || 5) + '" style="width:100%;">' + val(id) + '</textarea></div>';
+}
+
+function selectField(id, label, options, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var ops = '<option value="">' + (opts.placeholder || 'Select an option') + '</option>'
+    + options.map(function (o) { return '<option value="' + escapeHtml(o) + '"' + (GovBB.D[id] === o ? ' selected' : '') + '>' + escapeHtml(o) + '</option>'; }).join('');
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-select-wrapper"><select class="govbb-select" id="' + id + '" name="' + id + '" data-field="' + id + '">' + ops + '</select>'
+    + '<span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>';
+}
+
+function radioGroup(name, legend, labels, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var items = labels.map(function (l, i) {
+    var id = name + '-' + i;
+    var checked = GovBB.D[name] === l ? ' checked' : '';
+    return '<div class="govbb-radio-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-radio" type="radio" id="' + id + '" name="' + name + '" data-field="' + name + '" value="' + escapeHtml(l) + '"' + checked + ' /><label class="govbb-radio-item__label" for="' + id + '">' + l + '</label></div>';
+  }).join('');
+  return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">' + legend + '</legend>' + hint
+    + '<div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">' + items + '</div></fieldset>';
+}
+
+function btns(label) {
+  return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">' + (label || 'Continue') + '</button></div>';
+}
+
+function fmtAddress() {
+  return [GovBB.D['address-line-1'], GovBB.D['address-line-2'], GovBB.D['parish']].filter(Boolean).join(', ');
+}
+function fmtName() {
+  return [GovBB.D['title'], GovBB.D['first-name'], GovBB.D['surname']].filter(Boolean).join(' ');
+}
+
+/* ───────── Pages ───────── */
+const PAGES = {
+
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Housing and property</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Ask about your plantation tenantry lot</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-xs);">Plantation Tenants Query Form — Housing Planning Unit, Ministry of Housing, Lands and Maintenance</p>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on June 2026</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service if you live on a plantation tenantry and want to <strong>buy your rented house spot</strong>, or if you have a <strong>query about your occupation of the lot</strong>.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">The Housing Planning Unit administers the tenantries programme under the <strong>Tenantries Freehold Purchase Act, Cap. 239B</strong>, for plantation and non-urban private tenantries.</p>
+
+      <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-l);">
+        <p class="govbb-text-body" style="margin:0;">This form is for people who live on a <strong>plantation or non-urban private tenantry</strong>. There is no fee to submit a query.</p>
+      </div>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your name, address, a phone number and an email address</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The plantation your rent is paid to</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The name on the rental book or receipts</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Whether the land is vacant or occupied, and your query</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Housing Planning Unit will review your query.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A member of the team will contact you using the details you provide.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A copy of your query will be sent to your email address.</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Contact the Housing Planning Unit if you need help with this form.</p>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Email: <a href="mailto:hpu@housing.gov.bb" class="govbb-link">hpu@housing.gov.bb</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Housing Planning Unit, Ministry of Housing, Lands and Maintenance</li>
+      </ul>
+    </div>`,
+
+  'your-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your details</h1>
+
+      ${selectField('title', 'Title', TITLES, { placeholder: 'Select a title' })}
+      ${textField('first-name', 'First name')}
+      ${textField('surname', 'Surname')}
+      ${textField('address-line-1', 'Address line 1')}
+      ${textField('address-line-2', 'Address line 2 (optional)')}
+      ${selectField('parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
+
+      ${btns()}
+    </form>`,
+
+  'contact': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Contact details</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Enter at least one phone number and your email address so we can reply to your query.</p>
+
+      ${textField('phone-home', 'Home telephone', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 433 1234.' })}
+      ${textField('phone-cell', 'Mobile number', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' })}
+      ${textField('email', 'Email address', { type: 'email', inputmode: 'email', hint: 'We will send a copy of your query here. For example, you@example.com.' })}
+
+      ${btns()}
+    </form>`,
+
+  'tenancy': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About the tenancy</h1>
+
+      ${textField('plantation', 'Which plantation is your rent paid to?')}
+      ${textField('rent-book-name', 'Name on the rental book or receipts')}
+      ${textField('relationship', 'Your relationship to the rent book tenant (optional)', { hint: 'For example, self, spouse, son or daughter.' })}
+      ${selectField('land-status', 'Is the land vacant or occupied?', ['Vacant', 'Occupied'], { placeholder: 'Select an option' })}
+      ${textField('occupied-duration', 'How long has the tenant been occupying the land? (optional)', { hint: 'For example, 20 years.' })}
+      ${radioGroup('interested-purchase', 'Is the rent book tenant interested in purchasing the lot?', ['Yes', 'No'])}
+
+      ${btns()}
+    </form>`,
+
+  'query': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your query</h1>
+
+      ${textareaField('query', 'Please state your query', { rows: 6, hint: 'Tell us your question or what you need help with. If you are only registering interest in purchasing your lot, you can leave this blank.' })}
+
+      ${btns()}
+    </form>`,
+
+  'check': () => `
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your details</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Name', fmtName(), 'your-details')}
+        ${GovBB.summaryRow('Address', fmtAddress(), 'your-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact details</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Home telephone', GovBB.D['phone-home'] || 'Not provided', 'contact')}
+        ${GovBB.summaryRow('Mobile number', GovBB.D['phone-cell'] || 'Not provided', 'contact')}
+        ${GovBB.summaryRow('Email', GovBB.D['email'] || '', 'contact')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About the tenancy</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Plantation rent is paid to', GovBB.D['plantation'] || '', 'tenancy')}
+        ${GovBB.summaryRow('Name on rental book', GovBB.D['rent-book-name'] || '', 'tenancy')}
+        ${GovBB.summaryRow('Relationship to tenant', GovBB.D['relationship'] || 'Not provided', 'tenancy')}
+        ${GovBB.summaryRow('Land is', GovBB.D['land-status'] || '', 'tenancy')}
+        ${GovBB.summaryRow('Length of occupation', GovBB.D['occupied-duration'] || 'Not provided', 'tenancy')}
+        ${GovBB.summaryRow('Interested in purchasing?', GovBB.D['interested-purchase'] || '', 'tenancy')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your query</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Query', GovBB.D['query'] || 'None given', 'query')}
+      </dl>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By sending this form, you confirm that the information you have given is true and complete.</p>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Accept and send</button>
+      </div>
+    </div>`,
+
+  'confirmation': () => {
+    window.__refNumber = window.__refNumber || ('PTQ-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+    if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    return `
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Query submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">A copy of your query has been sent to <strong>${escapeHtml(GovBB.D['email'] || 'the email address you gave us')}</strong> and to the Housing Planning Unit.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Housing Planning Unit will review your query.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A member of the team will contact you using the details you provided.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number for any follow-up.</li>
+      </ul>
+
+      <p style="margin-bottom:var(--spacing-l);"><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.D={};window.__refNumber=null;GovBB.nav('start');">Submit another query</a></p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Contact the Housing Planning Unit if you need help.</p>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Email: <a href="mailto:hpu@housing.gov.bb" class="govbb-link">hpu@housing.gov.bb</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Housing Planning Unit, Ministry of Housing, Lands and Maintenance</li>
+      </ul>
+    </div>`;
+  }
+
+};
+
+/* ───────── Validation ───────── */
+function validate(pageId) {
+  const D = GovBB.D;
+  const errors = [];
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function reqText(id, msg) { if (!D[id] || !String(D[id]).trim()) errors.push({ id: id, msg: msg }); }
+  function reqPhone(id, label) {
+    var v = (D[id] || '').trim();
+    if (!v) return;
+    if (!/^\d{7,15}$/.test(v.replace(/[\s\-()+]/g, ''))) errors.push({ id: id, msg: 'Enter ' + label + ' using 7 to 15 digits, for example (246) 249 1234' });
+  }
+
+  if (pageId === 'your-details') {
+    if (!D['title']) errors.push({ id: 'title', msg: 'Select your title' });
+    reqText('first-name', 'Enter your first name');
+    reqText('surname', 'Enter your surname');
+    reqText('address-line-1', 'Enter the first line of your address');
+    if (!D['parish']) errors.push({ id: 'parish', msg: 'Select your parish' });
+  }
+
+  if (pageId === 'contact') {
+    reqPhone('phone-home', 'a home telephone number');
+    reqPhone('phone-cell', 'a mobile number');
+    if (!(D['phone-home'] || '').trim() && !(D['phone-cell'] || '').trim())
+      errors.push({ id: 'phone-home', msg: 'Enter at least one phone number — home or mobile' });
+    var email = (D['email'] || '').trim();
+    if (!email) errors.push({ id: 'email', msg: 'Enter your email address' });
+    else if (!EMAIL_RE.test(email)) errors.push({ id: 'email', msg: 'Enter an email address in the format you@example.com' });
+  }
+
+  if (pageId === 'tenancy') {
+    reqText('plantation', 'Enter which plantation your rent is paid to');
+    reqText('rent-book-name', 'Enter the name on the rental book or receipts');
+    if (!D['land-status']) errors.push({ id: 'land-status', msg: 'Select whether the land is vacant or occupied' });
+    if (!D['interested-purchase']) errors.push({ id: 'interested-purchase-0', msg: 'Select whether the rent book tenant is interested in purchasing the lot' });
+  }
+
+  return errors;
+}
+
+/* ───────── Init ───────── */
+GovBB.init({
+  formName: FORM_NAME,
+  getFlow: function () { return FLOW; },
+  pages: PAGES,
+  validate: validate
+});
+
+/* ───────── Auto-fill (demo helper) ─────────
+   Floating button that fills the CURRENT page with realistic sample data,
+   so reviewers can see how the form behaves without typing. */
+(function () {
+  function fillCurrentPage() {
+    var D = GovBB.D;
+    var flow = GovBB.getFlow();
+    var pageId = flow[GovBB.getCurrentIndex()];
+    switch (pageId) {
+      case 'your-details':
+        D['title'] = 'Mr'; D['first-name'] = 'Andrew'; D['surname'] = 'Griffith';
+        D['address-line-1'] = 'House 5, Bulkeley'; D['address-line-2'] = 'Bulkeley Tenantry'; D['parish'] = 'St. George';
+        break;
+      case 'contact':
+        D['phone-home'] = ''; D['phone-cell'] = '(246) 249 1234'; D['email'] = 'andrew.griffith@example.com';
+        break;
+      case 'tenancy':
+        D['plantation'] = 'Bulkeley Plantation';
+        D['rent-book-name'] = 'Andrew Griffith';
+        D['relationship'] = 'Self';
+        D['land-status'] = 'Occupied';
+        D['occupied-duration'] = '20 years';
+        D['interested-purchase'] = 'Yes';
+        break;
+      case 'query':
+        D['query'] = 'I would like to know the steps and cost to purchase my rented house spot.';
+        break;
+      default:
+        return false;
+    }
+    GovBB.render();
+    return true;
+  }
+  function buildButton() {
+    if (document.getElementById('ptq-autofill-btn')) return;
+    var btn = document.createElement('button');
+    btn.id = 'ptq-autofill-btn'; btn.type = 'button';
+    btn.setAttribute('aria-label', 'Auto-fill this page with sample data');
+    btn.setAttribute('title', 'Fill this page with sample data');
+    btn.style.cssText = [
+      'position:fixed', 'bottom:6.5rem', 'right:1.5rem', 'z-index:9999',
+      'display:inline-flex', 'align-items:center', 'gap:0.5rem',
+      'padding:0.5rem 0.875rem', 'border-radius:9999px',
+      'border:2px solid #00267f', 'background:#00267f', 'color:#ffffff',
+      'font-family:inherit', 'font-size:0.875rem', 'font-weight:600', 'line-height:1.4',
+      'cursor:pointer', 'box-shadow:0 2px 8px rgba(0,0,0,0.18)'
+    ].join(';');
+    var label = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Auto-fill page';
+    btn.innerHTML = label;
+    btn.addEventListener('click', function () {
+      if (!fillCurrentPage()) { btn.innerHTML = 'Nothing to fill here'; setTimeout(function () { btn.innerHTML = label; }, 1200); }
+    });
+    document.body.appendChild(btn);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', buildButton);
+  else buildButton();
+})();
+</script>
+
+<!-- Comment World feedback widget -->
+<script>window.CommentWidget = { siteId: "3f6a568d-ae7b-47a9-bef0-beace3e0b197" };</script>
+<script async src="https://comment-world-dashboard.vercel.app/widget.js"></script>
+</body>
+</html>
