@@ -172,7 +172,7 @@ function fmtAddress() {
   return [GovBB.D['address-line-1'], GovBB.D['address-line-2'], GovBB.D['parish']].filter(Boolean).join(', ');
 }
 function fmtName() {
-  return [GovBB.D['title'], GovBB.D['first-name'], GovBB.D['surname']].filter(Boolean).join(' ');
+  return [GovBB.D['title'], GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['surname']].filter(Boolean).join(' ');
 }
 
 /* ───────── Pages ───────── */
@@ -230,6 +230,7 @@ const PAGES = {
 
       ${selectField('title', 'Title', TITLES, { placeholder: 'Select a title' })}
       ${textField('first-name', 'First name')}
+      ${textField('middle-name', 'Middle name (optional)')}
       ${textField('surname', 'Surname')}
       ${textField('address-line-1', 'Address line 1')}
       ${textField('address-line-2', 'Address line 2 (optional)')}
@@ -407,7 +408,7 @@ GovBB.init({
     var pageId = flow[GovBB.getCurrentIndex()];
     switch (pageId) {
       case 'your-details':
-        D['title'] = 'Mr'; D['first-name'] = 'Andrew'; D['surname'] = 'Griffith';
+        D['title'] = 'Mr'; D['first-name'] = 'Andrew'; D['middle-name'] = 'Nathaniel'; D['surname'] = 'Griffith';
         D['address-line-1'] = 'House 5, Bulkeley'; D['address-line-2'] = 'Bulkeley Tenantry'; D['parish'] = 'St. George';
         break;
       case 'contact':
