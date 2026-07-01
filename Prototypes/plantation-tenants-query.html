@@ -102,6 +102,7 @@ const SERVICE_NAME = 'Ask about your plantation tenantry lot';
 
 const FLOW = [
   'start',
+  'intent',
   'your-details',
   'contact',
   'tenancy',
@@ -111,6 +112,8 @@ const FLOW = [
 ];
 
 const TITLES = ['Mr', 'Mrs', 'Miss', 'Ms', 'Dr'];
+const INTENT_BUY = 'Register interest in buying my lot';
+const INTENT_QUERY = 'Ask a question about my tenantry';
 
 /* ───────── Helpers ───────── */
 function escapeHtml(s) {
@@ -169,7 +172,7 @@ function btns(label) {
 }
 
 function fmtAddress() {
-  return [GovBB.D['address-line-1'], GovBB.D['address-line-2'], GovBB.D['parish']].filter(Boolean).join(', ');
+  return [GovBB.D['address'], GovBB.D['parish']].filter(Boolean).join(', ');
 }
 function fmtName() {
   return [GovBB.D['title'], GovBB.D['first-name'], GovBB.D['middle-name'], GovBB.D['surname']].filter(Boolean).join(' ');
@@ -223,6 +226,14 @@ const PAGES = {
       </ul>
     </div>`,
 
+  'intent': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">What do you want to do?</h1>
+      ${radioGroup('intent', 'Select the main reason for contacting the Housing Planning Unit', [INTENT_BUY, INTENT_QUERY], { hint: 'You can add more detail later. If you have a question as well as an interest in buying, choose "Ask a question".' })}
+      ${btns()}
+    </form>`,
+
   'your-details': () => `
     <form novalidate>
       ${caption()}
@@ -232,8 +243,7 @@ const PAGES = {
       ${textField('first-name', 'First name')}
       ${textField('middle-name', 'Middle name (optional)')}
       ${textField('surname', 'Surname')}
-      ${textField('address-line-1', 'Address line 1')}
-      ${textField('address-line-2', 'Address line 2 (optional)')}
+      ${textareaField('address', 'Address', { rows: 3, hint: 'Include your house number or name and the tenantry or area. For example, House 5, Bulkeley Tenantry.' })}
       ${selectField('parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
 
       ${btns()}
@@ -262,24 +272,32 @@ const PAGES = {
       ${textField('relationship', 'Your relationship to the rent book tenant (optional)', { hint: 'For example, self, spouse, son or daughter.' })}
       ${selectField('land-status', 'Is the land vacant or occupied?', ['Vacant', 'Occupied'], { placeholder: 'Select an option' })}
       ${textField('occupied-duration', 'How long has the tenant been occupying the land? (optional)', { hint: 'For example, 20 years.' })}
-      ${radioGroup('interested-purchase', 'Is the rent book tenant interested in purchasing the lot?', ['Yes', 'No'])}
+      ${GovBB.D['intent'] === INTENT_BUY ? '' : radioGroup('interested-purchase', 'Is the rent book tenant interested in purchasing the lot?', ['Yes', 'No'])}
 
       ${btns()}
     </form>`,
 
-  'query': () => `
+  'query': () => {
+    var buying = GovBB.D['intent'] === INTENT_BUY;
+    return `
     <form novalidate>
       ${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your query</h1>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">${buying ? 'Anything else to add?' : 'Your query'}</h1>
 
-      ${textareaField('query', 'Please state your query', { rows: 6, hint: 'Tell us your question or what you need help with. If you are only registering interest in purchasing your lot, you can leave this blank.' })}
+      ${textareaField('query', buying ? 'Is there anything else you would like to add? (optional)' : 'Please state your query', { rows: 6, hint: buying ? 'For example, any questions about the purchase process.' : 'Tell us your question or what you need help with.' })}
 
       ${btns()}
-    </form>`,
+    </form>`;
+  },
 
   'check': () => `
     <div>
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your request</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('What you want to do', GovBB.D['intent'] || '', 'intent')}
+      </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your details</h2>
       <dl style="margin-bottom:var(--spacing-m);">
@@ -301,7 +319,7 @@ const PAGES = {
         ${GovBB.summaryRow('Relationship to tenant', GovBB.D['relationship'] || 'Not provided', 'tenancy')}
         ${GovBB.summaryRow('Land is', GovBB.D['land-status'] || '', 'tenancy')}
         ${GovBB.summaryRow('Length of occupation', GovBB.D['occupied-duration'] || 'Not provided', 'tenancy')}
-        ${GovBB.summaryRow('Interested in purchasing?', GovBB.D['interested-purchase'] || '', 'tenancy')}
+        ${GovBB.summaryRow('Interested in purchasing?', GovBB.D['intent'] === INTENT_BUY ? 'Yes — registering interest' : (GovBB.D['interested-purchase'] || ''), 'tenancy')}
       </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your query</h2>
@@ -320,6 +338,7 @@ const PAGES = {
   'confirmation': () => {
     window.__refNumber = window.__refNumber || ('PTQ-' + Math.random().toString(36).substring(2, 8).toUpperCase());
     if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    var buying = GovBB.D['intent'] === INTENT_BUY;
     return `
     <div>
       <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
@@ -332,7 +351,7 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Housing Planning Unit will review your query.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">${buying ? 'The Housing Planning Unit will review your interest in purchasing your lot and contact you about the next steps under the Tenantries Freehold Purchase Act.' : 'The Housing Planning Unit will review your query.'}</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A member of the team will contact you using the details you provided.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number for any follow-up.</li>
       </ul>
@@ -362,11 +381,15 @@ function validate(pageId) {
     if (!/^\d{7,15}$/.test(v.replace(/[\s\-()+]/g, ''))) errors.push({ id: id, msg: 'Enter ' + label + ' using 7 to 15 digits, for example (246) 249 1234' });
   }
 
+  if (pageId === 'intent') {
+    if (!D['intent']) errors.push({ id: 'intent-0', msg: 'Select what you want to do' });
+  }
+
   if (pageId === 'your-details') {
     if (!D['title']) errors.push({ id: 'title', msg: 'Select your title' });
     reqText('first-name', 'Enter your first name');
     reqText('surname', 'Enter your surname');
-    reqText('address-line-1', 'Enter the first line of your address');
+    reqText('address', 'Enter your address');
     if (!D['parish']) errors.push({ id: 'parish', msg: 'Select your parish' });
   }
 
@@ -384,7 +407,11 @@ function validate(pageId) {
     reqText('plantation', 'Enter which plantation your rent is paid to');
     reqText('rent-book-name', 'Enter the name on the rental book or receipts');
     if (!D['land-status']) errors.push({ id: 'land-status', msg: 'Select whether the land is vacant or occupied' });
-    if (!D['interested-purchase']) errors.push({ id: 'interested-purchase-0', msg: 'Select whether the rent book tenant is interested in purchasing the lot' });
+    if (D['intent'] !== INTENT_BUY && !D['interested-purchase']) errors.push({ id: 'interested-purchase-0', msg: 'Select whether the rent book tenant is interested in purchasing the lot' });
+  }
+
+  if (pageId === 'query') {
+    if (D['intent'] !== INTENT_BUY) reqText('query', 'Enter your query');
   }
 
   return errors;
@@ -407,9 +434,12 @@ GovBB.init({
     var flow = GovBB.getFlow();
     var pageId = flow[GovBB.getCurrentIndex()];
     switch (pageId) {
+      case 'intent':
+        if (!D['intent']) D['intent'] = INTENT_QUERY;
+        break;
       case 'your-details':
         D['title'] = 'Mr'; D['first-name'] = 'Andrew'; D['middle-name'] = 'Nathaniel'; D['surname'] = 'Griffith';
-        D['address-line-1'] = 'House 5, Bulkeley'; D['address-line-2'] = 'Bulkeley Tenantry'; D['parish'] = 'St. George';
+        D['address'] = 'House 5, Bulkeley Tenantry'; D['parish'] = 'St. George';
         break;
       case 'contact':
         D['phone-home'] = ''; D['phone-cell'] = '(246) 249 1234'; D['email'] = 'andrew.griffith@example.com';
