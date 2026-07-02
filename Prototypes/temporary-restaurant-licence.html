@@ -315,7 +315,7 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The types of food you will serve and where you will get them</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The number of food handlers, your water and sanitation arrangements, and the expected size of the event</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The organiser's details, if the event is organised by someone else</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Required:</strong> staff medical certificates (valid for the current year) and a site or stall plan</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Required:</strong> staff medical certificates (valid for the current year). If you are organising the event, a site or stall plan too</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A copy of your food business licence, if you have one</li>
       </ul>
 
@@ -426,23 +426,28 @@ const PAGES = {
       ${btns()}
     </form>`,
 
-  'documents': () => `
+  'documents': () => {
+    var isOrganiser = GovBB.D['organiser-different'] === 'No';
+    return `
     <form novalidate>
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Supporting documents</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You must upload staff medical certificates and a site or stall plan. A food business licence is only needed if you have one.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You must upload staff medical certificates.${isOrganiser ? ' As the event organiser, you must also upload a site or stall plan.' : ''} A food business licence is only needed if you have one.</p>
 
       ${uploadRow('medical-certs', 'Staff medical certificates', 'Required. Valid certificates for the current year for all food handlers, as a single PDF, JPG or PNG.', false)}
       <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
         <p class="govbb-text-body" style="margin:0;">All staff must have their medical certificates with them during the event, whether or not you upload them here.</p>
       </div>
 
-      ${uploadRow('site-plan', 'Site or stall plan', 'Required. A plan of the event site or your stall — usually provided by the event organiser. PDF, JPG or PNG.', false)}
+      ${isOrganiser
+        ? uploadRow('site-plan', 'Site or stall plan', 'Required. A plan of the event site, showing stall positions, waste disposal, water supply and facilities. PDF, JPG or PNG.', false)
+        : uploadRow('site-plan', 'Site or stall plan', 'The event organiser is responsible for this — you can upload it if you have it, or the organiser can send it to the polyclinic. PDF, JPG or PNG.', true)}
 
       ${uploadRow('food-licence', 'Food business licence', 'Upload a copy of your valid food business licence, if you have one. PDF, JPG or PNG.', true)}
 
       ${btns()}
-    </form>`,
+    </form>`;
+  },
 
   'check': () => `
     <div>
@@ -655,7 +660,7 @@ function validate(pageId) {
 
   if (pageId === 'documents') {
     if (!D['upload-medical-certs']) errors.push({ id: 'upload-medical-certs', msg: 'Upload staff medical certificates for the current year' });
-    if (!D['upload-site-plan']) errors.push({ id: 'upload-site-plan', msg: 'Upload a site or stall plan' });
+    if (D['organiser-different'] === 'No' && !D['upload-site-plan']) errors.push({ id: 'upload-site-plan', msg: 'Upload a site or stall plan' });
   }
 
   if (pageId === 'declaration') {
