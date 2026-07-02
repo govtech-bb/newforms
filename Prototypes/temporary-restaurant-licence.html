@@ -410,6 +410,12 @@ const PAGES = {
         textField('organiser-phone', "Organiser's phone number", { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' }) +
         textField('organiser-email', "Organiser's email address", { type: 'email', inputmode: 'email', hint: 'For example, organiser@example.com.' })
       )}
+      ${conditional('organiser-different', 'No',
+        '<div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">As the event organiser, you must also request an Environmental Health Officer to attend. This is required when food is served.</p></div>' +
+        '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);"><a href="environmental-health-officer-request.html" target="_blank" rel="noopener" class="govbb-link">Request an Environmental Health Officer (opens in a new tab)</a></p>' +
+        radioGroup('officer-request-submitted', 'Have you already submitted your request for an Environmental Health Officer?', ['Yes', 'No'], { trigger: true }) +
+        conditional('officer-request-submitted', 'No', '<div style="border-left:4px solid var(--color-yellow-00);background:var(--color-yellow-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">You will need to submit that request too. You can do it before or after this application — but it is required when food is served.</p></div>')
+      )}
 
       ${btns()}
     </form>`,
@@ -492,6 +498,7 @@ const PAGES = {
         ${GovBB.D['organiser-different'] === 'Yes' ? GovBB.summaryRow('Organiser name', GovBB.D['organiser-name'] || '', 'food-details') : ''}
         ${GovBB.D['organiser-different'] === 'Yes' ? GovBB.summaryRow('Organiser phone', GovBB.D['organiser-phone'] || 'Not provided', 'food-details') : ''}
         ${GovBB.D['organiser-different'] === 'Yes' ? GovBB.summaryRow('Organiser email', GovBB.D['organiser-email'] || 'Not provided', 'food-details') : ''}
+        ${GovBB.D['organiser-different'] === 'No' ? GovBB.summaryRow('Officer request already submitted?', GovBB.D['officer-request-submitted'] || '', 'food-details') : ''}
       </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food safety</h2>
@@ -546,6 +553,7 @@ const PAGES = {
     var poly = GovBB.D['polyclinic'] || 'your chosen polyclinic';
     var c = POLYCLINIC_CONTACTS[GovBB.D['polyclinic']];
     var needsInspection = GovBB.D['has-food-licence'] === 'No';
+    var needsOfficerRequest = GovBB.D['organiser-different'] === 'No' && GovBB.D['officer-request-submitted'] !== 'Yes';
     return `
     <div>
       <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
@@ -562,6 +570,7 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">${needsInspection ? 'An Environmental Health Officer will inspect your set-up before the licence is issued.' : 'They may arrange an inspection before issuing the licence.'}</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The licence is collected from the polyclinic. An electronic copy will also be emailed to you.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">It covers your event dates and, in law, remains valid at the same location for up to 30 days.</li>
+        ${needsOfficerRequest ? '<li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You still need to <a href="environmental-health-officer-request.html" class="govbb-link">request an Environmental Health Officer to attend</a> — this is required when food is served.</li>' : ''}
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number for any follow-up.</li>
       </ul>
 
@@ -656,6 +665,7 @@ function validate(pageId) {
       if (oEmail && !EMAIL_RE.test(oEmail)) errors.push({ id: 'organiser-email', msg: "Enter the organiser's email in the format you@example.com" });
       if (!(D['organiser-phone'] || '').trim() && !oEmail) errors.push({ id: 'organiser-phone', msg: 'Enter a phone number or email for the organiser' });
     }
+    if (D['organiser-different'] === 'No' && !D['officer-request-submitted']) errors.push({ id: 'officer-request-submitted-0', msg: 'Select whether you have already requested an Environmental Health Officer' });
   }
 
   if (pageId === 'food-safety') {
@@ -743,6 +753,8 @@ GovBB.init({
           D['organiser-name'] = 'Sandra Clarke';
           D['organiser-phone'] = '(246) 249 5678';
           D['organiser-email'] = 'sandra.clarke@example.com';
+        } else {
+          D['officer-request-submitted'] = 'Yes';
         }
         break;
       case 'food-safety':
