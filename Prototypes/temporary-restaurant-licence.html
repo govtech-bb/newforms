@@ -103,8 +103,8 @@ const SERVICE_NAME = 'Apply for a licence to operate a temporary restaurant';
 const FLOW = [
   'start',
   'applicant-details',
-  'event-details',
   'organiser',
+  'event-details',
   'food-details',
   'food-safety',
   'documents',
@@ -312,8 +312,6 @@ const PAGES = {
         <p class="govbb-text-body" style="margin:0;"><strong>There is no fee to apply.</strong> Event organisers are responsible for the overtime costs of the Environmental Health Officers who attend the event.</p>
       </div>
 
-      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
-
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your name, National Registration Number, address, contact numbers and email address</li>
@@ -325,9 +323,11 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A copy of your food business licence, if you have one</li>
       </ul>
 
-      <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+      <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-l);">
         <p class="govbb-text-body" style="margin:0;">If you are organising the event, you must also <a href="environmental-health-officer-request.html" target="_blank" rel="noopener" class="govbb-link">request an Environmental Health Officer to attend</a> — a separate form, required when food is served.</p>
       </div>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
@@ -368,6 +368,28 @@ const PAGES = {
       ${btns()}
     </form>`,
 
+  'organiser': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">The event organiser</h1>
+
+      ${radioGroup('is-organiser', 'Are you organising this event?', ['Yes', 'No'], { trigger: true, hint: 'The organiser is responsible for the overall event — including the site plan and requesting an Environmental Health Officer to attend.' })}
+      ${conditional('is-organiser', 'No',
+        textField('organiser-name', "Organiser's name") +
+        '<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Give a phone number or an email for the organiser.</p>' +
+        textField('organiser-phone', "Organiser's phone number", { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' }) +
+        textField('organiser-email', "Organiser's email address", { type: 'email', inputmode: 'email', hint: 'For example, organiser@example.com.' })
+      )}
+      ${conditional('is-organiser', 'Yes',
+        '<div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">As the event organiser, you must also request an Environmental Health Officer to attend. This is required when food is served.</p></div>' +
+        '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);"><a href="environmental-health-officer-request.html" target="_blank" rel="noopener" class="govbb-link">Request an Environmental Health Officer (opens in a new tab)</a></p>' +
+        radioGroup('officer-request-submitted', 'Have you already submitted your request for an Environmental Health Officer?', ['Yes', 'No'], { trigger: true }) +
+        conditional('officer-request-submitted', 'No', '<div style="border-left:4px solid var(--color-yellow-00);background:var(--color-yellow-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">You will need to submit that request too. You can do it before or after this application — but it is required when food is served.</p></div>')
+      )}
+
+      ${btns()}
+    </form>`,
+
   'event-details': () => `
     <form novalidate>
       ${caption()}
@@ -392,28 +414,6 @@ const PAGES = {
       <p class="govbb-hint" style="margin-bottom:var(--spacing-s);">Ask the event organiser if you are not sure.</p>
       ${textField('num-patrons', 'Expected number of patrons', { inputmode: 'numeric', numeric: true })}
       ${textField('num-stalls', 'Number of food stalls', { inputmode: 'numeric', numeric: true })}
-
-      ${btns()}
-    </form>`,
-
-  'organiser': () => `
-    <form novalidate>
-      ${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">The event organiser</h1>
-
-      ${radioGroup('is-organiser', 'Are you organising this event?', ['Yes', 'No'], { trigger: true, hint: 'The organiser is responsible for the overall event — including the site plan and requesting an Environmental Health Officer to attend.' })}
-      ${conditional('is-organiser', 'No',
-        textField('organiser-name', "Organiser's name") +
-        '<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Give a phone number or an email for the organiser.</p>' +
-        textField('organiser-phone', "Organiser's phone number", { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' }) +
-        textField('organiser-email', "Organiser's email address", { type: 'email', inputmode: 'email', hint: 'For example, organiser@example.com.' })
-      )}
-      ${conditional('is-organiser', 'Yes',
-        '<div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">As the event organiser, you must also request an Environmental Health Officer to attend. This is required when food is served.</p></div>' +
-        '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);"><a href="environmental-health-officer-request.html" target="_blank" rel="noopener" class="govbb-link">Request an Environmental Health Officer (opens in a new tab)</a></p>' +
-        radioGroup('officer-request-submitted', 'Have you already submitted your request for an Environmental Health Officer?', ['Yes', 'No'], { trigger: true }) +
-        conditional('officer-request-submitted', 'No', '<div style="border-left:4px solid var(--color-yellow-00);background:var(--color-yellow-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">You will need to submit that request too. You can do it before or after this application — but it is required when food is served.</p></div>')
-      )}
 
       ${btns()}
     </form>`,
