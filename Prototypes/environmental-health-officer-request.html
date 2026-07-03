@@ -311,9 +311,12 @@ const PAGES = {
   'purpose': () => `
     <form novalidate>
       ${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Why you need the officers</h1>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Requesting the officers</h1>
 
-      ${textareaField('purpose', 'What do you need the Environmental Health Officers to do?', { rows: 4, hint: 'For example, monitor food safety at an event, inspect a venue, or assess sanitation arrangements.' })}
+      <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin:0;"><strong>If food will be served, you must request officers to attend.</strong></p>
+      </div>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Environmental Health Officers monitor food hygiene, sanitation and waste disposal at your event. This is not optional — whether officers are assigned is at the polyclinic's discretion, but the request itself is required.</p>
 
       ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the activity will be held. The request goes to the Medical Officer of Health there, through the Principal Environmental Health Officer.' })}
 
@@ -359,7 +362,6 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Request</h2>
       <dl style="margin-bottom:var(--spacing-l);">
-        ${GovBB.summaryRow('Purpose', GovBB.D['purpose'] || '', 'purpose')}
         ${GovBB.summaryRow('Polyclinic', GovBB.D['polyclinic'] || '', 'purpose')}
       </dl>
 
@@ -493,7 +495,6 @@ function validate(pageId) {
   }
 
   if (pageId === 'purpose') {
-    reqText('purpose', 'Tell us why you need the officers to attend');
     reqText('polyclinic', 'Select the polyclinic you are applying to');
   }
 
@@ -541,7 +542,6 @@ GovBB.init({
         D['time-from'] = '16:00'; D['time-to'] = '23:00';
         break;
       case 'purpose':
-        D['purpose'] = 'Monitor food safety and sanitation at a community fish fry — about 20 food vendors.';
         D['polyclinic'] = 'Maurice Byer Polyclinic';
         break;
       case 'documents':
