@@ -274,9 +274,9 @@ const PAGES = {
       ${selectField('applicant-parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
 
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Enter at least one phone number so we can contact you.</p>
-      ${textField('phone-home', 'Home telephone', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 433 1234.' })}
-      ${textField('phone-cell', 'Mobile number', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' })}
-      ${textField('phone-work', 'Work telephone', { type: 'tel', inputmode: 'tel' })}
+      ${textField('phone-home', 'Home telephone (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 433 1234.' })}
+      ${textField('phone-cell', 'Mobile number (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' })}
+      ${textField('phone-work', 'Work telephone (optional)', { type: 'tel', inputmode: 'tel' })}
       ${textField('email', 'Email address', { type: 'email', inputmode: 'email', hint: 'We will use this to contact you about your request. For example, you@example.com.' })}
 
       ${btns()}
