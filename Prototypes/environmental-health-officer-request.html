@@ -112,9 +112,10 @@ const FLOW = [
 ];
 
 /* The seven Environmental Health Department offices — matches the temporary
-   restaurant licence form. Edgar Cochrane and Frederick Miller have no EHD
-   office, so they are not listed. (Catchment reassignment for those areas is
-   still being confirmed with the department before any redirect guidance.) */
+   restaurant licence form. Per the department's catchment map, Edgar Cochrane
+   and Frederick Miller have no EHD office: the Edgar Cochrane area is served by
+   Sir Winston Scott and the Frederick Miller area by St. Philip Polyclinic
+   (Six Roads). */
 const POLYCLINICS = [
   'Branford Taitt Polyclinic',
   'David Thompson Health & Social Services Complex',
@@ -320,7 +321,7 @@ const PAGES = {
       </div>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Environmental Health Officers monitor food hygiene, sanitation and waste disposal at your event. This is not optional — whether officers are assigned is at the polyclinic's discretion, but the request itself is required.</p>
 
-      ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the activity will be held. The request goes to the Medical Officer of Health there, through the Principal Environmental Health Officer.' })}
+      ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the activity will be held. The Edgar Cochrane area is served by Sir Winston Scott, and the Frederick Miller area by St. Philip Polyclinic (Six Roads). The request goes to the Medical Officer of Health there, through the Principal Environmental Health Officer.' })}
 
       ${btns()}
     </form>`,

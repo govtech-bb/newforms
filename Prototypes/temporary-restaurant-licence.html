@@ -403,7 +403,7 @@ const PAGES = {
       ${dateField('event-from', 'Start date', 'The first day the temporary restaurant will operate. You must apply at least two weeks before this date. For example, 27 6 2025.')}
       ${dateField('event-to', 'End date', 'The last day the temporary restaurant will operate.')}
 
-      ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { trigger: true, placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the event will be held — the Environmental Health Department there will process your application. The Edgar Cochrane area is served by Sir Winston Scott, and the Frederick Miller area falls under St. Philip.' })}
+      ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { trigger: true, placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the event will be held — the Environmental Health Department there will process your application. The Edgar Cochrane area is served by Sir Winston Scott, and the Frederick Miller area by St. Philip Polyclinic (Six Roads).' })}
       ${(function () {
         var c = POLYCLINIC_CONTACTS[GovBB.D['polyclinic']];
         if (!c) return '';
