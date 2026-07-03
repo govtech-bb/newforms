@@ -103,6 +103,7 @@ const SERVICE_NAME = 'Ask about your plantation tenantry lot';
 const FLOW = [
   'start',
   'your-details',
+  'contact',
   'tenancy',
   'query',
   'check',
@@ -234,7 +235,13 @@ const PAGES = {
       ${textareaField('address', 'Address', { rows: 3, hint: 'Include your house number or name and the tenantry or area. For example, House 5, Bulkeley Tenantry.' })}
       ${selectField('parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
 
-      <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">Contact details</h2>
+      ${btns()}
+    </form>`,
+
+  'contact': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Contact details</h1>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Enter at least one phone number and your email address so we can reply.</p>
       ${textField('phone-home', 'Home telephone (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 433 1234.' })}
       ${textField('phone-cell', 'Mobile number (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' })}
@@ -280,9 +287,9 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact details</h2>
       <dl style="margin-bottom:var(--spacing-m);">
-        ${GovBB.summaryRow('Home telephone', GovBB.D['phone-home'] || 'Not provided', 'your-details')}
-        ${GovBB.summaryRow('Mobile number', GovBB.D['phone-cell'] || 'Not provided', 'your-details')}
-        ${GovBB.summaryRow('Email', GovBB.D['email'] || '', 'your-details')}
+        ${GovBB.summaryRow('Home telephone', GovBB.D['phone-home'] || 'Not provided', 'contact')}
+        ${GovBB.summaryRow('Mobile number', GovBB.D['phone-cell'] || 'Not provided', 'contact')}
+        ${GovBB.summaryRow('Email', GovBB.D['email'] || '', 'contact')}
       </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">About the tenancy</h2>
@@ -361,6 +368,9 @@ function validate(pageId) {
     reqText('surname', 'Enter your surname');
     reqText('address', 'Enter your address');
     if (!D['parish']) errors.push({ id: 'parish', msg: 'Select your parish' });
+  }
+
+  if (pageId === 'contact') {
     reqPhone('phone-home', 'a home telephone number');
     reqPhone('phone-cell', 'a mobile number');
     if (!(D['phone-home'] || '').trim() && !(D['phone-cell'] || '').trim())
@@ -400,6 +410,8 @@ GovBB.init({
       case 'your-details':
         D['title'] = 'Mr'; D['first-name'] = 'Andrew'; D['middle-name'] = 'Nathaniel'; D['surname'] = 'Griffith';
         D['address'] = 'House 5, Bulkeley Tenantry'; D['parish'] = 'St. George';
+        break;
+      case 'contact':
         D['phone-home'] = ''; D['phone-cell'] = '(246) 249 1234'; D['email'] = 'andrew.griffith@example.com';
         break;
       case 'tenancy':
