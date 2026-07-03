@@ -111,13 +111,14 @@ const FLOW = [
   'confirmation'
 ];
 
-/* The nine polyclinics. Source: govtech-bb/find-a-polyclinic. */
+/* The seven Environmental Health Department offices — matches the temporary
+   restaurant licence form. Edgar Cochrane and Frederick Miller have no EHD
+   office, so they are not listed. (Catchment reassignment for those areas is
+   still being confirmed with the department before any redirect guidance.) */
 const POLYCLINICS = [
   'Branford Taitt Polyclinic',
   'David Thompson Health & Social Services Complex',
-  'Edgar Cochrane Polyclinic',
   'Eunice Gibson Polyclinic',
-  'Frederick Miller Polyclinic',
   'Maurice Byer Polyclinic',
   'Randal Phillips Polyclinic',
   'Sir Winston Scott Polyclinic',
@@ -241,10 +242,11 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What it costs</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">As the event organiser, you are responsible for paying the officers for their attendance:</p>
-      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-s);">
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Weekdays after standard working hours are charged at an hourly rate.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Weekends and public holidays are charged at a flat, fixed rate.</li>
       </ul>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You do not pay anything when you apply. The polyclinic will send you an invoice after your request has been made and approved.</p>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
