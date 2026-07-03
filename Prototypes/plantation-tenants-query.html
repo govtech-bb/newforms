@@ -105,7 +105,6 @@ const FLOW = [
   'your-details',
   'contact',
   'tenancy',
-  'query',
   'check',
   'confirmation'
 ];
@@ -261,16 +260,7 @@ const PAGES = {
       ${selectField('land-status', 'Is the land vacant or occupied?', ['Vacant', 'Occupied'], { placeholder: 'Select an option' })}
       ${textField('occupied-duration', 'How long has the tenant been occupying the land? (optional)', { hint: 'For example, 20 years.' })}
       ${radioGroup('interested-purchase', 'Is the rent book tenant interested in purchasing the lot?', ['Yes', 'No'])}
-
-      ${btns()}
-    </form>`,
-
-  'query': () => `
-    <form novalidate>
-      ${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your question or request</h1>
-
-      ${textareaField('query', 'Your question or request (optional)', { rows: 6, hint: 'Tell us what you’d like to know, or what you’d like to do — for example, ask about the purchase process or query something about your tenancy.' })}
+      ${textareaField('query', 'Is there anything else you want to tell us?', { rows: 5, hint: 'Optional. For example, a question about the purchase process or your current rental arrangement.' })}
 
       ${btns()}
     </form>`,
@@ -300,11 +290,7 @@ const PAGES = {
         ${GovBB.summaryRow('Land is', GovBB.D['land-status'] || '', 'tenancy')}
         ${GovBB.summaryRow('Length of occupation', GovBB.D['occupied-duration'] || 'Not provided', 'tenancy')}
         ${GovBB.summaryRow('Interested in purchasing?', GovBB.D['interested-purchase'] || '', 'tenancy')}
-      </dl>
-
-      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your question or request</h2>
-      <dl style="margin-bottom:var(--spacing-l);">
-        ${GovBB.summaryRow('Question or request', GovBB.D['query'] || 'None given', 'query')}
+        ${GovBB.summaryRow('Anything else', GovBB.D['query'] || 'None given', 'tenancy')}
       </dl>
 
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">By sending this form, you confirm that the information you have given is true and complete.</p>
@@ -421,8 +407,6 @@ GovBB.init({
         D['land-status'] = 'Occupied';
         D['occupied-duration'] = '20 years';
         D['interested-purchase'] = 'Yes';
-        break;
-      case 'query':
         D['query'] = 'I would like to know the steps and cost to purchase my rented house spot.';
         break;
       default:
