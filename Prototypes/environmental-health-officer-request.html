@@ -223,6 +223,7 @@ const PAGES = {
 
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to request the attendance of Environmental Health Officers at an event or activity — for example, to monitor food safety and sanitation.</p>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If food will be served at your event, you must request Environmental Health Officers to attend.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);"><strong>Food</strong> means anything served for people to eat or drink — meals, snacks, sweets, cut fruit and drinks. In law, food is “any substance, whether processed, semi-processed or raw, which is intended for human consumption and includes drink, chewing gum and other substances which are used in the manufacture or treatment of food, but does not include cosmetics, tobacco or substances used only as drugs” (Health Services (Food Hygiene) Regulations, 1969).</p>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply to the polyclinic for the area where your event will be held.</p>
 
       <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-l);">
@@ -251,17 +252,22 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Environmental Health team at the polyclinic you choose will review your request and contact you to arrange the officers' attendance.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Environmental Health Department at the polyclinic you choose will review your request and contact you to arrange the officers' attendance.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You will need to schedule a site meeting with the polyclinic to review the stall layout, waste disposal, potable water supply and bathroom facilities.</li>
       </ul>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If you need help, contact the Environmental Health Department, Ministry of Health and Wellness, or the polyclinic for the area where your event or activity will be held.</p>
-      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12465363800" class="govbb-link">1 (246) 536-3800</a></li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Email: <a href="mailto:info@health.gov.bb" class="govbb-link">info@health.gov.bb</a></li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If you need help, contact the Environmental Health Department at the polyclinic for the area where your event or activity will be held:</p>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-s);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Branford Taitt Polyclinic — <a href="tel:+12465363706" class="govbb-link">(246) 536-3706</a> or <a href="tel:+12465363719" class="govbb-link">(246) 536-3719</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Eunice Gibson Polyclinic — <a href="tel:+12465364031" class="govbb-link">(246) 536-4031</a> or <a href="tel:+12465364032" class="govbb-link">(246) 536-4032</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">David Thompson Health &amp; Social Services Complex — <a href="tel:+12465364453" class="govbb-link">(246) 536-4453</a> or <a href="tel:+12465364445" class="govbb-link">(246) 536-4445</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Maurice Byer Polyclinic — <a href="tel:+12465363214" class="govbb-link">(246) 536-3214</a> or <a href="tel:+12465363210" class="govbb-link">(246) 536-3210</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Randal Phillips Polyclinic — <a href="tel:+12465354307" class="govbb-link">(246) 535-4307</a> or <a href="tel:+12465354314" class="govbb-link">(246) 535-4314</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">St. Philip Polyclinic — <a href="tel:+12465364240" class="govbb-link">(246) 536-4240</a> or <a href="tel:+12465364242" class="govbb-link">(246) 536-4242</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Sir Winston Scott Polyclinic — <a href="tel:+12465363475" class="govbb-link">(246) 536-3475</a> or <a href="tel:+12465363476" class="govbb-link">(246) 536-3476</a></li>
       </ul>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Or contact the Environmental Health Department, Ministry of Health and Wellness: <a href="tel:+12465363800" class="govbb-link">1 (246) 536-3800</a>, <a href="mailto:info@health.gov.bb" class="govbb-link">info@health.gov.bb</a> — Frank Walcott Building, Culloden Road, St. Michael.</p>
     </div>`,
 
   'applicant-details': () => `
@@ -321,7 +327,7 @@ const PAGES = {
       </div>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Environmental Health Officers monitor food hygiene, sanitation and waste disposal at your event. This is not optional — whether officers are assigned is at the polyclinic's discretion, but the request itself is required.</p>
 
-      ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the activity will be held. The Edgar Cochrane area is served by Sir Winston Scott, and the Frederick Miller area by St. Philip Polyclinic (Six Roads). The request goes to the Medical Officer of Health there, through the Principal Environmental Health Officer.' })}
+      ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the activity will be held. The Edgar Cochrane area is served by Sir Winston Scott, and the Frederick Miller area by St. Philip Polyclinic (Six Roads). The request goes to the Environmental Health Department there, through the Principal Environmental Health Officer.' })}
 
       ${btns()}
     </form>`,
@@ -423,7 +429,7 @@ const PAGES = {
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Environmental Health team at <strong>${escapeHtml(GovBB.D['polyclinic'] || 'your chosen polyclinic')}</strong> will review your request.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Environmental Health Department at <strong>${escapeHtml(GovBB.D['polyclinic'] || 'your chosen polyclinic')}</strong> will review your request.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">They will contact you to confirm whether officers can attend and to arrange a site meeting.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you have not uploaded your food vendor list, email it to the polyclinic.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number for any follow-up.</li>
