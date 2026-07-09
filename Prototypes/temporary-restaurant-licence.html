@@ -2950,7 +2950,7 @@ GovBB.showErrors = function(errors) {
 };
 GovBB.summaryRow = function(label, value, changeTo) {
   var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
-  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);white-space:pre-wrap;">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);min-width:0;overflow-wrap:break-word;">'+label+'</dt><dd style="font-size:var(--font-size-body);white-space:pre-wrap;min-width:0;overflow-wrap:break-word;word-break:break-word;">'+(value||'—')+'</dd><div>'+link+'</div></div>';
 };
 </script>
 <script>
@@ -2999,6 +2999,31 @@ function confirmNote(t) {
   if (!SHOW_DRAFT_NOTES) return '';
   return '<p class="confirm-note" style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-m);font-size:var(--font-size-caption);">[Confirm: ' + escapeHtml(t) + ']</p>';
 }
+/* Repeatable "date + start/end time" entries. One date per block; "Add another"
+   appends another date + times. Used by the officer request and, on the licence,
+   when the organiser has not yet requested an officer. */
+function officerDateTimes() {
+  var n = parseInt(GovBB.D['officer-dt-count'], 10); if (!n || n < 1) n = 1;
+  var html = '';
+  for (var i = 1; i <= n; i++) {
+    var p = 'officer-dt-' + i;
+    var block = dateField(p + '-date', (n > 1 ? 'Date ' + i : 'Date'), 'The day officers are needed. For example, 27 8 2026.')
+      + textField(p + '-start', 'Start time', { width: 14, hint: 'For example, 4:00pm.' })
+      + textField(p + '-end', 'End time', { width: 14, hint: 'For example, 10:00pm.' });
+    if (i > 1) block += '<button type="button" class="govbb-btn--link" onclick="removeOfficerDateTime(' + i + ')">Remove date ' + i + '</button>';
+    html += '<div style="' + (i > 1 ? 'border-left:4px solid var(--color-grey-00);padding-left:var(--spacing-m);' : '') + 'margin-bottom:var(--spacing-m);">' + block + '</div>';
+  }
+  return html + '<div style="margin-bottom:var(--spacing-m);"><button type="button" class="govbb-btn--secondary" onclick="addOfficerDateTime()">Add an additional date and time</button></div>';
+}
+function addOfficerDateTime() { var n = parseInt(GovBB.D['officer-dt-count'], 10) || 1; GovBB.D['officer-dt-count'] = n + 1; GovBB.render(); }
+function removeOfficerDateTime(idx) {
+  var n = parseInt(GovBB.D['officer-dt-count'], 10) || 1;
+  var parts = ['date-day', 'date-month', 'date-year', 'start', 'end'];
+  for (var i = idx; i < n; i++) parts.forEach(function (pt) { GovBB.D['officer-dt-' + i + '-' + pt] = GovBB.D['officer-dt-' + (i + 1) + '-' + pt] || ''; });
+  parts.forEach(function (pt) { delete GovBB.D['officer-dt-' + n + '-' + pt]; });
+  GovBB.D['officer-dt-count'] = (n > 1 ? n - 1 : 1); GovBB.render();
+}
+
 /* Multiple event date ranges — for events that run on separate days. */
 function addEventDates() { GovBB.D['event-extra-count'] = (parseInt(GovBB.D['event-extra-count'], 10) || 0) + 1; GovBB.render(); }
 function removeEventDates(idx) {
@@ -3131,38 +3156,27 @@ const FOOD_CATEGORIES = [
 function fslug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
 function foodKey(catKey, item) { return 'food-' + catKey + '-' + fslug(item); }
 function catKeyFor(cat) { return 'food-cat-' + cat.key; }
-function foodTallyText(n) { return 'You have selected ' + n + ' item' + (n === 1 ? '' : 's') + '.' + (n ? '' : ' Tick the items you will serve.'); }
-function updateFoodTally() {
-  var el = document.getElementById('food-tally'); if (!el) return;
-  var n = document.querySelectorAll('[data-food-item]:checked').length;
-  el.textContent = foodTallyText(n);
-  el.style.borderLeftColor = n ? 'var(--color-green-00)' : 'var(--color-yellow-00)';
-  el.style.background = n ? 'var(--color-green-10)' : 'var(--color-yellow-10)';
-}
 function foodSelector() {
-  function renderCat(cat) {
-    var badge = cat.risk ? ' <span style="display:inline-block;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);background:var(--color-yellow-10);border:1px solid var(--color-yellow-00);border-radius:4px;padding:1px 8px;margin-left:6px;">Higher-risk</span>' : '';
-    var hasSel = cat.items.some(function (it) { return !!GovBB.D[foodKey(cat.key, it)]; });
-    var items = cat.items.map(function (it) {
-      var key = foodKey(cat.key, it);
-      return '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="' + key + '" name="' + key + '" data-field="' + key + '" data-food-item="1"' + (GovBB.D[key] ? ' checked' : '') + ' /><label class="govbb-checkbox-item__label" for="' + key + '">' + escapeHtml(it) + '</label></div>';
-    }).join('');
-    return '<details class="govbb-show-hide"' + (hasSel ? ' open' : '') + ' style="margin-bottom:var(--spacing-s);">'
-      + '<summary class="govbb-show-hide__summary">' + escapeHtml(cat.label) + badge + '</summary>'
-      + '<div class="govbb-show-hide__content" style="display:flex;flex-direction:column;gap:var(--spacing-xs);">'
-      + items + '<p class="govbb-hint" style="margin:var(--spacing-xs) 0 0;">Tick every item you will serve.</p></div></details>';
-  }
-  function group(title, g) {
-    var cats = FOOD_CATEGORIES.filter(function (c) { return c.group === g; });
-    return '<h2 class="govbb-text-h2" style="margin:var(--spacing-m) 0 var(--spacing-s);">' + title + '</h2>' + cats.map(renderCat).join('');
-  }
-  var n = foodCount();
-  var tally = '<p id="food-tally" role="status" aria-live="polite" class="govbb-text-body" style="margin-top:var(--spacing-m);font-weight:var(--font-weight-bold);border-left:4px solid ' + (n ? 'var(--color-green-00)' : 'var(--color-yellow-00)') + ';padding:var(--spacing-xs) var(--spacing-s);background:' + (n ? 'var(--color-green-10)' : 'var(--color-yellow-10)') + ';">' + foodTallyText(n) + '</p>';
-  return '<div id="food-selector">' + group('Food', 'food') + group('Drinks', 'drink') + tally + '</div>';
-}
-/* Items count whenever ticked — the category is a disclosure, not a selection. */
-function getSelectedFoods() {
   return FOOD_CATEGORIES.map(function (cat) {
+    var catKey = catKeyFor(cat);
+    var open = !!GovBB.D[catKey];
+    var badge = cat.risk ? ' <span style="display:inline-block;font-size:var(--font-size-caption);font-weight:var(--font-weight-bold);background:var(--color-yellow-10);border:1px solid var(--color-yellow-00);border-radius:4px;padding:1px 8px;margin-left:6px;">Higher-risk</span>' : '';
+    var catBox = '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="' + catKey + '" name="' + catKey + '" data-field="' + catKey + '" data-trigger-render="1"' + (open ? ' checked' : '') + ' /><label class="govbb-checkbox-item__label" for="' + catKey + '">' + escapeHtml(cat.label) + badge + '</label></div>';
+    var items = '';
+    if (open) {
+      items = '<div style="padding-left:var(--spacing-l);border-left:4px solid var(--color-blue-40);margin:var(--spacing-xs) 0 var(--spacing-m);display:flex;flex-direction:column;gap:var(--spacing-xs);">'
+        + cat.items.map(function (it) {
+            var key = foodKey(cat.key, it);
+            return '<div class="govbb-checkbox-item"><input class="govbb-checkbox" type="checkbox" id="' + key + '" name="' + key + '" data-field="' + key + '"' + (GovBB.D[key] ? ' checked' : '') + ' /><label class="govbb-checkbox-item__label" for="' + key + '">' + escapeHtml(it) + '</label></div>';
+          }).join('')
+        + '</div>';
+    }
+    return '<div style="margin-bottom:var(--spacing-s);">' + catBox + items + '</div>';
+  }).join('');
+}
+/* Items only count when their category is expanded (ticked). */
+function getSelectedFoods() {
+  return FOOD_CATEGORIES.filter(function (cat) { return !!GovBB.D[catKeyFor(cat)]; }).map(function (cat) {
     return { label: cat.label, items: cat.items.filter(function (it) { return !!GovBB.D[foodKey(cat.key, it)]; }) };
   }).filter(function (c) { return c.items.length; });
 }
@@ -3263,7 +3277,7 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The organiser\'s details, if someone else is organising the event</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A medical certificate for you and everyone handling food</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If someone else is organising the event, a letter from the venue or organiser confirming you can operate there</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you are organising the event, a <a href="temporary-restaurant-guidance.html#setting-up-your-stall" target="_blank" rel="noopener" class="govbb-link">site or stall plan</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you are organising the event, a <a href="temporary-restaurant-guidance.html#setting-up-your-stall" target="_blank" rel="noopener" class="govbb-link">site or stall plan (opens in a new tab)</a></li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you have one, a copy of your food business licence</li>
       </ul>
       ${confirmNote('the official term for the medical or health certificate')}
@@ -3324,7 +3338,13 @@ const PAGES = {
         textField('organiser-email', "Organiser's email address", { type: 'email', inputmode: 'email', hint: 'For example, organiser@example.com.' })
       )}
       ${conditional('is-organiser', 'Yes',
-        '<p class="govbb-text-body" role="status" aria-live="polite" style="margin:0;">Because you are organising the event, we will request an environmental health officer to attend on your behalf. You do not need to do anything else.</p>')}
+        '<div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">As the event organiser, you must also request an environmental health officer to attend. This is required whenever food is served.</p></div>' +
+        radioGroup('officer-request-submitted', 'Have you already requested an environmental health officer for this event?', ['Yes', 'No'], { trigger: true }) +
+        conditional('officer-request-submitted', 'No',
+          '<h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">When do you need the officers?</h2>' +
+          '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Give the date and the times officers are needed. We will request an officer for you when you submit this application — you do not need to fill out a separate Request an environmental health officer form. If they are needed on more than one day, add an additional date and time.</p>' +
+          officerDateTimes())
+      )}
 
       ${btns()}
     </form>`,
@@ -3337,27 +3357,12 @@ const PAGES = {
       ${textField('event-name', 'Name of event')}
       ${textField('event-line1', 'Event address line 1')}
       ${textField('event-line2', 'Event address line 2 (optional)')}
-      ${selectField('event-parish', 'Parish of event', GovBB.PARISHES, { placeholder: 'Select a parish', width: 15, trigger: true })}
-      ${(function () {
-        var p = GOVBB_BACKEND.assignPolyclinic({ parish: GovBB.D['event-parish'] });
-        if (!p) return '';
-        return '<div role="status" aria-live="polite" style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">Your application will go to the Environmental Health Department at <strong>' + escapeHtml(p) + '</strong>.</p></div>';
-      })()}
+      ${selectField('event-parish', 'Parish of event', GovBB.PARISHES, { placeholder: 'Select a parish', width: 15 })}
 
       ${dateField('event-from', 'Start date', 'The first day the temporary restaurant will operate. You must apply at least 14 days before this date. For example, 27 8 2026.')}
       ${dateField('event-to', 'End date', 'The last day the temporary restaurant will operate.')}
-      ${(function () {
-        var n = parseInt(GovBB.D['event-extra-count'], 10) || 0, html = '';
-        for (var i = 1; i <= n; i++) {
-          html += '<div style="border-left:4px solid var(--color-grey-00);padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">'
-            + dateField('event-x' + i + '-from', 'Another start date', 'The first day of this set of dates.')
-            + dateField('event-x' + i + '-to', 'Another end date', 'The last day of this set of dates.')
-            + '<button type="button" class="govbb-btn--link" onclick="removeEventDates(' + i + ')">Remove these dates</button></div>';
-        }
-        return html + '<p class="govbb-hint" style="margin-bottom:var(--spacing-xs);">If your event runs on separate days rather than one block, add another set of dates.</p><div style="margin-bottom:var(--spacing-m);"><button type="button" class="govbb-btn--secondary" onclick="addEventDates()">Add another set of dates</button></div>';
-      })()}
 
-      <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">What times will you operate each day?</h2>
+      <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">What times will you operate?</h2>
       ${textField('event-start-time', 'Start time', { width: 14, hint: 'For example, 4:00pm.' })}
       ${textField('event-end-time', 'End time', { width: 14, hint: 'For example, 10:00pm.' })}
 
@@ -3408,7 +3413,7 @@ const PAGES = {
     <form novalidate>
       ${caption()}
       <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Supporting documents</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You must upload a medical certificate for everyone handling food.${isOrganiser ? ' As the event organiser, you must also upload your list of vendors.' : ''} A site or stall plan and a food business licence are optional.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You must upload a medical certificate for everyone handling food.${isOrganiser ? ' As the event organiser, you must also upload your list of vendors and a site or stall plan.' : ''} ${isOrganiser ? 'A food business licence is optional.' : 'A site or stall plan and a food business licence are optional.'}</p>
 
       ${uploadRow('medical-certs', 'Staff medical certificates', 'Required. A valid medical certificate for you and everyone handling food, as a single PDF, JPG or PNG.', false)}
       <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
@@ -3419,7 +3424,9 @@ const PAGES = {
       ${isOrganiser ? uploadRow('vendor-list', 'List of vendors', 'Required. A list of the food vendors taking part in your event. PDF, JPG, PNG, DOC or DOCX.', false) : ''}
 
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Before you upload, check your set-up meets the requirements for <a href="temporary-restaurant-guidance.html#setting-up-your-stall" target="_blank" rel="noopener" class="govbb-link">setting up your stall (opens in a new tab)</a>.</p>
-      ${uploadRow('site-plan', 'Site or stall plan', 'Optional. A plan of the event site, showing stall positions, waste disposal, water supply and facilities. PDF, JPG or PNG.', true)}
+      ${isOrganiser
+        ? uploadRow('site-plan', 'Site or stall plan', 'Required. A plan of the event site, showing stall positions, waste disposal, water supply and facilities. PDF, JPG or PNG.', false)
+        : uploadRow('site-plan', 'Site or stall plan', 'Optional. A plan of the event site, showing stall positions, waste disposal, water supply and facilities. PDF, JPG or PNG.', true)}
       ${uploadRow('food-licence', 'Food business licence', 'Optional. A copy of your valid food business licence, if you have one. PDF, JPG or PNG.', true)}
 
       ${btns()}
@@ -3445,27 +3452,28 @@ const PAGES = {
       <dl style="margin-bottom:var(--spacing-m);">
         ${GovBB.summaryRow('Name of event', GovBB.D['event-name'] || '', 'event-details')}
         ${GovBB.summaryRow('Address of event', fmtAddress('event'), 'event-details')}
-        ${GovBB.summaryRow('Event dates', (function () {
-          var out = fmtDate('event-from') + ' to ' + fmtDate('event-to');
-          var xn = parseInt((GovBB.D['event-extra-count'] || '0'), 10) || 0;
-          for (var xi = 1; xi <= xn; xi++) out += '\n' + fmtDate('event-x' + xi + '-from') + ' to ' + fmtDate('event-x' + xi + '-to');
-          return out;
-        })(), 'event-details')}
+        ${GovBB.summaryRow('Event dates', fmtDate('event-from') + ' to ' + fmtDate('event-to'), 'event-details')}
         ${GovBB.summaryRow('Times each day', (GovBB.D['event-start-time'] && GovBB.D['event-end-time']) ? (GovBB.D['event-start-time'] + ' to ' + GovBB.D['event-end-time']) : (GovBB.D['event-start-time'] || GovBB.D['event-end-time'] || ''), 'event-details')}
         ${GovBB.summaryRow('Polyclinic (by event area)', GOVBB_BACKEND.assignPolyclinic({ parish: GovBB.D['event-parish'] }) || 'To be assigned')}
         ${GovBB.D['is-organiser'] === 'Yes' ? GovBB.summaryRow('Expected patrons', GovBB.D['num-patrons'] || '', 'event-details') : ''}
         ${GovBB.D['is-organiser'] === 'Yes' ? GovBB.summaryRow('Food stalls', GovBB.D['num-stalls'] || '', 'event-details') : ''}
-      </dl>
-
-      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food and organiser</h2>
-      <dl style="margin-bottom:var(--spacing-l);">
-        ${GovBB.summaryRow('Foods to be served', foodSummaryHtml() || 'None selected', 'food-details')}
-        ${GovBB.summaryRow('Source of food', GovBB.D['food-source'] || '', 'food-details')}
         ${GovBB.summaryRow('Are you organising the event?', GovBB.D['is-organiser'] || '', 'organiser')}
         ${GovBB.D['is-organiser'] === 'No' ? GovBB.summaryRow('Organiser name', GovBB.D['organiser-name'] || '', 'organiser') : ''}
         ${GovBB.D['is-organiser'] === 'No' ? GovBB.summaryRow('Organiser phone', GovBB.D['organiser-phone'] || 'Not provided', 'organiser') : ''}
         ${GovBB.D['is-organiser'] === 'No' ? GovBB.summaryRow('Organiser email', GovBB.D['organiser-email'] || 'Not provided', 'organiser') : ''}
-        ${GovBB.D['is-organiser'] === 'Yes' ? GovBB.summaryRow('environmental health officer', 'Will be requested on your behalf', 'organiser') : ''}
+        ${GovBB.D['is-organiser'] === 'Yes' ? GovBB.summaryRow('Environmental health officer already requested?', GovBB.D['officer-request-submitted'] || '', 'organiser') : ''}
+        ${GovBB.D['is-organiser'] === 'Yes' && GovBB.D['officer-request-submitted'] === 'No' ? GovBB.summaryRow('Officer dates and times', (function () {
+          var n = parseInt((GovBB.D['officer-dt-count'] || '1'), 10) || 1, out = [];
+          for (var i = 1; i <= n; i++) { var p = 'officer-dt-' + i; var d = fmtDate(p + '-date'); var st = GovBB.D[p + '-start'] || ''; var en = GovBB.D[p + '-end'] || ''; var t = (st || en) ? st + ' to ' + en : ''; out.push([d, t].filter(Boolean).join(', ')); }
+          return out.filter(Boolean).join('\n');
+        })(), 'organiser') : ''}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Foods to be served', foodSummaryHtml() || 'None selected', 'food-details')}
+        ${GovBB.summaryRow('Source of food', GovBB.D['food-source'] || '', 'food-details')}
+
       </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food safety</h2>
@@ -3481,7 +3489,7 @@ const PAGES = {
       <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('Staff medical certificates', GovBB.D['upload-medical-certs'] ? GovBB.D['upload-medical-certs'].name : 'Not uploaded', 'documents')}
         ${GovBB.D['is-organiser'] === 'Yes' ? GovBB.summaryRow('List of vendors', GovBB.D['upload-vendor-list'] ? GovBB.D['upload-vendor-list'].name : 'Not uploaded', 'documents') : ''}
-        ${GovBB.summaryRow('Site or stall plan', GovBB.D['upload-site-plan'] ? GovBB.D['upload-site-plan'].name : 'Not uploaded (optional)', 'documents')}
+        ${GovBB.summaryRow('Site or stall plan', GovBB.D['upload-site-plan'] ? GovBB.D['upload-site-plan'].name : (GovBB.D['is-organiser'] === 'Yes' ? 'Not uploaded' : 'Not uploaded (optional)'), 'documents')}
         ${GovBB.summaryRow('Food business licence', GovBB.D['upload-food-licence'] ? GovBB.D['upload-food-licence'].name : 'Not uploaded (optional)', 'documents')}
       </dl>
 
@@ -3494,6 +3502,7 @@ const PAGES = {
   'declaration': () => {
     var td = new Date();
     var todayStr = td.getDate() + ' ' + MONTHS[td.getMonth()] + ' ' + td.getFullYear();
+    var fullName = [GovBB.D['applicant-first-name'], GovBB.D['applicant-middle-name'], GovBB.D['applicant-surname']].filter(Boolean).join(' ');
     return `
     <form novalidate>
       ${caption()}
@@ -3512,7 +3521,19 @@ const PAGES = {
         </div>
       </fieldset>
 
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Date: <strong>${todayStr}</strong></p>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your signature</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Submitting this application with your name is your legal signature.</p>
+      <div style="border:2px solid var(--color-grey-00);border-left:4px solid var(--color-blue-40);background:var(--color-white-00);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin:0;"><strong>Signed:</strong> ${escapeHtml(fullName) || '[the name you gave]'}</p>
+        <p class="govbb-text-body" style="margin:var(--spacing-xs) 0 0;"><strong>Date:</strong> ${todayStr}</p>
+      </div>
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Signature confirmation</legend>
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
+          <input class="govbb-checkbox" type="checkbox" id="declare-signature" name="declare-signature" data-field="declare-signature"${GovBB.D['declare-signature']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="declare-signature">I understand that submitting this application with my name is my legal signature.</label>
+        </div>
+      </fieldset>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
         <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
@@ -3528,7 +3549,9 @@ const PAGES = {
     var poly = assigned || 'the Environmental Health Department for your area';
     var c = assigned ? GOVBB_BACKEND.contactsFor(assigned) : null;
     var needsInspection = GovBB.D['has-food-licence'] === 'No';
-    var officerOnBehalf = GovBB.D['is-organiser'] === 'Yes';
+    var officerRequestedForYou = GovBB.D['is-organiser'] === 'Yes' && GovBB.D['officer-request-submitted'] === 'No';
+    var officerDT = parseInt((GovBB.D['officer-dt-count'] || '1'), 10) || 1;
+    var officerDTWord = officerDT > 1 ? 'the dates and times you gave' : 'the date and time you gave';
     var orgEmail = (GovBB.D['is-organiser'] === 'No' && (GovBB.D['organiser-email'] || '').trim()) ? escapeHtml(GovBB.D['organiser-email'].trim()) : '';
     return `
     <div>
@@ -3546,7 +3569,7 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">${needsInspection ? 'An environmental health officer will inspect your set-up before the licence is issued.' : 'They may arrange an inspection before issuing the licence.'}</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The licence is collected from the polyclinic. An electronic copy will also be emailed to you.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The licence is valid for 30 days from the date it is issued.</li>
-        ${officerOnBehalf ? '<li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">We have requested an environmental health officer to attend on your behalf.</li>' : ''}
+        ${officerRequestedForYou ? '<li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You had not already requested an environmental health officer, so we have requested one for you through this application, for ' + officerDTWord + '.</li>' : ''}
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number for any follow-up.</li>
       </ul>
 
@@ -3624,12 +3647,6 @@ function validate(pageId) {
       if (from < minStart) errors.push({ id: 'event-from-day', msg: 'Start date – You must apply at least 14 days before the event' });
     }
     if (from && to && to < from) errors.push({ id: 'event-to-day', msg: 'The end date must be the same as or after the start date' });
-    var xn = parseInt((D['event-extra-count'] || '0'), 10) || 0;
-    for (var xi = 1; xi <= xn; xi++) {
-      var xf = reqDate('event-x' + xi + '-from', 'Another start date');
-      var xt = reqDate('event-x' + xi + '-to', 'Another end date');
-      if (xf && xt && xt < xf) errors.push({ id: 'event-x' + xi + '-to-day', msg: 'The end date must be the same as or after the start date' });
-    }
     reqText('event-start-time', 'Enter the time you will start each day');
     reqText('event-end-time', 'Enter the time you will finish each day');
     /* polyclinic is assigned by GOVBB_BACKEND from the event location — no user field */
@@ -3648,10 +3665,21 @@ function validate(pageId) {
       if (oEmail && !EMAIL_RE.test(oEmail)) errors.push({ id: 'organiser-email', msg: "Enter the organiser's email in the format you@example.com" });
       if (!(D['organiser-phone'] || '').trim() && !oEmail) errors.push({ id: 'organiser-phone', msg: 'Enter a phone number or email for the organiser' });
     }
+    if (D['is-organiser'] === 'Yes' && !D['officer-request-submitted']) errors.push({ id: 'officer-request-submitted-0', msg: 'Select whether you have already requested an environmental health officer' });
+    if (D['is-organiser'] === 'Yes' && D['officer-request-submitted'] === 'No') {
+      var odn = parseInt((D['officer-dt-count'] || '1'), 10); if (!odn || odn < 1) odn = 1;
+      for (var oi = 1; oi <= odn; oi++) {
+        var op = 'officer-dt-' + oi;
+        var od = reqDate(op + '-date', (odn > 1 ? 'Date ' + oi : 'Date'));
+        if (oi === 1 && od) { var oms = new Date(); oms.setHours(0, 0, 0, 0); oms.setDate(oms.getDate() + 14); if (od < oms) errors.push({ id: op + '-date-day', msg: 'Date – You must apply at least 14 days before the event' }); }
+        reqText(op + '-start', 'Enter the start time' + (odn > 1 ? ' for date ' + oi : ''));
+        reqText(op + '-end', 'Enter the end time' + (odn > 1 ? ' for date ' + oi : ''));
+      }
+    }
   }
 
   if (pageId === 'food-details') {
-    if (foodCount() === 0) errors.push({ id: 'food-selector', msg: 'Select at least one item of food or drink you will serve' });
+    if (foodCount() === 0) errors.push({ id: 'food-cat-meat', msg: 'Select at least one type of food you will serve' });
     reqText('food-source', 'Enter where you will get the food from');
   }
 
@@ -3667,11 +3695,13 @@ function validate(pageId) {
   if (pageId === 'documents') {
     if (!D['upload-medical-certs']) errors.push({ id: 'upload-medical-certs', msg: 'Upload a medical certificate for everyone handling food' });
     if (D['is-organiser'] === 'Yes' && !D['upload-vendor-list']) errors.push({ id: 'upload-vendor-list', msg: 'Upload your list of vendors' });
+    if (D['is-organiser'] === 'Yes' && !D['upload-site-plan']) errors.push({ id: 'upload-site-plan', msg: 'Upload a site or stall plan' });
   }
 
   if (pageId === 'declaration') {
     if (!D['declare-agree']) errors.push({ id: 'declare-agree', msg: 'Tick the box to declare the information is true' });
     if (!D['declare-overtime']) errors.push({ id: 'declare-overtime', msg: 'Tick the box to confirm you understand the overtime cost responsibility' });
+    if (!D['declare-signature']) errors.push({ id: 'declare-signature', msg: 'Tick the box to confirm your signature' });
   }
 
   return errors;
@@ -3762,6 +3792,12 @@ GovBB.init({
           D['organiser-name'] = 'Sandra Clarke';
           D['organiser-phone'] = '(246) 249 5678';
           D['organiser-email'] = 'sandra.clarke@example.com';
+        } else {
+          D['officer-request-submitted'] = 'No';
+          var of1 = futParts(21);
+          D['officer-dt-count'] = '1';
+          D['officer-dt-1-date-day'] = of1.d; D['officer-dt-1-date-month'] = of1.m; D['officer-dt-1-date-year'] = of1.y;
+          D['officer-dt-1-start'] = '4:00pm'; D['officer-dt-1-end'] = '11:00pm';
         }
         break;
       case 'food-safety':
@@ -3832,9 +3868,6 @@ document.addEventListener('click', function (e) {
   if (max != null && next > max) next = max;
   input.value = String(next);
   input.dispatchEvent(new Event('input', { bubbles: true }));
-});
-document.addEventListener('change', function (e) {
-  if (e.target && e.target.matches && e.target.matches('[data-food-item]')) updateFoodTally();
 });
 </script>
 <!-- Reviewer comment widget (self-hosted, select-to-comment) -->
