@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Request the attendance of an Environmental Health Officer – Ministry of Health</title>
+  <link rel="stylesheet" href="../dist/styles.css">
+</head>
+<body class="govbb-page">
+
+<div class="govbb-official-banner">
+  <div class="govbb-container govbb-official-banner__inner">
+    <div class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="../dist/assets/images/govbb-creast.svg" alt="" />
+    </div>
+    <div class="govbb-official-banner__text">
+      <span>Official government website</span>
+    </div>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-container govbb-header__inner">
+    <a href="/" aria-label="Go to the alpha.gov.bb homepage">
+      <img class="govbb-header__logo" src="../dist/assets/images/govbb-logo.svg" alt="GovBB" />
+    </a>
+  </div>
+</header>
+
+<main class="govbb-page__main">
+  <div class="govbb-status-banner govbb-status-banner--alpha" role="status" aria-label="alpha status banner" aria-live="polite">
+    <div class="govbb-container">
+      <p>This page is in <a class="govbb-link govbb-link--secondary" href="#">Alpha</a>. Your feedback helps us improve.</p>
+    </div>
+  </div>
+  <div class="govbb-container">
+    <div id="app" style="padding-block: var(--spacing-l); max-width: 48rem;"></div>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-container govbb-footer__inner">
+    <nav class="govbb-footer__nav" aria-label="Footer">
+      <a class="govbb-footer__link" href="#">Home</a>
+      <a class="govbb-footer__link" href="#">Privacy</a>
+      <a class="govbb-footer__link" href="#">Terms &amp; Conditions</a>
+      <a class="govbb-footer__link" href="#">Accessibility</a>
+    </nav>
+    <hr class="govbb-footer__divider" aria-hidden="true" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="../dist/assets/images/govbb-creast.svg" alt="Government of Barbados Coat of Arms" />
+      <p class="govbb-footer__copy">© 2025 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/govbb-framework.js"></script>
+<script>
+GovBB.clearErrors = function() {
+  var s = document.getElementById('error-summary');
+  if (s) s.remove();
+  document.querySelectorAll('.govbb-error-message').forEach(function(e){e.remove();});
+  document.querySelectorAll('[aria-invalid]').forEach(function(el){el.removeAttribute('aria-invalid');el.removeAttribute('aria-describedby');});
+  if (document.title.indexOf('Error: ') === 0) document.title = document.title.slice(7);
+};
+GovBB.showErrors = function(errors) {
+  GovBB.clearErrors();
+  if (!errors||!errors.length) return;
+  var html = '<div class="govbb-error-summary" role="alert" id="error-summary" tabindex="-1"><h2 class="govbb-error-summary__title">There is a problem</h2><ul class="govbb-error-summary__list">';
+  errors.forEach(function(e){ html += '<li><a class="govbb-error-summary__link" href="#'+e.id+'">'+e.msg+'</a></li>'; });
+  html += '</ul></div>';
+  var app = document.getElementById('app');
+  var h1 = app.querySelector('h1');
+  if (h1) { h1.insertAdjacentHTML('afterend', html); } else { app.insertAdjacentHTML('afterbegin', html); }
+  document.getElementById('error-summary').focus();
+  errors.forEach(function(e){
+    var el = document.getElementById(e.id);
+    if (!el) return;
+    var errId = 'err-'+e.id;
+    el.setAttribute('aria-invalid','true');
+    el.setAttribute('aria-describedby',errId);
+    var msg = document.createElement('p');
+    msg.className='govbb-error-message'; msg.id=errId; msg.textContent=e.msg;
+    var group = el.closest('.govbb-form-group')||el.closest('fieldset')||el.parentElement;
+    if (group) {
+      var anchor = group.querySelector('.govbb-hint') || group.querySelector('.govbb-label') || group.querySelector('legend');
+      if (anchor) anchor.insertAdjacentElement('afterend', msg);
+      else group.insertBefore(msg, group.firstChild);
+    }
+  });
+  if (!document.title.startsWith('Error:')) document.title = 'Error: ' + document.title;
+};
+GovBB.summaryRow = function(label, value, changeTo) {
+  var link = changeTo ? '<a href="#" onclick="nav(\''+changeTo+'\');return false;" class="govbb-link" style="font-size:var(--font-size-caption);">Change<span class="govbb-visually-hidden"> '+label+'</span></a>' : '';
+  return '<div style="display:grid;grid-template-columns:1fr 1fr auto;gap:var(--spacing-xs) var(--spacing-s);padding:var(--spacing-s) 0;border-bottom:1px solid var(--color-grey-00);"><dt style="font-size:var(--font-size-body);font-weight:var(--font-weight-bold);">'+label+'</dt><dd style="font-size:var(--font-size-body);white-space:pre-wrap;">'+(value||'—')+'</dd><div>'+link+'</div></div>';
+};
+</script>
+<script>
+/* ───────── Form configuration ───────── */
+const FORM_NAME = 'Request for the Attendance of an Environmental Health Officer';
+const SERVICE_NAME = 'Request the attendance of an Environmental Health Officer';
+
+const FLOW = [
+  'start',
+  'applicant-details',
+  'event-details',
+  'purpose',
+  'documents',
+  'check',
+  'declaration',
+  'confirmation'
+];
+
+/* The seven Environmental Health Department offices — matches the temporary
+   restaurant licence form. Per the department's catchment map, Edgar Cochrane
+   and Frederick Miller have no EHD office: the Edgar Cochrane area is served by
+   Sir Winston Scott and the Frederick Miller area by St. Philip Polyclinic
+   (Six Roads). */
+const POLYCLINICS = [
+  'Branford Taitt Polyclinic',
+  'David Thompson Health & Social Services Complex',
+  'Eunice Gibson Polyclinic',
+  'Maurice Byer Polyclinic',
+  'Randal Phillips Polyclinic',
+  'Sir Winston Scott Polyclinic',
+  'St. Philip Polyclinic'
+];
+
+/* ───────── Helpers ───────── */
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function val(id) { return escapeHtml(GovBB.D[id] || ''); }
+
+function caption() {
+  return '<p style="border-left:4px solid var(--color-blue-40);color:var(--color-mid-grey-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-s);">' + SERVICE_NAME + '</p>';
+}
+
+function textField(id, label, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var type = opts.type || 'text';
+  var im = opts.inputmode ? ' inputmode="' + opts.inputmode + '"' : '';
+  var extra = opts.width ? ' style="max-width:' + opts.width + ';"' : '';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-input-wrapper"' + extra + '><input class="govbb-input" type="' + type + '" id="' + id + '" name="' + id + '" data-field="' + id + '"' + im + ' value="' + val(id) + '" /></div></div>';
+}
+
+function textareaField(id, label, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<textarea class="govbb-textarea" id="' + id + '" name="' + id + '" data-field="' + id + '" rows="' + (opts.rows || 4) + '" style="width:100%;">' + val(id) + '</textarea></div>';
+}
+
+function selectField(id, label, options, opts) {
+  opts = opts || {};
+  var hint = opts.hint ? '<p class="govbb-hint">' + opts.hint + '</p>' : '';
+  var ops = '<option value="">' + (opts.placeholder || 'Select an option') + '</option>'
+    + options.map(function (o) { return '<option value="' + escapeHtml(o) + '"' + (GovBB.D[id] === o ? ' selected' : '') + '>' + escapeHtml(o) + '</option>'; }).join('');
+  return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
+    + '<label class="govbb-label" for="' + id + '">' + label + '</label>' + hint
+    + '<div class="govbb-select-wrapper"><select class="govbb-select" id="' + id + '" name="' + id + '" data-field="' + id + '">' + ops + '</select>'
+    + '<span class="govbb-select__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg></span></div></div>';
+}
+
+function dateField(prefix, legend, hint) {
+  hint = hint || 'For example, 27 6 2025.';
+  function part(suffix, label, wide) {
+    return '<div class="govbb-date-input__part"><label class="govbb-date-input__label" for="' + prefix + '-' + suffix + '">' + label + '</label>'
+      + '<div class="govbb-date-input-wrapper' + (wide ? ' govbb-date-input-wrapper--year' : '') + '"><input class="govbb-date-input" type="text" id="' + prefix + '-' + suffix + '" name="' + prefix + '-' + suffix + '" data-field="' + prefix + '-' + suffix + '" inputmode="numeric" value="' + val(prefix + '-' + suffix) + '" /></div></div>';
+  }
+  return '<fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);"><legend class="govbb-fieldset__legend">' + legend + '</legend><p class="govbb-hint">' + hint + '</p>'
+    + '<div style="display:flex;gap:var(--spacing-s);align-items:flex-end;flex-wrap:wrap;">' + part('day', 'Day') + part('month', 'Month') + part('year', 'Year', true) + '</div></fieldset>';
+}
+
+function btns(label) {
+  return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">' + (label || 'Continue') + '</button></div>';
+}
+
+function fmtDate(prefix) {
+  var d = GovBB.D[prefix + '-day'], m = GovBB.D[prefix + '-month'], y = GovBB.D[prefix + '-year'];
+  if (!d && !m && !y) return '';
+  return [d, m, y].filter(Boolean).join(' / ');
+}
+function fmtAddress(prefix) {
+  return [GovBB.D[prefix + '-line1'], GovBB.D[prefix + '-line2'], GovBB.D[prefix + '-parish']].filter(Boolean).join(', ');
+}
+function fmtTimes() {
+  var f = GovBB.D['time-from'], t = GovBB.D['time-to'];
+  if (!f && !t) return '';
+  return (f || '—') + ' to ' + (t || '—');
+}
+
+/* ───────── File upload ───────── */
+function formatBytes(n) { if (n < 1024) return n + ' B'; if (n < 1024 * 1024) return (n / 1024).toFixed(1) + ' KB'; return (n / (1024 * 1024)).toFixed(1) + ' MB'; }
+function handleUpload(key, input) { var file = input.files && input.files[0]; if (!file) return; if (file.size > 10 * 1024 * 1024) { alert('File is larger than 10 MB.'); input.value = ''; return; } GovBB.D['upload-' + key] = { name: file.name, size: file.size, type: file.type }; GovBB.render(); }
+function removeUpload(key) { delete GovBB.D['upload-' + key]; GovBB.render(); }
+function uploadRow(key, label, hint, optional) {
+  var file = GovBB.D['upload-' + key];
+  if (file) {
+    return `<div style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);border-left:4px solid var(--color-green-00);background:var(--color-white-00);margin-bottom:var(--spacing-m);"><div style="min-width:0;"><p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">${label}${optional ? ' (optional)' : ''}</p>${hint ? `<p class="govbb-hint" style="margin:0;">${hint}</p>` : ''}<p class="govbb-text-body" style="margin:0;font-size:var(--font-size-caption);color:var(--color-mid-grey-00);word-break:break-all;"><span aria-hidden="true">✓ </span>${escapeHtml(file.name)} (${formatBytes(file.size)})</p></div><button type="button" class="govbb-btn--link" style="flex-shrink:0;" onclick="removeUpload('${key}')">Remove<span class="govbb-visually-hidden"> ${label}</span></button></div>`;
+  }
+  return `<div id="upload-row-${key}" style="display:flex;justify-content:space-between;align-items:center;gap:var(--spacing-s);padding:var(--spacing-s) var(--spacing-m);border:2px solid var(--color-grey-00);background:var(--color-white-00);margin-bottom:var(--spacing-m);"><div style="min-width:0;flex:1;"><p class="govbb-text-body" style="margin:0;font-weight:var(--font-weight-bold);">${label}${optional ? ' (optional)' : ''}</p>${hint ? `<p class="govbb-hint" style="margin:0;">${hint}</p>` : ''}</div><label for="upload-${key}" class="govbb-btn--secondary" style="flex-shrink:0;cursor:pointer;margin:0;">Upload file</label><input type="file" id="upload-${key}" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" onchange="handleUpload('${key}', this)" /></div>`;
+}
+
+/* ───────── Pages ───────── */
+const PAGES = {
+
+  'start': () => `
+    <div>
+      <nav class="govbb-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom:var(--spacing-m);">
+        <ol class="govbb-breadcrumbs__list">
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Home</a></li>
+          <li class="govbb-breadcrumbs__item"><a class="govbb-breadcrumbs__link" href="#">Health</a></li>
+        </ol>
+      </nav>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-xs);">Request the attendance of an Environmental Health Officer</h1>
+      <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on 6 June 2026</p>
+      <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to request the attendance of Environmental Health Officers at an event or activity — for example, to monitor food safety and sanitation.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If food will be served at your event, you must request Environmental Health Officers to attend.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);"><strong>Food</strong> means anything served for people to eat or drink — meals, snacks, sweets, cut fruit and drinks. In law, food is “any substance, whether processed, semi-processed or raw, which is intended for human consumption and includes drink, chewing gum and other substances which are used in the manufacture or treatment of food, but does not include cosmetics, tobacco or substances used only as drugs” (Health Services (Food Hygiene) Regulations, 1969).</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply to the polyclinic for the area where your event will be held.</p>
+
+      <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-l);">
+        <p class="govbb-text-body" style="margin:0;">Submit your request at least <strong>two weeks</strong> before your event.</p>
+      </div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your name, address, contact numbers and email address</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The address where event or activity will take place</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The date and times you need the officers to attend</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The reason you need the officers to attend</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A site plan showing the layout of the event venue</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A list of food vendors and their contact details (you can upload this or email it to the polyclinic)</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What it costs</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">As the event organiser, you are responsible for paying the officers for their attendance:</p>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-s);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Weekdays after standard working hours are charged at an hourly rate.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Weekends and public holidays are charged at a flat, fixed rate.</li>
+      </ul>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">You do not pay anything when you apply. The polyclinic will send you an invoice after your request has been made and approved.</p>
+
+      <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Environmental Health Department at the polyclinic you choose will review your request and contact you to arrange the officers' attendance.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">You will need to schedule a site meeting with the polyclinic to review the stall layout, waste disposal, potable water supply and bathroom facilities.</li>
+      </ul>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If you need help, contact the Environmental Health Department at the polyclinic for the area where your event or activity will be held:</p>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-s);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Branford Taitt Polyclinic — <a href="tel:+12465363706" class="govbb-link">(246) 536-3706</a> or <a href="tel:+12465363719" class="govbb-link">(246) 536-3719</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Eunice Gibson Polyclinic — <a href="tel:+12465364031" class="govbb-link">(246) 536-4031</a> or <a href="tel:+12465364032" class="govbb-link">(246) 536-4032</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">David Thompson Health &amp; Social Services Complex — <a href="tel:+12465364453" class="govbb-link">(246) 536-4453</a> or <a href="tel:+12465364445" class="govbb-link">(246) 536-4445</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Maurice Byer Polyclinic — <a href="tel:+12465363214" class="govbb-link">(246) 536-3214</a> or <a href="tel:+12465363210" class="govbb-link">(246) 536-3210</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Randal Phillips Polyclinic — <a href="tel:+12465354307" class="govbb-link">(246) 535-4307</a> or <a href="tel:+12465354314" class="govbb-link">(246) 535-4314</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">St. Philip Polyclinic — <a href="tel:+12465364240" class="govbb-link">(246) 536-4240</a> or <a href="tel:+12465364242" class="govbb-link">(246) 536-4242</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Sir Winston Scott Polyclinic — <a href="tel:+12465363475" class="govbb-link">(246) 536-3475</a> or <a href="tel:+12465363476" class="govbb-link">(246) 536-3476</a></li>
+      </ul>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Or contact the Environmental Health Department, Ministry of Health and Wellness: <a href="tel:+12465363800" class="govbb-link">1 (246) 536-3800</a>, <a href="mailto:info@health.gov.bb" class="govbb-link">info@health.gov.bb</a> — Frank Walcott Building, Culloden Road, St. Michael.</p>
+    </div>`,
+
+  'applicant-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Your details</h1>
+
+      ${textField('applicant-first-name', 'First name')}
+      ${textField('applicant-middle-name', 'Middle name (optional)')}
+      ${textField('applicant-surname', 'Last name')}
+      ${textField('applicant-line1', 'Address line 1')}
+      ${textField('applicant-line2', 'Address line 2 (optional)')}
+      ${selectField('applicant-parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Enter at least one phone number so we can contact you.</p>
+      ${textField('phone-home', 'Home telephone (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 433 1234.' })}
+      ${textField('phone-cell', 'Mobile number (optional)', { type: 'tel', inputmode: 'tel', hint: 'For example, (246) 249 1234.' })}
+      ${textField('phone-work', 'Work telephone (optional)', { type: 'tel', inputmode: 'tel' })}
+      ${textField('email', 'Email address', { type: 'email', inputmode: 'email', hint: 'We will use this to contact you about your request. For example, you@example.com.' })}
+
+      ${btns()}
+    </form>`,
+
+  'event-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Where and when</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Where the activity will take place</h2>
+      ${textField('event-line1', 'Address line 1')}
+      ${textField('event-line2', 'Address line 2 (optional)')}
+      ${selectField('event-parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish' })}
+
+      ${dateField('event-date', 'Date you need the officers to attend', 'Contact the polyclinic at least two weeks before this date. For example, 27 6 2025.')}
+
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="time-from">Start time</label>
+        <p class="govbb-hint">When you need the officers to arrive.</p>
+        <div class="govbb-input-wrapper" style="max-width:10rem;"><input class="govbb-input" type="time" id="time-from" name="time-from" data-field="time-from" value="${val('time-from')}" /></div>
+      </div>
+      <div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">
+        <label class="govbb-label" for="time-to">End time</label>
+        <p class="govbb-hint">When you expect to finish.</p>
+        <div class="govbb-input-wrapper" style="max-width:10rem;"><input class="govbb-input" type="time" id="time-to" name="time-to" data-field="time-to" value="${val('time-to')}" /></div>
+      </div>
+
+      ${btns()}
+    </form>`,
+
+  'purpose': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Requesting the officers</h1>
+
+      <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin:0;"><strong>If food will be served, you must request officers to attend.</strong></p>
+      </div>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Environmental Health Officers monitor food hygiene, sanitation and waste disposal at your event. This is not optional — whether officers are assigned is at the polyclinic's discretion, but the request itself is required.</p>
+
+      ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the activity will be held. The Edgar Cochrane area is served by Sir Winston Scott, and the Frederick Miller area by St. Philip Polyclinic (Six Roads). The request goes to the Environmental Health Department there, through the Principal Environmental Health Officer.' })}
+
+      ${btns()}
+    </form>`,
+
+  'documents': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Site plan and vendors</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Provide a site plan of the venue and a list of your food vendors.</p>
+
+      ${uploadRow('site-plan', 'Site plan', 'A comprehensive layout of the event venue — including stall positions, waste disposal, water supply and bathroom facilities. PDF, JPG or PNG.', false)}
+
+      ${uploadRow('vendor-list', 'Food vendor list', 'A complete list of food vendors and their contact details. PDF, JPG, PNG, DOC or DOCX.', true)}
+      <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <p class="govbb-text-body" style="margin:0;">You can upload the vendor list here, or email it to the polyclinic you apply to.</p>
+      </div>
+
+      ${btns()}
+    </form>`,
+
+  'check': () => `
+    <div>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Check your answers</h1>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Applicant</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Full name', [GovBB.D['applicant-first-name'], GovBB.D['applicant-middle-name'], GovBB.D['applicant-surname']].filter(Boolean).join(' '), 'applicant-details')}
+        ${GovBB.summaryRow('Address', fmtAddress('applicant'), 'applicant-details')}
+        ${GovBB.summaryRow('Mobile', GovBB.D['phone-cell'] || '', 'applicant-details')}
+        ${GovBB.summaryRow('Home phone', GovBB.D['phone-home'] || 'Not provided', 'applicant-details')}
+        ${GovBB.summaryRow('Work phone', GovBB.D['phone-work'] || 'Not provided', 'applicant-details')}
+        ${GovBB.summaryRow('Email', GovBB.D['email'] || '', 'applicant-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Where and when</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Address of activity', fmtAddress('event'), 'event-details')}
+        ${GovBB.summaryRow('Date', fmtDate('event-date'), 'event-details')}
+        ${GovBB.summaryRow('Time', fmtTimes(), 'event-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Request</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Polyclinic', GovBB.D['polyclinic'] || '', 'purpose')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Site plan and vendors</h2>
+      <dl style="margin-bottom:var(--spacing-l);">
+        ${GovBB.summaryRow('Site plan', GovBB.D['upload-site-plan'] ? GovBB.D['upload-site-plan'].name : 'Not uploaded', 'documents')}
+        ${GovBB.summaryRow('Food vendor list', GovBB.D['upload-vendor-list'] ? GovBB.D['upload-vendor-list'].name : 'Not uploaded', 'documents')}
+      </dl>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Continue to declaration</button>
+      </div>
+    </div>`,
+
+  'declaration': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Declaration</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Please confirm the information you have given is correct before you submit your request.</p>
+
+      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
+        <legend class="govbb-visually-hidden">Declaration</legend>
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);margin-bottom:var(--spacing-s);">
+          <input class="govbb-checkbox" type="checkbox" id="declare-agree" name="declare-agree" data-field="declare-agree"${GovBB.D['declare-agree']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="declare-agree">I declare that the information I have given is true and complete.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);margin-bottom:var(--spacing-s);">
+          <input class="govbb-checkbox" type="checkbox" id="declare-costs" name="declare-costs" data-field="declare-costs"${GovBB.D['declare-costs']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="declare-costs">I understand that I am responsible for paying the officers for their attendance, including weekday after-hours (hourly) and weekend or public holiday (flat) rates.</label>
+        </div>
+        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
+          <input class="govbb-checkbox" type="checkbox" id="declare-meeting" name="declare-meeting" data-field="declare-meeting"${GovBB.D['declare-meeting']?' checked':''} />
+          <label class="govbb-checkbox-item__label" for="declare-meeting">I will schedule a site meeting with the polyclinic to review the stall layout, waste disposal, potable water supply and bathroom facilities.</label>
+        </div>
+      </fieldset>
+
+      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
+        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
+        <button type="button" class="govbb-btn" onclick="next()">Submit request</button>
+      </div>
+    </form>`,
+
+  'confirmation': () => {
+    window.__refNumber = window.__refNumber || ('EHO-' + Math.random().toString(36).substring(2, 8).toUpperCase());
+    if (document.title.indexOf('Error: ') === 0) document.title = document.title.substring('Error: '.length);
+    return `
+    <div>
+      <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
+        <h1 class="govbb-text-h1" style="color:var(--color-green-00);">Request submitted</h1>
+        <p class="govbb-text-body" style="margin-top:var(--spacing-s);">Your reference number</p>
+        <p style="font-size:var(--font-size-h2);font-weight:var(--font-weight-bold);">${window.__refNumber}</p>
+      </div>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">A copy of your request has been sent to <strong>${escapeHtml(GovBB.D['email'] || 'the email address you gave us')}</strong>.</p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Environmental Health Department at <strong>${escapeHtml(GovBB.D['polyclinic'] || 'your chosen polyclinic')}</strong> will review your request.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">They will contact you to confirm whether officers can attend and to arrange a site meeting.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you have not uploaded your food vendor list, email it to the polyclinic.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number for any follow-up.</li>
+      </ul>
+
+      <p style="margin-bottom:var(--spacing-l);"><a class="govbb-link" href="#" onclick="event.preventDefault();GovBB.D={};window.__refNumber=null;GovBB.nav('start');">Make another request</a></p>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Contact the Environmental Health Department, Ministry of Health and Wellness, or the polyclinic you applied to, if you need help.</p>
+      <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12465363800" class="govbb-link">1 (246) 536-3800</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Email: <a href="mailto:info@health.gov.bb" class="govbb-link">info@health.gov.bb</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Frank Walcott Building, Culloden Road, St. Michael</li>
+      </ul>
+    </div>`;
+  }
+
+};
+
+/* ───────── Validation ───────── */
+function validate(pageId) {
+  const D = GovBB.D;
+  const errors = [];
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function reqText(id, msg) { if (!D[id] || !String(D[id]).trim()) errors.push({ id: id, msg: msg }); }
+  function reqPhone(id, label, required) {
+    var v = (D[id] || '').trim();
+    if (!v) { if (required) errors.push({ id: id, msg: 'Enter ' + label }); return; }
+    var digits = v.replace(/[\s\-()+]/g, '');
+    if (!/^\d{7,15}$/.test(digits)) errors.push({ id: id, msg: 'Enter ' + label + ' using 7 to 15 digits, for example (246) 249 1234' });
+  }
+  function reqDate(prefix, label) {
+    var d = D[prefix + '-day'], m = D[prefix + '-month'], y = D[prefix + '-year'];
+    if (!d || !m || !y) { errors.push({ id: prefix + '-day', msg: label + ' – Enter a complete date' }); return null; }
+    var day = parseInt(d, 10), month = parseInt(m, 10), year = parseInt(y, 10);
+    var parsed = new Date(year, month - 1, day);
+    if (parsed.getFullYear() !== year || parsed.getMonth() !== month - 1 || parsed.getDate() !== day) {
+      errors.push({ id: prefix + '-day', msg: label + ' – Enter a real date, for example 27 6 2025' }); return null;
+    }
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    if (parsed < today) { errors.push({ id: prefix + '-day', msg: label + ' – Enter a date that is today or in the future' }); return null; }
+    return parsed;
+  }
+
+  if (pageId === 'applicant-details') {
+    reqText('applicant-first-name', 'Enter your first name');
+    reqText('applicant-surname', 'Enter your last name');
+    reqText('applicant-line1', 'Enter your address');
+    reqText('applicant-parish', 'Select your parish');
+    reqPhone('phone-home', 'a home telephone number', false);
+    reqPhone('phone-cell', 'a mobile number', false);
+    reqPhone('phone-work', 'a work telephone number', false);
+    if (!(D['phone-home'] || '').trim() && !(D['phone-cell'] || '').trim() && !(D['phone-work'] || '').trim())
+      errors.push({ id: 'phone-home', msg: 'Enter at least one phone number — home, mobile, or work' });
+    var email = (D['email'] || '').trim();
+    if (!email) errors.push({ id: 'email', msg: 'Enter your email address' });
+    else if (!EMAIL_RE.test(email)) errors.push({ id: 'email', msg: 'Enter an email address in the format you@example.com' });
+  }
+
+  if (pageId === 'event-details') {
+    reqText('event-line1', 'Enter the address where the activity will take place');
+    reqText('event-parish', 'Select the parish');
+    var when = reqDate('event-date', 'Date');
+    if (when) {
+      var minStart = new Date(); minStart.setHours(0, 0, 0, 0); minStart.setDate(minStart.getDate() + 14);
+      if (when < minStart) errors.push({ id: 'event-date-day', msg: 'Date – You must contact the polyclinic at least two weeks (14 days) before the event' });
+    }
+    if (!D['time-from']) errors.push({ id: 'time-from', msg: 'Enter the start time' });
+    if (!D['time-to']) errors.push({ id: 'time-to', msg: 'Enter the end time' });
+    if (D['time-from'] && D['time-to'] && D['time-to'] <= D['time-from']) errors.push({ id: 'time-to', msg: 'The end time must be after the start time' });
+  }
+
+  if (pageId === 'purpose') {
+    reqText('polyclinic', 'Select the polyclinic you are applying to');
+  }
+
+  if (pageId === 'documents') {
+    if (!D['upload-site-plan']) errors.push({ id: 'upload-site-plan', msg: 'Upload a site plan of the venue' });
+  }
+
+  if (pageId === 'declaration') {
+    if (!D['declare-agree']) errors.push({ id: 'declare-agree', msg: 'Tick the box to declare the information is true' });
+    if (!D['declare-costs']) errors.push({ id: 'declare-costs', msg: 'Tick the box to confirm you understand the charges' });
+    if (!D['declare-meeting']) errors.push({ id: 'declare-meeting', msg: 'Tick the box to confirm you will schedule a site meeting' });
+  }
+
+  return errors;
+}
+
+/* ───────── Init ───────── */
+GovBB.init({
+  formName: FORM_NAME,
+  getFlow: function () { return FLOW; },
+  pages: PAGES,
+  validate: validate
+});
+
+/* ───────── Auto-fill (demo helper) ─────────
+   Floating button that fills the CURRENT page with realistic sample data,
+   so reviewers can see how the form behaves without typing. */
+(function () {
+  function futParts(days){ var dt=new Date(); dt.setDate(dt.getDate()+days); return { d:String(dt.getDate()), m:String(dt.getMonth()+1), y:String(dt.getFullYear()) }; }
+  function fillCurrentPage() {
+    var D = GovBB.D;
+    var flow = GovBB.getFlow();
+    var pageId = flow[GovBB.getCurrentIndex()];
+    switch (pageId) {
+      case 'applicant-details':
+        D['applicant-first-name'] = 'Marcus'; D['applicant-middle-name'] = ''; D['applicant-surname'] = 'Browne';
+        D['applicant-line1'] = '12 Bay Street'; D['applicant-line2'] = ''; D['applicant-parish'] = 'St. Michael';
+        D['phone-home'] = ''; D['phone-cell'] = '(246) 249 1234'; D['phone-work'] = '';
+        D['email'] = 'marcus.browne@example.com';
+        break;
+      case 'event-details':
+        D['event-line1'] = 'Oistins Bay Garden'; D['event-line2'] = ''; D['event-parish'] = 'Christ Church';
+        var f = futParts(21);
+        D['event-date-day'] = f.d; D['event-date-month'] = f.m; D['event-date-year'] = f.y;
+        D['time-from'] = '16:00'; D['time-to'] = '23:00';
+        break;
+      case 'purpose':
+        D['polyclinic'] = 'Maurice Byer Polyclinic';
+        break;
+      case 'documents':
+        D['upload-site-plan'] = { name: 'site-plan.pdf', size: 180000, type: 'application/pdf' };
+        D['upload-vendor-list'] = { name: 'food-vendor-list.pdf', size: 96000, type: 'application/pdf' };
+        break;
+      case 'declaration':
+        D['declare-agree'] = true; D['declare-costs'] = true; D['declare-meeting'] = true;
+        break;
+      default:
+        return false;
+    }
+    GovBB.render();
+    return true;
+  }
+  function buildButton() {
+    if (document.getElementById('eho-autofill-btn')) return;
+    var btn = document.createElement('button');
+    btn.id = 'eho-autofill-btn'; btn.type = 'button';
+    btn.setAttribute('aria-label', 'Auto-fill this page with sample data');
+    btn.setAttribute('title', 'Fill this page with sample data');
+    btn.style.cssText = [
+      'position:fixed', 'bottom:6.5rem', 'right:1.5rem', 'z-index:9999',
+      'display:inline-flex', 'align-items:center', 'gap:0.5rem',
+      'padding:0.5rem 0.875rem', 'border-radius:9999px',
+      'border:2px solid #00267f', 'background:#00267f', 'color:#ffffff',
+      'font-family:inherit', 'font-size:0.875rem', 'font-weight:600', 'line-height:1.4',
+      'cursor:pointer', 'box-shadow:0 2px 8px rgba(0,0,0,0.18)'
+    ].join(';');
+    var label = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Auto-fill page';
+    btn.innerHTML = label;
+    btn.addEventListener('click', function () {
+      if (!fillCurrentPage()) { btn.innerHTML = 'Nothing to fill here'; setTimeout(function () { btn.innerHTML = label; }, 1200); }
+    });
+    document.body.appendChild(btn);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', buildButton);
+  else buildButton();
+})();
+</script>
+
+<!-- Comment World feedback widget -->
+<script>window.CommentWidget = { siteId: "3f6a568d-ae7b-47a9-bef0-beace3e0b197" };</script>
+<script async src="https://comment-world-dashboard.vercel.app/widget.js"></script>
+</body>
+</html>
