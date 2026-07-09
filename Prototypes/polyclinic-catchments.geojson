@@ -1,0 +1,313 @@
+{
+  "type": "FeatureCollection",
+  "name": "polyclinic_catchments_mock",
+  "note": "MOCK catchment polygons traced approximately from the 'Polyclinic Catchment Areas' map. Replace with the official shapefile/GeoJSON when available.",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "catchment": "Maurice Byer",
+        "polyclinic": "Maurice Byer Polyclinic",
+        "phone": "536-3214",
+        "email": "mbpc.apps@health.gov.bb",
+        "mock": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -59.64,
+              13.2
+            ],
+            [
+              -59.52,
+              13.2
+            ],
+            [
+              -59.5,
+              13.3
+            ],
+            [
+              -59.6,
+              13.34
+            ],
+            [
+              -59.64,
+              13.28
+            ],
+            [
+              -59.64,
+              13.2
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "catchment": "Eunice Gibson",
+        "polyclinic": "Eunice Gibson Polyclinic",
+        "phone": "536-4033",
+        "email": "environmentalhealthegpc@gmail.com",
+        "mock": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -59.64,
+              13.13
+            ],
+            [
+              -59.575,
+              13.13
+            ],
+            [
+              -59.57,
+              13.2
+            ],
+            [
+              -59.64,
+              13.2
+            ],
+            [
+              -59.64,
+              13.13
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "catchment": "David Thompson",
+        "polyclinic": "David Thompson Health & Social Services Complex",
+        "phone": "536-4453",
+        "email": "Dthssc.ehd@health.gov.bb",
+        "mock": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -59.57,
+              13.11
+            ],
+            [
+              -59.46,
+              13.13
+            ],
+            [
+              -59.48,
+              13.22
+            ],
+            [
+              -59.57,
+              13.2
+            ],
+            [
+              -59.57,
+              13.11
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "catchment": "Frederick Miller",
+        "polyclinic": "St. Philip Polyclinic",
+        "phone": "536-1240",
+        "email": "stphillippolyclinicehd@gmail.com",
+        "mock": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -59.6,
+              13.08
+            ],
+            [
+              -59.54,
+              13.08
+            ],
+            [
+              -59.54,
+              13.13
+            ],
+            [
+              -59.6,
+              13.13
+            ],
+            [
+              -59.6,
+              13.08
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "catchment": "St. Philip",
+        "polyclinic": "St. Philip Polyclinic",
+        "phone": "536-1240",
+        "email": "stphillippolyclinicehd@gmail.com",
+        "mock": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -59.5,
+              13.05
+            ],
+            [
+              -59.42,
+              13.08
+            ],
+            [
+              -59.44,
+              13.15
+            ],
+            [
+              -59.5,
+              13.13
+            ],
+            [
+              -59.5,
+              13.05
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "catchment": "Winston Scott",
+        "polyclinic": "Sir Winston Scott Polyclinic",
+        "phone": "536-3476",
+        "email": "ehd.wspc@health.gov.bb",
+        "mock": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -59.64,
+              13.06
+            ],
+            [
+              -59.6,
+              13.06
+            ],
+            [
+              -59.6,
+              13.11
+            ],
+            [
+              -59.64,
+              13.11
+            ],
+            [
+              -59.64,
+              13.06
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "catchment": "Black Rock",
+        "polyclinic": "Sir Winston Scott Polyclinic",
+        "phone": "536-3476",
+        "email": "ehd.wspc@health.gov.bb",
+        "mock": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -59.655,
+              13.1
+            ],
+            [
+              -59.62,
+              13.1
+            ],
+            [
+              -59.62,
+              13.145
+            ],
+            [
+              -59.655,
+              13.145
+            ],
+            [
+              -59.655,
+              13.1
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "catchment": "Randal Phillips",
+        "polyclinic": "Randal Phillips Polyclinic",
+        "phone": "536-4338",
+        "email": "Rppc.ehd@health.gov.bb",
+        "mock": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -59.6,
+              13.04
+            ],
+            [
+              -59.5,
+              13.05
+            ],
+            [
+              -59.52,
+              13.09
+            ],
+            [
+              -59.6,
+              13.08
+            ],
+            [
+              -59.6,
+              13.04
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
