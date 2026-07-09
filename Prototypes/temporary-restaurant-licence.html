@@ -433,7 +433,7 @@ const PAGES = {
       ${textField('event-line2', 'Event address line 2 (optional)')}
       ${selectField('event-parish', 'Parish of event', GovBB.PARISHES, { placeholder: 'Select a parish' })}
 
-      ${dateField('event-from', 'Start date', 'The first day the temporary restaurant will operate. You must apply at least two weeks before this date. For example, 27 6 2025.')}
+      ${dateField('event-from', 'Start date', 'The first day the temporary restaurant will operate. You must apply at least 2 weeks before this date. For example, 27 6 2025.')}
       ${dateField('event-to', 'End date', 'The last day the temporary restaurant will operate.')}
 
       ${selectField('polyclinic', 'Which polyclinic are you applying to?', POLYCLINICS, { trigger: true, placeholder: 'Select a polyclinic', hint: 'Choose the polyclinic for the area where the event will be held — the Environmental Health Department there will process your application. The Edgar Cochrane area is served by Sir Winston Scott, and the Frederick Miller area by St. Philip Polyclinic (Six Roads).' })}
@@ -690,7 +690,7 @@ function validate(pageId) {
     var to = reqDate('event-to', 'End date');
     if (from) {
       var minStart = new Date(); minStart.setHours(0, 0, 0, 0); minStart.setDate(minStart.getDate() + 14);
-      if (from < minStart) errors.push({ id: 'event-from-day', msg: 'Start date – You must apply at least two weeks (14 days) before the event' });
+      if (from < minStart) errors.push({ id: 'event-from-day', msg: 'Start date – You must apply at least 2 weeks (14 days) before the event' });
     }
     if (from && to && to < from) errors.push({ id: 'event-to-day', msg: 'The end date must be the same as or after the start date' });
     reqText('polyclinic', 'Select the polyclinic you are applying to');
