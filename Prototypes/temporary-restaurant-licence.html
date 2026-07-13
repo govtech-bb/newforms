@@ -2282,7 +2282,9 @@
 }
 
   </style>
-<style>.govbb-skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--color-text,#0b0c0c);color:var(--color-background,#fff);padding:0.75rem 1rem;text-decoration:none;}.govbb-skip-link:focus{left:0;}:focus-visible{outline:3px solid var(--color-text,#0b0c0c);outline-offset:2px;}</style>
+<style>.govbb-skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--color-text,#0b0c0c);color:var(--color-background,#fff);padding:0.75rem 1rem;text-decoration:none;}.govbb-skip-link:focus{left:0;}:focus-visible{outline:3px solid var(--color-text,#0b0c0c);outline-offset:2px;}
+/* Mobile-ready: scale design-system type tokens down on small screens */
+@media (max-width:48rem){:root,:host{--font-size-display:2.5rem;--font-size-h1:2rem;--font-size-h2:1.5rem;--font-size-h3:1.25rem;--font-size-h4:1.125rem;--font-size-body-lg:1.25rem;}h1,h2,h3,h4,.govbb-text-display,.govbb-text-h1,.govbb-text-h2,.govbb-text-h3,.govbb-text-h4{overflow-wrap:break-word;}}</style>
 </head>
 <body class="govbb-page">
 <a href="#main" class="govbb-skip-link">Skip to main content</a>
@@ -2994,7 +2996,7 @@ function escapeHtml(s) {
 }
 function val(id) { return escapeHtml(GovBB.D[id] || ''); }
 
-var SHOW_DRAFT_NOTES = true; /* set to false before publishing to strip every [Confirm] draft note */
+var SHOW_DRAFT_NOTES = false; /* set to false before publishing to strip every [Confirm] draft note */
 function confirmNote(t) {
   if (!SHOW_DRAFT_NOTES) return '';
   return '<p class="confirm-note" style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-m);font-size:var(--font-size-caption);">[Confirm: ' + escapeHtml(t) + ']</p>';
@@ -3015,7 +3017,7 @@ function officerDateTimes() {
   }
   return html + '<div style="margin-bottom:var(--spacing-m);"><button type="button" class="govbb-btn--secondary" onclick="addOfficerDateTime()">Add an additional date and time</button></div>';
 }
-function addOfficerDateTime() { var n = parseInt(GovBB.D['officer-dt-count'], 10) || 1; GovBB.D['officer-dt-count'] = n + 1; GovBB.render(); }
+function addOfficerDateTime() { var n = (parseInt(GovBB.D['officer-dt-count'], 10) || 1) + 1; GovBB.D['officer-dt-count'] = n; GovBB.render(); var el = document.getElementById('officer-dt-' + n + '-date-day'); if (el) el.focus(); }
 function removeOfficerDateTime(idx) {
   var n = parseInt(GovBB.D['officer-dt-count'], 10) || 1;
   var parts = ['date-day', 'date-month', 'date-year', 'start', 'end'];
@@ -3120,6 +3122,18 @@ function btns(label) {
   return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">' + (label || 'Continue') + '</button></div>';
 }
 
+/* Regulatory note: officers are assigned by the Environmental Health Department
+   from the event dates, under the Health Services (Assignment of Public Health
+   Inspectors to Private Businesses) Regulations, 1986. Same markup as the
+   officer-request form. */
+function regNote() {
+  return '<details class="govbb-show-hide" style="margin-bottom:var(--spacing-m);">'
+    + '<summary class="govbb-show-hide__summary">Why you do not choose officer times</summary>'
+    + '<div class="govbb-show-hide__content">'
+    + '<p class="govbb-text-body" style="margin:0;">The Environmental Health Department assigns officers based on your event\'s dates and times. This follows the Health Services (Assignment of Public Health Inspectors to Private Businesses) Regulations, 1986, which set officers\' working days and hours (regulation 2 and the First Schedule) and the fees for attendance outside those hours (regulation 7 and the Second Schedule).</p>'
+    + '</div></details>';
+}
+
 function fmtDate(prefix) {
   var d = GovBB.D[prefix + '-day'], m = GovBB.D[prefix + '-month'], y = GovBB.D[prefix + '-year'];
   if (!d && !m && !y) return '';
@@ -3207,8 +3221,8 @@ const POLYCLINIC_CONTACTS = {
    out into a real server-side service.
 
    DATA: polyclinic-catchments.geojson (shipped beside this file) is a
-   MOCK of the "Polyclinic Catchment Areas" map. Swap it for the
-   official shapefile/GeoJSON when available.
+   the OFFICIAL "Polyclinic Catchment Areas", reprojected from
+   Barbados_Polyclinics.shp (Barbados National Grid) to WGS84.
 
    ENTRY POINT: GOVBB_BACKEND.assignPolyclinic({ parish, lng, lat })
    - With lng/lat it runs point-in-polygon against the catchments
@@ -3220,7 +3234,7 @@ const POLYCLINIC_CONTACTS = {
    ============================================================ */
 var GOVBB_BACKEND = (function () {
   var PARISH_TO_POLYCLINIC = {"St. Lucy": "Maurice Byer Polyclinic", "St. Peter": "Maurice Byer Polyclinic", "St. Andrew": "Maurice Byer Polyclinic", "St. James": "Maurice Byer Polyclinic", "St. Thomas": "Eunice Gibson Polyclinic", "St. Joseph": "David Thompson Health & Social Services Complex", "St. John": "David Thompson Health & Social Services Complex", "St. George": "David Thompson Health & Social Services Complex", "St. Philip": "St. Philip Polyclinic", "Christ Church": "Randal Phillips Polyclinic", "St. Michael": "Sir Winston Scott Polyclinic"};
-  var CATCHMENTS = [{"polyclinic": "Maurice Byer Polyclinic", "ring": [[-59.64, 13.2], [-59.52, 13.2], [-59.5, 13.3], [-59.6, 13.34], [-59.64, 13.28], [-59.64, 13.2]]}, {"polyclinic": "Eunice Gibson Polyclinic", "ring": [[-59.64, 13.13], [-59.575, 13.13], [-59.57, 13.2], [-59.64, 13.2], [-59.64, 13.13]]}, {"polyclinic": "David Thompson Health & Social Services Complex", "ring": [[-59.57, 13.11], [-59.46, 13.13], [-59.48, 13.22], [-59.57, 13.2], [-59.57, 13.11]]}, {"polyclinic": "St. Philip Polyclinic", "ring": [[-59.6, 13.08], [-59.54, 13.08], [-59.54, 13.13], [-59.6, 13.13], [-59.6, 13.08]]}, {"polyclinic": "St. Philip Polyclinic", "ring": [[-59.5, 13.05], [-59.42, 13.08], [-59.44, 13.15], [-59.5, 13.13], [-59.5, 13.05]]}, {"polyclinic": "Sir Winston Scott Polyclinic", "ring": [[-59.64, 13.06], [-59.6, 13.06], [-59.6, 13.11], [-59.64, 13.11], [-59.64, 13.06]]}, {"polyclinic": "Sir Winston Scott Polyclinic", "ring": [[-59.655, 13.1], [-59.62, 13.1], [-59.62, 13.145], [-59.655, 13.145], [-59.655, 13.1]]}, {"polyclinic": "Randal Phillips Polyclinic", "ring": [[-59.6, 13.04], [-59.5, 13.05], [-59.52, 13.09], [-59.6, 13.08], [-59.6, 13.04]]}]; /* mock; mirrors polyclinic-catchments.geojson */
+  var CATCHMENTS = [{"polyclinic": "Branford Taitt Polyclinic", "ring": [[-59.63639, 13.18611], [-59.63314, 13.18412], [-59.62045, 13.18566], [-59.61628, 13.18505], [-59.61296, 13.18608], [-59.61446, 13.1819], [-59.61936, 13.18044], [-59.61892, 13.1769], [-59.61979, 13.17504], [-59.62687, 13.17465], [-59.62672, 13.17257], [-59.62809, 13.17181], [-59.62816, 13.16413], [-59.62905, 13.16157], [-59.62809, 13.15902], [-59.62572, 13.15898], [-59.62455, 13.1572], [-59.6247, 13.15217], [-59.62303, 13.14862], [-59.62262, 13.14463], [-59.62378, 13.13575], [-59.61778, 13.1326], [-59.61591, 13.13287], [-59.60657, 13.1266], [-59.60762, 13.12412], [-59.61386, 13.11813], [-59.61482, 13.11338], [-59.61107, 13.1103], [-59.61676, 13.09613], [-59.61928, 13.09526], [-59.61885, 13.09589], [-59.62022, 13.0959], [-59.62011, 13.09663], [-59.62226, 13.09652], [-59.62015, 13.0952], [-59.62229, 13.09612], [-59.62381, 13.09796], [-59.6289, 13.10018], [-59.62957, 13.09949], [-59.62886, 13.10027], [-59.63234, 13.10206], [-59.63294, 13.10674], [-59.63223, 13.1021], [-59.62975, 13.10095], [-59.62842, 13.10141], [-59.63007, 13.10725], [-59.62787, 13.10888], [-59.62602, 13.10606], [-59.62539, 13.1069], [-59.62703, 13.11073], [-59.63007, 13.10971], [-59.63083, 13.11149], [-59.63185, 13.11109], [-59.62738, 13.1129], [-59.62771, 13.11612], [-59.62937, 13.1199], [-59.63337, 13.1238], [-59.6351, 13.13108], [-59.63665, 13.13317], [-59.63616, 13.13711], [-59.63895, 13.14445], [-59.63833, 13.15396], [-59.63705, 13.15732], [-59.638, 13.16123], [-59.63723, 13.16684], [-59.6383, 13.16881], [-59.63761, 13.17483], [-59.63971, 13.17861], [-59.63857, 13.18619], [-59.63639, 13.18611]]}, {"polyclinic": "St. Philip Polyclinic", "ring": [[-59.44598, 13.10314], [-59.46502, 13.10487], [-59.46849, 13.10469], [-59.47088, 13.10343], [-59.48617, 13.10366], [-59.48614, 13.1055], [-59.48794, 13.1056], [-59.49584, 13.10038], [-59.49652, 13.10182], [-59.49535, 13.10654], [-59.49762, 13.10688], [-59.49687, 13.11613], [-59.4978, 13.11683], [-59.507, 13.11632], [-59.50679, 13.1202], [-59.50945, 13.1204], [-59.50886, 13.12324], [-59.50701, 13.12431], [-59.50596, 13.12749], [-59.50651, 13.13258], [-59.50213, 13.13317], [-59.5043, 13.13659], [-59.49821, 13.13985], [-59.49916, 13.14272], [-59.49842, 13.1467], [-59.50045, 13.14739], [-59.50094, 13.14871], [-59.50036, 13.14972], [-59.49785, 13.14955], [-59.49746, 13.155], [-59.49869, 13.15811], [-59.49886, 13.16249], [-59.49038, 13.16162], [-59.49042, 13.16074], [-59.48945, 13.16054], [-59.47963, 13.16378], [-59.46885, 13.16253], [-59.46519, 13.16709], [-59.46611, 13.16888], [-59.46249, 13.1716], [-59.46345, 13.17396], [-59.45656, 13.18054], [-59.45116, 13.17453], [-59.44882, 13.17519], [-59.45034, 13.17257], [-59.44873, 13.17249], [-59.44834, 13.16926], [-59.4451, 13.16789], [-59.44337, 13.16485], [-59.44199, 13.16558], [-59.43875, 13.16346], [-59.43155, 13.16569], [-59.43133, 13.16245], [-59.42835, 13.16313], [-59.42559, 13.15663], [-59.42174, 13.15552], [-59.42232, 13.15193], [-59.42035, 13.15019], [-59.42273, 13.13883], [-59.42391, 13.13865], [-59.42477, 13.13529], [-59.42624, 13.13438], [-59.42659, 13.13148], [-59.42913, 13.12944], [-59.43019, 13.12348], [-59.43608, 13.11627], [-59.44009, 13.11323], [-59.44254, 13.10744], [-59.44598, 13.10314]]}, {"polyclinic": "Maurice Byer Polyclinic", "ring": [[-59.50806, 13.20955], [-59.5081, 13.20953], [-59.50805, 13.20956], [-59.50806, 13.20955]]}, {"polyclinic": "Maurice Byer Polyclinic", "ring": [[-59.61254, 13.33488], [-59.61263, 13.33404], [-59.60871, 13.33234], [-59.60752, 13.33288], [-59.60619, 13.33024], [-59.60487, 13.33022], [-59.60164, 13.32753], [-59.59881, 13.32735], [-59.59941, 13.326], [-59.59493, 13.32293], [-59.59482, 13.3223], [-59.5963, 13.32248], [-59.59524, 13.32099], [-59.58926, 13.3167], [-59.5857, 13.31264], [-59.58476, 13.31277], [-59.58579, 13.31116], [-59.58462, 13.31181], [-59.58072, 13.31058], [-59.58028, 13.31113], [-59.57707, 13.30834], [-59.57634, 13.30653], [-59.5783, 13.30392], [-59.57551, 13.30353], [-59.57529, 13.30181], [-59.57383, 13.30033], [-59.5775, 13.29791], [-59.57658, 13.29646], [-59.574, 13.29549], [-59.57168, 13.29141], [-59.57225, 13.29001], [-59.56791, 13.28385], [-59.56813, 13.27887], [-59.56533, 13.27138], [-59.56078, 13.26499], [-59.55563, 13.2539], [-59.54629, 13.24156], [-59.53881, 13.22957], [-59.54067, 13.22727], [-59.54336, 13.22668], [-59.54334, 13.2253], [-59.54484, 13.22514], [-59.54485, 13.2232], [-59.54326, 13.22217], [-59.54365, 13.22102], [-59.54749, 13.22143], [-59.54901, 13.22033], [-59.5489, 13.22178], [-59.55341, 13.22256], [-59.55333, 13.22419], [-59.5552, 13.22549], [-59.55627, 13.22433], [-59.55905, 13.2237], [-59.56026, 13.22193], [-59.56237, 13.22266], [-59.5634, 13.22171], [-59.56239, 13.21494], [-59.56487, 13.21398], [-59.56363, 13.21164], [-59.56506, 13.20669], [-59.56179, 13.20408], [-59.56103, 13.2014], [-59.5628, 13.19677], [-59.56513, 13.19945], [-59.56479, 13.2014], [-59.56594, 13.2037], [-59.57349, 13.20824], [-59.57286, 13.21336], [-59.5702, 13.21543], [-59.56734, 13.21988], [-59.56947, 13.22149], [-59.57254, 13.22155], [-59.57352, 13.22257], [-59.57528, 13.22185], [-59.57661, 13.21789], [-59.58498, 13.21233], [-59.58722, 13.21297], [-59.58741, 13.21715], [-59.59315, 13.21559], [-59.59459, 13.21589], [-59.59508, 13.21741], [-59.59824, 13.21471], [-59.60022, 13.20866], [-59.6019, 13.2067], [-59.61605, 13.20071], [-59.61258, 13.1964], [-59.61177, 13.18623], [-59.61628, 13.18505], [-59.62045, 13.18566], [-59.63338, 13.18413], [-59.63664, 13.18646], [-59.63857, 13.18619], [-59.63822, 13.18868], [-59.64063, 13.19149], [-59.64252, 13.19701], [-59.6424, 13.19944], [-59.64041, 13.20369], [-59.64005, 13.20856], [-59.64229, 13.21826], [-59.64159, 13.22188], [-59.64357, 13.22568], [-59.64268, 13.23459], [-59.6454, 13.24048], [-59.64404, 13.24389], [-59.64492, 13.24641], [-59.64387, 13.24976], [-59.64492, 13.2517], [-59.6434, 13.26204], [-59.64502, 13.26324], [-59.64339, 13.26481], [-59.64647, 13.27132], [-59.64757, 13.27771], [-59.64981, 13.28264], [-59.65016, 13.28657], [-59.64916, 13.29288], [-59.64993, 13.3007], [-59.65097, 13.30179], [-59.65022, 13.30344], [-59.65084, 13.30572], [-59.64964, 13.30879], [-59.64006, 13.3199], [-59.63923, 13.32252], [-59.63823, 13.32259], [-59.63694, 13.32667], [-59.63397, 13.32774], [-59.63383, 13.32889], [-59.63088, 13.3284], [-59.62901, 13.33091], [-59.62696, 13.32982], [-59.62575, 13.33161], [-59.62327, 13.33161], [-59.62031, 13.33437], [-59.61837, 13.33323], [-59.61526, 13.33385], [-59.61451, 13.335], [-59.61399, 13.33427], [-59.61254, 13.33488]]}, {"polyclinic": "Eunice Gibson Polyclinic", "ring": [[-59.61996, 13.17504], [-59.61892, 13.1769], [-59.61936, 13.18044], [-59.61446, 13.1819], [-59.61296, 13.18608], [-59.6114, 13.18673], [-59.61263, 13.19656], [-59.61605, 13.20071], [-59.6019, 13.2067], [-59.60022, 13.20866], [-59.59824, 13.21471], [-59.59508, 13.21741], [-59.59459, 13.21589], [-59.59315, 13.21559], [-59.58741, 13.21715], [-59.58722, 13.21297], [-59.58512, 13.2123], [-59.57647, 13.21802], [-59.57465, 13.22222], [-59.56962, 13.22153], [-59.56737, 13.22], [-59.5702, 13.21543], [-59.57284, 13.2134], [-59.57372, 13.20911], [-59.56594, 13.2037], [-59.56479, 13.2014], [-59.56513, 13.19945], [-59.5628, 13.19677], [-59.56455, 13.19546], [-59.56408, 13.19134], [-59.569, 13.18364], [-59.56879, 13.17872], [-59.5712, 13.17423], [-59.57224, 13.16731], [-59.57571, 13.16531], [-59.57767, 13.16151], [-59.58144, 13.15847], [-59.58196, 13.15667], [-59.58401, 13.15569], [-59.58353, 13.15468], [-59.58429, 13.15432], [-59.57968, 13.15167], [-59.58161, 13.14835], [-59.57991, 13.14695], [-59.582, 13.14304], [-59.58307, 13.14411], [-59.58376, 13.14227], [-59.58202, 13.1387], [-59.58385, 13.13681], [-59.58357, 13.13111], [-59.58791, 13.11853], [-59.59538, 13.12646], [-59.60031, 13.11758], [-59.60332, 13.11812], [-59.60939, 13.11349], [-59.61107, 13.1103], [-59.61482, 13.11338], [-59.61398, 13.11772], [-59.60762, 13.12412], [-59.60657, 13.1266], [-59.61591, 13.13287], [-59.61778, 13.1326], [-59.62378, 13.13575], [-59.62262, 13.14463], [-59.62303, 13.14862], [-59.6247, 13.15217], [-59.62455, 13.1572], [-59.62572, 13.15898], [-59.62809, 13.15902], [-59.62906, 13.16149], [-59.62816, 13.16413], [-59.62809, 13.17181], [-59.62672, 13.17257], [-59.62687, 13.17465], [-59.61996, 13.17504]]}, {"polyclinic": "David Thompson Health & Social Services Complex", "ring": [[-59.50954, 13.12039], [-59.51815, 13.12001], [-59.52762, 13.11507], [-59.52788, 13.11929], [-59.52987, 13.12001], [-59.52987, 13.12242], [-59.53118, 13.12278], [-59.53057, 13.12371], [-59.53118, 13.1283], [-59.52945, 13.13236], [-59.52999, 13.13467], [-59.53243, 13.13534], [-59.53037, 13.13856], [-59.53163, 13.14122], [-59.53112, 13.14667], [-59.53319, 13.15639], [-59.54173, 13.15529], [-59.54526, 13.15384], [-59.55327, 13.1479], [-59.55316, 13.15273], [-59.55095, 13.15629], [-59.55082, 13.1582], [-59.55596, 13.15975], [-59.55559, 13.16391], [-59.55705, 13.16749], [-59.56407, 13.16227], [-59.57197, 13.16096], [-59.57571, 13.16217], [-59.57767, 13.16151], [-59.57571, 13.16531], [-59.57224, 13.16731], [-59.5712, 13.17423], [-59.56879, 13.17872], [-59.569, 13.18364], [-59.56408, 13.19134], [-59.56455, 13.19546], [-59.56275, 13.19681], [-59.56105, 13.20003], [-59.56179, 13.20408], [-59.56506, 13.20669], [-59.56363, 13.21164], [-59.56487, 13.21398], [-59.56239, 13.21494], [-59.5634, 13.22171], [-59.56237, 13.22266], [-59.56026, 13.22193], [-59.55905, 13.2237], [-59.55627, 13.22433], [-59.5552, 13.22549], [-59.55333, 13.22419], [-59.55341, 13.22256], [-59.5489, 13.22178], [-59.54901, 13.22033], [-59.54749, 13.22143], [-59.54365, 13.22102], [-59.54326, 13.22217], [-59.54485, 13.2232], [-59.54484, 13.22514], [-59.54334, 13.2253], [-59.54336, 13.22668], [-59.54067, 13.22727], [-59.5387, 13.22953], [-59.53021, 13.21943], [-59.52673, 13.2175], [-59.52577, 13.2159], [-59.51992, 13.21276], [-59.51601, 13.21265], [-59.51225, 13.21043], [-59.508, 13.20953], [-59.50384, 13.20437], [-59.49563, 13.19803], [-59.49193, 13.1974], [-59.48994, 13.1985], [-59.48812, 13.1977], [-59.48711, 13.19666], [-59.48631, 13.19166], [-59.48458, 13.19052], [-59.48197, 13.1911], [-59.4777, 13.18946], [-59.47682, 13.18774], [-59.47417, 13.18653], [-59.46903, 13.18107], [-59.46639, 13.18024], [-59.46656, 13.1786], [-59.46586, 13.17975], [-59.46289, 13.18084], [-59.46246, 13.18254], [-59.46027, 13.18253], [-59.45852, 13.18372], [-59.45728, 13.18213], [-59.45656, 13.18054], [-59.46345, 13.17396], [-59.46249, 13.1716], [-59.46611, 13.16888], [-59.46519, 13.16709], [-59.46885, 13.16253], [-59.47963, 13.16378], [-59.48945, 13.16054], [-59.49042, 13.16074], [-59.49038, 13.16162], [-59.49886, 13.16249], [-59.49869, 13.15811], [-59.49746, 13.155], [-59.49785, 13.14955], [-59.50036, 13.14972], [-59.50094, 13.14871], [-59.50045, 13.14739], [-59.49842, 13.1467], [-59.49916, 13.14272], [-59.49821, 13.13985], [-59.5043, 13.13659], [-59.50213, 13.13317], [-59.50651, 13.13258], [-59.50596, 13.12749], [-59.50701, 13.12431], [-59.50886, 13.12324], [-59.50954, 13.12039]]}, {"polyclinic": "Sir Winston Scott Polyclinic", "ring": [[-59.58791, 13.11854], [-59.5808, 13.11041], [-59.57983, 13.10502], [-59.57355, 13.10651], [-59.56273, 13.1066], [-59.55029, 13.10909], [-59.53924, 13.10846], [-59.53368, 13.11021], [-59.52762, 13.11507], [-59.52881, 13.10887], [-59.52766, 13.10294], [-59.52985, 13.08105], [-59.53068, 13.08047], [-59.5355, 13.08294], [-59.53694, 13.08509], [-59.54352, 13.08839], [-59.54817, 13.08606], [-59.54953, 13.08353], [-59.55237, 13.08275], [-59.55612, 13.08318], [-59.55998, 13.08199], [-59.56403, 13.0831], [-59.56782, 13.08277], [-59.56758, 13.0845], [-59.56928, 13.08588], [-59.57702, 13.08712], [-59.58162, 13.07498], [-59.58804, 13.07812], [-59.59145, 13.07763], [-59.59231, 13.07983], [-59.59879, 13.08117], [-59.60076, 13.0804], [-59.60252, 13.08115], [-59.6037, 13.07909], [-59.60547, 13.07869], [-59.60705, 13.07679], [-59.61215, 13.07757], [-59.61289, 13.07862], [-59.6126, 13.08105], [-59.61134, 13.08021], [-59.60981, 13.08255], [-59.61036, 13.08328], [-59.60964, 13.08317], [-59.60998, 13.08957], [-59.61533, 13.09467], [-59.61778, 13.0952], [-59.60943, 13.11343], [-59.60332, 13.11812], [-59.60031, 13.11758], [-59.59538, 13.12646], [-59.58791, 13.11854]]}, {"polyclinic": "Randal Phillips Polyclinic", "ring": [[-59.44598, 13.10314], [-59.4472, 13.10104], [-59.44884, 13.10186], [-59.44949, 13.10121], [-59.45364, 13.09248], [-59.45716, 13.08993], [-59.45921, 13.08678], [-59.46288, 13.08455], [-59.46309, 13.08326], [-59.46426, 13.08379], [-59.4689, 13.08149], [-59.48615, 13.06765], [-59.48926, 13.06639], [-59.49512, 13.06646], [-59.50369, 13.05232], [-59.50614, 13.05287], [-59.51311, 13.04965], [-59.5157, 13.04733], [-59.52652, 13.04488], [-59.53209, 13.04664], [-59.5348, 13.04924], [-59.53527, 13.05379], [-59.53751, 13.0564], [-59.53875, 13.05986], [-59.54359, 13.06383], [-59.55213, 13.06578], [-59.56111, 13.06524], [-59.56495, 13.06405], [-59.5681, 13.06638], [-59.5738, 13.06689], [-59.57566, 13.06859], [-59.58041, 13.06925], [-59.58855, 13.07333], [-59.59717, 13.07356], [-59.60274, 13.07581], [-59.60707, 13.07622], [-59.60252, 13.08115], [-59.60076, 13.0804], [-59.59879, 13.08117], [-59.59231, 13.07983], [-59.59145, 13.07763], [-59.58804, 13.07812], [-59.58162, 13.07498], [-59.57702, 13.08712], [-59.56928, 13.08588], [-59.56758, 13.0845], [-59.56782, 13.08277], [-59.56403, 13.0831], [-59.55998, 13.08199], [-59.55612, 13.08318], [-59.55237, 13.08275], [-59.54953, 13.08353], [-59.54817, 13.08606], [-59.54352, 13.08839], [-59.53031, 13.08048], [-59.52876, 13.08753], [-59.52931, 13.09109], [-59.52766, 13.10329], [-59.52881, 13.10887], [-59.52762, 13.11507], [-59.51773, 13.12011], [-59.50679, 13.1202], [-59.507, 13.11632], [-59.49736, 13.11677], [-59.4966, 13.11537], [-59.49762, 13.10688], [-59.49535, 13.10654], [-59.49652, 13.10182], [-59.49584, 13.10038], [-59.48794, 13.1056], [-59.48614, 13.1055], [-59.48617, 13.10366], [-59.47088, 13.10343], [-59.46849, 13.10469], [-59.46502, 13.10487], [-59.44598, 13.10314]]}, {"polyclinic": "Frederick Miller Polyclinic", "ring": [[-59.58791, 13.11853], [-59.58357, 13.13111], [-59.58385, 13.13681], [-59.58202, 13.1387], [-59.58376, 13.14227], [-59.58307, 13.14411], [-59.582, 13.14304], [-59.57991, 13.14695], [-59.58161, 13.14835], [-59.57968, 13.15167], [-59.58429, 13.15432], [-59.58353, 13.15468], [-59.58401, 13.15569], [-59.58196, 13.15667], [-59.58144, 13.15847], [-59.57767, 13.16151], [-59.57571, 13.16217], [-59.57197, 13.16096], [-59.56407, 13.16227], [-59.55705, 13.16749], [-59.55559, 13.16391], [-59.55596, 13.15975], [-59.55082, 13.1582], [-59.55095, 13.15629], [-59.55316, 13.15273], [-59.55327, 13.1479], [-59.54526, 13.15384], [-59.54173, 13.15529], [-59.53319, 13.15639], [-59.53112, 13.14667], [-59.53163, 13.14122], [-59.53037, 13.13856], [-59.53243, 13.13534], [-59.52999, 13.13467], [-59.52945, 13.13236], [-59.53118, 13.1283], [-59.53057, 13.12371], [-59.53118, 13.12278], [-59.52987, 13.12242], [-59.52987, 13.12001], [-59.52788, 13.11929], [-59.52773, 13.11842], [-59.52762, 13.11507], [-59.53094, 13.11197], [-59.53924, 13.10846], [-59.55029, 13.10909], [-59.56273, 13.1066], [-59.57355, 13.10651], [-59.57983, 13.10502], [-59.5808, 13.11041], [-59.58791, 13.11853]]}]; /* official; from Barbados_Polyclinics.shp (Barbados National Grid) -> WGS84; mirrors polyclinic-catchments.geojson */
   function parishToPolyclinic(parish) { return PARISH_TO_POLYCLINIC[parish] || null; }
   function inRing(lng, lat, ring) {
     var inside = false;
@@ -3277,7 +3291,7 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The organiser\'s details, if someone else is organising the event</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A medical certificate for you and everyone handling food</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If someone else is organising the event, a letter from the venue or organiser confirming you can operate there</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you are organising the event, a <a href="temporary-restaurant-guidance.html#setting-up-your-stall" target="_blank" rel="noopener" class="govbb-link">site or stall plan (opens in a new tab)</a></li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>If you are organising the event</strong>, a <a href="temporary-restaurant-guidance.html#setting-up-your-stall" target="_blank" rel="noopener" class="govbb-link">site or stall plan (opens in a new tab)</a></li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If you have one, a copy of your food business licence</li>
       </ul>
       ${confirmNote('the official term for the medical or health certificate')}
@@ -3296,7 +3310,7 @@ const PAGES = {
       ${confirmNote('whether someone can collect the licence on your behalf if you are overseas')}
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If you need help, contact the Ministry of Health and Wellness, or the polyclinic nearest to where your event will be held.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If you need help, contact the Ministry of Health and Wellness. Full contact details are on the <a href="temporary-restaurant-guidance.html#contact-us" target="_blank" rel="noopener" class="govbb-link">temporary restaurants guidance page (opens in a new tab)</a>.</p>
       <ul style="list-style:none;padding:0;margin-bottom:var(--spacing-m);">
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Telephone: <a href="tel:+12465363800" class="govbb-link">1 (246) 536-3800</a></li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Email: <a href="mailto:info@health.gov.bb" class="govbb-link">info@health.gov.bb</a></li>
@@ -3339,11 +3353,8 @@ const PAGES = {
       )}
       ${conditional('is-organiser', 'Yes',
         '<div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">As the event organiser, you must also request an environmental health officer to attend. This is required whenever food is served.</p></div>' +
-        radioGroup('officer-request-submitted', 'Have you already requested an environmental health officer for this event?', ['Yes', 'No'], { trigger: true }) +
-        conditional('officer-request-submitted', 'No',
-          '<h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">When do you need the officers?</h2>' +
-          '<p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Give the date and the times officers are needed. We will request an officer for you when you submit this application — you do not need to fill out a separate Request an environmental health officer form. If they are needed on more than one day, add an additional date and time.</p>' +
-          officerDateTimes())
+        '<p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">We will request an officer for you when you submit this application. The Environmental Health Department decides when officers attend, at their discretion, based on the event dates and times you have provided. You do not need to fill out a separate Request an environmental health officer form.</p>' +
+        regNote()
       )}
 
       ${btns()}
@@ -3370,7 +3381,7 @@ const PAGES = {
         '<h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">Event size</h2>' +
         '<p class="govbb-hint" style="margin-bottom:var(--spacing-s);">As the event organiser, tell us the expected size of the event.</p>' +
         numberField('num-patrons', 'Expected number of patrons', { min: 0, hint: 'For example, 300.' }) +
-        numberField('num-stalls', 'Number of food stalls', { min: 0, hint: 'For example, 4.' }))}
+        numberField('num-stalls', 'Number of food stalls including bars', { min: 0, hint: 'Count each bar as a stall. For example, 4.' }))}
 
       ${btns()}
     </form>`,
@@ -3456,17 +3467,12 @@ const PAGES = {
         ${GovBB.summaryRow('Times each day', (GovBB.D['event-start-time'] && GovBB.D['event-end-time']) ? (GovBB.D['event-start-time'] + ' to ' + GovBB.D['event-end-time']) : (GovBB.D['event-start-time'] || GovBB.D['event-end-time'] || ''), 'event-details')}
         ${GovBB.summaryRow('Polyclinic (by event area)', GOVBB_BACKEND.assignPolyclinic({ parish: GovBB.D['event-parish'] }) || 'To be assigned')}
         ${GovBB.D['is-organiser'] === 'Yes' ? GovBB.summaryRow('Expected patrons', GovBB.D['num-patrons'] || '', 'event-details') : ''}
-        ${GovBB.D['is-organiser'] === 'Yes' ? GovBB.summaryRow('Food stalls', GovBB.D['num-stalls'] || '', 'event-details') : ''}
+        ${GovBB.D['is-organiser'] === 'Yes' ? GovBB.summaryRow('Food stalls including bars', GovBB.D['num-stalls'] || '', 'event-details') : ''}
         ${GovBB.summaryRow('Are you organising the event?', GovBB.D['is-organiser'] || '', 'organiser')}
         ${GovBB.D['is-organiser'] === 'No' ? GovBB.summaryRow('Organiser name', GovBB.D['organiser-name'] || '', 'organiser') : ''}
         ${GovBB.D['is-organiser'] === 'No' ? GovBB.summaryRow('Organiser phone', GovBB.D['organiser-phone'] || 'Not provided', 'organiser') : ''}
         ${GovBB.D['is-organiser'] === 'No' ? GovBB.summaryRow('Organiser email', GovBB.D['organiser-email'] || 'Not provided', 'organiser') : ''}
-        ${GovBB.D['is-organiser'] === 'Yes' ? GovBB.summaryRow('Environmental health officer already requested?', GovBB.D['officer-request-submitted'] || '', 'organiser') : ''}
-        ${GovBB.D['is-organiser'] === 'Yes' && GovBB.D['officer-request-submitted'] === 'No' ? GovBB.summaryRow('Officer dates and times', (function () {
-          var n = parseInt((GovBB.D['officer-dt-count'] || '1'), 10) || 1, out = [];
-          for (var i = 1; i <= n; i++) { var p = 'officer-dt-' + i; var d = fmtDate(p + '-date'); var st = GovBB.D[p + '-start'] || ''; var en = GovBB.D[p + '-end'] || ''; var t = (st || en) ? st + ' to ' + en : ''; out.push([d, t].filter(Boolean).join(', ')); }
-          return out.filter(Boolean).join('\n');
-        })(), 'organiser') : ''}
+        ${GovBB.D['is-organiser'] === 'Yes' ? GovBB.summaryRow('Officer attendance', 'Arranged by the Environmental Health Department from your event dates', 'organiser') : ''}
       </dl>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food</h2>
@@ -3503,36 +3509,24 @@ const PAGES = {
     var td = new Date();
     var todayStr = td.getDate() + ' ' + MONTHS[td.getMonth()] + ' ' + td.getFullYear();
     var fullName = [GovBB.D['applicant-first-name'], GovBB.D['applicant-middle-name'], GovBB.D['applicant-surname']].filter(Boolean).join(' ');
+    var isOrganiser = GovBB.D['is-organiser'] === 'Yes';
     return `
     <form novalidate>
       ${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Declaration</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Please confirm the information you have given is correct before you submit your application.</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Declaration</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-xs);"><strong>Applicant's name:</strong> ${escapeHtml(fullName) || '[the name you gave]'}</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);"><strong>Date:</strong> ${todayStr}</p>
 
       <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
         <legend class="govbb-visually-hidden">Declaration</legend>
         <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);margin-bottom:var(--spacing-s);">
           <input class="govbb-checkbox" type="checkbox" id="declare-agree" name="declare-agree" data-field="declare-agree"${GovBB.D['declare-agree']?' checked':''} />
-          <label class="govbb-checkbox-item__label" for="declare-agree">I declare that the information I have given is true, and that I will operate the temporary restaurant in accordance with the Health Services (Restaurant) Regulations, 1969.</label>
+          <label class="govbb-checkbox-item__label" for="declare-agree">I confirm that my information is correct and I am happy for it to be verified. I understand that false details may lead to my application being rejected, and that the Government of Barbados will keep my information confidential. I will operate the temporary restaurant in accordance with the Health Services (Restaurant) Regulations, 1969.</label>
         </div>
-        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
+        ${isOrganiser ? `<div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
           <input class="govbb-checkbox" type="checkbox" id="declare-overtime" name="declare-overtime" data-field="declare-overtime"${GovBB.D['declare-overtime']?' checked':''} />
           <label class="govbb-checkbox-item__label" for="declare-overtime">I understand that the event organiser is responsible for the overtime costs of the environmental health officers who provide public health surveillance and inspection during the event.</label>
-        </div>
-      </fieldset>
-
-      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Your signature</h2>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Submitting this application with your name is your legal signature.</p>
-      <div style="border:2px solid var(--color-grey-00);border-left:4px solid var(--color-blue-40);background:var(--color-white-00);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);">
-        <p class="govbb-text-body" style="margin:0;"><strong>Signed:</strong> ${escapeHtml(fullName) || '[the name you gave]'}</p>
-        <p class="govbb-text-body" style="margin:var(--spacing-xs) 0 0;"><strong>Date:</strong> ${todayStr}</p>
-      </div>
-      <fieldset class="govbb-fieldset" style="margin-bottom:var(--spacing-m);">
-        <legend class="govbb-visually-hidden">Signature confirmation</legend>
-        <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
-          <input class="govbb-checkbox" type="checkbox" id="declare-signature" name="declare-signature" data-field="declare-signature"${GovBB.D['declare-signature']?' checked':''} />
-          <label class="govbb-checkbox-item__label" for="declare-signature">I understand that submitting this application with my name is my legal signature.</label>
-        </div>
+        </div>` : ''}
       </fieldset>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
@@ -3549,9 +3543,8 @@ const PAGES = {
     var poly = assigned || 'the Environmental Health Department for your area';
     var c = assigned ? GOVBB_BACKEND.contactsFor(assigned) : null;
     var needsInspection = GovBB.D['has-food-licence'] === 'No';
-    var officerRequestedForYou = GovBB.D['is-organiser'] === 'Yes' && GovBB.D['officer-request-submitted'] === 'No';
-    var officerDT = parseInt((GovBB.D['officer-dt-count'] || '1'), 10) || 1;
-    var officerDTWord = officerDT > 1 ? 'the dates and times you gave' : 'the date and time you gave';
+    var officerRequestedForYou = GovBB.D['is-organiser'] === 'Yes';
+    var officerDTWord = 'the event dates and times you gave';
     var orgEmail = (GovBB.D['is-organiser'] === 'No' && (GovBB.D['organiser-email'] || '').trim()) ? escapeHtml(GovBB.D['organiser-email'].trim()) : '';
     return `
     <div>
@@ -3652,7 +3645,7 @@ function validate(pageId) {
     /* polyclinic is assigned by GOVBB_BACKEND from the event location — no user field */
     if (D['is-organiser'] === 'Yes') {
       reqNum('num-patrons', 'the expected number of patrons');
-      reqNum('num-stalls', 'the number of food stalls');
+      reqNum('num-stalls', 'the number of food stalls including bars');
     }
   }
 
@@ -3665,17 +3658,9 @@ function validate(pageId) {
       if (oEmail && !EMAIL_RE.test(oEmail)) errors.push({ id: 'organiser-email', msg: "Enter the organiser's email in the format you@example.com" });
       if (!(D['organiser-phone'] || '').trim() && !oEmail) errors.push({ id: 'organiser-phone', msg: 'Enter a phone number or email for the organiser' });
     }
-    if (D['is-organiser'] === 'Yes' && !D['officer-request-submitted']) errors.push({ id: 'officer-request-submitted-0', msg: 'Select whether you have already requested an environmental health officer' });
-    if (D['is-organiser'] === 'Yes' && D['officer-request-submitted'] === 'No') {
-      var odn = parseInt((D['officer-dt-count'] || '1'), 10); if (!odn || odn < 1) odn = 1;
-      for (var oi = 1; oi <= odn; oi++) {
-        var op = 'officer-dt-' + oi;
-        var od = reqDate(op + '-date', (odn > 1 ? 'Date ' + oi : 'Date'));
-        if (oi === 1 && od) { var oms = new Date(); oms.setHours(0, 0, 0, 0); oms.setDate(oms.getDate() + 14); if (od < oms) errors.push({ id: op + '-date-day', msg: 'Date – You must apply at least 14 days before the event' }); }
-        reqText(op + '-start', 'Enter the start time' + (odn > 1 ? ' for date ' + oi : ''));
-        reqText(op + '-end', 'Enter the end time' + (odn > 1 ? ' for date ' + oi : ''));
-      }
-    }
+    /* Officer request question removed — an officer is always requested for the
+       organiser via this application; the Environmental Health Department
+       arranges attendance from the event dates captured on the event page. */
   }
 
   if (pageId === 'food-details') {
@@ -3699,9 +3684,8 @@ function validate(pageId) {
   }
 
   if (pageId === 'declaration') {
-    if (!D['declare-agree']) errors.push({ id: 'declare-agree', msg: 'Tick the box to declare the information is true' });
-    if (!D['declare-overtime']) errors.push({ id: 'declare-overtime', msg: 'Tick the box to confirm you understand the overtime cost responsibility' });
-    if (!D['declare-signature']) errors.push({ id: 'declare-signature', msg: 'Tick the box to confirm your signature' });
+    if (!D['declare-agree']) errors.push({ id: 'declare-agree', msg: 'Tick the box to confirm the information is correct' });
+    if (D['is-organiser'] === 'Yes' && !D['declare-overtime']) errors.push({ id: 'declare-overtime', msg: 'Tick the box to confirm you understand the overtime cost responsibility' });
   }
 
   return errors;
@@ -3792,12 +3776,6 @@ GovBB.init({
           D['organiser-name'] = 'Sandra Clarke';
           D['organiser-phone'] = '(246) 249 5678';
           D['organiser-email'] = 'sandra.clarke@example.com';
-        } else {
-          D['officer-request-submitted'] = 'No';
-          var of1 = futParts(21);
-          D['officer-dt-count'] = '1';
-          D['officer-dt-1-date-day'] = of1.d; D['officer-dt-1-date-month'] = of1.m; D['officer-dt-1-date-year'] = of1.y;
-          D['officer-dt-1-start'] = '4:00pm'; D['officer-dt-1-end'] = '11:00pm';
         }
         break;
       case 'food-safety':
@@ -3846,6 +3824,8 @@ GovBB.init({
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', buildButton);
   else buildButton();
+  var _afRender = GovBB.render;
+  GovBB.render = function () { var r = _afRender.apply(GovBB, arguments); buildButton(); return r; };
 })();
 </script>
 
