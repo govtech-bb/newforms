@@ -2964,10 +2964,11 @@ const SERVICE_NAME = 'Request an environmental health officer';
 
 const FLOW = [
   'start',
-  'licence-check',
+  'operating-restaurant',
   'applicant-details',
-  'activity-location',
-  'activity-dates',
+  'event-details',
+  'food-details',
+  'food-safety',
   'documents',
   'check',
   'declaration',
@@ -3001,6 +3002,17 @@ var SHOW_DRAFT_NOTES = false; /* set to false before publishing to strip every [
 function confirmNote(t) {
   if (!SHOW_DRAFT_NOTES) return '';
   return '<p class="confirm-note" style="background:var(--color-yellow-10);border-left:4px solid var(--color-yellow-00);padding:var(--spacing-xs) var(--spacing-s);margin-bottom:var(--spacing-m);font-size:var(--font-size-caption);">[Confirm: ' + escapeHtml(t) + ']</p>';
+}
+/* Regulatory note explaining why the applicant gives event dates, not officer
+   times. Officers are assigned by the Environmental Health Department under the
+   Health Services (Assignment of Public Health Inspectors to Private
+   Businesses) Regulations, 1986. Same markup as the licence form. */
+function regNote() {
+  return '<details class="govbb-show-hide" style="margin-bottom:var(--spacing-m);">'
+    + '<summary class="govbb-show-hide__summary">Why you do not choose officer times</summary>'
+    + '<div class="govbb-show-hide__content">'
+    + '<p class="govbb-text-body" style="margin:0;">The Environmental Health Department assigns officers based on your event\'s dates and times. This follows the Health Services (Assignment of Public Health Inspectors to Private Businesses) Regulations, 1986, which set officers\' working days and hours (regulation 2 and the First Schedule) and the fees for attendance outside those hours (regulation 7 and the Second Schedule).</p>'
+    + '</div></details>';
 }
 /* Repeatable "date + start/end time" entries. One date per block; "Add another"
    appends another date + times. Used by the officer request and, on the licence,
@@ -3121,26 +3133,6 @@ function conditional(name, showValue, inner) {
 
 function btns(label) {
   return '<div class="govbb-btn-group" style="margin-top:var(--spacing-l);"><button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button><button type="button" class="govbb-btn" onclick="next()">' + (label || 'Continue') + '</button></div>';
-}
-
-/* Regulatory note explaining why the applicant gives event dates, not officer
-   times. Officers are assigned by the Environmental Health Department under the
-   Health Services (Assignment of Public Health Inspectors to Private
-   Businesses) Regulations, 1986. Same markup is used on the licence form. */
-function regNote() {
-  return '<details class="govbb-show-hide" style="margin-bottom:var(--spacing-m);">'
-    + '<summary class="govbb-show-hide__summary">Why you do not choose officer times</summary>'
-    + '<div class="govbb-show-hide__content">'
-    + '<p class="govbb-text-body" style="margin:0;">The Environmental Health Department assigns officers based on your event\'s dates and times. This follows the Health Services (Assignment of Public Health Inspectors to Private Businesses) Regulations, 1986, which set officers\' working days and hours (regulation 2 and the First Schedule) and the fees for attendance outside those hours (regulation 7 and the Second Schedule).</p>'
-    + '</div></details>';
-}
-
-/* Continue handler for the qualifying question. "Yes" (also need a licence)
-   hands off to the licence form, which covers both; "No" proceeds through the
-   officer form. GovBB.next() enforces that an answer was chosen. */
-function qualifierContinue() {
-  if (GovBB.D['also-need-licence'] === 'Yes') { window.location.href = 'temporary-restaurant-licence.html'; return; }
-  GovBB.next();
 }
 
 function fmtDate(prefix) {
@@ -3455,7 +3447,8 @@ const PAGES = {
       <p class="govbb-text-body" style="color:var(--color-mid-grey-00);margin-bottom:var(--spacing-m);">Last updated on 8 July 2026</p>
       <hr style="border:none;border-top:1px solid var(--color-grey-00);margin-bottom:var(--spacing-m);">
 
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">Use this service to request an environmental health officer to attend your event. This is required whenever food or drink is served to the public.</p>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Use this service to request an environmental health officer to attend your event. This is required whenever food or drink is served to the public.</p>
+      <div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-l);"><p class="govbb-text-body" style="margin:0;">The first question asks whether you are operating a temporary restaurant (serving food). If you are, this same service also completes your <strong>temporary restaurant licence</strong> — you will be asked about the food you serve, your food-safety arrangements, and asked to upload a medical certificate for everyone handling food.</p></div>
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Who needs to request an officer</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">The event organiser makes this request. Individual food vendors do not — but each vendor must apply for their own <a href="temporary-restaurant-licence.html" class="govbb-link">temporary restaurant licence</a>.</p>
@@ -3464,7 +3457,7 @@ const PAGES = {
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">When to apply and what it costs</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Apply at least <strong>14 days</strong> before your event.</p>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-l);">There is no fee to request an officer. If there are overtime costs for officers attending, the polyclinic will send you an invoice after your request is approved.</p>
-      ${confirmNote('current environmental health officer fees, and how overtime is invoiced')}
+      <!-- To confirm: current environmental health officer fees, and how overtime is invoiced -->
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What you'll need</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-l);">
@@ -3472,6 +3465,12 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The address of the event, and the dates and times you need officers to attend</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A list of the food vendors taking part</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A <a href="temporary-restaurant-guidance.html#setting-up-your-stall" target="_blank" rel="noopener" class="govbb-link">site or stall plan (opens in a new tab)</a></li>
+      </ul>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If you are serving food (and so also need a licence), you will also need:</p>
+      <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-l);">
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Details of the food and drink you will serve, and where you will get it from</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Your food-safety arrangements (water, handwashing, waste disposal, number of food handlers)</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">A medical certificate for everyone handling food</li>
       </ul>
 
       <div style="margin-bottom:var(--spacing-l);"><button type="button" class="govbb-btn" onclick="next()">Start now</button></div>
@@ -3482,7 +3481,7 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">They will contact you to arrange the officers' attendance.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If there are overtime costs, they will send an invoice after the request is approved.</li>
       </ul>
-      ${confirmNote('whether the requester is emailed a copy of the request')}
+      <!-- To confirm: whether the requester is emailed a copy of the request -->
 
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Contact us</h2>
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">If you need help, contact the Ministry of Health and Wellness. Full contact details are on the <a href="temporary-restaurant-guidance.html#contact-us" target="_blank" rel="noopener" class="govbb-link">temporary restaurants guidance page (opens in a new tab)</a>.</p>
@@ -3491,26 +3490,6 @@ const PAGES = {
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Email: <a href="mailto:info@health.gov.bb" class="govbb-link">info@health.gov.bb</a></li>
       </ul>
     </div>`,
-
-  'licence-check': () => `
-    <form novalidate>
-      ${caption()}
-      <fieldset class="govbb-fieldset" aria-describedby="also-need-licence-hint" style="margin-bottom:var(--spacing-m);">
-        <legend class="govbb-fieldset__legend" style="padding:0;"><h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Will you also need a temporary restaurant licence?</h1></legend>
-        <p class="govbb-hint" id="also-need-licence-hint" style="margin-bottom:var(--spacing-s);">You need a licence if you will run a stall, booth or bar serving food or drink to the public. As the event organiser, you only request an officer here.</p>
-        <div style="display:flex;flex-direction:column;gap:var(--spacing-xs);">
-          <div class="govbb-radio-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-radio" type="radio" id="also-need-licence-0" name="also-need-licence" data-field="also-need-licence" value="Yes"${GovBB.D['also-need-licence'] === 'Yes' ? ' checked' : ''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="also-need-licence-0">Yes</label></div>
-          <div class="govbb-radio-item" style="margin-bottom:var(--spacing-xs);"><input class="govbb-radio" type="radio" id="also-need-licence-1" name="also-need-licence" data-field="also-need-licence" value="No"${GovBB.D['also-need-licence'] === 'No' ? ' checked' : ''} data-trigger-render="1" /><label class="govbb-radio-item__label" for="also-need-licence-1">No</label></div>
-        </div>
-      </fieldset>
-      ${conditional('also-need-licence', 'Yes',
-        '<p class="govbb-text-body" style="margin:0 0 var(--spacing-s);"><strong>You need to apply using the temporary restaurant licence form instead.</strong></p>' +
-        '<p class="govbb-text-body" style="margin:0;">That form covers both your licence and this officer request, so you <strong>do not need</strong> to complete this one. Select Continue to open it.</p>')}
-      <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
-        <button type="button" class="govbb-btn--secondary" onclick="back()">Previous</button>
-        <button type="button" class="govbb-btn" onclick="qualifierContinue()">Continue</button>
-      </div>
-    </form>`,
 
   'applicant-details': () => `
     <form novalidate>
@@ -3530,42 +3509,91 @@ const PAGES = {
       ${btns()}
     </form>`,
 
-  'activity-location': () => `
+  'operating-restaurant': () => `
     <form novalidate>
       ${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Where will the activity take place?</h1>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Are you operating a temporary restaurant?</h1>
+      ${radioGroup('operating-restaurant', 'Are you operating a temporary restaurant (serving food) at this event?', ['Yes', 'No'], { trigger: true, hint: 'A temporary restaurant is any set-up serving food or drink to the public for 30 days or less. If you are serving food, you also need a temporary restaurant licence — we will collect that in this same form.' })}
+      ${'<div data-show-when-name="operating-restaurant" data-show-when-value="Yes" style="display:' + (GovBB.D['operating-restaurant'] === 'Yes' ? 'block' : 'none') + ';">' +
+        '<div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">Because you are serving food, this request also includes your application for a temporary restaurant licence. We will ask about the food you serve and your food-safety arrangements. You <strong>do not need</strong> to fill out a separate temporary restaurant licence form.</p></div>' + '</div>'}
+      ${btns()}
+    </form>`,
+
+  'event-details': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">About the event</h1>
+
       ${textField('event-name', 'Name of event')}
-      ${textField('event-line1', 'Address line 1')}
-      ${textField('event-line2', 'Address line 2 (optional)')}
-      ${selectField('event-parish', 'Parish', GovBB.PARISHES, { placeholder: 'Select a parish', width: 15 })}
+      ${textField('event-line1', 'Event address line 1')}
+      ${textField('event-line2', 'Event address line 2 (optional)')}
+      ${selectField('event-parish', 'Parish of event', GovBB.PARISHES, { placeholder: 'Select a parish', width: 15 })}
       ${landmarkField()}
       ${eventMapBlock()}
-      ${btns()}
-    </form>`,
 
-  'activity-dates': () => `
-    <form novalidate>
-      ${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">When is your event?</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Give the dates your event runs and the times it opens each day. The Environmental Health Department decides when officers attend, at their discretion, based on the event dates and times you provide.</p>
-      ${dateField('event-from', 'Event start date', 'The first day your event runs. You must apply at least 14 days before this date. For example, 27 8 2026.')}
-      ${dateField('event-to', 'Event end date', 'The last day your event runs. For example, 29 8 2026.')}
-      <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">What times does your event open each day?</h2>
-      ${textField('event-start-time', 'Daily start time', { width: 14, hint: 'For example, 10:00am.' })}
-      ${textField('event-end-time', 'Daily end time', { width: 14, hint: 'For example, 6:00pm.' })}
+      ${dateField('event-from', 'Start date', 'The first day of the event. You must apply at least 14 days before this date. For example, 27 8 2026.')}
+      ${dateField('event-to', 'End date', 'The last day of the event.')}
+
+      <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">What times will the event run?</h2>
+      ${textField('event-start-time', 'Start time', { width: 14, hint: 'For example, 4:00pm.' })}
+      ${textField('event-end-time', 'End time', { width: 14, hint: 'For example, 10:00pm.' })}
       ${regNote()}
+
+      <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">Event size</h2>
+      ${numberField('num-patrons', 'Expected number of patrons', { min: 0, hint: 'For example, 300.' })}
+      ${numberField('num-stalls', 'Number of food stalls including bars', { min: 0, hint: 'Count each bar as a stall. For example, 4.' })}
+
       ${btns()}
     </form>`,
 
-  'documents': () => `
+  'food-details': () => `
     <form novalidate>
       ${caption()}
-      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Site plan and vendors</h1>
-      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Upload your list of vendors and a <a href="temporary-restaurant-guidance.html#setting-up-your-stall" target="_blank" rel="noopener" class="govbb-link">site or stall plan (opens in a new tab)</a>.</p>
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">What food and drink will you serve?</h1>
+
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-s);">Go through the <strong>Food</strong> and <strong>Drinks</strong> categories below. Open each category you are serving, then tick the items. Anything marked <strong>Higher-risk</strong> needs extra care and may affect how your set-up is inspected.</p>
+      ${foodSelector()}
+      ${textareaField('food-source', 'Where will you get the food from?', { rows: 3, hint: 'List your suppliers or sources. For example, "fish from Oistins market; flour and oil from a wholesaler".' })}
+
+      ${btns()}
+    </form>`,
+
+  'food-safety': () => `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-m);">Food safety</h1>
+
+      ${radioGroup('has-food-licence', 'Do you already have a valid food business licence?', ['Yes', 'No'], { trigger: true, hint: 'A current licence for your own food business or premises.' })}
+
+      <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">Food handlers</h2>
+      ${numberField('handlers-male', 'Number of male food handlers', { min: 0, hint: 'For example, 2.' })}
+      ${numberField('handlers-female', 'Number of female food handlers', { min: 0, hint: 'For example, 3.' })}
+      ${confirmNote('whether food handlers should be split by sex or counted as one total — under review')}
+
+      <h2 class="govbb-text-h2" style="margin:var(--spacing-l) 0 var(--spacing-s);">Water and sanitation</h2>
+      ${textField('water-source', 'Water source', { hint: 'Where will safe water come from? For example, mains supply, a water tank, or bottled water.' })}
+      ${textField('handwashing', 'Handwashing arrangements', { hint: 'For example, a portable handwashing station with soap and paper towels.' })}
+      ${textField('waste-disposal', 'Waste disposal', { hint: 'How will food waste and rubbish be stored and removed?' })}
+
+      ${btns()}
+    </form>`,
+
+  'documents': () => {
+    var operating = GovBB.D['operating-restaurant'] === 'Yes';
+    return `
+    <form novalidate>
+      ${caption()}
+      <h1 class="govbb-text-h1" style="margin-bottom:var(--spacing-s);">Supporting documents</h1>
+      <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">Upload your list of vendors and a <a href="temporary-restaurant-guidance.html#setting-up-your-stall" target="_blank" rel="noopener" class="govbb-link">site or stall plan (opens in a new tab)</a>.${operating ? ' Because you are operating a temporary restaurant, you must also upload a medical certificate for everyone handling food.' : ''}</p>
+
       ${uploadRow('vendor-list', 'List of vendors', 'Required. A list of the food vendors taking part in your event. PDF, JPG, PNG, DOC or DOCX.', false)}
       ${uploadRow('site-plan', 'Site or stall plan', 'Required. A plan of the event site, showing stall positions, waste disposal, water supply and facilities. PDF, JPG or PNG.', false)}
+      ${operating ? uploadRow('medical-certs', 'Staff medical certificates', 'Required. A valid medical certificate for you and everyone handling food, as a single PDF, JPG or PNG.', false) : ''}
+      ${operating ? '<div style="border-left:4px solid var(--color-blue-40);background:var(--color-blue-10);padding:var(--spacing-s) var(--spacing-m);margin-bottom:var(--spacing-m);"><p class="govbb-text-body" style="margin:0;">All staff must have their medical certificates with them during the event, whether or not you upload them here.</p></div>' : ''}
+      ${operating ? uploadRow('food-licence', 'Food business licence', 'Optional. A copy of your valid food business licence, if you have one. PDF, JPG or PNG.', true) : ''}
       ${btns()}
-    </form>`,
+    </form>`;
+  },
 
   'check': () => `
     <div>
@@ -3581,20 +3609,41 @@ const PAGES = {
         ${GovBB.summaryRow('Email', GovBB.D['email'] || '', 'applicant-details')}
       </dl>
 
-      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Activity</h2>
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Event</h2>
       <dl style="margin-bottom:var(--spacing-m);">
-        ${GovBB.summaryRow('Name of event', GovBB.D['event-name'] || '', 'activity-location')}
-        ${GovBB.summaryRow('Address', fmtAddress('event'), 'activity-location')}
-        ${GovBB.summaryRow('Polyclinic (by event area)', eventPolyclinic() || 'To be assigned', 'activity-location')}
-        ${GovBB.summaryRow('Event dates', (function () { var ef = fmtDate('event-from'), et = fmtDate('event-to'); return (ef || et) ? (ef + (et ? ' to ' + et : '')) : ''; })(), 'activity-dates')}
-        ${GovBB.summaryRow('Daily times', (GovBB.D['event-start-time'] && GovBB.D['event-end-time']) ? (GovBB.D['event-start-time'] + ' to ' + GovBB.D['event-end-time']) : (GovBB.D['event-start-time'] || GovBB.D['event-end-time'] || ''), 'activity-dates')}
+        ${GovBB.summaryRow('Operating a temporary restaurant?', GovBB.D['operating-restaurant'] || '', 'operating-restaurant')}
+        ${GovBB.summaryRow('Name of event', GovBB.D['event-name'] || '', 'event-details')}
+        ${GovBB.summaryRow('Address of event', fmtAddress('event'), 'event-details')}
+        ${GovBB.summaryRow('Event dates', fmtDate('event-from') + ' to ' + fmtDate('event-to'), 'event-details')}
+        ${GovBB.summaryRow('Times each day', (GovBB.D['event-start-time'] && GovBB.D['event-end-time']) ? (GovBB.D['event-start-time'] + ' to ' + GovBB.D['event-end-time']) : (GovBB.D['event-start-time'] || GovBB.D['event-end-time'] || ''), 'event-details')}
+        ${GovBB.summaryRow('Expected patrons', GovBB.D['num-patrons'] || '', 'event-details')}
+        ${GovBB.summaryRow('Food stalls including bars', GovBB.D['num-stalls'] || '', 'event-details')}
+        ${GovBB.summaryRow('Polyclinic (by event area)', eventPolyclinic() || 'To be assigned', 'event-details')}
       </dl>
-      <p class="govbb-hint" style="margin:calc(-1 * var(--spacing-xs)) 0 var(--spacing-l);">We route your request to the Environmental Health Department for your event's area — this is who arranges the officers. If it looks wrong, change your event parish.</p>
+      <p class="govbb-hint" style="margin:calc(-1 * var(--spacing-xs)) 0 var(--spacing-l);">We route your request to the Environmental Health Department for your event's area — this is who arranges the officers${GovBB.D['operating-restaurant'] === 'Yes' ? ' and inspects your set-up' : ''}. If it looks wrong, change your event parish.</p>
 
-      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Site plan and vendors</h2>
+      ${GovBB.D['operating-restaurant'] === 'Yes' ? `
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Foods to be served', foodSummaryHtml() || 'None selected', 'food-details')}
+        ${GovBB.summaryRow('Source of food', GovBB.D['food-source'] || '', 'food-details')}
+      </dl>
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Food safety</h2>
+      <dl style="margin-bottom:var(--spacing-m);">
+        ${GovBB.summaryRow('Already has a food business licence?', GovBB.D['has-food-licence'] || '', 'food-safety')}
+        ${GovBB.summaryRow('Food handlers', 'Male: ' + (GovBB.D['handlers-male'] || '0') + ', Female: ' + (GovBB.D['handlers-female'] || '0'), 'food-safety')}
+        ${GovBB.summaryRow('Water source', GovBB.D['water-source'] || '', 'food-safety')}
+        ${GovBB.summaryRow('Handwashing', GovBB.D['handwashing'] || '', 'food-safety')}
+        ${GovBB.summaryRow('Waste disposal', GovBB.D['waste-disposal'] || '', 'food-safety')}
+      </dl>` : ''}
+
+      <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">Supporting documents</h2>
       <dl style="margin-bottom:var(--spacing-l);">
         ${GovBB.summaryRow('List of vendors', GovBB.D['upload-vendor-list'] ? GovBB.D['upload-vendor-list'].name : 'Not uploaded', 'documents')}
         ${GovBB.summaryRow('Site or stall plan', GovBB.D['upload-site-plan'] ? GovBB.D['upload-site-plan'].name : 'Not uploaded', 'documents')}
+        ${GovBB.D['operating-restaurant'] === 'Yes' ? GovBB.summaryRow('Staff medical certificates', GovBB.D['upload-medical-certs'] ? GovBB.D['upload-medical-certs'].name : 'Not uploaded', 'documents') : ''}
+        ${GovBB.D['operating-restaurant'] === 'Yes' ? GovBB.summaryRow('Food business licence', GovBB.D['upload-food-licence'] ? GovBB.D['upload-food-licence'].name : 'Not uploaded (optional)', 'documents') : ''}
       </dl>
 
       <div class="govbb-btn-group" style="margin-top:var(--spacing-l);">
@@ -3607,6 +3656,7 @@ const PAGES = {
     var td = new Date();
     var todayStr = td.getDate() + ' ' + MONTHS[td.getMonth()] + ' ' + td.getFullYear();
     var fullName = [GovBB.D['applicant-first-name'], GovBB.D['applicant-middle-name'], GovBB.D['applicant-surname']].filter(Boolean).join(' ');
+    var operating = GovBB.D['operating-restaurant'] === 'Yes';
     return `
     <form novalidate>
       ${caption()}
@@ -3617,7 +3667,7 @@ const PAGES = {
         <legend class="govbb-visually-hidden">Declaration</legend>
         <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);margin-bottom:var(--spacing-s);">
           <input class="govbb-checkbox" type="checkbox" id="declare-agree" name="declare-agree" data-field="declare-agree"${GovBB.D['declare-agree']?' checked':''} />
-          <label class="govbb-checkbox-item__label" for="declare-agree">I confirm that my information is correct and I am happy for it to be verified. I understand that false details may lead to my application being rejected, and that the Government of Barbados will keep my information confidential.</label>
+          <label class="govbb-checkbox-item__label" for="declare-agree">I confirm that my information is correct and I am happy for it to be verified. I understand that false details may lead to my application being rejected, and that the Government of Barbados will keep my information confidential.${operating ? ' I will operate the temporary restaurant in accordance with the Health Services (Restaurants) Regulations, 1969.' : ''}</label>
         </div>
         <div class="govbb-checkbox-item" style="align-items:flex-start;gap:var(--spacing-s);">
           <input class="govbb-checkbox" type="checkbox" id="declare-overtime" name="declare-overtime" data-field="declare-overtime"${GovBB.D['declare-overtime']?' checked':''} />
@@ -3637,7 +3687,8 @@ const PAGES = {
     var assigned = eventPolyclinic();
     var poly = assigned || 'the Environmental Health Department for your area';
     var c = assigned ? GOVBB_BACKEND.contactsFor(assigned) : null;
-    var officerDTWord = 'the dates and times you gave';
+    var operating = GovBB.D['operating-restaurant'] === 'Yes';
+    var needsInspection = GovBB.D['has-food-licence'] === 'No';
     return `
     <div>
       <div style="border-left:4px solid var(--color-green-00);padding:var(--spacing-m);background:var(--color-green-10);margin-bottom:var(--spacing-l);">
@@ -3648,8 +3699,9 @@ const PAGES = {
       <p class="govbb-text-body" style="margin-bottom:var(--spacing-m);">A copy of your request has been sent to <strong>${escapeHtml(GovBB.D['email'] || 'the email address you gave us')}</strong>${c ? ' and to the Environmental Health Department at <strong>' + escapeHtml(poly) + '</strong> (' + escapeHtml(c.email) + ')' : ''}.</p>
       <h2 class="govbb-text-h2" style="margin-bottom:var(--spacing-s);">What happens next</h2>
       <ul style="list-style:disc;padding-left:var(--spacing-m);margin-bottom:var(--spacing-m);">
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Environmental Health Department at <strong>${escapeHtml(poly)}</strong> will review your request.</li>
-        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">They will contact you to arrange the officers' attendance, for ${officerDTWord}.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">The Environmental Health Department at <strong>${escapeHtml(poly)}</strong> will review your request${operating ? ' and your temporary restaurant licence application' : ''}.</li>
+        <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Environmental health officers will attend on the dates and times you gave. The department will confirm arrangements and any overtime costs.</li>
+        ${operating ? '<li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">' + (needsInspection ? 'An environmental health officer will inspect your set-up before the licence is issued.' : 'They may arrange an inspection before issuing the licence.') + ' The licence is collected from the polyclinic, and an electronic copy is emailed to you. It is valid for 30 days from the date it is issued.</li>' : ''}
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">If there are overtime costs, they will send an invoice after the request is approved.</li>
         <li class="govbb-text-body" style="margin-bottom:var(--spacing-xs);">Keep your reference number for any follow-up.</li>
       </ul>
@@ -3687,6 +3739,11 @@ function validate(pageId) {
     if (parsed < today) { errors.push({ id: prefix + '-day', msg: label + ' – Enter a date that is today or in the future' }); return null; }
     return parsed;
   }
+  function reqNum(id, label) {
+    var v = (D[id] || '').trim();
+    if (!v) { errors.push({ id: id, msg: 'Enter ' + label }); return; }
+    if (!/^\d+$/.test(v)) errors.push({ id: id, msg: 'Enter ' + label + ' using digits only' });
+  }
 
   if (pageId === 'applicant-details') {
     reqText('applicant-first-name', 'Enter your first name');
@@ -3701,28 +3758,45 @@ function validate(pageId) {
     else if (!EMAIL_RE.test(email)) errors.push({ id: 'email', msg: 'Enter an email address in the format you@example.com' });
   }
 
-  if (pageId === 'activity-location') {
+  if (pageId === 'operating-restaurant') {
+    if (!D['operating-restaurant']) errors.push({ id: 'operating-restaurant-0', msg: 'Select yes or no' });
+  }
+
+  if (pageId === 'event-details') {
     reqText('event-name', 'Enter the name of the event');
     reqText('event-line1', 'Enter the address of the event');
     reqText('event-parish', 'Select the parish of the event');
+    var from = reqDate('event-from', 'Start date');
+    var to = reqDate('event-to', 'End date');
+    if (from) {
+      var minStart = new Date(); minStart.setHours(0, 0, 0, 0); minStart.setDate(minStart.getDate() + 14);
+      if (from < minStart) errors.push({ id: 'event-from-day', msg: 'Start date – You must apply at least 14 days before the event' });
+    }
+    if (from && to && to < from) errors.push({ id: 'event-to-day', msg: 'The end date must be the same as or after the start date' });
+    reqText('event-start-time', 'Enter the time the event will start each day');
+    reqText('event-end-time', 'Enter the time the event will finish each day');
+    reqNum('num-patrons', 'the expected number of patrons');
+    reqNum('num-stalls', 'the number of food stalls including bars');
   }
 
-  if (pageId === 'licence-check') {
-    if (!D['also-need-licence']) errors.push({ id: 'also-need-licence-0', msg: 'Select yes if you will also need a temporary restaurant licence' });
+  if (pageId === 'food-details') {
+    if (foodCount() === 0) errors.push({ id: 'food-cat-meat', msg: 'Select at least one type of food you will serve' });
+    reqText('food-source', 'Enter where you will get the food from');
   }
 
-  if (pageId === 'activity-dates') {
-    var evFrom = reqDate('event-from', 'Event start date');
-    if (evFrom) { var ems = new Date(); ems.setHours(0, 0, 0, 0); ems.setDate(ems.getDate() + 14); if (evFrom < ems) errors.push({ id: 'event-from-day', msg: 'Event start date – You must apply at least 14 days before your event' }); }
-    var evTo = reqDate('event-to', 'Event end date');
-    if (evFrom && evTo && evTo < evFrom) errors.push({ id: 'event-to-day', msg: 'Event end date – Enter a date on or after the start date' });
-    reqText('event-start-time', 'Enter the daily start time');
-    reqText('event-end-time', 'Enter the daily end time');
+  if (pageId === 'food-safety') {
+    if (!D['has-food-licence']) errors.push({ id: 'has-food-licence-0', msg: 'Select whether you already have a valid food business licence' });
+    reqNum('handlers-male', 'the number of male food handlers');
+    reqNum('handlers-female', 'the number of female food handlers');
+    reqText('water-source', 'Enter the water source for the event');
+    reqText('handwashing', 'Describe the handwashing arrangements');
+    reqText('waste-disposal', 'Describe how waste will be disposed of');
   }
 
   if (pageId === 'documents') {
     if (!D['upload-vendor-list']) errors.push({ id: 'upload-vendor-list', msg: 'Upload your list of vendors' });
     if (!D['upload-site-plan']) errors.push({ id: 'upload-site-plan', msg: 'Upload a site or stall plan' });
+    if (D['operating-restaurant'] === 'Yes' && !D['upload-medical-certs']) errors.push({ id: 'upload-medical-certs', msg: 'Upload a medical certificate for everyone handling food' });
   }
 
   if (pageId === 'declaration') {
@@ -3773,7 +3847,13 @@ function validate(pageId) {
 
 GovBB.init({
   formName: FORM_NAME,
-  getFlow: function () { return FLOW; },
+  getFlow: function () {
+    var operating = GovBB.D['operating-restaurant'] === 'Yes';
+    return FLOW.filter(function (p) {
+      if ((p === 'food-details' || p === 'food-safety') && !operating) return false;
+      return true;
+    });
+  },
   pages: PAGES,
   validate: validate
 });
@@ -3794,23 +3874,39 @@ GovBB.init({
         D['phone-home'] = ''; D['phone-cell'] = '(246) 249 5678'; D['phone-work'] = '';
         D['email'] = 'sandra.clarke@example.com';
         break;
-      case 'activity-location':
+      case 'operating-restaurant':
+        if (!D['operating-restaurant']) D['operating-restaurant'] = 'Yes';
+        break;
+      case 'event-details':
         D['event-name'] = 'Oistins Fish Festival'; D['event-line1'] = 'Oistins Bay Garden'; D['event-line2'] = ''; D['event-parish'] = 'Christ Church';
+        var f = futParts(21), t = futParts(22);
+        D['event-from-day'] = f.d; D['event-from-month'] = f.m; D['event-from-year'] = f.y;
+        D['event-to-day'] = t.d; D['event-to-month'] = t.m; D['event-to-year'] = t.y;
+        D['event-start-time'] = '4:00pm'; D['event-end-time'] = '11:00pm';
+        D['num-patrons'] = '300'; D['num-stalls'] = '4';
         break;
-      case 'licence-check':
-        if (!D['also-need-licence']) D['also-need-licence'] = 'No';
+      case 'food-details':
+        D['food-cat-seafood'] = true; D['food-cat-starch'] = true; D['food-cat-drinks'] = true;
+        D[foodKey('seafood', 'Fish')] = true;
+        D[foodKey('seafood', 'Fish cakes')] = true;
+        D[foodKey('starch', 'Rice')] = true;
+        D[foodKey('drinks', 'Homemade juices')] = true;
+        D['food-source'] = 'Fish from Oistins market; flour and oil from a wholesaler.';
         break;
-      case 'activity-dates':
-        if (!D['event-from-day']) {
-          var f = futParts(21), f2 = futParts(23);
-          D['event-from-day'] = f.d; D['event-from-month'] = f.m; D['event-from-year'] = f.y;
-          D['event-to-day'] = f2.d; D['event-to-month'] = f2.m; D['event-to-year'] = f2.y;
-          D['event-start-time'] = '10:00am'; D['event-end-time'] = '6:00pm';
-        }
+      case 'food-safety':
+        if (!D['has-food-licence']) D['has-food-licence'] = 'No';
+        D['handlers-male'] = '2'; D['handlers-female'] = '3';
+        D['water-source'] = 'Mains supply with a 50-gallon backup tank';
+        D['handwashing'] = 'Portable handwashing station with soap and paper towels';
+        D['waste-disposal'] = 'Covered bins, emptied to the event skip each evening';
         break;
       case 'documents':
         D['upload-vendor-list'] = { name: 'vendor-list.pdf', size: 96000, type: 'application/pdf' };
         D['upload-site-plan'] = { name: 'site-plan.pdf', size: 180000, type: 'application/pdf' };
+        if (D['operating-restaurant'] === 'Yes') {
+          D['upload-medical-certs'] = { name: 'staff-medical-certificates.pdf', size: 512000, type: 'application/pdf' };
+          D['upload-food-licence'] = { name: 'food-business-licence.pdf', size: 248000, type: 'application/pdf' };
+        }
         break;
       case 'declaration':
         D['declare-agree'] = true;
