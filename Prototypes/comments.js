@@ -36,6 +36,18 @@
     root: "#main"                  // only text inside here is commentable
   };
 
+  // Per-page backend override. A page may set window.GTCOMMENTS_OVERRIDE BEFORE
+  // this script loads to point at a different store — e.g. a gov-owned AWS
+  // apiBase instead of the default Supabase. Shallow-merged, so a page overrides
+  // only what it needs; set `supabase: null` to fall through to `apiBase`.
+  if (window.GTCOMMENTS_OVERRIDE) {
+    for (var _k in window.GTCOMMENTS_OVERRIDE) {
+      if (Object.prototype.hasOwnProperty.call(window.GTCOMMENTS_OVERRIDE, _k)) {
+        COMMENTS_CONFIG[_k] = window.GTCOMMENTS_OVERRIDE[_k];
+      }
+    }
+  }
+
   /* ---------- storage adapters (async, Promise-based) ---------- */
   function LocalStore(pageId) {
     var key = "gtcomments:" + pageId;
