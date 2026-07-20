@@ -3293,10 +3293,12 @@ function landmarkOptionsHtml(parish, cur) {
 }
 function landmarkField() {
   var parish = GovBB.D['event-parish'];
-  if (!parish) return '<p class="govbb-hint" style="margin-bottom:var(--spacing-m);">Choose a parish above, then pick a nearby landmark to place the map.</p>';
+  var hint = parish
+    ? 'Pick the closest well-known place. It centres the map — you then drag the pin to the exact spot.'
+    : 'Choose a parish above first, then pick the closest well-known place. It centres the map — you then drag the pin to the exact spot.';
   return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
     + '<label class="govbb-label" for="event-landmark">Nearest landmark</label>'
-    + '<p class="govbb-hint" id="event-landmark-hint">Pick the closest well-known place. It centres the map — you then drag the pin to the exact spot.</p>'
+    + '<p class="govbb-hint" id="event-landmark-hint">' + hint + '</p>'
     + '<div class="govbb-select-wrapper" style="max-width:22rem"><select class="govbb-select" id="event-landmark" name="event-landmark" data-field="event-landmark" aria-describedby="event-landmark-hint">'
     + landmarkOptionsHtml(parish, GovBB.D['event-landmark'] || '')
     + '</select><span class="govbb-select__chevron" aria-hidden="true"><svg viewBox="0 0 12 8"><path d="M6 0 0 8h12z"/></svg></span></div></div>';
