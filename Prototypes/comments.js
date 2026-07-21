@@ -1,157 +1,97 @@
-/* =====================================================================
-   alpha.gov.bb prototype — select-to-comment review widget
-   ---------------------------------------------------------------------
-   Drop-in: add  <script src="comments.js" defer></script>  before </body>.
-   Reviewers select text on the page and leave threaded comments; a side
-   panel lists every thread, with replies, resolve, and a "show resolved"
-   toggle. Self-contained — injects its own CSS, no dependencies.
+/* ============================================================================
+   GovBB prototype dev tools — Comments (PROTOTYPE REVIEW TOOL)
+   ----------------------------------------------------------------------------
+   Drop-in, self-contained. Add  <script src="comments.js" defer></script>
+   before </body> on ANY prototype page (form flow, calculator, directory,
+   content page, start/entry). No framework, no dependencies.
 
-   STORAGE — read this:
-   By default comments are saved in the reviewer's own browser
-   (localStorage), so they are NOT shared between people. To make them
-   shared, point COMMENTS_CONFIG.apiBase at your database API and the
-   widget will use it instead. The API contract it expects:
+   Reviewers SELECT text on the page and leave a threaded comment anchored to
+   that text (highlighted in place). The side panel lists every thread with
+   replies, Resolve / Reopen, and a "show resolved" toggle. "Export all"
+   downloads every page's comments as one Markdown file for a ticket or email.
 
-     GET    {apiBase}/comments?page={pageId}        -> [thread, ...]
-     POST   {apiBase}/comments                      body: thread        -> thread
-     POST   {apiBase}/comments/{id}/replies         body: reply         -> reply
-     PATCH  {apiBase}/comments/{id}                 body: {resolved}    -> thread
+   STORAGE: browser localStorage only, with an in-memory fallback for private
+   browsing — comments are per-reviewer, per-browser, and never leave the
+   machine. No backend, no keys, nothing shared. This is a review aid, never a
+   shipped feature — don't present saved comments as service content.
 
-   A "thread" looks like:
-     { id, pageId, quote, prefix, suffix, author, text, createdAt,
-       resolved, replies: [ { id, author, text, createdAt } ] }
-   ===================================================================== */
+   DEV-ONLY: this tool has its OWN gate, separate from auto-fill. It appears
+   only when the URL carries ?comment (or ?comments), or the hash contains
+   "comment" (#comment / #comments). Nothing else enables it — not ?dev, not
+   localhost, not file:// — so a reviewer link can turn comments on without
+   turning auto-fill on. Real users (no param) never see it.
+   ============================================================================ */
 (function () {
   "use strict";
 
-  var COMMENTS_CONFIG = {
-    // Central storage via Supabase (anon public key — safe to ship in the page).
-    supabase: {
-      url: "https://ksnewcuzjbwjmmibgpmx.supabase.co",
-      anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzbmV3Y3V6amJ3am1taWJncG14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAwNDk1MTYsImV4cCI6MjA5NTYyNTUxNn0.ylV7U7I3X_xTQ30OWsCxAVPMJei_isJmLDKPxlO0MV8"
-    },
-    apiBase: null,
-    // Page key: treats "/self-employed-nis/" and "…/index.html" as the same page.
-    pageId: (location.pathname.replace(/index\.html$/, "").replace(/\/$/, "") || "/"),
-    root: "#main"                  // only text inside here is commentable
+  /* ---- dev gate: comments tool only, via ?comment / #comment ---- */
+  var showComments =
+    /[?&]comments?\b/.test(location.search) ||
+    location.hash.indexOf('comment') !== -1;
+  if (!showComments) return;
+
+  var CFG = {
+    root: '#main, main, #app',        // only text inside here is commentable
+    prefix: 'govbb-comments::',
+    authorKey: 'govbb-comments-author'
   };
 
-  // Per-page backend override. A page may set window.GTCOMMENTS_OVERRIDE BEFORE
-  // this script loads to point at a different store — e.g. a gov-owned AWS
-  // apiBase instead of the default Supabase. Shallow-merged, so a page overrides
-  // only what it needs; set `supabase: null` to fall through to `apiBase`.
-  if (window.GTCOMMENTS_OVERRIDE) {
-    for (var _k in window.GTCOMMENTS_OVERRIDE) {
-      if (Object.prototype.hasOwnProperty.call(window.GTCOMMENTS_OVERRIDE, _k)) {
-        COMMENTS_CONFIG[_k] = window.GTCOMMENTS_OVERRIDE[_k];
-      }
-    }
+  /* ---- page identity: URL path + visible H1 (so single-page framework flows
+     scope by rendered step, multi-file prototypes scope by file) ---- */
+  function currentHeading() {
+    var root = document.querySelector('#app') || document;
+    var h = root.querySelector('h1');
+    return (h && h.textContent.trim()) || (document.title || '').trim() || 'Untitled page';
+  }
+  function pageKey() { return location.pathname + '::' + currentHeading(); }
+
+  /* ---- storage: localStorage with in-memory fallback ---- */
+  var mem = {};
+  var LS = (function () {
+    try { var t = CFG.prefix + '__t'; localStorage.setItem(t, '1'); localStorage.removeItem(t); return localStorage; }
+    catch (e) { return null; }
+  })();
+  function getItem(k) { return LS ? LS.getItem(k) : (k in mem ? mem[k] : null); }
+  function setItem(k, v) { if (LS) { try { LS.setItem(k, v); } catch (e) { mem[k] = v; } } else { mem[k] = v; } }
+  function keyList() { if (LS) { var a = []; for (var i = 0; i < LS.length; i++) a.push(LS.key(i)); return a; } return Object.keys(mem); }
+  function load(key) { try { return JSON.parse(getItem(CFG.prefix + key)) || []; } catch (e) { return []; } }
+  function save(key, list) { setItem(CFG.prefix + key, JSON.stringify(list)); }
+  function allKeys() {
+    return keyList()
+      .filter(function (k) { return k && k.indexOf(CFG.prefix) === 0 && k !== CFG.prefix + '__t'; })
+      .map(function (k) { return k.slice(CFG.prefix.length); });
   }
 
-  /* ---------- storage adapters (async, Promise-based) ---------- */
-  function LocalStore(pageId) {
-    var key = "gtcomments:" + pageId;
-    function read() { try { return JSON.parse(localStorage.getItem(key)) || []; } catch (e) { return []; } }
-    function write(a) { localStorage.setItem(key, JSON.stringify(a)); }
-    return {
-      list: function () { return Promise.resolve(read()); },
-      create: function (thread) { var a = read(); a.push(thread); write(a); return Promise.resolve(thread); },
-      reply: function (id, reply) {
-        var a = read(), t = a.find(function (x) { return x.id === id; });
-        if (t) { t.replies.push(reply); write(a); } return Promise.resolve(reply);
-      },
-      setResolved: function (id, resolved) {
-        var a = read(), t = a.find(function (x) { return x.id === id; });
-        if (t) { t.resolved = resolved; write(a); } return Promise.resolve(t);
-      }
-    };
-  }
-  function ApiStore(base, pageId) {
-    function j(r) { if (!r.ok) throw new Error("API " + r.status); return r.json(); }
-    return {
-      list: function () { return fetch(base + "/comments?page=" + encodeURIComponent(pageId)).then(j); },
-      create: function (thread) {
-        return fetch(base + "/comments", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(thread) }).then(j);
-      },
-      reply: function (id, reply) {
-        return fetch(base + "/comments/" + id + "/replies", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(reply) }).then(j);
-      },
-      setResolved: function (id, resolved) {
-        return fetch(base + "/comments/" + id, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ resolved: resolved }) }).then(j);
-      }
-    };
-  }
-  function SupabaseStore(cfg, pageId) {
-    var base = cfg.url.replace(/\/$/, "") + "/rest/v1";
-    var h = { apikey: cfg.anonKey, Authorization: "Bearer " + cfg.anonKey, "Content-Type": "application/json" };
-    function j(r) { if (!r.ok) return r.text().then(function (t) { throw new Error("Supabase " + r.status + ": " + t); }); return r.json(); }
-    return {
-      list: function () {
-        return fetch(base + "/comments?pageId=eq." + encodeURIComponent(pageId) + "&order=createdAt.asc", { headers: h }).then(j);
-      },
-      create: function (thread) {
-        return fetch(base + "/comments", { method: "POST", headers: Object.assign({ Prefer: "return=representation" }, h), body: JSON.stringify(thread) })
-          .then(j).then(function (rows) { return rows[0]; });
-      },
-      reply: function (id, reply) {
-        return fetch(base + "/comments?id=eq." + id + "&select=replies", { headers: h }).then(j).then(function (rows) {
-          var reps = (rows[0] && rows[0].replies) || []; reps.push(reply);
-          return fetch(base + "/comments?id=eq." + id, { method: "PATCH", headers: h, body: JSON.stringify({ replies: reps }) });
-        }).then(function () { return reply; });
-      },
-      setResolved: function (id, resolved) {
-        return fetch(base + "/comments?id=eq." + id, { method: "PATCH", headers: h, body: JSON.stringify({ resolved: resolved }) });
-      }
-    };
-  }
+  /* ---- author (inline, no blocking prompt) ---- */
+  function getAuthor() { return getItem(CFG.authorKey) || ''; }
 
-  var store = (COMMENTS_CONFIG.supabase && COMMENTS_CONFIG.supabase.url)
-    ? SupabaseStore(COMMENTS_CONFIG.supabase, COMMENTS_CONFIG.pageId)
-    : COMMENTS_CONFIG.apiBase
-      ? ApiStore(COMMENTS_CONFIG.apiBase, COMMENTS_CONFIG.pageId)
-      : LocalStore(COMMENTS_CONFIG.pageId);
-
-  /* ---------- helpers ---------- */
+  /* ---- misc helpers ---- */
   var uid = function () { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); };
-  function authorName() {
-    var n = localStorage.getItem("gtcomments:author");
-    if (!n) {
-      n = (window.prompt("Your name (so the team knows who left the comment):") || "").trim();
-      if (n) localStorage.setItem("gtcomments:author", n);
-    }
-    return n || "Anonymous";
-  }
-  function when(ts) {
-    var d = new Date(ts), now = Date.now(), s = (now - ts) / 1000;
-    if (s < 60) return "just now";
-    if (s < 3600) return Math.floor(s / 60) + "m ago";
-    if (s < 86400) return Math.floor(s / 3600) + "h ago";
-    return d.toLocaleDateString();
-  }
-  function esc(t) { var d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
+  function when(ts) { var s = (Date.now() - ts) / 1000; if (s < 60) return 'just now'; if (s < 3600) return Math.floor(s / 60) + 'm ago'; if (s < 86400) return Math.floor(s / 3600) + 'h ago'; return new Date(ts).toLocaleDateString(); }
+  function esc(t) { var d = document.createElement('div'); d.textContent = (t == null ? '' : t); return d.innerHTML; }
+  function rootEl() { return document.querySelector(CFG.root) || document.body; }
 
-  /* ---------- anchoring (W3C text-quote style) ---------- */
-  function rootEl() { return document.querySelector(COMMENTS_CONFIG.root) || document.body; }
+  /* ---- anchoring (W3C text-quote style) ---- */
   function textNodes(root) {
     var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: function (n) {
         if (!n.nodeValue || !n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
-        if (n.parentElement && n.parentElement.closest("[data-gtc]")) return NodeFilter.FILTER_REJECT;
+        if (n.parentElement && n.parentElement.closest('[data-gcmt]')) return NodeFilter.FILTER_REJECT;
         return NodeFilter.FILTER_ACCEPT;
       }
     });
     var out = [], n; while ((n = w.nextNode())) out.push(n); return out;
   }
   function buildIndex(root) {
-    var nodes = textNodes(root), full = "", map = [];
+    var nodes = textNodes(root), full = '', map = [];
     nodes.forEach(function (node) { map.push({ node: node, start: full.length, end: full.length + node.nodeValue.length }); full += node.nodeValue; });
     return { full: full, map: map };
   }
   function locate(thread) {
     var idx = -1, ix = buildIndex(rootEl());
     if (thread.prefix || thread.suffix) {
-      var probe = thread.prefix + thread.quote + thread.suffix, p = ix.full.indexOf(probe);
-      if (p >= 0) idx = p + thread.prefix.length;
+      var probe = (thread.prefix || '') + thread.quote + (thread.suffix || ''), p = ix.full.indexOf(probe);
+      if (p >= 0) idx = p + (thread.prefix || '').length;
     }
     if (idx < 0) idx = ix.full.indexOf(thread.quote);
     if (idx < 0) return null;
@@ -164,144 +104,223 @@
       var a = Math.max(loc.start, seg.start) - seg.start, b = Math.min(loc.end, seg.end) - seg.start;
       var r = document.createRange();
       try { r.setStart(seg.node, a); r.setEnd(seg.node, b); } catch (e) { return; }
-      var m = document.createElement("mark");
-      m.className = "gtc-hl"; m.setAttribute("data-gtc", "hl"); m.dataset.thread = thread.id;
-      if (thread.resolved) m.dataset.resolved = "1";
-      m.addEventListener("click", function (e) { e.stopPropagation(); openPanel(); focusThread(thread.id); });
-      try { r.surroundContents(m); } catch (e) { /* spans block boundary — skip this segment */ }
+      var m = document.createElement('mark');
+      m.className = 'gcmt-hl'; m.setAttribute('data-gcmt', 'hl'); m.dataset.thread = thread.id;
+      if (thread.resolved) m.dataset.resolved = '1';
+      m.addEventListener('click', function (e) { e.stopPropagation(); openPanel(); focusThread(thread.id); });
+      try { r.surroundContents(m); } catch (e) { /* spans a block boundary — skip */ }
     });
     return true;
   }
   function clearHighlights() {
-    document.querySelectorAll('mark.gtc-hl').forEach(function (m) {
-      var p = m.parentNode; while (m.firstChild) p.insertBefore(m.firstChild, m); p.removeChild(m); p.normalize();
-    });
+    var marks = document.querySelectorAll('mark.gcmt-hl');
+    for (var i = 0; i < marks.length; i++) {
+      var m = marks[i], p = m.parentNode;
+      while (m.firstChild) p.insertBefore(m.firstChild, m);
+      p.removeChild(m); p.normalize();
+    }
   }
 
-  /* ---------- state ---------- */
+  /* ---- state ---- */
   var threads = [], showResolved = false;
-
   function refresh() {
-    return store.list().then(function (list) {
-      threads = list || [];
-      clearHighlights();
-      threads.forEach(function (t) { if (!t.resolved || showResolved) highlight(t); });
-      renderPanel();
-      updateCount();
-    });
+    threads = load(pageKey());
+    clearHighlights();
+    threads.forEach(function (t) { if (!t.resolved || showResolved) highlight(t); });
+    renderPanel();
+    renderToggle();
   }
 
-  /* ---------- UI ---------- */
-  var toggleBtn, panel, listEl, selBtn, composer, resolvedChk;
+  /* ---- export as Markdown (all pages) ---- */
+  function exportAll() {
+    var keys = allKeys(), any = false;
+    var lines = ['# Prototype review comments', '', 'Exported ' + new Date().toLocaleString(), ''];
+    keys.forEach(function (k) {
+      var list = load(k); if (!list.length) return; any = true;
+      lines.push('## ' + (k.split('::').slice(1).join('::') || k));
+      lines.push('_' + k.split('::')[0] + '_', '');
+      list.forEach(function (t) {
+        lines.push('> ' + t.quote.replace(/\n/g, ' '));
+        var who = t.author ? '**' + t.author + '**' : '_anonymous_';
+        lines.push('- ' + who + ' · ' + new Date(t.createdAt).toLocaleString() + (t.resolved ? ' · _resolved_' : ''));
+        t.text.split('\n').forEach(function (x) { lines.push('  ' + x); });
+        (t.replies || []).forEach(function (r) {
+          lines.push('  - ↳ ' + (r.author ? '**' + r.author + '**' : '_anonymous_') + ' · ' + new Date(r.createdAt).toLocaleString());
+          r.text.split('\n').forEach(function (x) { lines.push('    ' + x); });
+        });
+        lines.push('');
+      });
+    });
+    if (!any) return;
+    var blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'prototype-comments.md';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  }
+
+  /* ---- UI ---- */
+  var toggleBtn, panel, listEl, authorInput, resolvedChk, hint, selBtn, composer;
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    e.setAttribute('data-gcmt', 'ui');
+    return e;
+  }
 
   function buildUI() {
-    var css = document.createElement("style");
+    var css = document.createElement('style');
+    css.setAttribute('data-gcmt', 'style');
     css.textContent =
-      '[data-gtc]{box-sizing:border-box;font-family:"Figtree",arial,sans-serif}' +
-      'mark.gtc-hl{background:#fff3c4;border-bottom:2px solid #ffc726;cursor:pointer;padding:0 1px}' +
-      'mark.gtc-hl[data-resolved]{background:#eef0f2;border-bottom-color:#b1b4b6}' +
-      'mark.gtc-hl.gtc-flash{animation:gtcFlash 1.2s ease}' +
-      '@keyframes gtcFlash{0%,100%{background:#fff3c4}50%{background:#ffd94d}}' +
-      '.gtc-toggle{position:fixed;right:16px;bottom:16px;z-index:9000;background:#0e5f64;color:#fff;border:0;border-radius:24px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25)}' +
-      '.gtc-toggle:hover{background:#0a4549}.gtc-toggle:focus-visible{outline:3px solid #ffc726;outline-offset:2px}' +
-      '.gtc-panel{position:fixed;top:0;right:0;height:100vh;width:360px;max-width:92vw;background:#fff;border-left:1px solid #b1b4b6;box-shadow:-2px 0 12px rgba(0,0,0,.15);z-index:9001;transform:translateX(100%);transition:transform .2s;display:flex;flex-direction:column}' +
-      '.gtc-panel.gtc-open{transform:none}' +
-      '.gtc-head{display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid #b1b4b6;background:#00267f;color:#fff}' +
-      '.gtc-head h2{margin:0;font-size:18px;flex:1}.gtc-head button{background:none;border:0;color:#fff;font-size:20px;cursor:pointer;line-height:1}' +
-      '.gtc-sub{display:flex;align-items:center;gap:6px;padding:8px 16px;font-size:14px;color:#505a5f;border-bottom:1px solid #e0e4e9}' +
-      '.gtc-list{flex:1;overflow:auto;padding:8px 0}' +
-      '.gtc-empty{padding:24px 16px;color:#505a5f;font-size:15px}' +
-      '.gtc-thread{padding:12px 16px;border-bottom:1px solid #e0e4e9}.gtc-thread[data-resolved] {opacity:.6}' +
-      '.gtc-quote{font-size:13px;color:#505a5f;border-left:3px solid #ffc726;padding-left:8px;margin-bottom:6px}' +
-      '.gtc-msg{margin:6px 0}.gtc-meta{font-size:12px;color:#505a5f}.gtc-body{font-size:15px;margin:2px 0;white-space:pre-wrap;word-wrap:break-word}' +
-      '.gtc-actions{display:flex;gap:10px;margin-top:6px}' +
-      '.gtc-actions button{background:none;border:0;color:#1d70b8;font-size:13px;font-weight:700;cursor:pointer;padding:0}' +
-      '.gtc-reply{display:flex;gap:6px;margin-top:8px}.gtc-reply textarea{flex:1;font:inherit;font-size:14px;border:1px solid #b1b4b6;border-radius:4px;padding:6px;resize:vertical;min-height:34px}' +
-      '.gtc-btn{background:#0e5f64;color:#fff;border:0;border-radius:4px;padding:6px 12px;font-size:14px;font-weight:700;cursor:pointer}.gtc-btn:hover{background:#0a4549}' +
-      '.gtc-selbtn{position:absolute;z-index:9002;background:#0e5f64;color:#fff;border:0;border-radius:18px;padding:6px 12px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.3)}' +
-      '.gtc-composer{position:absolute;z-index:9003;background:#fff;border:1px solid #b1b4b6;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.2);padding:10px;width:280px}' +
-      '.gtc-composer textarea{width:100%;font:inherit;font-size:14px;border:1px solid #b1b4b6;border-radius:4px;padding:6px;resize:vertical;min-height:60px;box-sizing:border-box}' +
-      '.gtc-composer .gtc-row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}' +
-      '.gtc-composer .gtc-cancel{background:none;border:0;color:#505a5f;font-weight:700;cursor:pointer}';
+      '[data-gcmt]{box-sizing:border-box;font-family:"Figtree",system-ui,arial,sans-serif}' +
+      'mark.gcmt-hl{background:#fff3c4;border-bottom:2px solid #ffc726;cursor:pointer;padding:0 1px}' +
+      'mark.gcmt-hl[data-resolved]{background:#eef0f2;border-bottom-color:#b1b4b6}' +
+      'mark.gcmt-hl.gcmt-flash{animation:gcmtFlash 1.2s ease}' +
+      '@keyframes gcmtFlash{0%,100%{background:#fff3c4}50%{background:#ffd94d}}' +
+      '.gcmt-toggle{position:fixed;left:16px;bottom:16px;z-index:2147483000;background:#0e5f64;color:#fff;border:0;border-radius:24px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 6px 24px rgba(11,28,75,.22),inset 0 1px 0 rgba(255,255,255,.7)}' +
+      '.gcmt-toggle:hover{background:#0a4549}.gcmt-toggle:focus-visible{outline:3px solid #ffbf47;outline-offset:2px}' +
+      '.gcmt-panel{position:fixed;top:0;right:0;height:100vh;width:360px;max-width:92vw;background:#fff;border-left:1px solid #b1b4b6;box-shadow:-2px 0 12px rgba(0,0,0,.15);z-index:2147483001;transform:translateX(100%);transition:transform .2s;display:flex;flex-direction:column}' +
+      '.gcmt-panel.gcmt-open{transform:none}' +
+      '.gcmt-head{display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid #b1b4b6;background:#00267f;color:#fff}' +
+      '.gcmt-head h2{margin:0;font-size:18px;flex:1}.gcmt-head button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer;line-height:1}' +
+      '.gcmt-head button:focus-visible{outline:3px solid #ffbf47;outline-offset:2px}' +
+      '.gcmt-sub{display:flex;align-items:center;gap:6px;padding:8px 16px;font-size:14px;color:#505a5f;border-bottom:1px solid #e0e4e9}' +
+      '.gcmt-list{flex:1;overflow:auto;padding:8px 0}' +
+      '.gcmt-empty{padding:24px 16px;color:#505a5f;font-size:15px}' +
+      '.gcmt-thread{padding:12px 16px;border-bottom:1px solid #e0e4e9}.gcmt-thread[data-resolved]{opacity:.6}' +
+      '.gcmt-quote{font-size:13px;color:#505a5f;border-left:3px solid #ffc726;padding-left:8px;margin-bottom:6px}' +
+      '.gcmt-msg{margin:6px 0}.gcmt-meta{font-size:12px;color:#505a5f}.gcmt-body{font-size:15px;margin:2px 0;white-space:pre-wrap;word-wrap:break-word}' +
+      '.gcmt-actions{display:flex;gap:10px;margin-top:6px}' +
+      '.gcmt-actions button{background:none;border:0;color:#1d70b8;font-size:13px;font-weight:700;cursor:pointer;padding:0}' +
+      '.gcmt-actions button:focus-visible{outline:3px solid #ffbf47;outline-offset:2px}' +
+      '.gcmt-reply{display:flex;gap:6px;margin-top:8px}.gcmt-reply textarea{flex:1;font:inherit;font-size:14px;border:1px solid #b1b4b6;border-radius:4px;padding:6px;resize:vertical;min-height:34px}' +
+      '.gcmt-ft{padding:11px 16px;border-top:1px solid #e0e4e9;display:flex;flex-direction:column;gap:8px}' +
+      '.gcmt-ft input{width:100%;box-sizing:border-box;font:inherit;font-size:14px;border:1px solid #b1b4b6;border-radius:4px;padding:7px 9px}' +
+      '.gcmt-ft .gcmt-hintline{font-size:12px;color:#505a5f}' +
+      '.gcmt-btn{background:#0e5f64;color:#fff;border:0;border-radius:4px;padding:7px 12px;font-size:14px;font-weight:700;cursor:pointer}.gcmt-btn:hover{background:#0a4549}' +
+      '.gcmt-btn--ghost{background:#eef0f2;color:#0b0c0c}.gcmt-btn--ghost:hover{background:#dce0e4}' +
+      '.gcmt-btn:focus-visible{outline:3px solid #ffbf47;outline-offset:2px}' +
+      '.gcmt-selbtn{position:absolute;z-index:2147483002;background:#0e5f64;color:#fff;border:0;border-radius:18px;padding:6px 12px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.3)}' +
+      '.gcmt-composer{position:absolute;z-index:2147483003;background:#fff;border:1px solid #b1b4b6;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.2);padding:10px;width:280px}' +
+      '.gcmt-composer textarea{width:100%;font:inherit;font-size:14px;border:1px solid #b1b4b6;border-radius:4px;padding:6px;resize:vertical;min-height:60px;box-sizing:border-box}' +
+      '.gcmt-composer .gcmt-row{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}' +
+      '.gcmt-composer .gcmt-cancel{background:none;border:0;color:#505a5f;font-weight:700;cursor:pointer}';
     document.head.appendChild(css);
 
-    toggleBtn = el('button', 'gtc-toggle', '💬 Comments');
-    toggleBtn.setAttribute('data-gtc', 'toggle');
-    toggleBtn.addEventListener('click', function () { panel.classList.contains('gtc-open') ? closePanel() : openPanel(); });
+    toggleBtn = el('button', 'gcmt-toggle');
+    toggleBtn.type = 'button';
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    toggleBtn.setAttribute('aria-label', 'Open the prototype review comments panel (developer tool)');
+    toggleBtn.addEventListener('click', function () { panel.classList.contains('gcmt-open') ? closePanel() : openPanel(); });
     document.body.appendChild(toggleBtn);
 
-    panel = el('aside', 'gtc-panel'); panel.setAttribute('data-gtc', 'panel'); panel.setAttribute('aria-label', 'Comments');
-    var head = el('div', 'gtc-head');
-    var h2 = el('h2', '', 'Comments'); var close = el('button', '', '×'); close.setAttribute('aria-label', 'Close comments');
-    close.addEventListener('click', closePanel); head.appendChild(h2); head.appendChild(close);
-    var sub = el('div', 'gtc-sub');
-    resolvedChk = el('input'); resolvedChk.type = 'checkbox'; resolvedChk.id = 'gtc-showres';
+    panel = el('aside', 'gcmt-panel');
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-label', 'Prototype review comments');
+
+    var head = el('div', 'gcmt-head');
+    head.appendChild(el('h2', '', 'Comments'));
+    var close = el('button', ''); close.type = 'button'; close.textContent = '×'; close.setAttribute('aria-label', 'Close comments');
+    close.addEventListener('click', closePanel);
+    head.appendChild(close);
+
+    var sub = el('div', 'gcmt-sub');
+    resolvedChk = el('input'); resolvedChk.type = 'checkbox'; resolvedChk.id = 'gcmt-showres';
     resolvedChk.addEventListener('change', function () { showResolved = resolvedChk.checked; refresh(); });
-    var lbl = el('label', '', 'Show resolved'); lbl.setAttribute('for', 'gtc-showres');
+    var lbl = el('label', '', 'Show resolved'); lbl.setAttribute('for', 'gcmt-showres');
     sub.appendChild(resolvedChk); sub.appendChild(lbl);
-    listEl = el('div', 'gtc-list');
-    panel.appendChild(head); panel.appendChild(sub); panel.appendChild(listEl);
+
+    listEl = el('div', 'gcmt-list');
+
+    var ft = el('div', 'gcmt-ft');
+    authorInput = el('input'); authorInput.type = 'text'; authorInput.placeholder = 'Your name (optional)';
+    authorInput.setAttribute('aria-label', 'Your name'); authorInput.value = getAuthor();
+    authorInput.addEventListener('change', function () { setItem(CFG.authorKey, authorInput.value.trim()); });
+    hint = el('div', 'gcmt-hintline', 'Select any text on the page to add a comment.');
+    var exportBtn = el('button', 'gcmt-btn gcmt-btn--ghost', 'Export all'); exportBtn.type = 'button';
+    exportBtn.addEventListener('click', exportAll);
+    ft.appendChild(authorInput); ft.appendChild(hint); ft.appendChild(exportBtn);
+
+    panel.appendChild(head); panel.appendChild(sub); panel.appendChild(listEl); panel.appendChild(ft);
     document.body.appendChild(panel);
 
     document.addEventListener('mouseup', onSelect);
     document.addEventListener('keyup', onSelect);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        if (composer) { removeComposer(); return; }
+        if (panel.classList.contains('gcmt-open')) { closePanel(); toggleBtn.focus(); }
+      }
+    });
   }
-  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; e.setAttribute && e.setAttribute('data-gtc', e.getAttribute('data-gtc') || 'ui'); return e; }
 
-  function openPanel() { panel.classList.add('gtc-open'); }
-  function closePanel() { panel.classList.remove('gtc-open'); }
-  function updateCount() {
+  function openPanel() { panel.classList.add('gcmt-open'); toggleBtn.setAttribute('aria-expanded', 'true'); renderPanel(); }
+  function closePanel() { panel.classList.remove('gcmt-open'); toggleBtn.setAttribute('aria-expanded', 'false'); }
+
+  function renderToggle() {
     var n = threads.filter(function (t) { return !t.resolved; }).length;
     toggleBtn.textContent = '💬 Comments' + (n ? ' (' + n + ')' : '');
   }
 
   function renderPanel() {
+    if (!listEl) return;
     listEl.innerHTML = '';
     var visible = threads.filter(function (t) { return showResolved || !t.resolved; });
     if (!visible.length) {
-      listEl.appendChild(el('div', 'gtc-empty', 'No comments yet. Select any text on the page to start one.'));
+      listEl.appendChild(el('div', 'gcmt-empty', 'No comments on this page yet. Select any text to start one.'));
       return;
     }
     visible.forEach(function (t) {
-      var box = el('div', 'gtc-thread'); box.dataset.thread = t.id; if (t.resolved) box.setAttribute('data-resolved', '1');
-      var q = el('div', 'gtc-quote', '“' + t.quote + '”'); box.appendChild(q);
+      var box = el('div', 'gcmt-thread'); box.dataset.thread = t.id; if (t.resolved) box.setAttribute('data-resolved', '1');
+      box.appendChild(el('div', 'gcmt-quote', '“' + t.quote + '”'));
       box.appendChild(msg(t.author, t.text, t.createdAt));
       (t.replies || []).forEach(function (r) { box.appendChild(msg(r.author, r.text, r.createdAt)); });
-      var actions = el('div', 'gtc-actions');
-      var reBtn = el('button', '', 'Reply'); reBtn.addEventListener('click', function () { showReply(box, t.id); });
-      var resBtn = el('button', '', t.resolved ? 'Reopen' : 'Resolve');
-      resBtn.addEventListener('click', function () { store.setResolved(t.id, !t.resolved).then(refresh); });
+      var actions = el('div', 'gcmt-actions');
+      var reBtn = el('button', '', 'Reply'); reBtn.type = 'button'; reBtn.addEventListener('click', function () { showReply(box, t.id); });
+      var resBtn = el('button', '', t.resolved ? 'Reopen' : 'Resolve'); resBtn.type = 'button';
+      resBtn.addEventListener('click', function () { setResolved(t.id, !t.resolved); });
       actions.appendChild(reBtn); actions.appendChild(resBtn); box.appendChild(actions);
       box.addEventListener('click', function () { flash(t.id); });
       listEl.appendChild(box);
     });
   }
   function msg(author, text, ts) {
-    var wrap = el('div', 'gtc-msg');
-    wrap.appendChild(el('div', 'gtc-meta', author + ' · ' + when(ts)));
-    wrap.appendChild(el('div', 'gtc-body', text));
+    var wrap = el('div', 'gcmt-msg');
+    wrap.appendChild(el('div', 'gcmt-meta', (author || 'anonymous') + ' · ' + when(ts)));
+    wrap.appendChild(el('div', 'gcmt-body', text));
     return wrap;
   }
   function showReply(box, id) {
-    if (box.querySelector('.gtc-reply')) return;
-    var wrap = el('div', 'gtc-reply'); var ta = el('textarea'); var send = el('button', 'gtc-btn', 'Post');
+    if (box.querySelector('.gcmt-reply')) return;
+    var wrap = el('div', 'gcmt-reply'), ta = el('textarea'), send = el('button', 'gcmt-btn', 'Post');
+    send.type = 'button';
+    ta.setAttribute('aria-label', 'Write a reply');
     send.addEventListener('click', function () {
       var v = ta.value.trim(); if (!v) return;
-      store.reply(id, { id: uid(), author: authorName(), text: v, createdAt: Date.now() }).then(refresh);
+      var list = load(pageKey()), t = list.find(function (x) { return x.id === id; });
+      if (t) { (t.replies = t.replies || []).push({ id: uid(), author: getAuthor(), text: v, createdAt: Date.now() }); save(pageKey(), list); }
+      refresh();
     });
     wrap.appendChild(ta); wrap.appendChild(send); box.appendChild(wrap); ta.focus();
   }
+  function setResolved(id, resolved) {
+    var list = load(pageKey()), t = list.find(function (x) { return x.id === id; });
+    if (t) { t.resolved = resolved; save(pageKey(), list); }
+    refresh();
+  }
   function focusThread(id) {
-    var box = listEl.querySelector('.gtc-thread[data-thread="' + id + '"]');
+    var box = listEl.querySelector('.gcmt-thread[data-thread="' + id + '"]');
     if (box) box.scrollIntoView({ block: 'center' });
     flash(id);
   }
   function flash(id) {
-    var m = document.querySelector('mark.gtc-hl[data-thread="' + id + '"]');
-    if (m) { m.scrollIntoView({ block: 'center', behavior: 'smooth' }); m.classList.add('gtc-flash'); setTimeout(function () { m.classList.remove('gtc-flash'); }, 1200); }
+    var m = document.querySelector('mark.gcmt-hl[data-thread="' + id + '"]');
+    if (m) { m.scrollIntoView({ block: 'center', behavior: 'smooth' }); m.classList.add('gcmt-flash'); setTimeout(function () { m.classList.remove('gcmt-flash'); }, 1200); }
   }
 
-  /* ---------- selection -> new comment ---------- */
+  /* ---- selection -> new comment ---- */
   function onSelect() {
     setTimeout(function () {
       removeSelBtn();
@@ -309,14 +328,14 @@
       if (!sel || sel.isCollapsed) return;
       var range = sel.getRangeAt(0);
       if (!rootEl().contains(range.commonAncestorContainer)) return;
-      if (range.startContainer.parentElement && range.startContainer.parentElement.closest('[data-gtc]')) return;
+      if (range.startContainer.parentElement && range.startContainer.parentElement.closest('[data-gcmt]')) return;
       var quote = sel.toString().trim();
       if (quote.length < 2) return;
       var rect = range.getBoundingClientRect();
-      selBtn = el('button', 'gtc-selbtn', '💬 Comment');
+      var saved = { quote: quote, prefix: ctx(range, -32, 'start'), suffix: ctx(range, 32, 'end') };
+      selBtn = el('button', 'gcmt-selbtn'); selBtn.type = 'button'; selBtn.textContent = '💬 Comment';
       selBtn.style.top = (window.scrollY + rect.bottom + 6) + 'px';
       selBtn.style.left = (window.scrollX + rect.left) + 'px';
-      var saved = { quote: quote, prefix: ctx(range, -32, 'start'), suffix: ctx(range, 32, 'end') };
       selBtn.addEventListener('mousedown', function (e) { e.preventDefault(); });
       selBtn.addEventListener('click', function (e) { e.stopPropagation(); openComposer(saved, rect); });
       document.body.appendChild(selBtn);
@@ -338,22 +357,22 @@
 
   function openComposer(saved, rect) {
     removeSelBtn(); removeComposer();
-    composer = el('div', 'gtc-composer');
+    composer = el('div', 'gcmt-composer');
     composer.style.top = (window.scrollY + rect.bottom + 6) + 'px';
     composer.style.left = (window.scrollX + Math.min(rect.left, window.innerWidth - 300)) + 'px';
-    var ta = el('textarea'); ta.placeholder = 'Add your comment…';
-    var row = el('div', 'gtc-row');
-    var cancel = el('button', 'gtc-cancel', 'Cancel'); cancel.addEventListener('click', removeComposer);
-    var post = el('button', 'gtc-btn', 'Comment');
+    var ta = el('textarea'); ta.placeholder = 'Add your comment…'; ta.setAttribute('aria-label', 'Add your comment');
+    var row = el('div', 'gcmt-row');
+    var cancel = el('button', 'gcmt-cancel', 'Cancel'); cancel.type = 'button'; cancel.addEventListener('click', removeComposer);
+    var post = el('button', 'gcmt-btn', 'Comment'); post.type = 'button';
     post.addEventListener('click', function () {
       var v = ta.value.trim(); if (!v) return;
-      var thread = {
-        id: uid(), pageId: COMMENTS_CONFIG.pageId, quote: saved.quote,
-        prefix: saved.prefix, suffix: saved.suffix, author: authorName(),
-        text: v, createdAt: Date.now(), resolved: false, replies: []
-      };
-      store.create(thread).then(function () { removeComposer(); window.getSelection().removeAllRanges(); return refresh(); }).then(openPanel);
+      var list = load(pageKey());
+      list.push({ id: uid(), quote: saved.quote, prefix: saved.prefix, suffix: saved.suffix, author: getAuthor(), text: v, createdAt: Date.now(), resolved: false, replies: [] });
+      save(pageKey(), list);
+      removeComposer(); window.getSelection().removeAllRanges();
+      refresh(); openPanel();
     });
+    ta.addEventListener('keydown', function (e) { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); post.click(); } });
     row.appendChild(cancel); row.appendChild(post);
     composer.appendChild(ta); composer.appendChild(row);
     document.body.appendChild(composer); ta.focus();
@@ -363,7 +382,19 @@
     if (selBtn && e.target !== selBtn) removeSelBtn();
   });
 
-  /* ---------- go ---------- */
-  function init() { buildUI(); refresh(); }
+  /* ---- go ---- */
+  function init() {
+    buildUI();
+    refresh();
+    // Re-scope when a single-page framework flow swaps its H1.
+    var watch = document.getElementById('app') || document.body;
+    var lastKey = pageKey();
+    try {
+      new MutationObserver(function () {
+        var k = pageKey();
+        if (k !== lastKey) { lastKey = k; refresh(); }
+      }).observe(watch, { childList: true, subtree: true });
+    } catch (e) {}
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
