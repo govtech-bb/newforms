@@ -3302,8 +3302,8 @@ function landmarkOptionsHtml(parish, cur) {
 function landmarkField() {
   var parish = GovBB.D['event-parish'];
   var hint = parish
-    ? 'Pick the closest well-known place. It centres the map — you then drag the pin to the exact spot.'
-    : 'Choose a parish above first, then pick the closest well-known place. It centres the map — you then drag the pin to the exact spot.';
+    ? 'Pick the closest well-known place. It zooms the map to that area — then tap the map to drop your pin on the exact spot.'
+    : 'Choose a parish above first, then pick the closest well-known place. It zooms the map to that area — then tap the map to drop your pin on the exact spot.';
   return '<div class="govbb-form-group" style="margin-bottom:var(--spacing-m);">'
     + '<label class="govbb-label" for="event-landmark">Nearest landmark</label>'
     + '<p class="govbb-hint" id="event-landmark-hint">' + hint + '</p>'
@@ -3317,8 +3317,8 @@ function eventMapBlock() {
      zero width. The map needs an explicit width:100% in normal block flow. */
   return '<div style="margin-bottom:var(--spacing-m);">'
     + '<label class="govbb-label" style="display:block;">Pin the event location</label>'
-    + '<p class="govbb-hint" id="event-map-hint">Dropping a pin sets the geolocation of your event. Drag the pin, or tap the map, to place it. If you cannot use the map, the parish you chose above still sets your polyclinic.</p>'
-    + '<div id="event-map" style="height:340px;width:100%;border-radius:16px;overflow:hidden;box-shadow:0 6px 20px rgba(16,24,40,.12), 0 0 0 1px rgba(16,24,40,.08);" aria-label="Map to set the geolocation of your event. If you cannot use the map, the parish you chose already sets your polyclinic." aria-describedby="event-map-hint"></div>'
+    + '<p class="govbb-hint" id="event-map-hint">Tap the map to drop a pin on your exact event location — this is required to continue. You can drag the pin to adjust it. If the map does not load, the parish you chose above will set your polyclinic instead.</p>'
+    + '<div id="event-map" tabindex="-1" style="height:340px;width:100%;border-radius:16px;overflow:hidden;box-shadow:0 6px 20px rgba(16,24,40,.12), 0 0 0 1px rgba(16,24,40,.08);" aria-label="Map to set the geolocation of your event. Tap the map to drop a pin. If the map does not load, the parish you chose already sets your polyclinic." aria-describedby="event-map-hint"></div>'
     + '<div id="event-map-fallback"></div>'
     + '<div id="event-poly-result" aria-live="polite" style="margin-top:var(--spacing-s);"></div></div>';
 }
@@ -3342,12 +3342,13 @@ function eventLocationLabel() {
 function updateEventResult() {
   var box = document.getElementById('event-poly-result');
   if (!box) return;
+  /* The serving polyclinic is revealed only once the user drops a pin. */
+  if (!eventHasPin()) { box.innerHTML = ''; return; }
   var poly = eventPolyclinic();
   if (!poly) { box.innerHTML = ''; return; }
-  var basis = eventHasPin() ? 'Based on your pinned location.' : 'Based on your parish — pin the map for a more precise match.';
   box.innerHTML = '<div style="border-radius:14px;background:#ffffff;box-shadow:0 4px 14px rgba(16,24,40,.10);border:1px solid #ececf0;padding:16px 18px;">'
     + '<p class="govbb-text-body" style="margin:0;">📍 <strong>' + escapeHtml(poly) + '</strong> serves this location. Your officer request will be handled there.</p>'
-    + '<p class="govbb-hint" style="margin:var(--spacing-xs) 0 0;">' + basis + '</p></div>';
+    + '<p class="govbb-hint" style="margin:var(--spacing-xs) 0 0;">Based on your pinned location.</p></div>';
 }
 function eventMapCentre() {
   if (eventHasPin()) return { lat: parseFloat(GovBB.D['event-lat']), lng: parseFloat(GovBB.D['event-lng']), zoom: 15, pin: true };
@@ -3378,11 +3379,13 @@ function initEventMap() {
   var fb = document.getElementById('event-map-fallback');
   if (typeof L === 'undefined') {
     if (!window.__leafletTried) { ensureLeaflet(initEventMap); return; }
+    window.__eventMapFailed = true; /* pin no longer required — fall back to parish routing */
     el.style.display = 'none';
     if (fb) fb.innerHTML = '<p class="govbb-hint" style="margin:0;">Map could not load. We will route your application using the parish you selected.</p>';
     updateEventResult();
     return;
   }
+  window.__eventMapFailed = false;
   if (fb) fb.innerHTML = '';
   if (_eventMap) { try { _eventMap.remove(); } catch (e) {} _eventMap = null; }
   var c = eventMapCentre();
@@ -3412,9 +3415,10 @@ function initEventMap() {
     if (save) { GovBB.D['event-lat'] = lat.toFixed(6); GovBB.D['event-lng'] = lng.toFixed(6); updateEventResult(); }
     highlightZone(eventPolyclinic());
   }
+  /* Restore only a pin the user actually placed before. A chosen landmark
+     centres/zooms the view but never drops a pin — the user does that. */
   if (c.pin) place(c.lat, c.lng, false);
-  else if (lookupLandmark(GovBB.D['event-parish'], GovBB.D['event-landmark'])) place(c.lat, c.lng, true);
-  else highlightZone(eventPolyclinic());
+  else highlightZone(null);
   map.on('click', function (e) { place(e.latlng.lat, e.latlng.lng, true); });
   var pSel = document.getElementById('event-parish');
   if (pSel) pSel.addEventListener('change', function () {
@@ -3425,14 +3429,15 @@ function initEventMap() {
     var pc = PARISH_CENTROID[pSel.value];
     map.setView(pc ? [pc.lat, pc.lng] : [13.19, -59.54], pc ? 13 : 10);
     updateEventResult();
-    highlightZone(eventPolyclinic());
+    highlightZone(null);
   });
   var lSel = document.getElementById('event-landmark');
   if (lSel) lSel.addEventListener('change', function () {
     GovBB.D['event-landmark'] = lSel.value;
     var lm = lookupLandmark(GovBB.D['event-parish'], lSel.value);
-    if (lm) { map.setView([lm.lat, lm.lng], 15); place(lm.lat, lm.lng, true); }
-    else { if (marker) { map.removeLayer(marker); marker = null; } delete GovBB.D['event-lat']; delete GovBB.D['event-lng']; updateEventResult(); }
+    /* Zoom to the landmark's area only — the user drops the pin themselves.
+       Any pin already placed is left untouched. */
+    if (lm) map.setView([lm.lat, lm.lng], 16);
   });
   /* Map lives in a dynamically-injected container that may be zero-width at
      init — recompute size across a few frames/delays so the zones lay out. */
@@ -3707,6 +3712,11 @@ function validate(pageId) {
     reqText('event-name', 'Enter the name of the event');
     reqText('event-line1', 'Enter the address of the event');
     reqText('event-parish', 'Select the parish of the event');
+    /* The user must drop a pin so we can assign the serving polyclinic from the
+       exact location. If the map failed to load, fall back to parish routing so
+       nobody is trapped — the parish is already required above. */
+    if (!window.__eventMapFailed && !eventHasPin())
+      errors.push({ id: 'event-map', msg: 'Drop a pin on the map to set the exact event location' });
   }
 
   if (pageId === 'licence-check') {
