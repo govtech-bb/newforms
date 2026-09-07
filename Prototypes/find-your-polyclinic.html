@@ -1,0 +1,1317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Find your polyclinic — Government of Barbados</title>
+<link rel="icon" href="https://alpha.gov.bb/favicon.ico" />
+
+<!-- The stylesheet the LIVE alpha.gov.bb service pages use, vendored locally.
+     NOT the npm @govtech-bb/styles@alpha package: the live build uses different
+     class names and a different token prefix (govbb-width-container /
+     govbb-button / --govbb-* rather than govbb-container / govbb-btn /
+     --color-*), ships Tailwind utilities, and — unlike the npm build — scales
+     headings responsively on its own. -->
+<link rel="stylesheet" href="govbb-alpha-styles.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
+<style>
+  /* ===================================================================
+     Page-local styles only, prefixed `poly-`. All chrome, type, buttons,
+     the select, the summary list and the feedback block come from the live
+     alpha.gov.bb stylesheet. Tokens are --govbb-*.
+     No responsive type override here: the live build already scales
+     --govbb-font-size-h1 at 50rem and 64rem.
+     `govbb-inset-text` does NOT exist in the live build, so callouts are
+     local (.poly-callout).
+     =================================================================== */
+
+  .poly-callout{border-left:4px solid var(--govbb-blue-60);background:var(--govbb-blue-10);
+       padding:var(--govbb-space-s);margin:var(--govbb-space-s) 0}
+  .poly-callout > p{margin:0;font-size:var(--govbb-font-size-body-sm)}
+  .poly-callout > p + p{margin-top:var(--govbb-space-xs)}
+
+  .poly-filters{background:var(--govbb-teal-10);padding:var(--govbb-space-s);
+       border-radius:var(--govbb-radius);margin-bottom:var(--govbb-space-s)}
+  .poly-filters__row{display:grid;grid-template-columns:1fr 1fr;gap:var(--govbb-space-s);align-items:end}
+  @media (max-width:50rem){ .poly-filters__row{grid-template-columns:1fr} }
+  .poly-filters__actions{display:flex;flex-wrap:wrap;gap:var(--govbb-space-s);align-items:center;
+       margin-top:var(--govbb-space-s)}
+  .poly-search{display:flex}
+  .poly-search .govbb-input{min-width:0;flex:1}
+
+  .poly-meta{font-size:var(--govbb-font-size-body-sm);margin:0 0 var(--govbb-space-s)}
+
+  .poly-answer{border-left:6px solid var(--govbb-teal-80);background:var(--govbb-color-surface);
+       padding:var(--govbb-space-s);margin-top:var(--govbb-space-s);display:none}
+  .poly-answer.is-shown{display:block}
+  .poly-answer__lead{margin:0;font-size:var(--govbb-font-size-body)}
+  .poly-answer__note{display:block;color:var(--govbb-color-muted);
+       font-size:var(--govbb-font-size-body-sm);margin-top:var(--govbb-space-xs)}
+
+  .poly-layout{display:grid;grid-template-columns:1fr 1fr;gap:var(--govbb-space-m);align-items:start}
+  @media (max-width:64rem){ .poly-layout{grid-template-columns:1fr} .poly-layout__map{order:-1} }
+  .poly-layout__map{position:sticky;top:var(--govbb-space-xs)}
+  /* A Leaflet container in a flex/grid parent can collapse to a few pixels —
+     keep this a plain block with an explicit width and height. */
+  #poly-map{height:560px;width:100%;display:block;border:1px solid var(--govbb-grey-20);
+       border-radius:var(--govbb-radius)}
+  @media (max-width:64rem){ #poly-map{height:360px} .poly-layout__map{position:static} }
+
+  .poly-group{font-size:var(--govbb-font-size-body-sm);font-weight:700;text-transform:uppercase;
+       letter-spacing:.5px;color:var(--govbb-color-muted);margin:0 0 var(--govbb-space-xs)}
+  ul.poly-list{list-style:none;margin:0 0 var(--govbb-space-m);padding:0;display:flex;
+       flex-direction:column;gap:var(--govbb-space-xs);max-inline-size:none}
+  .poly-list__btn{width:100%;text-align:left;background:var(--govbb-color-surface);
+       border:1px solid var(--govbb-grey-20);border-left:6px solid var(--zone,#ccc);
+       border-radius:var(--govbb-radius);padding:var(--govbb-space-s);cursor:pointer;font:inherit;
+       display:grid;gap:var(--govbb-space-xxs)}
+  .poly-list__btn:hover{border-color:var(--govbb-color-ink)}
+  .poly-list__btn:focus-visible{outline:4px solid var(--govbb-color-focus);outline-offset:2px}
+  .poly-list__btn[aria-pressed="true"]{background:var(--govbb-teal-10);
+       box-shadow:0 0 0 2px var(--govbb-teal-80) inset;border-left-width:8px}
+  .poly-list__name{font-weight:700;font-size:var(--govbb-font-size-body);
+       min-width:0;overflow-wrap:anywhere}
+  .poly-list__meta{font-size:var(--govbb-font-size-body-sm);color:var(--govbb-color-muted);
+       min-width:0;overflow-wrap:anywhere}
+  .poly-list__addr{font-size:var(--govbb-font-size-body-sm);min-width:0;overflow-wrap:anywhere}
+  .poly-list__empty{padding:var(--govbb-space-s);border:1px dashed var(--govbb-grey-20);
+       border-radius:var(--govbb-radius);color:var(--govbb-color-muted)}
+  .poly-swatch{display:inline-block;width:12px;height:12px;border-radius:3px;
+       border:1px solid var(--govbb-overlay-dark-20);vertical-align:middle;
+       margin-right:var(--govbb-space-xxs);background:var(--zone,#ccc)}
+  .poly-swatch--none{background:repeating-linear-gradient(45deg,#fff,#fff 3px,#b1b4b6 3px,#b1b4b6 6px)}
+  .poly-approx{color:var(--govbb-color-muted);font-size:var(--govbb-font-size-body-sm);white-space:nowrap}
+
+  .poly-chip{display:inline-block;font-size:var(--govbb-font-size-body-sm);font-weight:700;
+       padding:1px 7px;border-radius:3px;background:var(--govbb-grey-20);color:var(--govbb-color-ink);
+       margin-left:var(--govbb-space-xxs);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+  .poly-chip--24{background:var(--govbb-blue-80);color:var(--govbb-white-00)}
+  .poly-chip--dist{background:var(--govbb-teal-40);color:var(--govbb-color-ink)}
+
+  .zone-label{background:transparent;border:0;box-shadow:none;color:var(--govbb-color-ink);
+       font-weight:700;font-size:12px;
+       text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;
+       white-space:nowrap;text-align:center}
+  .leaflet-tooltip.zone-label:before{display:none}
+  .zone-label--small{display:none}
+  .z-in .zone-label--small{display:block}
+  .day-badge{background:var(--govbb-teal-80);border:0;box-shadow:none;color:var(--govbb-white-00);
+       font-weight:700;font-size:11px;padding:1px 6px;border-radius:3px;white-space:nowrap}
+  .leaflet-tooltip.day-badge:before{display:none}
+
+  .poly-detail{border:2px solid var(--govbb-teal-80);border-radius:var(--govbb-radius);
+       margin-top:var(--govbb-space-m);overflow:hidden}
+  .poly-detail__head{background:var(--govbb-teal-80);color:var(--govbb-white-00);
+       padding:var(--govbb-space-s)}
+  .poly-detail__head h2{margin:0;color:var(--govbb-white-00);overflow-wrap:anywhere}
+  .poly-detail__aka{font-size:var(--govbb-font-size-body-sm);opacity:.9;margin:var(--govbb-space-xxs) 0 0}
+  .poly-detail__body{padding:var(--govbb-space-s)}
+  .poly-detail__empty{padding:var(--govbb-space-s);color:var(--govbb-color-muted)}
+  /* Long addresses / phone stacks in a summary value cause mobile horizontal
+     scroll without min-width:0 + overflow-wrap. */
+  .poly-detail .govbb-summary-list__value,
+  .poly-detail .govbb-summary-list__key{min-width:0;overflow-wrap:anywhere}
+  .poly-detail h3{margin:var(--govbb-space-m) 0 var(--govbb-space-xs);
+       padding-top:var(--govbb-space-s);border-top:1px solid var(--govbb-grey-20)}
+  .poly-detail h3:first-of-type{border-top:0;padding-top:0;margin-top:0}
+  .poly-detail .poly-callout + h3{margin-top:var(--govbb-space-m);padding-top:var(--govbb-space-s);
+       border-top:1px solid var(--govbb-grey-20)}
+  .poly-svc{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;
+       gap:var(--govbb-space-xxs);max-inline-size:none}
+  .poly-svc li{font-size:var(--govbb-font-size-body-sm);background:var(--govbb-teal-10);
+       border:1px solid var(--govbb-teal-40);border-radius:14px;padding:3px 11px}
+  .poly-clin{list-style:none;margin:0;padding:0;font-size:var(--govbb-font-size-body);
+       display:grid;gap:var(--govbb-space-xxs);max-inline-size:none}
+  .poly-clin .is-none{color:var(--govbb-color-muted)}
+  .poly-dirs{display:inline-block;margin-top:var(--govbb-space-s)}
+
+  .poly-sources{border-top:2px solid var(--govbb-grey-20);margin-top:var(--govbb-space-m);
+       padding-top:var(--govbb-space-s);font-size:var(--govbb-font-size-body-sm)}
+  .poly-note{font-size:var(--govbb-font-size-body-sm);margin:var(--govbb-space-s) 0}
+  /* the map column's notes shouldn't be capped to the reading measure */
+  .poly-layout .poly-note,.poly-layout p{max-inline-size:none}
+</style>
+</head>
+
+<body class="govbb-page">
+<a class="govbb-skip-link" href="#main-content">Skip to main content</a>
+
+<div class="govbb-official-banner">
+  <div class="govbb-official-banner__inner govbb-width-container">
+    <span class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="https://alpha.gov.bb/images/coat-of-arms.png"
+           alt="" aria-hidden="true" />
+    </span>
+    <span class="govbb-official-banner__text">
+      <span>Official website of the Government of Barbados</span>
+    </span>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-header__inner govbb-width-container">
+    <a class="govbb-header__home" href="#">
+      <img class="govbb-header__logo" src="https://alpha.gov.bb/assets/govbb-logo-dweJzbng.svg"
+           alt="GovBB — Government of Barbados" />
+    </a>
+  </div>
+</header>
+
+<div class="govbb-status-banner govbb-status-banner--alpha govbb-status-banner--full-width">
+  <div class="govbb-status-banner__inner govbb-width-container">
+    <p><span class="govbb-text-bold">Alpha</span> — this is a prototype. Catchment areas and map pins
+    are approximate and for testing only.</p>
+  </div>
+</div>
+
+<div class="govbb-width-container">
+  <nav class="govbb-breadcrumbs govbb-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
+    <ol class="govbb-breadcrumbs__list">
+      <li class="govbb-breadcrumbs__item">
+        <a class="govbb-link govbb-breadcrumbs__link" href="#">Home</a></li>
+      <li class="govbb-breadcrumbs__item">
+        <a class="govbb-link govbb-breadcrumbs__link" href="#">Health and emergency services</a></li>
+      <li class="govbb-breadcrumbs__item">
+        <a class="govbb-link govbb-breadcrumbs__link" href="#" aria-current="page">Find your polyclinic</a></li>
+    </ol>
+  </nav>
+</div>
+
+<main id="main-content" tabindex="-1">
+  <div class="govbb-width-container govbb-main-wrapper">
+
+    <div class="space-y-4 lg:space-y-6">
+      <h1 class="govbb-text-h1">Find your polyclinic</h1>
+      <p class="govbb-text-body">Barbados is divided into catchment areas, and each area is served by
+      one polyclinic. Find out which polyclinic serves the area where you live, what services it offers,
+      and when its clinics run. The one nearest you is not always the one assigned to you.</p>
+      <p class="govbb-text-body-sm" style="color:var(--govbb-color-muted)">Last updated on
+      September 1st, 2026</p>
+    </div>
+
+    <!-- CANONICAL: the text answer. Works with no map. -->
+    <div class="poly-filters mt-6">
+      <div class="poly-filters__row">
+        <div>
+          <label class="govbb-label" for="poly-q">Find by name or address</label>
+          <div class="poly-search">
+            <input class="govbb-input" type="search" id="poly-q"
+                   placeholder="For example, Oistins or Winston Scott" autocomplete="off" />
+          </div>
+        </div>
+        <div>
+          <label class="govbb-label" for="parish">Find by parish</label>
+          <select class="govbb-select" id="parish">
+            <option value="">Select your parish</option>
+          </select>
+        </div>
+      </div>
+      <div class="poly-filters__actions">
+        <button type="button" class="govbb-button govbb-button--secondary" id="locBtn">Use my location</button>
+        <button type="button" class="govbb-button govbb-button--text" id="clearBtn">Clear filters</button>
+      </div>
+      <div class="poly-answer" id="answer" role="status" aria-live="polite" aria-atomic="true"></div>
+    </div>
+
+    <p class="poly-meta" id="meta" role="status" aria-live="polite" aria-atomic="true"></p>
+
+    <div class="poly-layout">
+      <div class="poly-layout__list">
+        <noscript>
+          <p>This page needs JavaScript for the map and the service details. To find your polyclinic,
+          call the Ministry of Health and Wellness on <span class="govbb-text-bold">(246) 536-3800</span>
+          with your home address.</p>
+        </noscript>
+        <p class="poly-group" id="grp-poly">The nine polyclinics</p>
+        <ul class="poly-list" id="list" aria-labelledby="grp-poly"></ul>
+        <p class="poly-group" id="grp-sat">The three satellite clinics</p>
+        <ul class="poly-list" id="list-sat" aria-labelledby="grp-sat"></ul>
+        <p class="poly-note"><span class="govbb-text-bold">About the list.</span> Each polyclinic serves
+        the parishes shown in the matching colour on the map. Select any facility for its services,
+        opening hours and clinic days. Every pin is placed by hand, so each row is marked
+        <em>Approximate pin</em> — use the address or the "Get directions" link rather than the pin.</p>
+      </div>
+
+      <div class="poly-layout__map">
+        <div id="poly-map" role="region" aria-label="Map of polyclinic catchment areas"></div>
+
+        <p class="poly-note"><span class="govbb-text-bold">Reading the map.</span> Solid areas are
+        parishes served by one polyclinic. A dashed edge means the parish is shared with another
+        polyclinic. A dotted outline marks a parish that also has its own outpatient clinic, open on set
+        days only, with the days shown on the pin. Round pins are polyclinics; square pins are outpatient
+        clinics. Edgar Cochrane Polyclinic is a pin with no area, because no catchment is published for
+        it.</p>
+
+        <p class="poly-note"><span class="govbb-text-bold">About these areas.</span> Each polyclinic
+        publishes its catchment as a list of parishes, so the map colours whole parishes. Four parishes —
+        St. James, St. Thomas, St. Philip and St. Michael — are shared between polyclinics. The split
+        inside St. Michael is traced by hand because no source publishes it. Areas may change; this map
+        was last updated on September 1st, 2026.</p>
+
+        <div class="poly-callout">
+          <p>If you live near the edge of a parish, confirm which polyclinic serves you by calling the
+          Ministry of Health and Wellness on <span class="govbb-text-bold">(246) 536-3800</span> before
+          travelling.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- selected facility: services, hours, clinic days -->
+    <section class="poly-detail" id="detail" aria-live="polite" aria-label="Selected facility details">
+      <p class="poly-detail__empty" id="detail-empty">Select a polyclinic or satellite clinic to see its
+      address, phone numbers, opening hours, services and specialist clinic days.</p>
+    </section>
+
+    <div class="poly-sources">
+      <h2 class="govbb-text-h3">Sources and known data problems</h2>
+      <p>Sources are graded, because they are not equally trustworthy. Anything marked
+      <strong>unconfirmed</strong> on this page came only from Tier D.</p>
+
+      <h3 class="govbb-text-h4">Tier A — official, authoritative</h3>
+      <ul class="govbb-list govbb-list--bullet">
+        <li><strong>health.gov.bb</strong> — the nine polyclinic names, addresses and 536-xxxx phone
+        numbers; "all polyclinics 08:30&ndash;16:30, Monday to Friday"; Winston Scott 24/7; the
+        island-wide list of services; and the St. Joseph and St. Andrew outpatient clinics.</li>
+      </ul>
+
+      <h3 class="govbb-text-h4">Tier B — official but old</h3>
+      <ul class="govbb-list govbb-list--bullet">
+        <li><strong>Ministry of Health Polyclinic Procedure Manual (2011)</strong> — the 40-service
+        list, the programmes required at every polyclinic, and the asthma treatment room and
+        nebulisation protocol. Fifteen years old; the extended hours in it predate the 2019 24-hour
+        launch.</li>
+        <li><strong>Barbados Government Information Service (2019)</strong> — 24-hour service at
+        Winston Scott and David Thompson, the urgent-care definition, and pharmacy hours.</li>
+      </ul>
+
+      <h3 class="govbb-text-h4">Tier C — independent press</h3>
+      <ul class="govbb-list govbb-list--bullet">
+        <li><strong>Barbados Today, 1 May 2026</strong> — the St. Thomas Outpatient Clinic reopening
+        on 5 May 2026 and its Tuesday/Thursday/Friday general-practice days.</li>
+      </ul>
+
+      <h3 class="govbb-text-h4">Tier D — not an official source, must be confirmed</h3>
+      <div class="poly-callout">
+        <p><strong>The individual polyclinic websites on polyclinics.wixsite.com are not a
+        government source.</strong> Checked 1 September 2026: they are not linked from health.gov.bb,
+        from health.gov.bb's homepage, or from gov.bb; they sit on a free <code>wixsite.com</code>
+        subdomain; they serve a Wix free-tier advertising banner; they have no Wayback Machine
+        snapshots at all; they carry pre-migration phone numbers; and five of the nine publish the
+        wrong catchment paragraph. Authorship is unknown.</p>
+        <p>Everything in the following list came <strong>only</strong> from those pages and must be
+        confirmed with the Ministry before beta: the per-polyclinic service list, every specialist
+        clinic day, Winston Scott's eye / renal / STI / chest / non-communicable-disease clinic
+        detail, the urgent-care closing times, the twelve environmental-health functions, the
+        satellite weekly timetables, the founding dates, and
+        <strong>the catchment descriptions this map's parish colouring is built from</strong>.</p>
+        <p>It is kept on the page because there is no alternative — <strong>health.gov.bb publishes
+        no clinic days at all</strong> — but it is labelled everywhere it appears rather than shown
+        as fact.</p>
+      </div>
+
+      <h3 class="govbb-text-h4">What is still approximate or unverified</h3>
+      <ul class="govbb-list govbb-list--bullet">
+        <li><strong>Parish boundaries come from geoBoundaries</strong> (gbOpen BRB ADM1, full resolution),
+        licensed <strong>CC BY 2.5</strong>, source data geoBoundaries / Wikimedia, last updated January
+        2023. This is open data, <strong>not the Barbados Lands &amp; Surveys official boundary set</strong>,
+        and it can disagree with an official address near a border: it places our approximate pin for
+        <strong>Warrens</strong> in St. Thomas, where the Ministry gives Eunice Gibson Polyclinic's address
+        as Warrens, <strong>St. Michael</strong>. Replace with the official boundary set before beta.</li>
+        <li><strong>It is not established that a single set of catchment boundaries governs clinical
+        care.</strong> The official dataset (a Lands &amp; Surveys layer named "Polyclinic_Catchment_Areas",
+        8 polygons covering the whole island) has only ever been validated for routing Environmental Health
+        Department applications to a polyclinic's environmental health mailbox. Environmental health
+        districts and public health nursing catchments are run by different departments and need not share
+        boundaries. That dataset gives Maurice Byer 121.6&nbsp;km², where its own published clinical
+        catchment sums to roughly 150&nbsp;km² by parish area. <strong>Ask the Ministry whether one
+        boundary set governs both</strong> before it is used to tell a citizen where to go for care.</li>
+        <li><strong>The split inside St. Michael is traced by hand.</strong> Four polyclinics sit in that
+        parish and no published source subdivides it, so the three sub-areas shown (Eunice Gibson north,
+        Branford Taitt north-west, Winston Scott south and east) are an informed guess, not a boundary.</li>
+        <li><strong>Shared parishes are assigned to one polyclinic.</strong> St. James is split north/south
+        between Maurice Byer and Eunice Gibson, part of St. Thomas goes to Maurice Byer, and part of
+        St. Philip to Randal Phillips — but no source says where those lines fall, so the whole parish
+        takes its primary polyclinic's colour and a dashed edge.</li>
+        <li><strong>Map pin positions are placed by hand</strong>, not geocoded. Every facility is tagged
+        <em>Approximate</em>.</li>
+        <li><strong>Opening hours disagree across official sources.</strong> health.gov.bb says all
+        polyclinics run 08:30&ndash;16:30 with Winston Scott 24/7; the GIS says Winston Scott and David
+        Thompson are both 24/7; the polyclinics' own websites give a third set of times. Both readings are
+        shown where they conflict.</li>
+        <li><strong>Phone numbers disagree.</strong> The polyclinic websites carry pre-migration numbers;
+        the 536-xxxx numbers from health.gov.bb are shown here as the newer set.</li>
+        <li><strong>Five polyclinic websites carry the wrong catchment description</strong> — Branford
+        Taitt, Edgar Cochrane, Glebe and St. Philip all describe Randal Phillips' catchment, and Eunice
+        Gibson describes Maurice Byer's. Catchment text here does not come from those pages.</li>
+        <li><strong>Edgar Cochrane Polyclinic has no published catchment area.</strong> It began as a
+        satellite of Ladymeade (now Winston Scott). Confirm with the Ministry whether it has one.</li>
+        <li><strong>David Thompson has no facility website</strong>, so its specialist clinic days are
+        unknown.</li>
+        <li><strong>Naming is unsettled:</strong> health.gov.bb calls it Frederick "Freddie" Miller
+        Polyclinic; its own site and the Barbados Drug Service call it Glebe Polyclinic.</li>
+        <li><strong>Two different design-system builds exist, and they disagree.</strong> This page
+        uses the stylesheet the live alpha.gov.bb service pages use, vendored locally. The npm
+        <code>@govtech-bb/styles@alpha</code> package is a different build: different class names
+        (<code>govbb-container</code>, <code>govbb-btn</code>), a different token prefix
+        (<code>--color-*</code> rather than <code>--govbb-*</code>), no bundled Tailwind, no responsive
+        heading scale, and a broken skip link — its
+        <code>.govbb-visually-hidden-focusable</code> is permanently visible when used alone and stays
+        1&times;1 even when focused when combined with <code>.govbb-visually-hidden</code>. The live build
+        has a working <code>.govbb-skip-link</code> instead. Worth confirming with the design-system team
+        which build is canonical.</li>
+        <li><strong>Basemap tiles are served by Esri</strong>, a third-party commercial service, because
+        the two key-free providers both now fail silently. See the comment in the page source; this needs
+        a decision before beta.</li>
+      </ul>
+    </div>
+
+    </div>
+
+    <aside class="govbb-feedback mb-4 lg:mb-16">
+      <h3 class="govbb-feedback__heading">Was this helpful?</h3>
+      <p class="govbb-text-body">Give us your feedback about this page, or call the Ministry of Health
+      and Wellness on <span class="govbb-text-bold">(246) 536-3800</span> if you are not sure which
+      polyclinic serves you.</p>
+      <a class="govbb-link" href="#">Help us improve alpha.gov.bb</a>
+    </aside>
+  </div>
+</main>
+
+<footer class="govbb-footer print:hidden">
+  <div class="govbb-footer__inner govbb-width-container">
+    <nav class="govbb-footer__nav" aria-label="Footer navigation">
+      <ul class="govbb-footer__list">
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">Home</a></li>
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">Terms and conditions</a></li>
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">What we mean by alpha</a></li>
+      </ul>
+    </nav>
+    <hr class="govbb-footer__divider" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="https://alpha.gov.bb/images/coat-of-arms.png"
+           alt="" aria-hidden="true" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =========================================================================
+   PROVENANCE — re-audited 1 September 2026. Read this before trusting a field.
+
+   TIER A — official domain, treat as authoritative:
+     health.gov.bb /Institution pages ... the 9 polyclinic names, addresses,
+       536-xxxx phone numbers, "all polyclinics 08:30-16:30", WSPC 24/7,
+       and the St. Joseph + St. Andrew satellites with their numbers.
+     health.gov.bb Primary Health Care ... the island-wide service list.
+
+   TIER B — official but OLD:
+     MoH Polyclinic Procedure Manual (2011) ... the 40-service list, the
+       programmes mandated at every polyclinic, the asthma/nebulisation
+       protocol, and 2011-era extended hours.
+     GIS Barbados (gisbarbados.gov.bb, 2019) ... 24-hour service at Winston
+       Scott and David Thompson, urgent-care definition, pharmacy hours.
+
+   TIER C — independent press:
+     Barbados Today, 1 May 2026 ... St. Thomas Outpatient Clinic reopening
+       and its Tue/Thu/Fri general-practice days.
+
+   TIER D — *** NOT AN OFFICIAL SOURCE — DO NOT SHIP AS FACT *** :
+     polyclinics.wixsite.com/<code> (btpc, ecpc, egpc, glebe, mbpc, rppc,
+     sppc, wspc). Verified 1 Sept 2026: these pages are NOT linked from
+     health.gov.bb, from health.gov.bb's homepage, or from gov.bb; they sit on
+     a free wixsite.com subdomain; they serve a Wix free-tier upsell banner
+     ("built on Wix. Create yours today", FreemiumBanner, WixAd); they have NO
+     Wayback snapshots at all; they carry pre-migration phone numbers; and five
+     of the nine publish the WRONG catchment paragraph. Authorship unknown —
+     possibly a Ministry site built years ago on a free account and abandoned.
+     Everything below that came ONLY from them must be confirmed with the
+     Ministry before beta:
+       - the 15-item per-polyclinic clinical service list
+       - every specialist clinic day (dermatology, gynaecology, mental health,
+         catheter change, surgery availability)
+       - Winston Scott's eye / renal / STI / chest / NCD clinic detail
+       - urgent-care closing times (Branford Taitt 18:30, Maurice Byer and
+         Randal Phillips 20:30, Winston Scott Fast Track)
+       - the 12 environmental-health department functions
+       - the satellite weekly timetables
+       - the founding dates in the History rows
+       - THE CATCHMENT DESCRIPTIONS THE PARISH MAP IS BUILT FROM
+     There is no official source for clinic days: health.gov.bb publishes none.
+     So this data is kept, but labelled — never presented as confirmed.
+   =========================================================================
+
+   Facility records — SOURCED (Sept 2026), not placeholders.
+     Addresses + 536-xxxx phone numbers ....... health.gov.bb /Institution pages
+     Hours, specialist clinic days, services .. the nine polyclinic websites
+                                                (polyclinics.wixsite.com/<code>)
+     Mandated programmes, asthma protocol ..... MoH Polyclinic Procedure Manual
+     24-hour service, urgent-care definition .. GIS Barbados (2019)
+     St. Thomas OPC reopening ................. Barbados Today, 1 May 2026
+   lat/lng are APPROXIMATE (placed by hand, not geocoded) — the "Get directions"
+   link resolves by name + address so it stays correct regardless of the pin.
+   Catchment polygons remain TRACED — boundary_source:"traced". Not authoritative.
+   ========================================================================= */
+
+/* The 15 clinical services published by every polyclinic website. */
+var CORE_SERVICES = [
+  "General practice", "Antenatal and postnatal", "Child health", "Immunization",
+  "Family planning", "Dental health", "Podiatry (chiropody)", "Nutrition",
+  "Pharmacy", "Counselling", "Physiotherapy and speech", "School health",
+  "Community (district) nursing", "Health promotion", "Medical records"
+];
+
+/* Programmes the Polyclinic Procedure Manual requires at ALL polyclinics. */
+var CORE_PROGRAMMES = [
+  "Diabetic", "Hypertension", "Asthma", "Breast feeding", "Men's health", "Adolescent health"
+];
+
+/* Environmental Health department functions (identical wording on all six sites). */
+var ENV_FUNCTIONS = [
+  "Routine inspections", "Inspection and licensing of businesses", "Night vending",
+  "Investigation of communicable diseases", "Waste management",
+  "Potable water quality management", "Recreational water quality management",
+  "Institutional sanitation", "Farm sanitation", "Health promotion",
+  "Labour force services", "Environmental sanitation"
+];
+
+var ASTHMA_BASE = "Asthma treatment room with oxygen and a resuscitation trolley, and nebulisation. " +
+  "Nurses may begin nebulisation on a doctor's order, or immediately in an emergency. An asthma register " +
+  "and asthma programme are required at every polyclinic.";
+var ASTHMA_24 = "Acute asthma management with nebulisation is available around the clock at this site.";
+var ASTHMA_NOTE = "Polyclinics do not have an “asthma bay” — that is a Queen Elizabeth Hospital " +
+  "facility. A patient who needs intubation is an emergency for QEH Accident &amp; Emergency, not a polyclinic.";
+
+var FACILITIES = [
+  { id:1, type:"polyclinic", zone:true,
+    name:"Maurice Byer Polyclinic", short:"Maurice Byer", colour:"#e5789a",
+    zoneName:"North", served:"St. Lucy, St. Peter, St. Andrew, St. Joseph, northern St. James and part of St. Thomas",
+    address:"“Litchfield”, Station Hill, St. Peter",
+    phones:["PBX (246) 536-3200 / 3201 / 3202","Dental unit (246) 536-3243","Medical records (246) 536-3239"],
+    hours:"Monday to Friday, 8:30am to 4:30pm",
+    urgent:"Urgent care until 8:30pm",
+    specialists:[
+      {n:"Dermatology", w:"4th Tuesday of every month, by appointment"},
+      {n:"Mental health", w:"Wednesday mornings"},
+      {n:"Catheter change", w:"Thursday afternoons from 2:00pm"},
+      {n:"Gynaecology", w:"Not confirmed — facility site does not say"},
+      {n:"Surgery", w:"Not currently available", none:true}
+    ],
+    extras:[], env:true, established:"1978",
+    satellites:[101,102],
+    lat:13.2470, lng:-59.6430 },
+
+  { id:2, type:"polyclinic", zone:true,
+    name:"Eunice Gibson Polyclinic", short:"Eunice Gibson", colour:"#d9c34a",
+    zoneName:"West-central", served:"St. Thomas, southern St. James and part of St. Michael",
+    address:"Warrens, St. Michael",
+    phones:["PBX (246) 536-4000","Medical records (246) 536-4004","Environmental health (246) 536-4033"],
+    hours:"Monday to Friday, 8:30am to 4:30pm",
+    urgent:"",
+    specialists:[
+      {n:"Mental health", w:"Wednesday mornings"},
+      {n:"Dermatology", w:"4th Tuesday of every month"},
+      {n:"Surgery", w:"Not currently available", none:true},
+      {n:"Catheter change", w:"Not currently available", none:true}
+    ],
+    extras:[], env:true, established:"Opened as Warrens Polyclinic, 1976; renamed 2012",
+    satellites:[103],
+    lat:13.1620, lng:-59.5940 },
+
+  { id:3, type:"polyclinic", zone:true,
+    name:"Frederick “Freddie” Miller Polyclinic", aka:"Also called Glebe Polyclinic",
+    short:"Freddie Miller", colour:"#4aa3a5",
+    zoneName:"Central", served:"St. George",
+    address:"The Glebe, St. George",
+    phones:["PBX (246) 536-3940 / 3941","Pharmacy (246) 536-3966","Medical records (246) 536-3945"],
+    hours:"Monday to Friday, 8:30am to 4:30pm",
+    urgent:"",
+    specialists:[
+      {n:"Mental health", w:"Wednesday mornings"},
+      {n:"Dermatology", w:"4th Tuesday of every month"},
+      {n:"Surgery", w:"Not currently available", none:true},
+      {n:"Catheter change", w:"Not currently available", none:true}
+    ],
+    extras:[{n:"Audiometry (hearing tests)", only:"One of only two polyclinics with audiometry"}],
+    env:false, established:"Glebe Clinic from 1960; polyclinic opened 1988",
+    satellites:[],
+    lat:13.1330, lng:-59.5600 },
+
+  { id:4, type:"polyclinic", zone:true,
+    name:"David Thompson Health &amp; Social Services Complex", short:"David Thompson", colour:"#7bb661",
+    zoneName:"East-central", served:"St. John and the east-central parishes",
+    address:"Colleton Road, Glebe Land, St. John",
+    phones:["PBX (246) 536-4440 / 4441 / 4442","Environmental front desk (246) 536-4453","Senior clerk (246) 536-4446"],
+    hours:"Open 24 hours a day, 7 days a week",
+    hoursFlag:"Sources disagree. The GIS says this site has run round-the-clock urgent care since 1 June 2019; health.gov.bb still publishes 8:30am to 4:30pm, Monday to Friday. The pharmacy is 8:30am to 4:30pm, Monday to Friday only.",
+    urgent:"Urgent care 24 hours",
+    open24:true,
+    specialists:[{n:"Specialist clinic days", w:"Not published — this is the only polyclinic with no facility website", none:true}],
+    extras:[{n:"Round-the-clock urgent care", only:"One of only two 24-hour polyclinics"},
+            {n:"Point-of-care testing (cardiac enzymes, blood work)"},
+            {n:"Social services (this is a combined health and social services complex)"}],
+    env:false, established:"",
+    satellites:[],
+    lat:13.1730, lng:-59.5010 },
+
+  { id:5, type:"polyclinic", zone:true,
+    name:"St. Philip Polyclinic", short:"St. Philip", colour:"#9ccf8f",
+    zoneName:"East", served:"St. Philip (part of the parish is served by Randal Phillips)",
+    address:"Six Roads Cross Roads, St. Philip",
+    phones:["Medical records (appointments) (246) 536-4212","Pharmacy (246) 536-4214","Medical Officer of Health (246) 536-4229","Ministry switchboard (246) 536-3800","No main PBX number is published for this polyclinic"],
+    hours:"Monday to Friday, 8:30am to 4:30pm",
+    urgent:"",
+    specialists:[
+      {n:"Mental health", w:"Wednesday mornings"},
+      {n:"Dermatology", w:"4th Tuesday of every month"},
+      {n:"Surgery", w:"Not currently available", none:true},
+      {n:"Catheter change", w:"Not currently available", none:true}
+    ],
+    extras:[], env:true, established:"Six Roads Health Centre from 1957; polyclinic from 1987",
+    satellites:[],
+    lat:13.1240, lng:-59.4640 },
+
+  { id:6, type:"polyclinic", zone:true,
+    name:"Branford Taitt Polyclinic", aka:"Formerly Black Rock Polyclinic",
+    short:"Branford Taitt", colour:"#6f9bd1",
+    zoneName:"North-west coast", served:"the north-west coast of St. Michael",
+    address:"Black Rock Main Road, St. Michael",
+    phones:["PBX (246) 536-3700 / 3701 / 3702","Medical Officer of Health (246) 536-3703","Principal Environmental Health Officer (246) 536-3705"],
+    hours:"Monday to Friday, 8:30am to 4:30pm",
+    urgent:"Urgent care until 6:30pm",
+    specialists:[
+      {n:"Mental health", w:"Wednesday mornings"},
+      {n:"Dermatology", w:"4th Tuesday of every month"},
+      {n:"Gynaecology", w:"Not confirmed — facility site does not say"},
+      {n:"Surgery", w:"Not currently available", none:true},
+      {n:"Catheter change", w:"Not currently available", none:true}
+    ],
+    extras:[], env:true, established:"Opened at the Psychiatric Hospital 1978; current site 1994; renamed 2011",
+    satellites:[],
+    lat:13.1180, lng:-59.6280 },
+
+  { id:7, type:"polyclinic", zone:true,
+    name:"Winston Scott Polyclinic", short:"Winston Scott", colour:"#9b8cc4",
+    zoneName:"South Bridgetown", served:"southern and eastern St. Michael, to the Christ Church and St. George boundaries",
+    address:"Ladymeade Gardens, Jemmotts Lane, St. Michael",
+    phones:["PBX (246) 536-3400","Fast Track doctor (246) 536-3416","Fast Track nurse (246) 536-3440","Lady Meade Reference Unit (246) 536-3315","Vashti Inniss Empowerment Centre (246) 536-3300"],
+    hours:"Open 24 hours a day, 7 days a week",
+    hoursFlag:"Sources disagree. health.gov.bb and the GIS say 24/7. The polyclinic's own site says Monday to Friday 8:30am to 6:30pm and Saturday 8:30am to 12:30pm, with Fast Track urgent care Monday to Friday 10:00am to 10:00pm and Saturday 9:00am to 4:00pm. The pharmacy is 8:30am to 10:00pm Monday to Friday and 8:30am to 4:00pm Saturday.",
+    urgent:"Fast Track urgent care — Monday to Friday 10:00am to 10:00pm, Saturday 9:00am to 4:00pm (times from the polyclinic's own site)",
+    open24:true,
+    specialists:[
+      {n:"Gynaecology", w:"1st Wednesday afternoon of every month, referral and appointment required"},
+      {n:"Dermatology", w:"1st Friday afternoon of every month, referral required"},
+      {n:"Mental health", w:"Wednesdays"},
+      {n:"Eye clinic — children", w:"Monday to Friday, ages 3 to 18 in primary or secondary school, on doctor or teacher referral"},
+      {n:"Eye clinic — adults", w:"Wednesday afternoons by appointment, only on referral from the Winston Scott NCD clinic"},
+      {n:"Non-communicable diseases", w:"Monday to Thursday by appointment — annual diabetes and hypertension review"},
+      {n:"Catheter change", w:"Tuesday and Thursday afternoons, on referral from QEH Urology"},
+      {n:"Surgery", w:"Not currently available", none:true}
+    ],
+    extras:[
+      {n:"Laboratory", only:"The only polyclinic with a laboratory"},
+      {n:"Chest clinic", only:"The only polyclinic with a chest clinic"},
+      {n:"Renal clinic", only:"The only polyclinic with a renal clinic"},
+      {n:"S.T.I. clinic", only:"The only polyclinic with a dedicated STI clinic"},
+      {n:"International health vaccines", only:"The only polyclinic issuing international health vaccines"},
+      {n:"Ophthalmic service", only:"The only polyclinic with an ophthalmic service"},
+      {n:"Audiometry (hearing tests)", only:"One of only two polyclinics with audiometry"},
+      {n:"Fast Track urgent care", only:"One of only two 24-hour polyclinics"},
+      {n:"Lady Meade Reference Unit"},
+      {n:"Vashti Inniss Empowerment Centre"}
+    ],
+    env:true, established:"Enmore Health Centre 1955; Ladymeade Polyclinic 1986; renamed December 1986",
+    satellites:[],
+    lat:13.0980, lng:-59.6150 },
+
+  { id:8, type:"polyclinic", zone:true,
+    name:"Randal Phillips Polyclinic", short:"Randal Phillips", colour:"#e0b24a",
+    zoneName:"South", served:"Christ Church, part of St. Philip and part of St. Michael",
+    address:"Oistins Main Road, Christ Church",
+    phones:["PBX (246) 536-4300","Pharmacy (246) 536-4346","Medical records (246) 536-4338","Environmental health (246) 535-4314"],
+    hours:"Monday to Friday, 8:30am to 4:30pm",
+    urgent:"Urgent care until 8:30pm",
+    specialists:[
+      {n:"Surgery", w:"1st Monday of every month"},
+      {n:"Gynaecology", w:"4th Monday of every month"},
+      {n:"Dermatology", w:"2nd Tuesday of every month"},
+      {n:"Mental health", w:"Tuesdays and Fridays"},
+      {n:"Catheter change", w:"Not currently available", none:true}
+    ],
+    extras:[], env:true, established:"Renamed in honour of Sir John Randal Phillips, 1984",
+    satellites:[],
+    lat:13.0660, lng:-59.5340 },
+
+  { id:9, type:"polyclinic", zone:false,
+    name:"Edgar Cochrane Polyclinic", short:"Edgar Cochrane", colour:"#8d8d8d",
+    zoneName:"No published catchment area", served:"No published catchment area — select to see why",
+    address:"Wildey, St. Michael",
+    phones:["PBX (246) 536-4100","General practice clinic (246) 536-4118 / 4119","Medical records (246) 536-4115 / 4116"],
+    hours:"Monday to Friday, 8:30am to 4:30pm",
+    urgent:"",
+    noZoneNote:"The Ministry lists nine polyclinics, but the official catchment dataset contains only eight areas — there is none for Edgar Cochrane. It opened in 1981 as the General Practice Unit, a medical training facility, and remained a satellite of Ladymeade (now Winston Scott) Polyclinic. Confirm with the Ministry how patients are assigned here before treating it as unassigned.",
+    specialists:[
+      {n:"Mental health", w:"Wednesday mornings"},
+      {n:"Dermatology", w:"4th Tuesday of every month"},
+      {n:"Surgery", w:"Not currently available", none:true},
+      {n:"Catheter change", w:"Not currently available", none:true}
+    ],
+    extras:[], env:false, established:"Opened 1981 as the General Practice Unit",
+    satellites:[],
+    lat:13.0960, lng:-59.5820 },
+
+  /* ---- the three satellite clinics ---- */
+  { id:101, type:"satellite", zone:false,
+    name:"St. Joseph Outpatient Clinic", colour:"#505a5f",
+    zoneName:"Satellite clinic", served:"St. Joseph, Monday to Friday — run from Maurice Byer Polyclinic",
+    parish:"St. Joseph", days:"Monday to Friday", daysShort:"Mon–Fri", parent:1,
+    address:"Horse Hill, St. Joseph",
+    phones:["(246) 536-3285","(246) 433-1140 (number published by Maurice Byer Polyclinic)"],
+    hours:"Monday to Friday, 8:30am to 4:30pm",
+    urgent:"Urgent care reported from 4:30pm — unconfirmed",
+    timetable:[
+      {d:"Monday", s:"Dressings clinic"},
+      {d:"Tuesday", s:"General practice clinic, pharmacy"},
+      {d:"Wednesday", s:"Antenatal clinic (1st and 3rd Wednesdays), child health clinic (2nd and 4th Wednesdays), pharmacy"},
+      {d:"Thursday", s:"Mental health services, dressings clinic"},
+      {d:"Friday", s:"General practice clinic, pharmacy"}
+    ],
+    lat:13.2000, lng:-59.5320 },
+
+  { id:102, type:"satellite", zone:false,
+    name:"St. Andrew Outpatient Clinic", colour:"#505a5f",
+    zoneName:"Satellite clinic", served:"St. Andrew, 1st and 3rd Fridays — staffed by Maurice Byer Polyclinic",
+    parish:"St. Andrew", days:"1st and 3rd Fridays", daysShort:"1st &amp; 3rd Fri", parent:1,
+    address:"Belleplaine, St. Andrew",
+    phones:["(246) 536-4071 to 4081","(246) 422-9203 (number published by Maurice Byer Polyclinic)"],
+    hours:"Monday to Friday, 8:30am to 4:30pm",
+    urgent:"Urgent care reported from 4:30pm — unconfirmed",
+    timetable:[
+      {d:"Friday", s:"Child health clinic (1st and 3rd Fridays), staffed by Maurice Byer Polyclinic"},
+      {d:"Other days", s:"Not published. Eunice Gibson Polyclinic also lists this clinic, so some sessions may run from there."}
+    ],
+    lat:13.2470, lng:-59.5680 },
+
+  { id:103, type:"satellite", zone:false,
+    name:"St. Thomas Outpatient Clinic", colour:"#505a5f",
+    zoneName:"Satellite clinic", served:"St. Thomas, Tuesday/Thursday/Friday — listed by Eunice Gibson Polyclinic",
+    parish:"St. Thomas", days:"Tuesday, Thursday and Friday", daysShort:"Tue/Thu/Fri", parent:2,
+    address:"Rock Hall, St. Thomas",
+    phones:["No direct number published — call the Ministry on (246) 536-3800"],
+    hours:"Tuesday, Thursday and Friday, 8:30am to 4:30pm",
+    urgent:"",
+    newsFlag:"Reopened on 5 May 2026 after refurbishment; the pharmacy reopened on 12 May 2026.",
+    timetable:[
+      {d:"Tuesday, Thursday, Friday", s:"General practice clinic"},
+      {d:"Pharmacy", s:"Reopened 12 May 2026"},
+      {d:"Other services", s:"Not published"}
+    ],
+    lat:13.1740, lng:-59.5820 }
+];
+
+/* Parish boundaries — geoBoundaries gbOpen BRB ADM1 (full resolution, rounded to
+   5 decimal places). Licence: Creative Commons Attribution 2.5; source data
+   geoBoundaries / Wikimedia, last updated January 2023. This is OPEN DATA, not
+   the Barbados Lands & Surveys official boundary set — near a parish border it
+   can disagree with an official address (see the Warrens note in Sources).
+   Rings are [lng,lat], closed. 1,010 points total across 11 parishes. */
+var PARISHES = {
+  "St. Lucy":[[-59.57757,13.29819],[-59.57756,13.29834],[-59.57723,13.29875],[-59.57674,13.29899],[-59.57567,13.29904],[-59.57482,13.29922],[-59.57462,13.29969],[-59.57434,13.30013],[-59.57387,13.30052],[-59.57399,13.30092],[-59.57434,13.30126],[-59.57474,13.30153],[-59.57515,13.30176],[-59.57528,13.30208],[-59.57515,13.30253],[-59.57518,13.30303],[-59.57552,13.30351],[-59.5763,13.30382],[-59.57684,13.304],[-59.57722,13.3039],[-59.57759,13.3036],[-59.57792,13.30375],[-59.5781,13.30411],[-59.57801,13.30453],[-59.57774,13.30532],[-59.57733,13.30578],[-59.57681,13.30605],[-59.57644,13.30652],[-59.57661,13.30723],[-59.57706,13.30789],[-59.57765,13.30855],[-59.57851,13.30931],[-59.57884,13.30963],[-59.57925,13.31001],[-59.58007,13.31041],[-59.58101,13.31066],[-59.58233,13.31117],[-59.58295,13.31139],[-59.58345,13.31145],[-59.58435,13.31159],[-59.58457,13.31195],[-59.58481,13.31251],[-59.58546,13.31248],[-59.58591,13.31306],[-59.58642,13.3137],[-59.5872,13.31458],[-59.58781,13.31501],[-59.5885,13.31562],[-59.58892,13.31606],[-59.58928,13.31653],[-59.59,13.31693],[-59.59027,13.31729],[-59.5904,13.31777],[-59.59068,13.31795],[-59.59118,13.31806],[-59.5915,13.31834],[-59.59206,13.31881],[-59.59241,13.31934],[-59.59285,13.31991],[-59.59366,13.32042],[-59.59427,13.32078],[-59.59471,13.32096],[-59.5952,13.32122],[-59.59553,13.32188],[-59.59543,13.32228],[-59.59506,13.32234],[-59.59495,13.32267],[-59.59526,13.32304],[-59.5958,13.32341],[-59.5963,13.32379],[-59.59681,13.32442],[-59.598,13.32522],[-59.59865,13.32558],[-59.59918,13.32597],[-59.59952,13.32667],[-59.59986,13.32739],[-59.60057,13.32757],[-59.60135,13.3275],[-59.60239,13.32793],[-59.60275,13.32833],[-59.60319,13.32876],[-59.60404,13.32932],[-59.60468,13.32967],[-59.60522,13.32992],[-59.60594,13.33009],[-59.6061,13.33051],[-59.60615,13.33091],[-59.60654,13.33118],[-59.60681,13.33146],[-59.60698,13.33199],[-59.6074,13.3323],[-59.60807,13.33247],[-59.60888,13.33265],[-59.60956,13.33285],[-59.61021,13.33308],[-59.61048,13.33331],[-59.61105,13.33357],[-59.61164,13.33375],[-59.61201,13.33415],[-59.61252,13.33457],[-59.61302,13.33465],[-59.61344,13.3345],[-59.61394,13.33462],[-59.61431,13.33461],[-59.61471,13.33439],[-59.61507,13.33404],[-59.61544,13.33385],[-59.61591,13.33375],[-59.61683,13.33375],[-59.61731,13.3337],[-59.61766,13.33352],[-59.61805,13.3333],[-59.61851,13.33324],[-59.61893,13.33346],[-59.61943,13.33403],[-59.62004,13.3343],[-59.62084,13.33393],[-59.62111,13.33364],[-59.62134,13.33308],[-59.622,13.33279],[-59.62239,13.33277],[-59.62285,13.33208],[-59.62436,13.33159],[-59.6256,13.33155],[-59.62629,13.33131],[-59.62675,13.33064],[-59.62735,13.33032],[-59.62844,13.33068],[-59.62899,13.33058],[-59.62979,13.33001],[-59.6307,13.329],[-59.63112,13.32835],[-59.63187,13.32859],[-59.63265,13.32881],[-59.63375,13.32846],[-59.63446,13.32764],[-59.63539,13.32708],[-59.63652,13.32654],[-59.6373,13.32557],[-59.6377,13.32482],[-59.63785,13.32419],[-59.63799,13.32348],[-59.63841,13.32268],[-59.6391,13.32154],[-59.63998,13.32078],[-59.64014,13.32003],[-59.64058,13.31923],[-59.64191,13.31805],[-59.64306,13.31703],[-59.64368,13.31639],[-59.64399,13.31542],[-59.64459,13.31483],[-59.6451,13.31404],[-59.64701,13.31134],[-59.64851,13.30955],[-59.64973,13.30879],[-59.64993,13.30826],[-59.65057,13.30655],[-59.65071,13.30578],[-59.65031,13.30463],[-59.65042,13.30269],[-59.65031,13.30181],[-59.64995,13.30023],[-59.64989,13.29842],[-59.64951,13.29611],[-59.64938,13.29419],[-59.64922,13.29322],[-59.64913,13.29202],[-59.64924,13.28999],[-59.64967,13.28915],[-59.65002,13.28781],[-59.65,13.28589],[-59.64998,13.28389],[-59.6498,13.28227],[-59.64907,13.28123],[-59.64803,13.27921],[-59.64756,13.27757],[-59.64736,13.27653],[-59.64683,13.27481],[-59.64675,13.27379],[-59.57757,13.29819]],
+  "St. Peter":[[-59.64675,13.27379],[-59.64672,13.27332],[-59.64616,13.27166],[-59.64541,13.26963],[-59.64506,13.26821],[-59.64448,13.26663],[-59.6439,13.26566],[-59.64344,13.26486],[-59.64339,13.2634],[-59.64337,13.26156],[-59.64348,13.26048],[-59.64377,13.25928],[-59.64419,13.25833],[-59.64439,13.25684],[-59.64461,13.25522],[-59.64483,13.25285],[-59.64475,13.25205],[-59.64435,13.25052],[-59.64393,13.24961],[-59.64419,13.24836],[-59.64464,13.24696],[-59.64481,13.24635],[-59.64439,13.24519],[-59.64404,13.24381],[-59.64439,13.24221],[-59.6449,13.24131],[-59.64499,13.24042],[-59.64464,13.23939],[-59.6445,13.23816],[-59.64386,13.23688],[-59.64302,13.23548],[-59.64264,13.23453],[-59.64273,13.23294],[-59.64297,13.23179],[-59.643,13.23035],[-59.64282,13.22931],[-59.64271,13.22828],[-59.64286,13.22741],[-59.64339,13.22612],[-59.64304,13.2253],[-59.643,13.22524],[-59.63418,13.22782],[-59.6195,13.23206],[-59.60465,13.23618],[-59.6001,13.23742],[-59.6001,13.23744],[-59.59619,13.25449],[-59.59383,13.26491],[-59.58764,13.2737],[-59.58002,13.28438],[-59.57331,13.29372],[-59.57339,13.29377],[-59.57363,13.2945],[-59.57396,13.29542],[-59.57437,13.29576],[-59.57494,13.29602],[-59.57562,13.29623],[-59.57611,13.29635],[-59.57677,13.29663],[-59.57732,13.29709],[-59.57759,13.29766],[-59.57757,13.29819],[-59.64675,13.27379]],
+  "St. Andrew":[[-59.54205,13.23448],[-59.54242,13.23556],[-59.54331,13.23705],[-59.5439,13.23786],[-59.54468,13.23856],[-59.54512,13.23924],[-59.54561,13.24046],[-59.54598,13.24135],[-59.54642,13.24192],[-59.54691,13.24253],[-59.54739,13.24315],[-59.54789,13.24388],[-59.54837,13.24458],[-59.54901,13.24525],[-59.54996,13.24617],[-59.55074,13.24725],[-59.55142,13.24804],[-59.55189,13.24849],[-59.55254,13.24949],[-59.55353,13.25093],[-59.55413,13.25134],[-59.55484,13.25185],[-59.55474,13.25263],[-59.55488,13.25307],[-59.55568,13.2543],[-59.55677,13.25608],[-59.55768,13.25825],[-59.55813,13.25897],[-59.55875,13.26017],[-59.56019,13.26286],[-59.56065,13.26428],[-59.56135,13.2656],[-59.56248,13.26684],[-59.56281,13.2675],[-59.56316,13.26812],[-59.56383,13.26906],[-59.5642,13.26983],[-59.56458,13.27076],[-59.56498,13.27143],[-59.56599,13.27319],[-59.56643,13.27415],[-59.56691,13.27535],[-59.56731,13.27628],[-59.5675,13.27709],[-59.56765,13.27792],[-59.56793,13.27857],[-59.56785,13.27974],[-59.56786,13.28016],[-59.56794,13.28075],[-59.56809,13.28143],[-59.5679,13.28183],[-59.56777,13.28285],[-59.56785,13.28382],[-59.56804,13.28447],[-59.56844,13.285],[-59.56877,13.28547],[-59.56922,13.28593],[-59.56962,13.28643],[-59.56997,13.28724],[-59.57034,13.28812],[-59.57101,13.28906],[-59.57155,13.28964],[-59.57166,13.29022],[-59.57156,13.29106],[-59.57175,13.29185],[-59.57211,13.29264],[-59.57247,13.2932],[-59.57287,13.29344],[-59.57331,13.29372],[-59.58002,13.28438],[-59.58764,13.2737],[-59.59383,13.26491],[-59.59619,13.25449],[-59.6001,13.23744],[-59.6001,13.23742],[-59.59754,13.2168],[-59.59164,13.21385],[-59.58402,13.20975],[-59.57461,13.20478],[-59.57456,13.20475],[-59.57016,13.21083],[-59.56665,13.21566],[-59.56307,13.22045],[-59.55687,13.22457],[-59.54986,13.22933],[-59.54205,13.23448]],
+  "St. Joseph":[[-59.54004,13.18088],[-59.53521,13.18562],[-59.52628,13.19422],[-59.51759,13.20245],[-59.50972,13.21001],[-59.51026,13.21021],[-59.5111,13.21037],[-59.51198,13.21036],[-59.51316,13.21091],[-59.51453,13.21174],[-59.51574,13.21268],[-59.51645,13.21276],[-59.51697,13.21268],[-59.5174,13.21243],[-59.51833,13.2124],[-59.51928,13.21261],[-59.51992,13.21297],[-59.5207,13.21351],[-59.52151,13.21395],[-59.52262,13.21422],[-59.52355,13.21458],[-59.52545,13.21583],[-59.52642,13.21643],[-59.52693,13.21714],[-59.52769,13.21786],[-59.52849,13.21827],[-59.52951,13.219],[-59.53015,13.21977],[-59.53124,13.22118],[-59.53168,13.22183],[-59.53229,13.2223],[-59.53283,13.22281],[-59.53325,13.22341],[-59.53355,13.22414],[-59.53389,13.22506],[-59.53447,13.22557],[-59.5353,13.22614],[-59.53615,13.22664],[-59.53673,13.22711],[-59.53765,13.2281],[-59.53819,13.22898],[-59.53873,13.22976],[-59.53931,13.2303],[-59.54005,13.23122],[-59.54061,13.23238],[-59.5411,13.23288],[-59.54158,13.23361],[-59.54202,13.2344],[-59.54205,13.23448],[-59.54986,13.22933],[-59.55687,13.22457],[-59.56307,13.22045],[-59.56665,13.21566],[-59.57016,13.21083],[-59.57456,13.20475],[-59.57144,13.20305],[-59.56588,13.1973],[-59.5594,13.19054],[-59.55735,13.1885],[-59.55604,13.18226],[-59.55297,13.16851],[-59.55291,13.16853],[-59.55062,13.17052],[-59.54373,13.17726],[-59.54004,13.18088]],
+  "St. James":[[-59.6001,13.23742],[-59.60465,13.23618],[-59.6195,13.23206],[-59.63418,13.22782],[-59.643,13.22524],[-59.6422,13.22386],[-59.64162,13.22258],[-59.64147,13.22107],[-59.64209,13.21984],[-59.64224,13.219],[-59.64206,13.21779],[-59.64169,13.21596],[-59.64127,13.21374],[-59.64107,13.21266],[-59.64045,13.21128],[-59.6402,13.21029],[-59.63989,13.2086],[-59.63996,13.2069],[-59.64014,13.20504],[-59.64062,13.20321],[-59.64109,13.20183],[-59.64178,13.20094],[-59.64231,13.19939],[-59.64249,13.19773],[-59.64233,13.19648],[-59.6416,13.19557],[-59.64107,13.19391],[-59.64093,13.19246],[-59.64005,13.19074],[-59.63903,13.18981],[-59.63814,13.18828],[-59.63812,13.18722],[-59.63861,13.18582],[-59.63896,13.18424],[-59.63934,13.1823],[-59.63947,13.1804],[-59.63947,13.1793],[-59.63938,13.1782],[-59.6387,13.17615],[-59.63805,13.17561],[-59.63752,13.17447],[-59.63759,13.17259],[-59.63823,13.17136],[-59.63814,13.17024],[-59.6381,13.16905],[-59.63761,13.16791],[-59.63719,13.16677],[-59.63712,13.16547],[-59.6375,13.16418],[-59.63779,13.16215],[-59.63777,13.16068],[-59.63708,13.15911],[-59.6371,13.15693],[-59.63761,13.15516],[-59.63794,13.15423],[-59.63805,13.15211],[-59.63797,13.15043],[-59.6385,13.14758],[-59.63885,13.14562],[-59.63883,13.14435],[-59.63832,13.14329],[-59.63761,13.14266],[-59.63746,13.14085],[-59.63697,13.13835],[-59.63606,13.13703],[-59.63606,13.13615],[-59.61901,13.14308],[-59.61349,13.14527],[-59.61485,13.16304],[-59.61581,13.17824],[-59.61657,13.18857],[-59.60494,13.20047],[-59.60152,13.20383],[-59.59754,13.2168],[-59.6001,13.23742]],
+  "St. Thomas":[[-59.55297,13.16851],[-59.55604,13.18226],[-59.55735,13.1885],[-59.5594,13.19054],[-59.56588,13.1973],[-59.57144,13.20305],[-59.57456,13.20475],[-59.57461,13.20478],[-59.58402,13.20975],[-59.59164,13.21385],[-59.59754,13.2168],[-59.60152,13.20383],[-59.60494,13.20047],[-59.61657,13.18857],[-59.61581,13.17824],[-59.61485,13.16304],[-59.61349,13.14527],[-59.60526,13.14854],[-59.59667,13.15191],[-59.58196,13.15764],[-59.58109,13.15798],[-59.56319,13.16476],[-59.55297,13.16851]],
+  "St. George":[[-59.5064,13.13629],[-59.51463,13.14728],[-59.52176,13.15658],[-59.52812,13.16518],[-59.53512,13.17417],[-59.54004,13.18088],[-59.54373,13.17726],[-59.55062,13.17052],[-59.55291,13.16853],[-59.55297,13.16851],[-59.56319,13.16476],[-59.58109,13.15798],[-59.58196,13.15764],[-59.58058,13.15261],[-59.5792,13.14661],[-59.57763,13.1399],[-59.57607,13.13346],[-59.57439,13.12658],[-59.57276,13.11955],[-59.57103,13.11248],[-59.56948,13.10597],[-59.56742,13.09723],[-59.5674,13.09723],[-59.55919,13.10135],[-59.55291,13.10443],[-59.54594,13.1079],[-59.54019,13.11067],[-59.53338,13.11399],[-59.52648,13.11732],[-59.51772,13.12148],[-59.51133,13.12449],[-59.5064,13.13629]],
+  "St. John":[[-59.5064,13.13629],[-59.50638,13.13634],[-59.49472,13.14716],[-59.48845,13.1531],[-59.48006,13.16077],[-59.47285,13.16741],[-59.46683,13.17297],[-59.46005,13.17907],[-59.45708,13.18172],[-59.45715,13.1819],[-59.45763,13.18262],[-59.45803,13.18331],[-59.45886,13.1836],[-59.45966,13.18351],[-59.46001,13.183],[-59.46065,13.18264],[-59.46183,13.18242],[-59.46242,13.18215],[-59.46272,13.18146],[-59.46308,13.18067],[-59.46389,13.1802],[-59.46546,13.17974],[-59.46664,13.17979],[-59.46787,13.1802],[-59.4693,13.18103],[-59.47015,13.18177],[-59.47076,13.18253],[-59.47147,13.18358],[-59.47228,13.18459],[-59.47312,13.1853],[-59.47371,13.186],[-59.4743,13.18651],[-59.47522,13.18694],[-59.47635,13.18756],[-59.47692,13.18811],[-59.47736,13.18904],[-59.47783,13.18958],[-59.47862,13.18978],[-59.47988,13.19016],[-59.48106,13.19068],[-59.4821,13.19104],[-59.48282,13.19093],[-59.48354,13.19063],[-59.48411,13.19067],[-59.48495,13.1911],[-59.48587,13.19152],[-59.48628,13.19209],[-59.48642,13.19311],[-59.48652,13.19449],[-59.48675,13.1954],[-59.48705,13.19648],[-59.4876,13.19724],[-59.48842,13.19774],[-59.48903,13.19803],[-59.49012,13.19832],[-59.4908,13.19811],[-59.4912,13.19764],[-59.49205,13.19732],[-59.49316,13.19735],[-59.49383,13.1975],[-59.49514,13.19797],[-59.49588,13.19835],[-59.4967,13.19887],[-59.49758,13.19968],[-59.49852,13.20035],[-59.49941,13.20101],[-59.50016,13.2017],[-59.50097,13.20209],[-59.50154,13.20238],[-59.50201,13.20296],[-59.50269,13.20359],[-59.50368,13.20431],[-59.50418,13.20501],[-59.50516,13.2059],[-59.50581,13.20686],[-59.50707,13.20804],[-59.50745,13.20863],[-59.50806,13.20928],[-59.50913,13.20979],[-59.50972,13.21001],[-59.51759,13.20245],[-59.52628,13.19422],[-59.53521,13.18562],[-59.54004,13.18088],[-59.53512,13.17417],[-59.52812,13.16518],[-59.52176,13.15658],[-59.51463,13.14728],[-59.5064,13.13629]],
+  "St. Philip":[[-59.47402,13.0773],[-59.47398,13.07733],[-59.47159,13.07925],[-59.46913,13.08086],[-59.46794,13.0816],[-59.46654,13.08261],[-59.46485,13.08331],[-59.46435,13.08354],[-59.46318,13.08378],[-59.46268,13.08447],[-59.46132,13.08578],[-59.46057,13.0861],[-59.46006,13.08653],[-59.45906,13.08722],[-59.45753,13.08882],[-59.45704,13.08982],[-59.45626,13.09037],[-59.45504,13.09136],[-59.45407,13.09189],[-59.45335,13.09327],[-59.45284,13.09461],[-59.4522,13.0957],[-59.452,13.09674],[-59.45139,13.09801],[-59.45045,13.09989],[-59.44939,13.10114],[-59.44877,13.1016],[-59.4483,13.1016],[-59.44766,13.10132],[-59.44721,13.10109],[-59.44678,13.10166],[-59.4465,13.10255],[-59.44558,13.10353],[-59.44495,13.10387],[-59.44451,13.1048],[-59.44423,13.10561],[-59.4441,13.10608],[-59.44324,13.10707],[-59.44216,13.10837],[-59.44138,13.11004],[-59.44038,13.11217],[-59.43963,13.11353],[-59.43915,13.11398],[-59.43851,13.11452],[-59.43813,13.1151],[-59.43752,13.11568],[-59.4368,13.11608],[-59.43621,13.11624],[-59.4358,13.11663],[-59.43541,13.11736],[-59.43494,13.11816],[-59.43457,13.11859],[-59.43421,13.11913],[-59.43386,13.11983],[-59.43324,13.12028],[-59.43253,13.12054],[-59.43237,13.12102],[-59.4319,13.12174],[-59.43136,13.12235],[-59.43098,13.12316],[-59.43043,13.12334],[-59.42999,13.12384],[-59.42988,13.12465],[-59.42958,13.12552],[-59.42942,13.12689],[-59.42936,13.12841],[-59.42912,13.12931],[-59.42769,13.13052],[-59.42714,13.13097],[-59.42647,13.13221],[-59.4266,13.13282],[-59.42678,13.13319],[-59.42674,13.13403],[-59.42646,13.1344],[-59.42546,13.13483],[-59.42484,13.13507],[-59.42495,13.13598],[-59.42487,13.13686],[-59.42427,13.13757],[-59.42369,13.13784],[-59.42406,13.13838],[-59.42349,13.13866],[-59.4228,13.13888],[-59.42268,13.13968],[-59.4222,13.14063],[-59.42213,13.14161],[-59.42183,13.14269],[-59.42161,13.14413],[-59.42169,13.14482],[-59.42132,13.14556],[-59.42129,13.14645],[-59.42085,13.14737],[-59.42034,13.14844],[-59.4204,13.15003],[-59.42102,13.15054],[-59.42182,13.15113],[-59.42216,13.15226],[-59.42212,13.15338],[-59.42168,13.15424],[-59.42175,13.15509],[-59.42251,13.15587],[-59.42329,13.1559],[-59.42403,13.15584],[-59.42521,13.15613],[-59.42572,13.15714],[-59.42636,13.15844],[-59.42661,13.15943],[-59.4269,13.16063],[-59.428,13.16186],[-59.42871,13.16225],[-59.42951,13.16223],[-59.43094,13.16218],[-59.43145,13.16266],[-59.43125,13.16342],[-59.43189,13.16431],[-59.43335,13.16464],[-59.43421,13.16431],[-59.43587,13.16403],[-59.43763,13.16375],[-59.43847,13.16357],[-59.43907,13.1636],[-59.43969,13.16393],[-59.44016,13.16439],[-59.44088,13.16453],[-59.44124,13.16512],[-59.44189,13.16515],[-59.44223,13.16479],[-59.44297,13.16473],[-59.44369,13.16526],[-59.44413,13.16584],[-59.44438,13.16676],[-59.44492,13.16743],[-59.44609,13.16827],[-59.44654,13.16856],[-59.44755,13.16855],[-59.44799,13.16884],[-59.4483,13.17002],[-59.44853,13.17109],[-59.44885,13.17187],[-59.44926,13.17237],[-59.44993,13.17205],[-59.45023,13.17234],[-59.45026,13.17276],[-59.45004,13.17349],[-59.44955,13.17388],[-59.44928,13.17422],[-59.44915,13.17484],[-59.44956,13.17508],[-59.45013,13.17487],[-59.45071,13.17466],[-59.45131,13.1748],[-59.45184,13.17555],[-59.45243,13.17635],[-59.45291,13.17711],[-59.45391,13.17787],[-59.45512,13.17922],[-59.45553,13.17969],[-59.45633,13.18028],[-59.45675,13.1809],[-59.45708,13.18172],[-59.46005,13.17907],[-59.46683,13.17297],[-59.47285,13.16741],[-59.48006,13.16077],[-59.48845,13.1531],[-59.49472,13.14716],[-59.50638,13.13634],[-59.5064,13.13629],[-59.51133,13.12449],[-59.5054,13.11682],[-59.50066,13.11094],[-59.49629,13.10539],[-59.49188,13.0998],[-59.48772,13.09458],[-59.48391,13.0897],[-59.48026,13.08513],[-59.47629,13.08004],[-59.47402,13.0773]],
+  "Christ Church":[[-59.56742,13.09723],[-59.57436,13.09368],[-59.58167,13.08992],[-59.58706,13.08716],[-59.5919,13.08466],[-59.59772,13.08163],[-59.60709,13.07675],[-59.60693,13.07668],[-59.60607,13.07637],[-59.60434,13.07575],[-59.60299,13.07556],[-59.60132,13.07521],[-59.59978,13.07433],[-59.59895,13.07397],[-59.59659,13.07363],[-59.5954,13.07367],[-59.59441,13.07361],[-59.59286,13.07334],[-59.59206,13.07318],[-59.59101,13.07328],[-59.58977,13.07352],[-59.58896,13.07347],[-59.5875,13.07298],[-59.58718,13.07237],[-59.58623,13.07159],[-59.58447,13.0713],[-59.5826,13.07099],[-59.58194,13.07061],[-59.58106,13.06984],[-59.58057,13.06926],[-59.57918,13.06907],[-59.57807,13.06907],[-59.57624,13.06861],[-59.57579,13.06853],[-59.57549,13.06809],[-59.57504,13.06742],[-59.5741,13.06709],[-59.5722,13.06679],[-59.57101,13.06652],[-59.5684,13.06608],[-59.56755,13.06564],[-59.56611,13.06455],[-59.56539,13.06409],[-59.56404,13.06407],[-59.56271,13.0644],[-59.56121,13.06488],[-59.55924,13.06514],[-59.55837,13.06534],[-59.55694,13.06525],[-59.55528,13.06546],[-59.55389,13.06581],[-59.5527,13.06582],[-59.55185,13.06545],[-59.55074,13.06496],[-59.5498,13.06481],[-59.54738,13.06438],[-59.54546,13.06393],[-59.54312,13.06307],[-59.54173,13.06213],[-59.54089,13.06127],[-59.54064,13.0603],[-59.5393,13.05994],[-59.53865,13.05953],[-59.53817,13.05877],[-59.53792,13.05825],[-59.53773,13.05735],[-59.53745,13.05634],[-59.53691,13.05573],[-59.53571,13.05434],[-59.5352,13.05361],[-59.53486,13.05258],[-59.53489,13.05156],[-59.53517,13.05076],[-59.53516,13.05011],[-59.53467,13.04936],[-59.53416,13.0488],[-59.53319,13.04769],[-59.53243,13.04678],[-59.53128,13.04631],[-59.52905,13.04542],[-59.52743,13.04506],[-59.52515,13.04527],[-59.52405,13.04554],[-59.5232,13.04596],[-59.5222,13.04627],[-59.52117,13.04643],[-59.51958,13.04644],[-59.5189,13.04645],[-59.51754,13.04682],[-59.51585,13.04751],[-59.5144,13.04833],[-59.51312,13.04925],[-59.51245,13.04968],[-59.51123,13.05034],[-59.51013,13.05074],[-59.50806,13.0516],[-59.5071,13.0521],[-59.50597,13.05279],[-59.50517,13.05274],[-59.50468,13.05235],[-59.50398,13.0522],[-59.50304,13.05296],[-59.50269,13.05383],[-59.50273,13.05434],[-59.50175,13.05647],[-59.50073,13.05782],[-59.49872,13.06104],[-59.49774,13.0625],[-59.49605,13.06477],[-59.49459,13.06665],[-59.49292,13.0668],[-59.49124,13.06672],[-59.48997,13.06677],[-59.48797,13.06742],[-59.48656,13.06793],[-59.48468,13.06891],[-59.48347,13.06973],[-59.48195,13.07079],[-59.481,13.07151],[-59.48027,13.07262],[-59.47953,13.07338],[-59.47766,13.07462],[-59.4758,13.07597],[-59.47402,13.0773],[-59.47629,13.08004],[-59.48026,13.08513],[-59.48391,13.0897],[-59.48772,13.09458],[-59.49188,13.0998],[-59.49629,13.10539],[-59.50066,13.11094],[-59.5054,13.11682],[-59.51133,13.12449],[-59.51772,13.12148],[-59.52648,13.11732],[-59.53338,13.11399],[-59.54019,13.11067],[-59.54594,13.1079],[-59.55291,13.10443],[-59.55919,13.10135],[-59.5674,13.09723],[-59.56742,13.09723]],
+  "St. Michael":[[-59.58196,13.15764],[-59.59667,13.15191],[-59.60526,13.14854],[-59.61349,13.14527],[-59.61901,13.14308],[-59.63606,13.13615],[-59.63606,13.1358],[-59.63624,13.13479],[-59.63626,13.13304],[-59.63519,13.13127],[-59.6348,13.12928],[-59.63451,13.12751],[-59.634,13.12648],[-59.63318,13.12393],[-59.63154,13.1224],[-59.63052,13.12112],[-59.62908,13.11948],[-59.62793,13.11724],[-59.62746,13.11504],[-59.62733,13.1129],[-59.62713,13.111],[-59.62666,13.1096],[-59.62582,13.10772],[-59.6264,13.10634],[-59.62965,13.10448],[-59.62912,13.10297],[-59.62902,13.10033],[-59.62784,13.09971],[-59.62601,13.09893],[-59.62387,13.09799],[-59.62265,13.09701],[-59.62229,13.09614],[-59.62161,13.09578],[-59.62039,13.09531],[-59.6194,13.09527],[-59.61869,13.0954],[-59.61753,13.09525],[-59.61628,13.09484],[-59.61472,13.09409],[-59.61377,13.09321],[-59.61229,13.09225],[-59.61109,13.09129],[-59.61022,13.09029],[-59.60998,13.0896],[-59.60964,13.08809],[-59.60981,13.08679],[-59.60978,13.08469],[-59.60961,13.08339],[-59.60981,13.08227],[-59.6102,13.08142],[-59.61102,13.08034],[-59.61168,13.07998],[-59.61207,13.0801],[-59.61256,13.0797],[-59.61262,13.07888],[-59.61245,13.07823],[-59.6119,13.07785],[-59.61107,13.07777],[-59.61008,13.07784],[-59.60881,13.07751],[-59.60709,13.07675],[-59.59772,13.08163],[-59.5919,13.08466],[-59.58706,13.08716],[-59.58167,13.08992],[-59.57436,13.09368],[-59.56742,13.09723],[-59.56948,13.10597],[-59.57103,13.11248],[-59.57276,13.11955],[-59.57439,13.12658],[-59.57607,13.13346],[-59.57763,13.1399],[-59.5792,13.14661],[-59.58058,13.15261],[-59.58196,13.15764]]
+};
+
+/* St. Michael is the ONE place we still trace. Four polyclinics sit inside it
+   (Branford Taitt at Black Rock, Winston Scott at Jemmotts Lane, Edgar Cochrane
+   at Wildey, Eunice Gibson at Warrens), and no published source subdivides the
+   parish. These three rings are a HAND-TRACED partition of St. Michael's bounding
+   box, clipped to the real parish outline at draw time:
+     Eunice Gibson  — northern strip (Warrens end)
+     Branford Taitt — north-west coast (Black Rock end)
+     Winston Scott  — south and east, matching its published catchment
+                      ("southern and eastern St. Michael to the Christ Church
+                       and St. George boundaries")
+   Edgar Cochrane gets NO ring: no catchment is published for it anywhere, so
+   inventing one here would contradict the note on its own panel. It shows as a
+   pin only, inside the Winston Scott area it was historically a satellite of.
+   Keyed by facility id. Rings are [lng,lat]. */
+var ST_MICHAEL_SUBZONES = {
+  2:[[-59.645,13.160],[-59.560,13.160],[-59.560,13.135],[-59.645,13.135]],
+  6:[[-59.645,13.135],[-59.605,13.135],[-59.605,13.105],[-59.645,13.105]],
+  7:[[-59.645,13.105],[-59.605,13.105],[-59.605,13.135],[-59.560,13.135],
+     [-59.560,13.070],[-59.645,13.070]]
+};
+
+/* Which parish each satellite outpatient clinic covers, on its set days. */
+var SATELLITE_PARISH = { 101:"St. Joseph", 102:"St. Andrew", 103:"St. Thomas" };
+
+/* parish -> polyclinic. Parish borders are NOT catchment borders; where a parish
+   is split between polyclinics that is stated rather than hidden.
+   St. Joseph is mapped to Maurice Byer because Maurice Byer publishes St. Joseph
+   in its own catchment and runs the St. Joseph Outpatient Clinic. */
+var PARISH_MAP = {
+  "St. Lucy":      {id:1},
+  "St. Peter":     {id:1},
+  "St. Andrew":    {id:1, note:"The St. Andrew Outpatient Clinic at Belleplaine serves this parish on its clinic days — 1st and 3rd Fridays, child health only. Everything else is at Maurice Byer."},
+  "St. Joseph":    {id:1, note:"The St. Joseph Outpatient Clinic at Horse Hill serves this parish Monday to Friday, a different clinic each day. Maurice Byer publishes St. Joseph in its catchment, but check with the Ministry — the east of the parish may be served by David Thompson."},
+  "St. James":     {id:2, also:[1], note:"Northern St. James is served by Maurice Byer; southern St. James by Eunice Gibson."},
+  "St. Thomas":    {id:2, also:[1], note:"The St. Thomas Outpatient Clinic at Rock Hall serves this parish on Tuesday, Thursday and Friday (general practice, plus pharmacy from 12 May 2026). A small part of St. Thomas is served by Maurice Byer."},
+  "St. George":    {id:3},
+  "St. John":      {id:4},
+  "St. Philip":    {id:5, also:[8], note:"Part of St. Philip is served by Randal Phillips Polyclinic."},
+  "Christ Church": {id:8},
+  "St. Michael":   {id:7, also:[6,9,2], note:"St. Michael is served by four polyclinics — Winston Scott, Branford Taitt, Edgar Cochrane and Eunice Gibson at Warrens. No published source says where the internal boundaries fall, so the split shown on the map is traced, not official. Use “Use my location” for a best guess, or call the Ministry."}
+};
+
+var byId = function(id){ var r=null; FACILITIES.forEach(function(f){ if(f.id===id) r=f; }); return r; };
+var ZONED = FACILITIES.filter(function(f){ return f.zone; });
+var state = { selected:null, q:'', parish:'', loc:null };
+var map, layers = {}, labels = {}, markers = {}, badges = [];
+
+/* ---------- point in polygon (ray casting) ---------- */
+function pointInRing(lng, lat, ring){
+  var inside=false;
+  for(var i=0,j=ring.length-1;i<ring.length;j=i++){
+    var xi=ring[i][0],yi=ring[i][1], xj=ring[j][0],yj=ring[j][1];
+    var hit=((yi>lat)!==(yj>lat)) && (lng < (xj-xi)*(lat-yi)/(yj-yi)+xi);
+    if(hit) inside=!inside;
+  }
+  return inside;
+}
+function parishForPoint(lng,lat){
+  for(var par in PARISHES){ if(pointInRing(lng,lat,PARISHES[par])) return par; }
+  return null;                                                          // off-island
+}
+function zoneForPoint(lng,lat){
+  var par = parishForPoint(lng,lat);
+  if(!par) return null;
+  if(par === 'St. Michael'){                                            // traced split
+    for(var id in ST_MICHAEL_SUBZONES){
+      if(pointInRing(lng,lat,ST_MICHAEL_SUBZONES[id])) return parseInt(id,10);
+    }
+    return 7;                                                           // fallback: Winston Scott
+  }
+  var m = PARISH_MAP[par];
+  return m ? m.id : null;
+}
+function ringArea(ring){
+  var a=0;
+  for(var i=0;i<ring.length-1;i++){ a += ring[i][0]*ring[i+1][1] - ring[i+1][0]*ring[i][1]; }
+  return Math.abs(a)/2;
+}
+function centroid(ring){
+  var x=0,y=0; ring.forEach(function(p){x+=p[0];y+=p[1];});
+  return [y/ring.length, x/ring.length]; // [lat,lng]
+}
+function esc(s){ return String(s); }
+function dirsUrl(f){
+  var plain = f.name.replace(/&amp;/g,'and').replace(/[“”]/g,'');
+  return 'https://www.google.com/maps/dir/?api=1&destination='+
+         encodeURIComponent(plain+', '+f.address.replace(/[“”]/g,'')+', Barbados');
+}
+
+/* ---------- map ---------- */
+function baseStyle(p){ return {color:'#ffffff',weight:1.5,fillColor:p.colour,fillOpacity:0.45}; }
+/* Selection is carried by aria-pressed on the list button; the pin colour is
+   reinforcement. Selected pin = its own colour (GovBB blue), NOT merely
+   prominence-by-elimination — recolouring the chosen one and dimming the rest
+   are two independent signals, so do both. */
+function pin(f, selected){
+  var ring = selected ? '3px solid #00267f' : '2px solid #fff';
+  var glow = selected ? 'box-shadow:0 0 0 3px #ffc726,0 1px 4px rgba(0,0,0,.6);' : 'box-shadow:0 1px 3px rgba(0,0,0,.5);';
+  if(f.type==='satellite'){
+    var bg = selected ? '#0e5f64' : '#fff';
+    return L.divIcon({className:'',iconSize:[20,20],iconAnchor:[10,10],
+      html:'<div style="width:18px;height:18px;border-radius:3px;background:'+bg+
+           ';border:3px solid #0e5f64;'+glow+'"></div>'});
+  }
+  return L.divIcon({className:'',iconSize:[24,24],iconAnchor:[12,12],
+    html:'<div style="width:22px;height:22px;border-radius:50%;background:'+
+      (selected ? '#00267f' : f.colour)+';border:'+ring+';'+glow+
+      'color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:12px">P</div>'});
+}
+
+/* Straight-line distance, for the "Use my location" sort. */
+function distanceKm(a, b){
+  var R=6371, dLat=(b.lat-a.lat)*Math.PI/180, dLng=(b.lng-a.lng)*Math.PI/180;
+  var la1=a.lat*Math.PI/180, la2=b.lat*Math.PI/180;
+  var h=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(la1)*Math.cos(la2)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return 2*R*Math.asin(Math.sqrt(h));
+}
+function fmtKm(d){ return d < 1 ? Math.round(d*1000)+' m' : d.toFixed(1)+' km'; }
+function initMap(){
+  var BARBADOS_BOUNDS = L.latLngBounds([12.99,-59.72],[13.36,-59.40]);
+  map = L.map('poly-map',{center:[13.16,-59.55],zoom:11,minZoom:10,maxZoom:15,
+        maxBounds:BARBADOS_BOUNDS,maxBoundsViscosity:1.0});
+  /* ---------------------------------------------------------------------
+     BASEMAP — provider checked 1 September 2026. Both previously-used
+     key-free providers now fail SILENTLY, returning HTTP 200 with a
+     placeholder image, so Leaflet's tileerror never fires and no automatic
+     fallback is possible. Verified by direct request:
+
+       CARTO Voyager  basemaps.cartocdn.com/rastertiles/voyager
+                      -> 200, tile reads "API KEY REQUIRED"
+       OpenStreetMap  tile.openstreetmap.org
+                      -> 200, tile reads "403 Access blocked - App is not
+                         following the tile usage policy"
+       Esri World Street Map (used below)
+                      -> 200, real tile, no key required
+
+     DECISION NEEDED before beta: Esri is a third-party commercial service.
+     The options are (a) obtain a CARTO API key and restore Voyager,
+     (b) move to OpenFreeMap, which is free and unmetered but serves VECTOR
+     tiles and would mean replacing Leaflet with MapLibre GL, or
+     (c) self-host tiles. Swap PROVIDER below to change basemap.
+     --------------------------------------------------------------------- */
+  var PROVIDER = {
+    url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    opts:{minZoom:10,maxZoom:17,
+      attribution:'Tiles &copy; Esri — Esri, DeLorme, NAVTEQ, and contributors'}
+  };
+  L.tileLayer(PROVIDER.url, PROVIDER.opts).addTo(map);
+
+  var haveTurf = (typeof turf !== 'undefined');
+
+  /* One layer per parish, coloured by the polyclinic that serves it.
+     St. Michael is drawn as three traced sub-zones clipped to the parish.
+     A facility serving several parishes gets one featureGroup so selection,
+     dimming and fitBounds all still work on a single object. */
+  var groups = {}, biggest = {};
+  function addPoly(fid, ring, isSplit, label){
+    var f = byId(fid); if(!f) return;
+    var st = baseStyle(f); if(isSplit) st.dashArray = '6,4';
+    var poly = L.polygon(ring.map(function(c){ return [c[1],c[0]]; }), st);
+    poly.bindTooltip(f.name.replace(/&amp;/g,'&') + (label ? ' — ' + label : ''), {sticky:true});
+    poly.on('click', function(){ selectFacility(fid, false); });
+    (groups[fid] = groups[fid] || []).push(poly);
+    var a = ringArea(ring);
+    if(!biggest[fid] || a > biggest[fid].a) biggest[fid] = {a:a, ring:ring};
+  }
+
+  Object.keys(PARISHES).forEach(function(par){
+    var ring = PARISHES[par];
+    if(par === 'St. Michael'){
+      var parishPoly = haveTurf ? turf.polygon([ring]) : null;
+      Object.keys(ST_MICHAEL_SUBZONES).forEach(function(pid){
+        var sub = ST_MICHAEL_SUBZONES[pid].slice(); sub.push(sub[0]);
+        var clipped = null;
+        if(parishPoly){
+          try { clipped = turf.intersect(turf.polygon([sub]), parishPoly); } catch(e){ clipped = null; }
+        }
+        if(clipped){
+          var cs = clipped.geometry.coordinates;
+          var rings = (clipped.geometry.type === 'MultiPolygon') ? cs.map(function(c){return c[0];}) : [cs[0]];
+          rings.forEach(function(r){ addPoly(parseInt(pid,10), r, false, 'St. Michael (traced split)'); });
+        } else {
+          addPoly(parseInt(pid,10), sub, false, 'St. Michael (traced split)');
+        }
+      });
+      return;
+    }
+    var m = PARISH_MAP[par]; if(!m) return;
+    var isSplit = !!(m.also && m.also.length);
+    addPoly(m.id, ring, isSplit, par + (isSplit ? ' (shared)' : ''));
+  });
+
+  // one featureGroup per facility, plus one name label in its largest area
+  Object.keys(groups).forEach(function(fid){
+    var id = parseInt(fid,10), f = byId(id);
+    var g = L.featureGroup(groups[fid]).addTo(map);
+    layers[id] = g;
+    var ring = biggest[fid].ring, pos = centroid(ring);
+    var area = biggest[fid].a;
+    if(haveTurf){
+      try {
+        var r2 = ring.slice(); if(r2[0][0]!==r2[r2.length-1][0] || r2[0][1]!==r2[r2.length-1][1]) r2.push(r2[0]);
+        var pt = turf.pointOnFeature(turf.polygon([r2])).geometry.coordinates;
+        pos = [pt[1], pt[0]];
+      } catch(e){}
+    }
+    /* Short name on the map — the full name is in the list and the panel.
+       Labels for small areas (the traced St. Michael slivers) would collide around
+       Bridgetown at island zoom, so they are hidden until the user zooms in. */
+    var small = area < 0.0025;                                  // ~ < 30 km2
+    var lbl = L.tooltip({permanent:true, direction:'center',
+                className:'zone-label' + (small ? ' zone-label--small' : '')})
+              .setContent(f.short || f.name.replace(/&amp;/g,'&')).setLatLng(pos);
+    map.addLayer(lbl); labels[id] = lbl;
+  });
+
+  function syncLabelZoom(){
+    var el = map.getContainer();
+    if(map.getZoom() >= 12) el.classList.add('z-in'); else el.classList.remove('z-in');
+  }
+  map.on('zoomend', syncLabelZoom); syncLabelZoom();
+
+  /* Satellite parishes: a dashed, non-interactive outline saying "there is also
+     an outpatient clinic in this parish, on set days". interactive:false so it
+     never steals a click from the polyclinic zone underneath — the triangle pin
+     is the click target for the satellite itself. */
+  Object.keys(SATELLITE_PARISH).forEach(function(sid){
+    var par = SATELLITE_PARISH[sid], ring = PARISHES[par], f = byId(parseInt(sid,10));
+    if(!ring || !f) return;
+    /* A light annotation, not a boundary. Heavier weights read as a real border
+       and merge into one dark blob where St. Andrew, St. Joseph and St. Thomas
+       touch, so keep this thin and low-contrast. */
+    L.polygon(ring.map(function(c){ return [c[1],c[0]]; }),
+      {color:'#1d4d4f', weight:1.5, dashArray:'1,5', opacity:0.85,
+       fill:false, interactive:false}).addTo(map);
+  });
+
+  // a pin at every facility, including the four with no catchment area
+  FACILITIES.forEach(function(f){
+    if(!f.lat) return;
+    var mk = L.marker([f.lat,f.lng],{icon:pin(f,false), title:f.name.replace(/&amp;/g,'&')})
+     .addTo(map)
+     .bindTooltip(f.name.replace(/&amp;/g,'&')+(f.type==='satellite'?' (satellite clinic)':''),{sticky:true})
+     .on('click',function(){ selectFacility(f.id,false); });
+    markers[f.id] = mk;
+    /* Satellites carry a permanent day badge — the whole point of the dotted
+       parish is that it is only covered on these days. */
+    if(f.type==='satellite' && f.daysShort){
+      badges.push(L.tooltip({permanent:true, direction:'bottom', offset:[0,8],
+                 className:'day-badge', interactive:false})
+       .setContent(f.daysShort).setLatLng([f.lat,f.lng]).addTo(map));
+    }
+  });
+}
+
+/* ---------- selection: distinct colour + dim others (two signals) ---------- */
+function selectFacility(id, fromList){
+  if(state.selected===id){ clearSelection(); return; }
+  state.selected=id;
+  var f=byId(id);
+  ZONED.forEach(function(p){
+    if(!layers[p.id]) return;
+    if(p.id===id) layers[p.id].setStyle({fillOpacity:0.75, weight:3, color:'#0b0c0c'});  // selected
+    else          layers[p.id].setStyle({fillOpacity:0.12, weight:1, color:'#ffffff'});   // dim the rest
+  });
+  if(map){
+    /* Pins: selected one recoloured, the others to opacity 0 — hidden but still
+       clickable, so their handlers stay alive (skill's focus behaviour). */
+    Object.keys(markers).forEach(function(mid){
+      var mf = byId(parseInt(mid,10)); if(!mf) return;
+      var isSel = (parseInt(mid,10) === id);
+      markers[mid].setIcon(pin(mf, isSel));
+      markers[mid].setOpacity(isSel ? 1 : 0);
+    });
+    map.getContainer().classList.add('poly-focused');
+    if(layers[id]) map.fitBounds(layers[id].getBounds(),{padding:[20,20],maxZoom:13});
+    else if(f && f.lat) map.setView([f.lat,f.lng],13);                 // no catchment -> centre on the pin
+  }
+  renderList(); renderDetail(id);
+  if(!fromList) answerFor(id, 'This is');
+}
+function clearSelection(){
+  state.selected=null;
+  ZONED.forEach(function(p){ if(layers[p.id]) layers[p.id].setStyle(baseStyle(p)); });
+  Object.keys(markers).forEach(function(mid){
+    var mf = byId(parseInt(mid,10)); if(!mf) return;
+    markers[mid].setIcon(pin(mf,false)); markers[mid].setOpacity(1);
+  });
+  if(map) map.getContainer().classList.remove('poly-focused');
+  document.getElementById('answer').classList.remove('is-shown');
+  renderList(); renderDetail(null);
+}
+
+/* ---------- detail panel (services, hours, clinic days) ---------- */
+function sumRow(k,v){
+  return v ? '<div class="govbb-summary-list__row"><dt class="govbb-summary-list__key">'+k+
+             '</dt><dd class="govbb-summary-list__value">'+v+'</dd></div>' : '';
+}
+
+function renderDetail(id){
+  var el = document.getElementById('detail');
+  if(!id){
+    el.innerHTML = '<p class="poly-detail__empty" id="detail-empty">Select a polyclinic or satellite clinic '+
+      'to see its address, phone numbers, opening hours, services and specialist clinic days.</p>';
+    return;
+  }
+  var f = byId(id);
+  var h = '<div class="poly-detail__head"><h2 class="govbb-text-h3">'+f.name+'</h2>'+
+          (f.aka ? '<p class="poly-detail__aka">'+f.aka+'</p>' : '')+
+          '</div><div class="poly-detail__body">';
+
+  /* --- facts --- */
+  h += '<dl class="govbb-summary-list">';
+  h += sumRow('Address', f.address);
+  h += sumRow('Phone', f.phones.join('<br>'));
+  h += sumRow('Opening hours', f.hours + (f.open24 ? ' <span class="poly-chip poly-chip--24">24 hours</span>' : ''));
+  h += sumRow('Urgent care', f.urgent ? f.urgent : (f.type==='polyclinic' ? 'None published — for urgent care outside opening hours use Winston Scott or David Thompson' : ''));
+  if(f.type==='polyclinic') h += sumRow('Serves', f.served);
+  if(f.type==='satellite'){
+    var parent = byId(f.parent);
+    h += sumRow('Serves', f.parish + ' — on its clinic days only (' + f.days + ')');
+    h += sumRow('Run from', parent ? parent.name : '');
+  }
+  if(state.loc && f.lat) h += sumRow('Distance from you', fmtKm(distanceKm(state.loc,{lat:f.lat,lng:f.lng}))+' in a straight line');
+  h += sumRow('Map pin', 'Approximate — placed by hand from the address, not geocoded');
+  h += sumRow('History', f.established);
+  h += '</dl>';
+  h += '<a class="poly-dirs govbb-link" href="'+dirsUrl(f)+'" target="_blank" rel="noopener">Get directions to '+
+       f.name.replace(/&amp;/g,'and')+' (opens in a new tab)</a>';
+
+  if(f.hoursFlag) h += '<div class="poly-callout"><p><strong>Opening hours are disputed.</strong> '+f.hoursFlag+'</p></div>';
+  if(f.noZoneNote) h += '<div class="poly-callout"><p><strong>No catchment area is published for this polyclinic.</strong> '+f.noZoneNote+'</p></div>';
+  if(f.newsFlag)  h += '<div class="poly-callout"><p>'+f.newsFlag+'</p></div>';
+
+  if(f.type==='satellite'){
+    /* --- satellite weekly timetable --- */
+    h += '<div class="poly-callout"><p><strong>These clinic days are unconfirmed.</strong> '+
+         'They come from a polyclinic website on polyclinics.wixsite.com, which is not linked from '+
+         'health.gov.bb or gov.bb. Call before travelling.</p></div>';
+    h += '<h3 class="govbb-text-h4">What runs on which day</h3><ul class="poly-clin">';
+    f.timetable.forEach(function(t){ h += '<li><b>'+t.d+'</b> — '+t.s+'</li>'; });
+    h += '</ul>';
+    h += '<div class="poly-callout"><p>A satellite clinic offers <strong>selected services only</strong>, '+
+         'on set days. For anything not listed, go to '+(byId(f.parent)?byId(f.parent).name:'your polyclinic')+'.</p></div>';
+    h += '</div>';
+    el.innerHTML = h;
+    return;
+  }
+
+  /* --- services --- */
+  h += '<div class="poly-callout"><p><strong>The service list, specialist clinic days and '+
+       'urgent-care times below are not published by the Ministry.</strong> They come from the '+
+       'individual polyclinic websites on polyclinics.wixsite.com, which are not linked from '+
+       'health.gov.bb or gov.bb, sit on a free Wix subdomain, and carry out-of-date phone numbers. '+
+       'Confirm by calling the polyclinic before relying on any clinic day.</p></div>';
+  h += '<h3 class="govbb-text-h4">Services at this polyclinic</h3><ul class="poly-svc">';
+  CORE_SERVICES.forEach(function(s){ h += '<li>'+s+'</li>'; });
+  h += '</ul>';
+
+  if(f.extras.length){
+    h += '<h3 class="govbb-text-h4">Also at this site</h3><ul class="poly-clin">';
+    f.extras.forEach(function(x){
+      h += '<li><b>'+x.n+'</b>'+(x.only?' — '+x.only:'')+'</li>';
+    });
+    h += '</ul>';
+  }
+
+  h += '<h3 class="govbb-text-h4">Programmes required at every polyclinic</h3>';
+  h += '<p style="font-size:15px;margin:0">'+CORE_PROGRAMMES.join(' · ')+'. '+
+       'A register of everyone with diabetes, hypertension or asthma is kept at each polyclinic.</p>';
+
+  /* --- specialist clinics --- */
+  h += '<h3 class="govbb-text-h4">Specialist clinics and when they run</h3><ul class="poly-clin">';
+  f.specialists.forEach(function(s){
+    h += '<li'+(s.none?' class="is-none"':'')+'><b>'+s.n+'</b> — '+s.w+'</li>';
+  });
+  h += '</ul>';
+  h += '<p style="font-size:14px;color:#505a5f;margin:10px 0 0">Mental health appointments can also be '+
+       'requested through the Assessment Clinic at the Psychiatric Hospital on (246) 536-3091.</p>';
+
+  /* --- asthma --- */
+  h += '<h3 class="govbb-text-h4">Asthma care</h3>';
+  h += '<p style="font-size:15px;margin:0 0 8px">'+ASTHMA_BASE+'</p>';
+  if(f.open24) h += '<p style="font-size:15px;margin:0 0 8px"><strong>'+ASTHMA_24+'</strong></p>';
+  h += '<div class="poly-callout"><p>'+ASTHMA_NOTE+'</p></div>';
+
+  /* --- environmental health --- */
+  if(f.env){
+    h += '<h3 class="govbb-text-h4">Environmental health department</h3><ul class="poly-svc">';
+    ENV_FUNCTIONS.forEach(function(s){ h += '<li>'+s+'</li>'; });
+    h += '</ul>';
+  }
+
+  /* --- satellites --- */
+  if(f.satellites.length){
+    h += '<h3 class="govbb-text-h4">Satellite clinics run from here</h3><ul class="poly-clin">';
+    f.satellites.forEach(function(sid){
+      var s = byId(sid);
+      if(s) h += '<li><b>'+s.name+'</b> — serves '+s.parish+' on '+s.days+
+                 '<br><span style="color:#505a5f">'+s.address+' · '+s.hours+'</span></li>';
+    });
+    h += '</ul>';
+  }
+
+  h += '</div>';
+  el.innerHTML = h;
+}
+
+/* ---------- answer text (canonical result) ---------- */
+function showAnswer(html){ var a=document.getElementById('answer'); a.innerHTML=html; a.classList.add('is-shown'); }
+function answerFor(id, prefix, extraNote){
+  var p=byId(id);
+  showAnswer('<p class="poly-answer__lead">'+prefix+' <strong>'+p.name+'</strong>.</p>'+
+    '<span class="poly-answer__note">'+p.address+' · '+p.phones[0]+' · '+p.hours+
+    (extraNote ? '<br>'+extraNote : '')+
+    '<br>Parish areas are a simplification — confirm with the Ministry of Health if you live near a boundary.</span>');
+}
+
+/* ---------- list ---------- */
+/* ---------- list (canonical interface) ---------- */
+function cardHtml(f){
+  var chips = '';
+  if(f.open24) chips += '<span class="poly-chip poly-chip--24">24 hours</span>';
+  else if(f.urgent && f.urgent.indexOf('Urgent care until')===0){
+    chips += '<span class="poly-chip">'+f.urgent.replace('Urgent care until','open to')+'</span>';
+  }
+  /* The row must carry the pin caveat, but EVERY pin here is hand-placed, so a
+     bright chip on all 12 rows differentiates nothing and trains the eye to skip
+     it. Keep it on the address line as quiet text instead. */
+  var dist = '';
+  if(state.loc && f.lat){
+    dist = '<span class="poly-chip poly-chip--dist">'+
+           fmtKm(distanceKm(state.loc,{lat:f.lat,lng:f.lng}))+'</span>';
+  }
+  return '<li><button type="button" class="poly-list__btn" style="--zone:'+f.colour+
+    '" data-id="'+f.id+'" aria-pressed="'+(state.selected===f.id)+'">'+
+    '<span class="poly-list__name"><span class="poly-swatch'+(f.zone?'':' poly-swatch--none')+
+      '" style="--zone:'+f.colour+'"></span>'+f.name+chips+dist+'</span>'+
+    '<span class="poly-list__meta">'+
+      (f.type==='satellite' ? 'Selected services · ' : (f.zone ? 'Serves ' : ''))+f.served+'</span>'+
+    '<span class="poly-list__addr">'+f.address+' · '+f.phones[0]+
+      ' <span class="poly-approx">Approximate pin</span></span>'+
+    '</button></li>';
+}
+
+/* Filter a DERIVED view — never the source array, so Clear filters can restore. */
+function visibleFacilities(){
+  var q = state.q.trim().toLowerCase();
+  var list = FACILITIES.filter(function(f){
+    if(state.parish){
+      var m = PARISH_MAP[state.parish];
+      var allowed = m ? [m.id].concat(m.also || []) : [];
+      var satOk = (f.type==='satellite' && f.parish === state.parish);
+      if(!satOk && allowed.indexOf(f.id) === -1) return false;
+    }
+    if(q){
+      /* Name + address + alias only. Including `served` would match a satellite
+         on its PARENT's name ("run from Maurice Byer Polyclinic") and on every
+         parish it lists — parish is the dropdown's job, not the search box. */
+      var hay = (f.name+' '+f.address+' '+(f.aka||'')).toLowerCase()
+                .replace(/&amp;/g,'&').replace(/[“”]/g,'"');
+      if(hay.indexOf(q) === -1) return false;
+    }
+    return true;
+  });
+  if(state.loc){
+    list = list.slice().sort(function(a,b){
+      if(!a.lat) return 1; if(!b.lat) return -1;
+      return distanceKm(state.loc,{lat:a.lat,lng:a.lng}) - distanceKm(state.loc,{lat:b.lat,lng:b.lng});
+    });
+  }
+  return list;
+}
+
+function renderMeta(view){
+  var bits = [];
+  if(state.parish) bits.push('serving ' + state.parish);
+  if(state.q.trim()) bits.push('matching “' + state.q.trim() + '”');
+  if(state.loc) bits.push('nearest first');
+  var ctx = bits.length ? ' — ' + bits.join(', ') : '';
+  document.getElementById('meta').innerHTML =
+    'Showing <strong>' + view.length + '</strong> of ' + FACILITIES.length + ' facilities' + ctx + '.';
+}
+
+function renderList(){
+  var view = visibleFacilities();
+  var ul = document.getElementById('list'), us = document.getElementById('list-sat');
+  var polys = view.filter(function(f){ return f.type==='polyclinic'; });
+  var sats  = view.filter(function(f){ return f.type==='satellite'; });
+
+  ul.innerHTML = polys.length ? polys.map(cardHtml).join('')
+    : '<li class="poly-list__empty">No polyclinic matches those filters. Clear the filters to see all nine.</li>';
+  us.innerHTML = sats.length ? sats.map(cardHtml).join('')
+    : '<li class="poly-list__empty">No satellite clinic matches those filters.</li>';
+
+  [ul,us].forEach(function(list){
+    Array.prototype.forEach.call(list.querySelectorAll('.poly-list__btn'), function(b){
+      b.addEventListener('click', function(){
+        var id = parseInt(b.getAttribute('data-id'),10);
+        selectFacility(id,true);
+        if(state.selected===id) answerFor(id,'This is');
+        else document.getElementById('answer').classList.remove('is-shown');
+      });
+    });
+  });
+  renderMeta(view);
+}
+
+/* ---------- controls ---------- */
+function applyParish(par){
+  state.parish = par || '';
+  if(!par){ clearSelection(); return; }
+  var m = PARISH_MAP[par];
+  selectFacility(m.id, true);
+  var note = m.note || '';
+  if(m.also && m.also.length){
+    var names = m.also.map(function(i){ var f=byId(i); return f?f.name:''; }).filter(Boolean);
+    note = (note ? note+' ' : '') + 'Also serving this parish: ' + names.join(', ') + '.';
+  }
+  answerFor(m.id, 'People in '+par+' are usually served by', note);
+  document.getElementById('detail').scrollIntoView({block:'nearest'});
+}
+
+function initControls(){
+  var sel = document.getElementById('parish');
+  Object.keys(PARISH_MAP).sort().forEach(function(par){
+    var o = document.createElement('option'); o.value = par; o.textContent = par; sel.appendChild(o);
+  });
+  sel.addEventListener('change', function(e){ applyParish(e.target.value); });
+
+  /* debounced free-text search */
+  var q = document.getElementById('poly-q'), t = null;
+  function runQuery(){ state.q = q.value; renderList(); }
+  q.addEventListener('input', function(){
+    if(t) window.clearTimeout(t);
+    t = window.setTimeout(runQuery, 200);
+  });
+  q.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); runQuery(); } });
+
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    state.q = ''; state.parish = ''; state.loc = null;
+    q.value = ''; sel.value = '';
+    clearSelection();
+    q.focus();
+  });
+
+  /* Never auto-trigger geolocation on load — wait for the press. */
+  document.getElementById('locBtn').addEventListener('click', function(){
+    if(!navigator.geolocation){
+      showAnswer('<p class="poly-answer__lead">Location is not available in this browser. '+
+                 'Select your parish instead.</p>'); return;
+    }
+    navigator.geolocation.getCurrentPosition(function(pos){
+      state.loc = {lat:pos.coords.latitude, lng:pos.coords.longitude};
+      var id = zoneForPoint(pos.coords.longitude, pos.coords.latitude);
+      if(id){
+        selectFacility(id,true);
+        answerFor(id,'Based on your location, you are usually served by');
+        document.getElementById('detail').scrollIntoView({block:'nearest'});
+      } else {
+        renderList();
+        showAnswer('<p class="poly-answer__lead">We could not match your location to a parish — you may be '+
+          'outside Barbados.</p><span class="poly-answer__note">The list is now sorted by straight-line '+
+          'distance from you. Select your parish above for a catchment answer.</span>');
+      }
+    }, function(){
+      showAnswer('<p class="poly-answer__lead">We could not get your location. '+
+                 'Select your parish above instead.</p>');
+    });
+  });
+}
+
+window.addEventListener('DOMContentLoaded', function(){
+  if(typeof L==='undefined'){ document.getElementById('poly-map').innerHTML='<p style="padding:16px">Map could not load. Use the parish selector above.</p>'; }
+  else initMap();
+  initControls();
+  renderList();
+  renderDetail(null);
+});
+</script>
+</body>
+</html>
