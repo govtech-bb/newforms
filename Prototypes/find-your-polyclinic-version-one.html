@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Find your polyclinic — Government of Barbados</title>
+<link rel="icon" href="https://alpha.gov.bb/favicon.ico" />
+
+<!-- The stylesheet the LIVE alpha.gov.bb service pages use, vendored locally.
+     NOT the npm @govtech-bb/styles@alpha package — the live build uses
+     govbb-width-container / govbb-button / --govbb-* class and token names. -->
+<link rel="stylesheet" href="govbb-alpha-styles.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+  /* ===================================================================
+     VERSION ONE — Phase 1 of Find your polyclinic.
+     Page-local styles only, prefixed `v1-`. All chrome, type, buttons,
+     inputs, the summary list and the feedback block come from the live
+     alpha.gov.bb stylesheet. Tokens are --govbb-*.
+     `govbb-inset-text` / `govbb-warning-text` do NOT exist in the live
+     build, so callouts are local (.v1-callout, .v1-warn).
+     =================================================================== */
+
+  .v1-lede{font-size:var(--govbb-font-size-body-lg,1.125rem)}
+
+  .v1-phase{border-left:4px solid var(--govbb-blue-60);background:var(--govbb-blue-10);
+    padding:var(--govbb-space-s);border-radius:var(--govbb-radius);margin:0 0 var(--govbb-space-m)}
+  .v1-phase p{margin:0;font-size:var(--govbb-font-size-body-sm)}
+  .v1-phase p + p{margin-top:var(--govbb-space-xs)}
+
+  /* Clinical-safety reassurance. Always visible, never behind a result. */
+  .v1-safety{border:2px solid var(--govbb-teal-80);border-radius:var(--govbb-radius);
+    padding:var(--govbb-space-s);margin:0 0 var(--govbb-space-m);background:var(--govbb-teal-10)}
+  .v1-safety p{margin:0}
+  .v1-safety p + p{margin-top:var(--govbb-space-xs);font-size:var(--govbb-font-size-body-sm)}
+
+  .v1-finder{background:var(--govbb-grey-10,#f3f2f1);padding:var(--govbb-space-s);
+    border-radius:var(--govbb-radius);margin:0 0 var(--govbb-space-m)}
+  .v1-finder__row{display:grid;grid-template-columns:1fr 1fr;gap:var(--govbb-space-m);
+    align-items:start}
+  @media (max-width:60rem){
+    .v1-finder__row{grid-template-columns:1fr;gap:var(--govbb-space-s)}
+    .v1-finder__row > .govbb-form-group + .govbb-form-group{
+      border-top:1px solid var(--govbb-grey-20);padding-top:var(--govbb-space-s)}
+  }
+  .v1-finder__actions{display:flex;flex-wrap:wrap;gap:var(--govbb-space-s);
+    align-items:center;margin-top:var(--govbb-space-s)}
+
+  /* --- Address autocomplete (ARIA 1.2 combobox) --- */
+  /* The live build's .govbb-form-group is display:flex, so the combobox never
+     stretched. Overriding to block means restoring the label/hint rhythm. */
+  .v1-finder .govbb-form-group{display:block}
+  .v1-finder .govbb-label{display:block;margin-bottom:var(--govbb-space-xxs)}
+  .v1-finder .govbb-hint{display:block;margin:0 0 var(--govbb-space-xs)}
+  .v1-combo{position:relative;width:100%}
+  .v1-combo .govbb-input{width:100%;min-width:0}
+  .v1-listbox{position:absolute;z-index:1200;left:0;right:0;top:100%;margin:2px 0 0;padding:0;
+    list-style:none;background:var(--govbb-color-surface,#fff);border:2px solid var(--govbb-color-ink);
+    border-radius:var(--govbb-radius);max-height:17rem;overflow-y:auto;display:none;
+    box-shadow:0 4px 12px rgba(0,0,0,.18)}
+  .v1-listbox.is-open{display:block}
+  .v1-opt{padding:var(--govbb-space-xs) var(--govbb-space-s);cursor:pointer;
+    border-bottom:1px solid var(--govbb-grey-20)}
+  .v1-opt:last-child{border-bottom:0}
+  .v1-opt[aria-selected="true"]{background:var(--govbb-teal-10);
+    box-shadow:inset 4px 0 0 var(--govbb-teal-80)}
+  .v1-opt__name{font-weight:700;display:block;min-width:0;overflow-wrap:anywhere}
+  .v1-opt__where{font-size:var(--govbb-font-size-body-sm);color:var(--govbb-color-muted);
+    display:block;min-width:0;overflow-wrap:anywhere}
+  .v1-combo__status{font-size:var(--govbb-font-size-body-sm);color:var(--govbb-color-muted);
+    margin:var(--govbb-space-xxs) 0 0;min-height:1.25rem}
+
+  /* --- The answer --- */
+  .v1-answer{display:none;border-radius:var(--govbb-radius);margin:0 0 var(--govbb-space-m);
+    border:2px solid var(--govbb-grey-20);overflow:hidden}
+  .v1-answer.is-shown{display:block}
+  .v1-answer__head{padding:var(--govbb-space-s);color:var(--govbb-white-00,#fff)}
+  .v1-answer__head h2{margin:0;color:inherit;overflow-wrap:anywhere}
+  .v1-answer__sub{margin:var(--govbb-space-xxs) 0 0;font-size:var(--govbb-font-size-body-sm);opacity:.95}
+  .v1-answer__body{padding:var(--govbb-space-s)}
+  .v1-answer__body > p{margin:0 0 var(--govbb-space-s)}
+  .v1-answer__body > p:last-child{margin-bottom:0}
+  .v1-answer--in    .v1-answer__head{background:var(--govbb-teal-80)}
+  .v1-answer--in    {border-color:var(--govbb-teal-80)}
+  .v1-answer--edge  .v1-answer__head{background:#8a5a00}
+  .v1-answer--edge  {border-color:#8a5a00}
+  .v1-answer--out   .v1-answer__head{background:var(--govbb-color-ink)}
+  .v1-answer--out   {border-color:var(--govbb-color-ink)}
+
+  /* The card holds a disclosure, so it cannot itself be a button — it carries
+     its own "Show on the map" button instead. */
+  .v1-site[data-selected="true"]{border:2px solid var(--govbb-teal-80);
+    background:var(--govbb-teal-10);box-shadow:inset 4px 0 0 var(--govbb-teal-80)}
+  .v1-site__pick{display:inline-block;margin-top:var(--govbb-space-s);font:inherit;cursor:pointer;
+    font-size:var(--govbb-font-size-body-sm);font-weight:700;
+    color:var(--govbb-color-interactive);background:none;border:0;padding:4px 0;
+    text-decoration:underline;text-underline-offset:3px}
+  .v1-site__pick:focus-visible{outline:4px solid var(--govbb-color-focus);outline-offset:2px}
+  .v1-site__pick[aria-pressed="true"]{color:var(--govbb-color-ink);text-decoration:none}
+
+  /* What is on today */
+  .v1-today{margin-top:var(--govbb-space-s);padding-top:var(--govbb-space-s);
+    border-top:1px solid var(--govbb-grey-20)}
+  .v1-today__head{font-weight:700;margin:0 0 var(--govbb-space-xxs)!important}
+  .v1-today__list{margin:0;padding-left:1.1rem;font-size:var(--govbb-font-size-body-sm)}
+  .v1-today__list li{margin-bottom:2px}
+  .v1-today__note{color:var(--govbb-color-muted);font-size:var(--govbb-font-size-body-sm)}
+  .v1-today__none{margin:0!important;font-size:var(--govbb-font-size-body-sm);
+    color:var(--govbb-color-muted)}
+  .v1-finder .govbb-select{width:100%}
+  .v1-svc__clear{margin-top:var(--govbb-space-xs);min-height:1.5rem}
+  #v1-svc-results .v1-svc__hit{border:1px solid var(--govbb-grey-20);border-radius:var(--govbb-radius);
+    padding:var(--govbb-space-s);margin-top:var(--govbb-space-s);background:var(--govbb-color-surface,#fff)}
+  #v1-svc-results .v1-svc__name{margin:0 0 var(--govbb-space-s);padding-bottom:var(--govbb-space-xs);
+    border-bottom:2px solid var(--govbb-color-ink);
+    font-size:var(--govbb-font-size-h4,1.125rem);font-weight:700}
+  /* One block per site, separated — not a cramped two-column pair. */
+  #v1-svc-results .v1-svc__where{display:block;margin:0;font-size:var(--govbb-font-size-body-sm)}
+  #v1-svc-results .v1-svc__where dt{font-weight:700;min-width:0;overflow-wrap:anywhere;
+    margin-top:var(--govbb-space-s);padding-top:var(--govbb-space-s);
+    border-top:1px solid var(--govbb-grey-20)}
+  #v1-svc-results .v1-svc__where dt:first-of-type{margin-top:0;padding-top:0;border-top:0}
+  #v1-svc-results .v1-svc__where dd{margin:var(--govbb-space-xxs) 0 0;min-width:0;overflow-wrap:anywhere;
+    font-size:var(--govbb-font-size-body)}
+  #v1-svc-results .v1-svc__none{color:var(--govbb-color-muted);margin-top:var(--govbb-space-s)}
+  #v1-svc-results .v1-svc__hit > .v1-today__note{margin-top:var(--govbb-space-s);padding-top:var(--govbb-space-xs);
+    border-top:1px solid var(--govbb-grey-20)}
+  #v1-svc-results .v1-svc__hit > .v1-today__note ~ .v1-today__note{border-top:0;padding-top:0;
+    margin-top:var(--govbb-space-xxs)}
+
+  #v1-svc-results .v1-svc__off{color:#6b2b00;font-weight:700}
+  #v1-svc-results .v1-svc__gloss{margin:0 0 var(--govbb-space-s);
+    font-size:var(--govbb-font-size-body);color:var(--govbb-color-ink)}
+  #v1-svc-results .v1-svc__gloss--query{font-size:var(--govbb-font-size-body-sm);
+    color:var(--govbb-color-muted)}
+  #v1-svc-results .v1-svc__covers-h{margin:0 0 var(--govbb-space-xxs);font-weight:700;
+    font-size:var(--govbb-font-size-body-sm)}
+  #v1-svc-results .v1-svc__covers{margin:0 0 var(--govbb-space-s);padding-left:1.1rem;
+    font-size:var(--govbb-font-size-body)}
+  #v1-svc-results .v1-svc__covers li{margin-bottom:2px}
+  .v1-tag{display:inline-block;font-size:0.75rem;font-weight:700;padding:1px 6px;
+    border-radius:3px;vertical-align:1px}
+  .v1-tag--ex{background:#fff2d6;color:#6b4800;border:1px solid #d9a441}
+  .v1-week__shut{color:var(--govbb-color-muted)}
+  .v1-week{margin-top:var(--govbb-space-xs)}
+  .v1-week > summary{cursor:pointer;font-size:var(--govbb-font-size-body-sm);font-weight:700;
+    color:var(--govbb-color-interactive);padding:4px 0}
+  .v1-week > summary:focus-visible{outline:4px solid var(--govbb-color-focus);outline-offset:2px}
+  .v1-week__list{display:grid;grid-template-columns:auto 1fr;gap:2px var(--govbb-space-s);
+    margin:var(--govbb-space-xs) 0;font-size:var(--govbb-font-size-body-sm)}
+  .v1-week__list dt{font-weight:700}
+  .v1-week__list dd{margin:0;min-width:0;overflow-wrap:anywhere}
+
+  /* Map pins for the two sites. */
+  /* Facility badges, matching the original build: the same round "P" badge for
+     each site. The icon box is a real
+     34x34 target — a zero-size divIcon leaves only the badge clickable. */
+  .v1-pin{background:none;border:0;display:flex;align-items:center;justify-content:center}
+  .v1-pin span{display:flex;align-items:center;justify-content:center;
+    width:22px;height:22px;border:2px solid #fff;color:#fff;
+    font-size:12px;font-weight:800;line-height:1;box-shadow:0 1px 3px rgba(0,0,0,.5)}
+  .v1-pin--poly span{border-radius:50%;background:#d9c34a;color:#0b0c0c}
+  .v1-pin:focus-visible{outline:4px solid var(--govbb-color-focus);outline-offset:2px}
+  /* Selected: recolour AND glow — two independent signals, as in the original. */
+  .v1-pin.is-active span{background:#00267f;color:#fff;border-color:#00267f;
+    box-shadow:0 0 0 3px #ffc726,0 1px 4px rgba(0,0,0,.6)}
+
+
+  .v1-site{border:1px solid var(--govbb-grey-20);border-radius:var(--govbb-radius);
+    padding:var(--govbb-space-s);margin-top:var(--govbb-space-s);background:var(--govbb-color-surface,#fff)}
+  .v1-site--near{border-color:var(--govbb-color-ink)}
+  .v1-site h3{margin:0 0 var(--govbb-space-xxs);font-size:var(--govbb-font-size-body)}
+  .v1-site p{margin:0;font-size:var(--govbb-font-size-body-sm);min-width:0;overflow-wrap:anywhere}
+  .v1-site p + p{margin-top:var(--govbb-space-xxs)}
+  .v1-site__tel{font-weight:700;font-size:var(--govbb-font-size-body)}
+
+  .v1-chip{display:inline-block;font-size:var(--govbb-font-size-body-sm);font-weight:700;
+    padding:2px 8px;border-radius:999px;margin-left:var(--govbb-space-xxs)}
+  .v1-chip--near{background:var(--govbb-teal-80);color:var(--govbb-white-00,#fff)}
+  .v1-chip--days{background:var(--govbb-grey-20);color:var(--govbb-color-ink)}
+
+  /* Unconfirmed = anything this page asserts about another polyclinic. */
+  .v1-warn{border-left:6px solid #8a5a00;background:#fff7e6;padding:var(--govbb-space-s);
+    border-radius:var(--govbb-radius);margin-top:var(--govbb-space-s)}
+  .v1-warn p{margin:0;font-size:var(--govbb-font-size-body-sm)}
+  .v1-warn p + p{margin-top:var(--govbb-space-xs)}
+  .v1-warn__title{font-weight:700;display:block;margin-bottom:var(--govbb-space-xxs)}
+
+  .v1-layout{display:grid;grid-template-columns:1fr 1fr;gap:var(--govbb-space-m);align-items:start;
+    margin-bottom:var(--govbb-space-l,2rem)}
+  /* Whichever column is taller, the grid must not butt the feedback banner. */
+  #v1-whole{margin:var(--govbb-space-xs) 0 var(--govbb-space-m)}
+  @media (max-width:64rem){ .v1-layout{grid-template-columns:1fr} .v1-layout__map{order:-1} }
+  .v1-layout__map{position:sticky;top:var(--govbb-space-xs)}
+  @media (max-width:64rem){ .v1-layout__map{position:static} }
+
+  /* A Leaflet container in a flex/grid parent can collapse to a few pixels —
+     keep this a plain block with an explicit width and height. */
+  #v1-map{height:560px;width:100%;display:block;border:1px solid var(--govbb-grey-20);
+    border-radius:var(--govbb-radius)}
+  @media (max-width:64rem){ #v1-map{height:360px} }
+  .v1-map-note{font-size:var(--govbb-font-size-body-sm);color:var(--govbb-color-muted);
+    margin:var(--govbb-space-xs) 0 var(--govbb-space-s)}
+  .v1-empty{border:1px dashed var(--govbb-grey-20);border-radius:var(--govbb-radius);
+    padding:var(--govbb-space-s);color:var(--govbb-color-muted)}
+  .v1-empty p{margin:0}
+
+
+  /* The live stylesheet ships fixed heading sizes with no mobile scaling. */
+  @media (max-width:48rem){
+    :root{--govbb-font-size-h1:1.75rem;--govbb-font-size-h2:1.375rem;--govbb-font-size-h3:1.125rem}
+  }
+  /* Long emails/addresses must not push the page sideways on a phone. */
+  .govbb-summary-list__key,.govbb-summary-list__value{min-width:0;overflow-wrap:anywhere}
+</style>
+</head>
+<body class="govbb-page">
+<a class="govbb-skip-link" href="#main-content">Skip to main content</a>
+
+<div class="govbb-official-banner">
+  <div class="govbb-official-banner__inner govbb-width-container">
+    <span class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="https://alpha.gov.bb/images/coat-of-arms.png"
+           alt="" width="20" height="20" />
+    </span>
+    <span class="govbb-official-banner__text">An official website of the Government of Barbados</span>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-header__inner govbb-width-container">
+    <a class="govbb-header__home" href="#">
+      <img class="govbb-header__logo" src="https://alpha.gov.bb/assets/govbb-logo-dweJzbng.svg"
+           alt="Government of Barbados" height="32" />
+    </a>
+  </div>
+</header>
+
+<div class="govbb-status-banner govbb-status-banner--alpha govbb-status-banner--full-width">
+  <div class="govbb-status-banner__inner govbb-width-container">
+    <p><span class="govbb-text-bold">Alpha</span> — this is a prototype. Catchment boundaries and
+    map pins are not confirmed by the Ministry of Health and Wellness.</p>
+  </div>
+</div>
+
+<div class="govbb-width-container">
+  <nav class="govbb-breadcrumbs govbb-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
+    <ol class="govbb-breadcrumbs__list">
+      <li class="govbb-breadcrumbs__item">
+        <a class="govbb-link govbb-breadcrumbs__link" href="#">Home</a></li>
+      <li class="govbb-breadcrumbs__item">
+        <a class="govbb-link govbb-breadcrumbs__link" href="#">Health and emergency services</a></li>
+      <li class="govbb-breadcrumbs__item">
+        <a class="govbb-link govbb-breadcrumbs__link" href="#" aria-current="page">Find your polyclinic</a></li>
+    </ol>
+  </nav>
+</div>
+
+<main id="main-content" tabindex="-1">
+  <div class="govbb-width-container govbb-main-wrapper">
+
+    <h1 class="govbb-text-h1">Find your polyclinic</h1>
+    <p class="govbb-text-body v1-lede">Find out which polyclinic serves your address, so you book
+    repeat appointments at the right place.</p>
+
+    <div class="v1-phase">
+      <p><span class="govbb-text-bold">This is phase one.</span> It covers one catchment —
+      Eunice&nbsp;Gibson Polyclinic at Warrens, and the St.&nbsp;Thomas Outpatient Clinic at Rock&nbsp;Hall,
+      which is run as part of it.</p>
+      <p>If your address falls outside that catchment, this page tells you which polyclinic it looks
+      like — but that has not been confirmed by the polyclinic concerned.</p>
+    </div>
+
+    <div class="v1-safety">
+      <p><span class="govbb-text-bold">You will always be seen in an emergency.</span> No polyclinic
+      turns away a walk-in who needs urgent care, wherever you live.</p>
+      <p>The catchment decides where you book <span class="govbb-text-bold">repeat appointments</span>
+      and where you send <span class="govbb-text-bold">environmental health forms</span>. It does not
+      decide where you can get help.</p>
+    </div>
+
+    <div class="v1-finder">
+      <div class="v1-finder__row">
+
+        <div class="govbb-form-group">
+          <label class="govbb-label" for="v1-addr">Enter your address</label>
+          <p class="govbb-hint" id="v1-addr-hint">Start typing your village, road or neighbourhood —
+          for example Redmans, Highway&nbsp;2A, or Rock Hall. Then choose from the list.</p>
+          <div class="v1-combo">
+            <input class="govbb-input" id="v1-addr" type="text" role="combobox"
+                   aria-expanded="false" aria-controls="v1-listbox" aria-autocomplete="list"
+                   aria-describedby="v1-addr-hint" autocomplete="off" spellcheck="false" />
+            <ul class="v1-listbox" id="v1-listbox" role="listbox" aria-label="Address suggestions"></ul>
+          </div>
+          <p class="v1-combo__status" id="v1-combo-status" role="status" aria-live="polite"></p>
+          <div class="v1-finder__actions">
+            <button type="button" class="govbb-button govbb-button--secondary" id="v1-loc">Use my location</button>
+            <button type="button" class="govbb-button govbb-button--text" id="v1-clear">Start again</button>
+          </div>
+        </div>
+
+        <div class="govbb-form-group">
+          <label class="govbb-label" for="v1-svc">Or look up a service</label>
+          <p class="govbb-hint" id="v1-svc-hint">See which of the two sites offers it, and on which
+          day — for example dentistry, blood testing or pharmacy.</p>
+          <select class="govbb-select" id="v1-svc" aria-describedby="v1-svc-hint">
+            <option value="">Choose a service</option>
+          </select>
+          <div class="v1-svc__clear">
+            <button type="button" class="govbb-button govbb-button--text" id="v1-svc-clear" hidden>
+              Clear service
+            </button>
+          </div>
+          <div id="v1-svc-results" role="status" aria-live="polite"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="v1-layout">
+      <div class="v1-layout__main">
+        <div class="v1-answer" id="v1-answer" role="status" aria-live="polite" aria-atomic="true"></div>
+        <div class="v1-empty" id="v1-empty">
+          <p>Enter your address above, or drag the pin on the map, to see which polyclinic serves you.</p>
+        </div>
+      </div>
+
+      <div class="v1-layout__map">
+        <div id="v1-map" role="region" aria-label="Map of the Eunice Gibson catchment area"></div>
+        <p class="v1-map-note"><span class="govbb-text-bold">Reading the map.</span> The shaded area is
+        the Eunice Gibson catchment. White outlines are the other catchments, shown for context only —
+        phase one does not cover them. The two <span class="govbb-text-bold">P</span> badges are the
+        catchment's two sites — Eunice Gibson Polyclinic at Warrens and the St. Thomas Outpatient
+        Clinic at Rock Hall, which opens three days a week. The filled badge is the one you have
+        selected.</p>
+        <p class="v1-map-note">Drag your pin to your exact address if it is not quite right. The answer
+        updates as you move it.</p>
+        <button type="button" class="govbb-button govbb-button--secondary" id="v1-whole" hidden>
+          Show the whole island
+        </button>
+      </div>
+    </div>
+
+    <aside class="govbb-feedback mb-4 lg:mb-16">
+      <h3 class="govbb-feedback__heading">Was this helpful?</h3>
+      <p class="govbb-text-body">Tell us what happened when you looked up your address. If you are not
+      sure which polyclinic serves you, call the Ministry of Health and Wellness on
+      <span class="govbb-text-bold">(246) 536-3800</span>.</p>
+      <a class="govbb-link" href="#">Help us improve alpha.gov.bb</a>
+    </aside>
+
+  </div>
+</main>
+
+<footer class="govbb-footer print:hidden">
+  <div class="govbb-footer__inner govbb-width-container">
+    <nav class="govbb-footer__nav" aria-label="Footer navigation">
+      <ul class="govbb-footer__list">
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">Home</a></li>
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">Terms and conditions</a></li>
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">What we mean by alpha</a></li>
+      </ul>
+    </nav>
+    <hr class="govbb-footer__divider" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="https://alpha.gov.bb/images/coat-of-arms.png"
+           alt="" width="36" height="36" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+<script>
+/* =========================================================================
+   FIND YOUR POLYCLINIC — VERSION ONE (phase 1)
+
+   One question only: is this address in the Eunice Gibson catchment?
+
+   Boundaries:  Polyclinic_Catchment_Areas (K. Waldron, 15 Apr 2025), Barbados
+                National Grid, reprojected to WGS84 and grid-snapped to ~56 m
+                with shapely.set_precision so shared borders coincide. Snapping
+                rather than per-polygon simplification — simplifying each ring
+                on its own drifts shared borders apart and opens visible gaps.
+   Pins:        OpenStreetMap (both sites exist as named features).
+   Addresses:   Photon (OSM) live, with a 36-village built-in fallback.
+
+   *** The catchment dataset has only ever been validated for ENVIRONMENTAL
+   HEALTH routing. Using it for clinical appointment routing is the working
+   assumption this prototype exists to test, not confirmed Ministry policy. ***
+   ========================================================================= */
+
+var CATCHMENTS=[{"name":"Eunice Gibson Polyclinic","short":"Eunice Gibson","colour":"#d9c34a","phone":"536-4033","email":"environmentalhealthegpc@gmail.com","rings":[[[-59.6195,13.1755],[-59.619,13.176],[-59.6195,13.176],[-59.6195,13.1765],[-59.619,13.1765],[-59.619,13.177],[-59.619,13.178],[-59.6195,13.1805],[-59.618,13.181],[-59.6175,13.1815],[-59.617,13.1815],[-59.6155,13.182],[-59.615,13.182],[-59.6145,13.182],[-59.6135,13.185],[-59.613,13.186],[-59.6125,13.186],[-59.6125,13.1865],[-59.612,13.1865],[-59.612,13.186],[-59.6115,13.1865],[-59.6115,13.187],[-59.6115,13.1875],[-59.6115,13.188],[-59.6115,13.1885],[-59.6115,13.189],[-59.6115,13.1895],[-59.6115,13.1905],[-59.612,13.191],[-59.612,13.192],[-59.612,13.1925],[-59.612,13.193],[-59.612,13.1935],[-59.612,13.194],[-59.6125,13.194],[-59.6125,13.1945],[-59.6125,13.195],[-59.6125,13.1955],[-59.6125,13.196],[-59.6125,13.1965],[-59.6125,13.197],[-59.613,13.197],[-59.613,13.1975],[-59.6135,13.198],[-59.6135,13.1985],[-59.614,13.1985],[-59.614,13.199],[-59.6145,13.199],[-59.6145,13.1995],[-59.616,13.2005],[-59.616,13.201],[-59.6155,13.201],[-59.615,13.201],[-59.6145,13.2015],[-59.614,13.2015],[-59.6135,13.2015],[-59.613,13.202],[-59.6125,13.2025],[-59.612,13.2025],[-59.6115,13.2025],[-59.611,13.2025],[-59.6105,13.203],[-59.61,13.203],[-59.6095,13.203],[-59.609,13.2035],[-59.6085,13.2035],[-59.6085,13.204],[-59.608,13.204],[-59.608,13.2045],[-59.6075,13.2045],[-59.607,13.2045],[-59.6065,13.205],[-59.606,13.205],[-59.606,13.2055],[-59.6055,13.2055],[-59.605,13.2055],[-59.604,13.206],[-59.6035,13.206],[-59.603,13.206],[-59.6025,13.2065],[-59.602,13.2065],[-59.6015,13.207],[-59.6015,13.2075],[-59.601,13.2075],[-59.601,13.208],[-59.6005,13.208],[-59.6005,13.2085],[-59.6,13.2085],[-59.6,13.209],[-59.6,13.21],[-59.6,13.2105],[-59.6,13.211],[-59.5995,13.2115],[-59.599,13.2125],[-59.599,13.213],[-59.5985,13.213],[-59.5985,13.2135],[-59.5985,13.214],[-59.5985,13.2145],[-59.598,13.2145],[-59.598,13.215],[-59.598,13.2155],[-59.5975,13.2155],[-59.5975,13.216],[-59.597,13.216],[-59.5965,13.2165],[-59.596,13.2165],[-59.5955,13.217],[-59.5955,13.2175],[-59.595,13.2175],[-59.5945,13.2165],[-59.5945,13.216],[-59.594,13.216],[-59.5935,13.216],[-59.5935,13.2155],[-59.593,13.2155],[-59.5925,13.216],[-59.592,13.216],[-59.592,13.2165],[-59.5915,13.2165],[-59.591,13.2165],[-59.591,13.216],[-59.5905,13.216],[-59.5905,13.2165],[-59.59,13.2165],[-59.5895,13.217],[-59.589,13.217],[-59.589,13.2175],[-59.5885,13.2175],[-59.588,13.2175],[-59.588,13.217],[-59.5875,13.217],[-59.587,13.217],[-59.587,13.2165],[-59.587,13.216],[-59.587,13.2155],[-59.587,13.215],[-59.587,13.2145],[-59.587,13.214],[-59.587,13.2135],[-59.587,13.213],[-59.587,13.2125],[-59.5865,13.2125],[-59.586,13.2125],[-59.5855,13.2125],[-59.585,13.2125],[-59.5845,13.2125],[-59.584,13.2125],[-59.584,13.213],[-59.5835,13.213],[-59.583,13.2135],[-59.5825,13.2135],[-59.582,13.214],[-59.5815,13.214],[-59.5815,13.2145],[-59.581,13.2145],[-59.581,13.215],[-59.5805,13.215],[-59.5805,13.2155],[-59.58,13.2155],[-59.58,13.216],[-59.5795,13.216],[-59.5795,13.2165],[-59.579,13.2165],[-59.579,13.217],[-59.5785,13.217],[-59.578,13.217],[-59.578,13.2175],[-59.5775,13.2175],[-59.577,13.2175],[-59.5765,13.218],[-59.5765,13.2185],[-59.5765,13.219],[-59.5765,13.2195],[-59.576,13.2195],[-59.576,13.22],[-59.576,13.2205],[-59.5755,13.2205],[-59.5755,13.221],[-59.5755,13.2215],[-59.5755,13.222],[-59.575,13.222],[-59.5745,13.222],[-59.5745,13.2225],[-59.574,13.2225],[-59.5735,13.2225],[-59.573,13.222],[-59.5725,13.2215],[-59.572,13.2215],[-59.5715,13.222],[-59.571,13.222],[-59.5705,13.2215],[-59.57,13.2215],[-59.5695,13.2215],[-59.569,13.2215],[-59.569,13.221],[-59.5685,13.221],[-59.5685,13.2205],[-59.568,13.2205],[-59.5675,13.22],[-59.5675,13.2195],[-59.568,13.2195],[-59.568,13.219],[-59.5685,13.219],[-59.5685,13.2185],[-59.569,13.218],[-59.569,13.2175],[-59.5695,13.2175],[-59.5695,13.217],[-59.5695,13.2165],[-59.57,13.216],[-59.57,13.2155],[-59.5705,13.2155],[-59.5705,13.215],[-59.571,13.215],[-59.5715,13.215],[-59.572,13.215],[-59.572,13.2145],[-59.572,13.214],[-59.5725,13.214],[-59.5725,13.2135],[-59.573,13.2135],[-59.573,13.213],[-59.573,13.2125],[-59.573,13.212],[-59.573,13.2115],[-59.573,13.211],[-59.573,13.2105],[-59.573,13.21],[-59.5735,13.21],[-59.5735,13.2095],[-59.5735,13.209],[-59.5735,13.2085],[-59.5735,13.208],[-59.573,13.208],[-59.566,13.2035],[-59.5655,13.2025],[-59.565,13.202],[-59.565,13.2015],[-59.565,13.201],[-59.565,13.2005],[-59.565,13.2],[-59.565,13.1995],[-59.563,13.197],[-59.5635,13.1965],[-59.5645,13.1955],[-59.5645,13.195],[-59.5645,13.1945],[-59.5645,13.1935],[-59.564,13.193],[-59.564,13.192],[-59.564,13.1915],[-59.564,13.191],[-59.5645,13.191],[-59.5645,13.1905],[-59.565,13.1905],[-59.5655,13.19],[-59.566,13.189],[-59.567,13.1875],[-59.567,13.187],[-59.5675,13.186],[-59.568,13.186],[-59.568,13.185],[-59.568,13.1845],[-59.5685,13.1845],[-59.5685,13.184],[-59.569,13.184],[-59.569,13.1835],[-59.569,13.183],[-59.569,13.1825],[-59.569,13.182],[-59.569,13.1815],[-59.5695,13.181],[-59.569,13.181],[-59.569,13.1805],[-59.569,13.18],[-59.569,13.1795],[-59.569,13.179],[-59.569,13.1785],[-59.569,13.178],[-59.569,13.1775],[-59.5695,13.1775],[-59.5695,13.1765],[-59.57,13.1765],[-59.57,13.176],[-59.5705,13.176],[-59.5705,13.1755],[-59.571,13.1755],[-59.571,13.175],[-59.571,13.1745],[-59.571,13.174],[-59.571,13.1735],[-59.571,13.173],[-59.571,13.1725],[-59.5715,13.1725],[-59.5715,13.172],[-59.572,13.1715],[-59.572,13.171],[-59.572,13.1705],[-59.572,13.17],[-59.572,13.1695],[-59.572,13.169],[-59.572,13.1685],[-59.572,13.1675],[-59.5725,13.167],[-59.573,13.167],[-59.5735,13.167],[-59.574,13.1665],[-59.5745,13.1665],[-59.575,13.166],[-59.575,13.1655],[-59.5755,13.1655],[-59.576,13.165],[-59.5765,13.164],[-59.577,13.1635],[-59.577,13.163],[-59.577,13.1625],[-59.577,13.162],[-59.5775,13.162],[-59.5775,13.1615],[-59.578,13.1615],[-59.578,13.161],[-59.5785,13.161],[-59.579,13.1605],[-59.5795,13.16],[-59.58,13.16],[-59.58,13.1595],[-59.5805,13.159],[-59.581,13.159],[-59.5815,13.1585],[-59.5815,13.158],[-59.5815,13.1575],[-59.582,13.157],[-59.582,13.1565],[-59.5825,13.1565],[-59.583,13.156],[-59.584,13.1555],[-59.584,13.155],[-59.5835,13.155],[-59.5835,13.1545],[-59.584,13.1545],[-59.584,13.154],[-59.583,13.1535],[-59.5825,13.1535],[-59.5825,13.153],[-59.582,13.153],[-59.582,13.1525],[-59.5815,13.1525],[-59.581,13.1525],[-59.5805,13.1525],[-59.58,13.1525],[-59.58,13.152],[-59.5795,13.1515],[-59.58,13.151],[-59.5805,13.1505],[-59.581,13.1505],[-59.581,13.15],[-59.581,13.1495],[-59.581,13.149],[-59.5815,13.149],[-59.5815,13.1485],[-59.5815,13.148],[-59.5815,13.1475],[-59.581,13.1475],[-59.581,13.147],[-59.5805,13.147],[-59.58,13.147],[-59.5805,13.146],[-59.581,13.145],[-59.582,13.143],[-59.5825,13.144],[-59.583,13.144],[-59.5835,13.1425],[-59.5835,13.142],[-59.583,13.142],[-59.583,13.1415],[-59.583,13.141],[-59.5825,13.1405],[-59.5825,13.14],[-59.5825,13.1395],[-59.5825,13.139],[-59.582,13.1385],[-59.5825,13.1385],[-59.5825,13.138],[-59.583,13.138],[-59.5835,13.1375],[-59.5835,13.137],[-59.584,13.137],[-59.584,13.1365],[-59.584,13.136],[-59.584,13.1355],[-59.5835,13.1345],[-59.5835,13.134],[-59.5835,13.133],[-59.5835,13.1325],[-59.5835,13.132],[-59.5835,13.1315],[-59.5835,13.131],[-59.5835,13.1305],[-59.584,13.1295],[-59.584,13.129],[-59.5845,13.1285],[-59.5845,13.128],[-59.585,13.128],[-59.585,13.1275],[-59.5855,13.127],[-59.5855,13.1265],[-59.5855,13.126],[-59.5855,13.125],[-59.5855,13.1245],[-59.586,13.1245],[-59.586,13.1235],[-59.5865,13.123],[-59.587,13.1215],[-59.587,13.121],[-59.5875,13.12],[-59.5875,13.119],[-59.588,13.119],[-59.589,13.1195],[-59.5895,13.12],[-59.59,13.121],[-59.5915,13.1225],[-59.5925,13.1235],[-59.593,13.124],[-59.5935,13.125],[-59.595,13.1265],[-59.5955,13.1265],[-59.5955,13.126],[-59.596,13.1255],[-59.596,13.125],[-59.5965,13.124],[-59.5975,13.1225],[-59.598,13.122],[-59.599,13.121],[-59.599,13.1205],[-59.6,13.119],[-59.6,13.1185],[-59.6,13.118],[-59.6005,13.1175],[-59.601,13.1175],[-59.6015,13.1175],[-59.6015,13.118],[-59.6025,13.118],[-59.603,13.118],[-59.6035,13.118],[-59.604,13.1175],[-59.605,13.1165],[-59.606,13.116],[-59.6065,13.115],[-59.607,13.1145],[-59.6075,13.114],[-59.608,13.114],[-59.608,13.1135],[-59.6085,13.1135],[-59.609,13.1135],[-59.6095,13.1135],[-59.6095,13.113],[-59.61,13.1125],[-59.61,13.112],[-59.6105,13.1115],[-59.611,13.1105],[-59.613,13.112],[-59.6135,13.113],[-59.6145,13.113],[-59.6145,13.1135],[-59.6145,13.114],[-59.6145,13.115],[-59.614,13.116],[-59.614,13.117],[-59.614,13.1175],[-59.614,13.118],[-59.6135,13.1185],[-59.613,13.119],[-59.613,13.1195],[-59.612,13.12],[-59.612,13.1205],[-59.6115,13.121],[-59.611,13.121],[-59.6105,13.1215],[-59.61,13.1215],[-59.609,13.1225],[-59.6085,13.123],[-59.608,13.1235],[-59.6075,13.124],[-59.6075,13.1245],[-59.607,13.1245],[-59.607,13.1255],[-59.6065,13.1265],[-59.607,13.1265],[-59.6075,13.1265],[-59.608,13.127],[-59.6085,13.1275],[-59.609,13.128],[-59.61,13.1285],[-59.61,13.129],[-59.6105,13.129],[-59.611,13.1295],[-59.6115,13.13],[-59.612,13.1305],[-59.6125,13.1305],[-59.6125,13.131],[-59.6135,13.131],[-59.6145,13.1315],[-59.615,13.132],[-59.6155,13.1325],[-59.616,13.133],[-59.6165,13.133],[-59.6175,13.1325],[-59.618,13.1325],[-59.6185,13.133],[-59.619,13.133],[-59.619,13.1335],[-59.6195,13.1335],[-59.6195,13.134],[-59.6205,13.134],[-59.621,13.1345],[-59.6215,13.135],[-59.622,13.135],[-59.6225,13.1345],[-59.623,13.135],[-59.6235,13.1355],[-59.624,13.136],[-59.624,13.1365],[-59.624,13.137],[-59.624,13.1375],[-59.624,13.138],[-59.624,13.1385],[-59.6235,13.139],[-59.6235,13.1395],[-59.6235,13.14],[-59.6235,13.1405],[-59.623,13.1405],[-59.623,13.141],[-59.623,13.1415],[-59.623,13.142],[-59.623,13.143],[-59.6225,13.143],[-59.6225,13.1435],[-59.6225,13.1445],[-59.6225,13.145],[-59.6225,13.1455],[-59.6225,13.146],[-59.623,13.1465],[-59.623,13.147],[-59.623,13.1475],[-59.623,13.148],[-59.623,13.1485],[-59.623,13.149],[-59.6235,13.1495],[-59.6235,13.15],[-59.624,13.15],[-59.624,13.1505],[-59.624,13.151],[-59.6245,13.1515],[-59.6245,13.152],[-59.6245,13.1525],[-59.625,13.153],[-59.625,13.1535],[-59.625,13.154],[-59.625,13.1545],[-59.625,13.155],[-59.625,13.1555],[-59.6245,13.156],[-59.6245,13.1565],[-59.6245,13.157],[-59.6245,13.1575],[-59.625,13.158],[-59.625,13.1585],[-59.6255,13.159],[-59.626,13.159],[-59.6265,13.159],[-59.627,13.159],[-59.6275,13.159],[-59.628,13.159],[-59.6285,13.1595],[-59.6285,13.16],[-59.6285,13.1605],[-59.629,13.1605],[-59.629,13.161],[-59.629,13.1615],[-59.629,13.162],[-59.629,13.1625],[-59.629,13.163],[-59.6285,13.163],[-59.6285,13.1635],[-59.6285,13.164],[-59.628,13.164],[-59.628,13.1645],[-59.6285,13.1645],[-59.6285,13.165],[-59.6285,13.166],[-59.6285,13.1665],[-59.6285,13.167],[-59.6285,13.1675],[-59.6285,13.168],[-59.6285,13.169],[-59.628,13.172],[-59.6275,13.1725],[-59.627,13.1725],[-59.6265,13.1725],[-59.6265,13.173],[-59.627,13.1735],[-59.627,13.174],[-59.627,13.1745],[-59.6255,13.1745],[-59.625,13.1745],[-59.6245,13.1745],[-59.624,13.1745],[-59.6235,13.175],[-59.6215,13.175],[-59.621,13.175],[-59.62,13.175],[-59.6195,13.1755]]]},{"name":"Branford Taitt Polyclinic","short":"Branford Taitt","colour":"#6f9bd1","phone":"536-3700","email":"Ehd.btpc@health.gov.bb","rings":[[[-59.636,13.186],[-59.636,13.1855],[-59.6355,13.1855],[-59.635,13.1855],[-59.6345,13.1855],[-59.634,13.185],[-59.634,13.1845],[-59.6335,13.184],[-59.633,13.184],[-59.6325,13.184],[-59.6325,13.1845],[-59.632,13.1845],[-59.6315,13.1845],[-59.6305,13.1845],[-59.63,13.1845],[-59.6295,13.1845],[-59.629,13.1845],[-59.6285,13.1845],[-59.6275,13.185],[-59.627,13.185],[-59.6265,13.185],[-59.626,13.185],[-59.6255,13.185],[-59.6245,13.185],[-59.624,13.185],[-59.624,13.1855],[-59.6235,13.1855],[-59.623,13.1855],[-59.6225,13.1855],[-59.622,13.1855],[-59.6215,13.1855],[-59.621,13.1855],[-59.6205,13.1855],[-59.62,13.1855],[-59.6195,13.1855],[-59.619,13.1855],[-59.6185,13.1855],[-59.618,13.1855],[-59.6175,13.1855],[-59.617,13.1855],[-59.617,13.185],[-59.6165,13.185],[-59.616,13.185],[-59.6155,13.185],[-59.6155,13.1855],[-59.615,13.1855],[-59.6145,13.1855],[-59.614,13.1855],[-59.614,13.186],[-59.6135,13.186],[-59.613,13.186],[-59.6135,13.185],[-59.6145,13.182],[-59.615,13.182],[-59.6155,13.182],[-59.617,13.1815],[-59.6175,13.1815],[-59.618,13.181],[-59.6195,13.1805],[-59.619,13.178],[-59.619,13.177],[-59.619,13.1765],[-59.6195,13.1765],[-59.6195,13.176],[-59.619,13.176],[-59.6195,13.1755],[-59.62,13.175],[-59.621,13.175],[-59.6215,13.175],[-59.6235,13.175],[-59.624,13.1745],[-59.6245,13.1745],[-59.625,13.1745],[-59.6255,13.1745],[-59.627,13.1745],[-59.627,13.174],[-59.627,13.1735],[-59.6265,13.173],[-59.6265,13.1725],[-59.627,13.1725],[-59.6275,13.1725],[-59.628,13.172],[-59.6285,13.169],[-59.6285,13.168],[-59.6285,13.1675],[-59.6285,13.167],[-59.6285,13.1665],[-59.6285,13.166],[-59.6285,13.165],[-59.6285,13.1645],[-59.628,13.1645],[-59.628,13.164],[-59.6285,13.164],[-59.6285,13.1635],[-59.6285,13.163],[-59.629,13.163],[-59.629,13.1625],[-59.629,13.162],[-59.629,13.1615],[-59.629,13.161],[-59.629,13.1605],[-59.6285,13.1605],[-59.6285,13.16],[-59.6285,13.1595],[-59.628,13.159],[-59.6275,13.159],[-59.627,13.159],[-59.6265,13.159],[-59.626,13.159],[-59.6255,13.159],[-59.625,13.1585],[-59.625,13.158],[-59.6245,13.1575],[-59.6245,13.157],[-59.6245,13.1565],[-59.6245,13.156],[-59.625,13.1555],[-59.625,13.155],[-59.625,13.1545],[-59.625,13.154],[-59.625,13.1535],[-59.625,13.153],[-59.6245,13.1525],[-59.6245,13.152],[-59.6245,13.1515],[-59.624,13.151],[-59.624,13.1505],[-59.624,13.15],[-59.6235,13.15],[-59.6235,13.1495],[-59.623,13.149],[-59.623,13.1485],[-59.623,13.148],[-59.623,13.1475],[-59.623,13.147],[-59.623,13.1465],[-59.6225,13.146],[-59.6225,13.1455],[-59.6225,13.145],[-59.6225,13.1445],[-59.6225,13.1435],[-59.6225,13.143],[-59.623,13.143],[-59.623,13.142],[-59.623,13.1415],[-59.623,13.141],[-59.623,13.1405],[-59.6235,13.1405],[-59.6235,13.14],[-59.6235,13.1395],[-59.6235,13.139],[-59.624,13.1385],[-59.624,13.138],[-59.624,13.1375],[-59.624,13.137],[-59.624,13.1365],[-59.624,13.136],[-59.6235,13.1355],[-59.623,13.135],[-59.6225,13.1345],[-59.622,13.135],[-59.6215,13.135],[-59.621,13.1345],[-59.6205,13.134],[-59.6195,13.134],[-59.6195,13.1335],[-59.619,13.1335],[-59.619,13.133],[-59.6185,13.133],[-59.618,13.1325],[-59.6175,13.1325],[-59.6165,13.133],[-59.616,13.133],[-59.6155,13.1325],[-59.615,13.132],[-59.6145,13.1315],[-59.6135,13.131],[-59.6125,13.131],[-59.6125,13.1305],[-59.612,13.1305],[-59.6115,13.13],[-59.611,13.1295],[-59.6105,13.129],[-59.61,13.129],[-59.61,13.1285],[-59.609,13.128],[-59.6085,13.1275],[-59.608,13.127],[-59.6075,13.1265],[-59.607,13.1265],[-59.6065,13.1265],[-59.607,13.1255],[-59.607,13.1245],[-59.6075,13.1245],[-59.6075,13.124],[-59.608,13.1235],[-59.6085,13.123],[-59.609,13.1225],[-59.61,13.1215],[-59.6105,13.1215],[-59.611,13.121],[-59.6115,13.121],[-59.612,13.1205],[-59.612,13.12],[-59.613,13.1195],[-59.613,13.119],[-59.6135,13.1185],[-59.614,13.118],[-59.614,13.1175],[-59.614,13.117],[-59.614,13.116],[-59.6145,13.115],[-59.6145,13.114],[-59.6145,13.1135],[-59.6145,13.113],[-59.6135,13.113],[-59.613,13.112],[-59.611,13.1105],[-59.611,13.11],[-59.6115,13.1095],[-59.612,13.109],[-59.612,13.1085],[-59.6125,13.108],[-59.6125,13.1075],[-59.6125,13.107],[-59.613,13.107],[-59.613,13.1065],[-59.613,13.106],[-59.613,13.1055],[-59.6135,13.105],[-59.6135,13.1045],[-59.6135,13.104],[-59.614,13.1035],[-59.614,13.103],[-59.614,13.1025],[-59.6145,13.1025],[-59.6145,13.102],[-59.615,13.102],[-59.615,13.1015],[-59.615,13.101],[-59.615,13.1005],[-59.6155,13.1],[-59.6155,13.0995],[-59.6155,13.099],[-59.616,13.099],[-59.616,13.0985],[-59.616,13.098],[-59.616,13.0975],[-59.6165,13.097],[-59.617,13.096],[-59.6175,13.096],[-59.618,13.0955],[-59.6185,13.0955],[-59.619,13.0955],[-59.619,13.096],[-59.6195,13.096],[-59.62,13.096],[-59.62,13.0965],[-59.6205,13.0965],[-59.621,13.097],[-59.6215,13.097],[-59.6215,13.0965],[-59.622,13.0965],[-59.622,13.096],[-59.6225,13.096],[-59.6225,13.0965],[-59.6225,13.097],[-59.623,13.097],[-59.623,13.0975],[-59.6235,13.0975],[-59.6235,13.098],[-59.624,13.098],[-59.6245,13.098],[-59.625,13.0985],[-59.6255,13.0985],[-59.626,13.099],[-59.6265,13.099],[-59.627,13.0995],[-59.6275,13.0995],[-59.628,13.0995],[-59.628,13.1],[-59.6285,13.1],[-59.629,13.1],[-59.629,13.1005],[-59.6295,13.1005],[-59.6295,13.101],[-59.6285,13.1015],[-59.63,13.106],[-59.6305,13.1065],[-59.63,13.107],[-59.63,13.1075],[-59.6295,13.1075],[-59.629,13.108],[-59.628,13.1085],[-59.628,13.109],[-59.6275,13.1085],[-59.627,13.108],[-59.627,13.1075],[-59.6265,13.1075],[-59.626,13.106],[-59.6255,13.106],[-59.6255,13.1065],[-59.6255,13.107],[-59.6255,13.1075],[-59.626,13.1075],[-59.626,13.108],[-59.626,13.1085],[-59.6265,13.1095],[-59.627,13.11],[-59.627,13.1105],[-59.6275,13.1105],[-59.628,13.1105],[-59.6285,13.1105],[-59.6285,13.11],[-59.629,13.11],[-59.6295,13.11],[-59.63,13.11],[-59.6305,13.11],[-59.6305,13.111],[-59.6305,13.1115],[-59.6305,13.112],[-59.63,13.112],[-59.6295,13.112],[-59.629,13.112],[-59.6285,13.1125],[-59.6275,13.113],[-59.6275,13.1145],[-59.6275,13.1155],[-59.6275,13.116],[-59.628,13.1165],[-59.628,13.117],[-59.6285,13.1175],[-59.6285,13.118],[-59.629,13.119],[-59.6295,13.12],[-59.63,13.121],[-59.6305,13.1215],[-59.631,13.122],[-59.6315,13.122],[-59.632,13.123],[-59.6325,13.123],[-59.633,13.123],[-59.633,13.1235],[-59.6335,13.1235],[-59.6335,13.124],[-59.633,13.124],[-59.6335,13.1245],[-59.6335,13.125],[-59.6335,13.1255],[-59.634,13.126],[-59.6345,13.127],[-59.6345,13.1275],[-59.635,13.128],[-59.635,13.1285],[-59.635,13.129],[-59.635,13.1295],[-59.635,13.1305],[-59.635,13.131],[-59.635,13.1315],[-59.6355,13.1315],[-59.6355,13.132],[-59.636,13.132],[-59.636,13.1325],[-59.6365,13.1325],[-59.6365,13.133],[-59.6365,13.1335],[-59.6365,13.134],[-59.6365,13.1345],[-59.6365,13.135],[-59.636,13.1355],[-59.636,13.136],[-59.636,13.1365],[-59.636,13.137],[-59.6365,13.1375],[-59.637,13.138],[-59.6375,13.1385],[-59.6375,13.139],[-59.6375,13.14],[-59.6375,13.141],[-59.6375,13.142],[-59.638,13.142],[-59.638,13.1425],[-59.638,13.143],[-59.6385,13.1435],[-59.639,13.144],[-59.639,13.1445],[-59.639,13.145],[-59.639,13.1455],[-59.639,13.146],[-59.6385,13.146],[-59.6385,13.1465],[-59.6385,13.147],[-59.6385,13.1475],[-59.6385,13.148],[-59.6385,13.1485],[-59.6385,13.149],[-59.6385,13.1495],[-59.6385,13.15],[-59.638,13.15],[-59.638,13.1505],[-59.638,13.151],[-59.638,13.1515],[-59.638,13.152],[-59.638,13.1525],[-59.638,13.153],[-59.638,13.1535],[-59.638,13.154],[-59.638,13.1545],[-59.638,13.155],[-59.6375,13.1555],[-59.6375,13.156],[-59.637,13.1565],[-59.637,13.157],[-59.637,13.1575],[-59.637,13.158],[-59.637,13.1585],[-59.637,13.159],[-59.6375,13.159],[-59.6375,13.1595],[-59.6375,13.16],[-59.6375,13.1605],[-59.638,13.1605],[-59.638,13.161],[-59.638,13.1615],[-59.638,13.162],[-59.638,13.1625],[-59.638,13.163],[-59.638,13.1635],[-59.638,13.164],[-59.6375,13.1645],[-59.6375,13.165],[-59.6375,13.1655],[-59.637,13.1665],[-59.637,13.167],[-59.6375,13.1675],[-59.6375,13.168],[-59.638,13.168],[-59.638,13.1685],[-59.6385,13.169],[-59.638,13.1695],[-59.638,13.17],[-59.638,13.1705],[-59.638,13.171],[-59.6385,13.1715],[-59.638,13.1715],[-59.638,13.172],[-59.6375,13.1725],[-59.6375,13.173],[-59.6375,13.1735],[-59.6375,13.174],[-59.6375,13.1745],[-59.6375,13.175],[-59.638,13.1755],[-59.6385,13.176],[-59.639,13.1765],[-59.639,13.177],[-59.639,13.1775],[-59.6395,13.1775],[-59.6395,13.178],[-59.6395,13.1785],[-59.6395,13.179],[-59.6395,13.1795],[-59.6395,13.18],[-59.6395,13.1805],[-59.6395,13.181],[-59.6395,13.1815],[-59.6395,13.182],[-59.6395,13.1825],[-59.6395,13.183],[-59.639,13.1835],[-59.639,13.184],[-59.639,13.1845],[-59.639,13.185],[-59.639,13.1855],[-59.6385,13.1855],[-59.6385,13.186],[-59.637,13.186],[-59.6365,13.1865],[-59.6365,13.186],[-59.636,13.186]]]},{"name":"St. Philip Polyclinic","short":"St. Philip","colour":"#9ccf8f","phone":"536-1240","email":"stphillippolyclinicehd@gmail.com","rings":[[[-59.447,13.103],[-59.447,13.1035],[-59.4475,13.1035],[-59.448,13.1035],[-59.4485,13.1035],[-59.449,13.1035],[-59.4495,13.1035],[-59.4505,13.1035],[-59.451,13.1035],[-59.4515,13.1035],[-59.4525,13.1035],[-59.453,13.104],[-59.4535,13.104],[-59.454,13.104],[-59.4545,13.104],[-59.455,13.104],[-59.456,13.104],[-59.4565,13.104],[-59.4575,13.104],[-59.458,13.104],[-59.4585,13.1045],[-59.459,13.1045],[-59.4595,13.1045],[-59.46,13.1045],[-59.461,13.1045],[-59.4615,13.1045],[-59.462,13.1045],[-59.4625,13.105],[-59.463,13.105],[-59.4635,13.105],[-59.464,13.105],[-59.4645,13.105],[-59.465,13.105],[-59.4655,13.105],[-59.4655,13.1045],[-59.466,13.1045],[-59.4675,13.1045],[-59.4685,13.1045],[-59.469,13.1045],[-59.4695,13.1045],[-59.47,13.104],[-59.4705,13.1035],[-59.471,13.1035],[-59.4715,13.1035],[-59.472,13.1035],[-59.4735,13.1035],[-59.4755,13.1035],[-59.476,13.1035],[-59.4775,13.104],[-59.4785,13.104],[-59.479,13.104],[-59.4795,13.1035],[-59.48,13.1035],[-59.4805,13.1035],[-59.481,13.1035],[-59.482,13.1035],[-59.4825,13.1035],[-59.483,13.1035],[-59.484,13.1035],[-59.4845,13.1035],[-59.485,13.1035],[-59.4855,13.1035],[-59.486,13.1035],[-59.486,13.104],[-59.486,13.1045],[-59.486,13.1055],[-59.4875,13.1055],[-59.488,13.1055],[-59.4885,13.1055],[-59.489,13.105],[-59.4895,13.1045],[-59.49,13.1045],[-59.4905,13.104],[-59.491,13.104],[-59.4915,13.104],[-59.492,13.1035],[-59.4925,13.103],[-59.493,13.1025],[-59.4935,13.102],[-59.4935,13.1015],[-59.494,13.1015],[-59.4945,13.101],[-59.495,13.101],[-59.495,13.1005],[-59.496,13.1005],[-59.496,13.101],[-59.4965,13.102],[-59.496,13.102],[-59.4965,13.1025],[-59.496,13.103],[-59.4955,13.1035],[-59.4955,13.104],[-59.4955,13.1045],[-59.4955,13.105],[-59.4955,13.1055],[-59.4955,13.106],[-59.4955,13.1065],[-59.496,13.1065],[-59.4975,13.107],[-59.4975,13.1075],[-59.4975,13.108],[-59.4975,13.1085],[-59.4975,13.109],[-59.497,13.1115],[-59.497,13.1125],[-59.4965,13.1145],[-59.4965,13.1155],[-59.4965,13.116],[-59.497,13.116],[-59.497,13.1165],[-59.4975,13.117],[-59.498,13.117],[-59.4985,13.1165],[-59.4995,13.1165],[-59.501,13.1165],[-59.5015,13.116],[-59.502,13.116],[-59.503,13.116],[-59.503,13.1165],[-59.505,13.1165],[-59.5065,13.1165],[-59.507,13.1165],[-59.507,13.1175],[-59.507,13.1185],[-59.507,13.1195],[-59.507,13.12],[-59.508,13.1205],[-59.509,13.1205],[-59.5095,13.1205],[-59.5095,13.121],[-59.5095,13.1215],[-59.509,13.1215],[-59.509,13.122],[-59.509,13.1225],[-59.509,13.123],[-59.509,13.1235],[-59.5085,13.1235],[-59.508,13.1235],[-59.5075,13.124],[-59.507,13.124],[-59.507,13.1245],[-59.5065,13.125],[-59.5065,13.1255],[-59.5065,13.126],[-59.506,13.1265],[-59.506,13.127],[-59.506,13.1275],[-59.506,13.128],[-59.506,13.1285],[-59.506,13.129],[-59.506,13.1295],[-59.506,13.13],[-59.506,13.1305],[-59.506,13.131],[-59.5065,13.1315],[-59.5065,13.132],[-59.5065,13.1325],[-59.506,13.1325],[-59.5055,13.1325],[-59.505,13.1325],[-59.505,13.133],[-59.5045,13.133],[-59.504,13.133],[-59.5035,13.133],[-59.503,13.133],[-59.5025,13.133],[-59.502,13.133],[-59.502,13.1335],[-59.5025,13.1335],[-59.5025,13.134],[-59.503,13.134],[-59.503,13.1345],[-59.503,13.135],[-59.5035,13.135],[-59.5035,13.1355],[-59.504,13.136],[-59.504,13.1365],[-59.502,13.138],[-59.501,13.139],[-59.501,13.1385],[-59.5005,13.1385],[-59.5,13.139],[-59.4995,13.139],[-59.499,13.1395],[-59.4985,13.1395],[-59.4985,13.14],[-59.4985,13.1405],[-59.499,13.141],[-59.499,13.1415],[-59.499,13.142],[-59.499,13.1425],[-59.499,13.143],[-59.499,13.1435],[-59.4985,13.144],[-59.499,13.145],[-59.4985,13.145],[-59.4985,13.1455],[-59.4985,13.1465],[-59.4985,13.147],[-59.499,13.147],[-59.4995,13.147],[-59.5,13.147],[-59.5005,13.1475],[-59.5005,13.148],[-59.501,13.148],[-59.501,13.1485],[-59.501,13.149],[-59.5005,13.149],[-59.5005,13.1495],[-59.5,13.15],[-59.5,13.1495],[-59.4995,13.1495],[-59.499,13.1495],[-59.4985,13.1495],[-59.498,13.1495],[-59.498,13.1505],[-59.4975,13.1535],[-59.4975,13.1545],[-59.4975,13.155],[-59.4975,13.1555],[-59.4975,13.156],[-59.4975,13.1565],[-59.4975,13.157],[-59.498,13.157],[-59.498,13.1575],[-59.4985,13.158],[-59.4985,13.1585],[-59.499,13.16],[-59.499,13.161],[-59.499,13.1625],[-59.4975,13.1625],[-59.496,13.1625],[-59.494,13.162],[-59.493,13.1615],[-59.492,13.1615],[-59.4915,13.1615],[-59.491,13.1615],[-59.4905,13.1615],[-59.4905,13.161],[-59.4905,13.1605],[-59.49,13.1605],[-59.4895,13.1605],[-59.489,13.1605],[-59.4885,13.1605],[-59.488,13.161],[-59.4875,13.161],[-59.487,13.161],[-59.4865,13.161],[-59.4855,13.161],[-59.4845,13.1615],[-59.484,13.162],[-59.4835,13.1625],[-59.483,13.1625],[-59.482,13.1625],[-59.4815,13.163],[-59.481,13.163],[-59.4805,13.1635],[-59.48,13.1635],[-59.4795,13.164],[-59.479,13.164],[-59.4785,13.164],[-59.478,13.1635],[-59.477,13.1635],[-59.477,13.163],[-59.4765,13.163],[-59.476,13.163],[-59.4755,13.163],[-59.475,13.163],[-59.474,13.163],[-59.4735,13.163],[-59.4735,13.1625],[-59.473,13.1625],[-59.4725,13.1625],[-59.472,13.1625],[-59.4715,13.1625],[-59.4715,13.163],[-59.471,13.163],[-59.471,13.1625],[-59.4705,13.1625],[-59.47,13.1625],[-59.4695,13.1625],[-59.469,13.1625],[-59.4685,13.1625],[-59.4685,13.163],[-59.4685,13.1635],[-59.468,13.1635],[-59.468,13.164],[-59.468,13.1645],[-59.4675,13.1645],[-59.4675,13.165],[-59.467,13.165],[-59.467,13.1655],[-59.467,13.166],[-59.4665,13.166],[-59.466,13.1665],[-59.4655,13.1665],[-59.4655,13.167],[-59.466,13.169],[-59.4645,13.17],[-59.464,13.1705],[-59.4635,13.171],[-59.463,13.171],[-59.463,13.1715],[-59.4625,13.1715],[-59.4625,13.172],[-59.4625,13.1725],[-59.4625,13.173],[-59.463,13.173],[-59.463,13.1735],[-59.4635,13.1735],[-59.4635,13.174],[-59.463,13.174],[-59.463,13.1745],[-59.4625,13.1745],[-59.4625,13.175],[-59.462,13.175],[-59.462,13.1755],[-59.4615,13.1755],[-59.4615,13.176],[-59.461,13.176],[-59.461,13.1765],[-59.4605,13.1765],[-59.4605,13.177],[-59.46,13.177],[-59.46,13.1775],[-59.4595,13.1775],[-59.4595,13.178],[-59.459,13.178],[-59.459,13.1785],[-59.4585,13.1785],[-59.4585,13.179],[-59.458,13.179],[-59.458,13.1795],[-59.4575,13.1795],[-59.4575,13.18],[-59.4565,13.1805],[-59.456,13.1805],[-59.456,13.18],[-59.4555,13.18],[-59.4555,13.1795],[-59.455,13.179],[-59.455,13.1785],[-59.4545,13.1785],[-59.4545,13.178],[-59.454,13.178],[-59.454,13.1775],[-59.4535,13.1775],[-59.4535,13.177],[-59.453,13.177],[-59.453,13.1765],[-59.4525,13.1765],[-59.4525,13.176],[-59.452,13.176],[-59.452,13.1755],[-59.4515,13.1755],[-59.4515,13.175],[-59.4515,13.1745],[-59.451,13.1745],[-59.4505,13.1745],[-59.45,13.1745],[-59.45,13.175],[-59.4495,13.175],[-59.449,13.175],[-59.449,13.1745],[-59.4495,13.1745],[-59.4495,13.174],[-59.4495,13.1735],[-59.45,13.1735],[-59.45,13.173],[-59.4505,13.173],[-59.4505,13.1725],[-59.45,13.1725],[-59.4495,13.1725],[-59.449,13.1725],[-59.4485,13.1725],[-59.4485,13.172],[-59.449,13.172],[-59.449,13.1715],[-59.449,13.171],[-59.4485,13.171],[-59.4485,13.1705],[-59.4485,13.17],[-59.4485,13.1695],[-59.4485,13.169],[-59.448,13.169],[-59.448,13.1685],[-59.4475,13.1685],[-59.447,13.1685],[-59.447,13.169],[-59.4465,13.169],[-59.446,13.169],[-59.446,13.1685],[-59.446,13.168],[-59.4455,13.168],[-59.445,13.168],[-59.445,13.1675],[-59.445,13.167],[-59.4445,13.167],[-59.444,13.167],[-59.444,13.1665],[-59.444,13.166],[-59.444,13.1655],[-59.4435,13.1655],[-59.4435,13.165],[-59.443,13.165],[-59.443,13.1645],[-59.4425,13.1645],[-59.4425,13.165],[-59.4425,13.1655],[-59.442,13.1655],[-59.4415,13.1655],[-59.4415,13.165],[-59.441,13.165],[-59.441,13.1645],[-59.4405,13.1645],[-59.44,13.1645],[-59.4395,13.1645],[-59.4395,13.164],[-59.439,13.164],[-59.439,13.1635],[-59.4385,13.1635],[-59.438,13.1635],[-59.438,13.164],[-59.4375,13.164],[-59.437,13.164],[-59.4365,13.164],[-59.436,13.164],[-59.436,13.1645],[-59.4355,13.1645],[-59.435,13.1645],[-59.435,13.164],[-59.4345,13.164],[-59.4345,13.1645],[-59.434,13.1645],[-59.4335,13.1645],[-59.4335,13.165],[-59.433,13.165],[-59.433,13.1655],[-59.4325,13.1655],[-59.432,13.1655],[-59.4315,13.1655],[-59.4315,13.165],[-59.4315,13.1645],[-59.4315,13.164],[-59.4315,13.1635],[-59.431,13.1635],[-59.431,13.163],[-59.4315,13.163],[-59.4315,13.1625],[-59.431,13.1625],[-59.4305,13.1625],[-59.4305,13.162],[-59.43,13.162],[-59.43,13.1625],[-59.4295,13.1625],[-59.429,13.1625],[-59.429,13.163],[-59.4285,13.163],[-59.428,13.163],[-59.428,13.1625],[-59.428,13.162],[-59.4275,13.162],[-59.4275,13.1615],[-59.427,13.1615],[-59.427,13.161],[-59.427,13.1605],[-59.427,13.16],[-59.4265,13.16],[-59.4265,13.1595],[-59.4265,13.159],[-59.4265,13.1585],[-59.426,13.1585],[-59.426,13.158],[-59.426,13.1575],[-59.4255,13.1575],[-59.4255,13.157],[-59.4255,13.1565],[-59.425,13.1565],[-59.425,13.156],[-59.4245,13.156],[-59.424,13.156],[-59.4235,13.156],[-59.423,13.156],[-59.4225,13.156],[-59.4225,13.1555],[-59.422,13.1555],[-59.4215,13.1555],[-59.4215,13.155],[-59.4215,13.1545],[-59.4215,13.154],[-59.422,13.154],[-59.422,13.1535],[-59.422,13.153],[-59.4225,13.153],[-59.4225,13.1525],[-59.4225,13.152],[-59.422,13.152],[-59.422,13.1515],[-59.422,13.151],[-59.4215,13.151],[-59.4215,13.1505],[-59.421,13.1505],[-59.4205,13.1505],[-59.4205,13.15],[-59.4205,13.1495],[-59.42,13.1495],[-59.42,13.149],[-59.42,13.1485],[-59.4205,13.1485],[-59.4205,13.148],[-59.4205,13.1475],[-59.421,13.1475],[-59.421,13.147],[-59.4215,13.147],[-59.4215,13.1465],[-59.4215,13.146],[-59.4215,13.1455],[-59.4215,13.145],[-59.422,13.145],[-59.422,13.1445],[-59.4215,13.1445],[-59.4215,13.144],[-59.4215,13.1435],[-59.422,13.1435],[-59.422,13.143],[-59.422,13.1425],[-59.422,13.142],[-59.4225,13.142],[-59.4225,13.1415],[-59.422,13.1415],[-59.422,13.141],[-59.4225,13.141],[-59.4225,13.1405],[-59.4225,13.14],[-59.423,13.14],[-59.423,13.1395],[-59.423,13.139],[-59.423,13.1385],[-59.4235,13.1385],[-59.424,13.1385],[-59.424,13.138],[-59.424,13.1375],[-59.4245,13.1375],[-59.4245,13.137],[-59.425,13.137],[-59.425,13.1365],[-59.425,13.136],[-59.425,13.1355],[-59.425,13.135],[-59.4255,13.135],[-59.426,13.135],[-59.426,13.1345],[-59.4265,13.1345],[-59.4265,13.134],[-59.4265,13.1335],[-59.4265,13.133],[-59.426,13.133],[-59.426,13.1325],[-59.4265,13.1325],[-59.4265,13.132],[-59.4265,13.1315],[-59.427,13.1315],[-59.427,13.131],[-59.4275,13.131],[-59.4275,13.1305],[-59.428,13.1305],[-59.428,13.13],[-59.428,13.1295],[-59.4285,13.1295],[-59.429,13.1295],[-59.429,13.129],[-59.429,13.1285],[-59.429,13.128],[-59.429,13.1275],[-59.4295,13.1275],[-59.4295,13.127],[-59.4295,13.1265],[-59.4295,13.126],[-59.4295,13.1255],[-59.4295,13.125],[-59.43,13.125],[-59.43,13.1245],[-59.43,13.124],[-59.43,13.1235],[-59.4305,13.1235],[-59.431,13.1235],[-59.431,13.123],[-59.431,13.1225],[-59.4315,13.1225],[-59.4315,13.122],[-59.432,13.122],[-59.432,13.1215],[-59.4325,13.1215],[-59.4325,13.121],[-59.4325,13.1205],[-59.433,13.1205],[-59.4335,13.1205],[-59.4335,13.12],[-59.4335,13.1195],[-59.434,13.1195],[-59.434,13.119],[-59.4345,13.119],[-59.4345,13.1185],[-59.435,13.1185],[-59.435,13.118],[-59.435,13.1175],[-59.4355,13.1175],[-59.4355,13.117],[-59.436,13.117],[-59.436,13.1165],[-59.436,13.116],[-59.4365,13.116],[-59.437,13.1165],[-59.437,13.116],[-59.4375,13.116],[-59.4375,13.1155],[-59.438,13.1155],[-59.438,13.115],[-59.4385,13.115],[-59.4385,13.1145],[-59.4385,13.114],[-59.439,13.114],[-59.4395,13.114],[-59.4395,13.1135],[-59.44,13.1135],[-59.44,13.113],[-59.44,13.1125],[-59.4405,13.1125],[-59.4405,13.112],[-59.4405,13.1115],[-59.441,13.1115],[-59.441,13.111],[-59.441,13.1105],[-59.441,13.11],[-59.4415,13.11],[-59.4415,13.1095],[-59.4415,13.109],[-59.442,13.109],[-59.442,13.1085],[-59.4425,13.108],[-59.4425,13.1075],[-59.443,13.1075],[-59.443,13.107],[-59.443,13.1065],[-59.4435,13.1065],[-59.444,13.106],[-59.4445,13.106],[-59.4445,13.1055],[-59.444,13.1055],[-59.444,13.105],[-59.4445,13.105],[-59.4445,13.1045],[-59.4445,13.104],[-59.445,13.104],[-59.4455,13.104],[-59.4455,13.1035],[-59.4455,13.103],[-59.446,13.103],[-59.447,13.103]]]},{"name":"Maurice Byer Polyclinic","short":"Maurice Byer","colour":"#e5789a","phone":"536-3214","email":"mbpc.apps@health.gov.bb","rings":[[[-59.6125,13.3345],[-59.6125,13.334],[-59.612,13.334],[-59.6115,13.334],[-59.6115,13.3335],[-59.611,13.3335],[-59.6105,13.3335],[-59.6105,13.333],[-59.61,13.333],[-59.6095,13.333],[-59.6095,13.3325],[-59.609,13.3325],[-59.6085,13.3325],[-59.608,13.3325],[-59.6075,13.3325],[-59.607,13.3325],[-59.607,13.332],[-59.607,13.3315],[-59.607,13.331],[-59.6065,13.331],[-59.606,13.331],[-59.606,13.3305],[-59.606,13.33],[-59.6055,13.33],[-59.605,13.33],[-59.6045,13.3295],[-59.6045,13.329],[-59.604,13.329],[-59.6035,13.329],[-59.6035,13.3285],[-59.603,13.3285],[-59.6025,13.3285],[-59.6025,13.328],[-59.602,13.328],[-59.6015,13.3275],[-59.601,13.3275],[-59.601,13.327],[-59.6005,13.327],[-59.6005,13.3275],[-59.6,13.328],[-59.5995,13.328],[-59.5995,13.3275],[-59.5995,13.327],[-59.5995,13.3265],[-59.5995,13.326],[-59.599,13.326],[-59.599,13.3255],[-59.5985,13.3255],[-59.5985,13.325],[-59.598,13.325],[-59.598,13.3245],[-59.5975,13.3245],[-59.597,13.3245],[-59.597,13.324],[-59.5965,13.324],[-59.5965,13.3235],[-59.596,13.3235],[-59.596,13.323],[-59.5955,13.323],[-59.595,13.323],[-59.595,13.3225],[-59.5955,13.3225],[-59.596,13.3225],[-59.596,13.322],[-59.5955,13.322],[-59.5955,13.3215],[-59.5955,13.321],[-59.595,13.321],[-59.5945,13.321],[-59.594,13.321],[-59.5935,13.3205],[-59.5935,13.32],[-59.593,13.32],[-59.593,13.3195],[-59.5925,13.3195],[-59.592,13.319],[-59.592,13.3185],[-59.5915,13.318],[-59.591,13.318],[-59.5905,13.3175],[-59.59,13.317],[-59.5895,13.317],[-59.5895,13.3165],[-59.589,13.316],[-59.5885,13.3155],[-59.5875,13.3145],[-59.587,13.314],[-59.5865,13.314],[-59.586,13.3135],[-59.586,13.313],[-59.5855,13.3125],[-59.585,13.313],[-59.5845,13.3125],[-59.5845,13.312],[-59.586,13.3115],[-59.586,13.311],[-59.5845,13.3115],[-59.5845,13.311],[-59.584,13.311],[-59.5835,13.3115],[-59.583,13.3115],[-59.582,13.3115],[-59.582,13.311],[-59.5815,13.311],[-59.5805,13.3105],[-59.5805,13.311],[-59.58,13.311],[-59.5795,13.311],[-59.5795,13.3105],[-59.579,13.3105],[-59.579,13.31],[-59.579,13.3095],[-59.5785,13.3095],[-59.578,13.3095],[-59.5775,13.309],[-59.5775,13.3085],[-59.577,13.3085],[-59.577,13.308],[-59.5765,13.3075],[-59.5765,13.307],[-59.5765,13.3065],[-59.577,13.306],[-59.5775,13.3055],[-59.578,13.3055],[-59.578,13.305],[-59.578,13.3045],[-59.578,13.304],[-59.578,13.3035],[-59.5775,13.304],[-59.577,13.304],[-59.5765,13.304],[-59.576,13.304],[-59.576,13.3035],[-59.5755,13.3035],[-59.5755,13.303],[-59.5755,13.3025],[-59.5755,13.302],[-59.575,13.3015],[-59.5745,13.301],[-59.574,13.3005],[-59.574,13.2995],[-59.5745,13.2995],[-59.575,13.299],[-59.5755,13.299],[-59.576,13.299],[-59.577,13.299],[-59.577,13.2985],[-59.5775,13.298],[-59.5775,13.2975],[-59.577,13.297],[-59.5765,13.2965],[-59.576,13.2965],[-59.5755,13.2965],[-59.5755,13.296],[-59.575,13.2955],[-59.5745,13.2955],[-59.574,13.2955],[-59.574,13.295],[-59.574,13.2945],[-59.574,13.294],[-59.5735,13.294],[-59.573,13.2935],[-59.5725,13.2935],[-59.5725,13.293],[-59.5725,13.2925],[-59.572,13.292],[-59.572,13.2915],[-59.572,13.291],[-59.572,13.2905],[-59.5725,13.2905],[-59.5725,13.29],[-59.572,13.29],[-59.572,13.2895],[-59.5715,13.2895],[-59.571,13.2885],[-59.5705,13.2885],[-59.5705,13.2875],[-59.57,13.2875],[-59.57,13.287],[-59.57,13.2865],[-59.5695,13.286],[-59.569,13.2855],[-59.569,13.285],[-59.5685,13.285],[-59.568,13.2845],[-59.568,13.284],[-59.568,13.283],[-59.568,13.2825],[-59.568,13.282],[-59.568,13.2815],[-59.5685,13.2815],[-59.5685,13.281],[-59.5685,13.2805],[-59.568,13.28],[-59.568,13.2795],[-59.568,13.279],[-59.568,13.2785],[-59.568,13.278],[-59.568,13.2775],[-59.5675,13.2765],[-59.567,13.2755],[-59.567,13.2745],[-59.5665,13.274],[-59.566,13.2735],[-59.566,13.2725],[-59.5655,13.272],[-59.5655,13.2715],[-59.565,13.271],[-59.5645,13.27],[-59.564,13.269],[-59.5635,13.2685],[-59.563,13.2675],[-59.5625,13.2665],[-59.562,13.266],[-59.5615,13.266],[-59.561,13.265],[-59.5605,13.264],[-59.5605,13.263],[-59.5595,13.2615],[-59.559,13.2605],[-59.558,13.259],[-59.5575,13.2575],[-59.557,13.2565],[-59.556,13.255],[-59.5555,13.254],[-59.555,13.253],[-59.5545,13.2525],[-59.554,13.251],[-59.553,13.25],[-59.552,13.249],[-59.5515,13.2485],[-59.551,13.247],[-59.5495,13.2455],[-59.5485,13.2445],[-59.548,13.244],[-59.5475,13.243],[-59.5475,13.2425],[-59.547,13.242],[-59.5465,13.2415],[-59.546,13.241],[-59.5455,13.24],[-59.5455,13.2395],[-59.545,13.2385],[-59.5445,13.2385],[-59.544,13.2375],[-59.543,13.237],[-59.5425,13.236],[-59.5425,13.235],[-59.542,13.234],[-59.5415,13.233],[-59.5405,13.232],[-59.5405,13.2315],[-59.5395,13.23],[-59.539,13.2295],[-59.5395,13.229],[-59.5395,13.2285],[-59.5405,13.2275],[-59.541,13.227],[-59.5415,13.227],[-59.5435,13.2265],[-59.5435,13.2255],[-59.544,13.2255],[-59.5445,13.2255],[-59.5445,13.225],[-59.5445,13.2245],[-59.5445,13.224],[-59.545,13.224],[-59.545,13.2235],[-59.545,13.223],[-59.5445,13.223],[-59.544,13.223],[-59.544,13.2225],[-59.544,13.222],[-59.5435,13.222],[-59.5435,13.2215],[-59.5435,13.221],[-59.544,13.221],[-59.5445,13.221],[-59.545,13.221],[-59.5455,13.221],[-59.546,13.221],[-59.5465,13.221],[-59.547,13.221],[-59.5475,13.2215],[-59.5475,13.221],[-59.548,13.221],[-59.548,13.2205],[-59.549,13.2205],[-59.549,13.222],[-59.5495,13.222],[-59.55,13.222],[-59.5505,13.222],[-59.5505,13.2225],[-59.551,13.2225],[-59.5515,13.2225],[-59.552,13.2225],[-59.5525,13.2225],[-59.5535,13.2225],[-59.5535,13.2235],[-59.5535,13.224],[-59.554,13.224],[-59.555,13.2255],[-59.5555,13.225],[-59.556,13.2245],[-59.5565,13.2245],[-59.5565,13.224],[-59.557,13.224],[-59.5575,13.224],[-59.5575,13.2245],[-59.558,13.2245],[-59.559,13.224],[-59.559,13.2235],[-59.5595,13.223],[-59.56,13.2225],[-59.5605,13.2225],[-59.5605,13.222],[-59.5615,13.2225],[-59.5625,13.2225],[-59.5635,13.2215],[-59.563,13.221],[-59.563,13.2205],[-59.5625,13.22],[-59.5625,13.2195],[-59.5625,13.219],[-59.563,13.219],[-59.563,13.2185],[-59.563,13.218],[-59.563,13.2175],[-59.563,13.217],[-59.5625,13.217],[-59.5625,13.2165],[-59.5625,13.216],[-59.563,13.216],[-59.563,13.2155],[-59.5625,13.2155],[-59.5625,13.215],[-59.563,13.215],[-59.563,13.2145],[-59.5635,13.2145],[-59.564,13.2145],[-59.5645,13.2145],[-59.5645,13.214],[-59.5645,13.2135],[-59.5645,13.213],[-59.564,13.213],[-59.564,13.2125],[-59.5635,13.2125],[-59.5635,13.212],[-59.5635,13.2115],[-59.5645,13.2105],[-59.5645,13.21],[-59.5645,13.2095],[-59.564,13.2095],[-59.564,13.209],[-59.565,13.2075],[-59.565,13.207],[-59.565,13.2065],[-59.5645,13.2065],[-59.564,13.2065],[-59.564,13.2055],[-59.5625,13.205],[-59.562,13.2045],[-59.562,13.204],[-59.5615,13.2035],[-59.5615,13.203],[-59.5615,13.2025],[-59.5615,13.202],[-59.561,13.202],[-59.561,13.2015],[-59.561,13.2],[-59.5615,13.2],[-59.5615,13.1995],[-59.562,13.1995],[-59.562,13.199],[-59.562,13.1985],[-59.5625,13.198],[-59.5625,13.1975],[-59.5625,13.197],[-59.563,13.197],[-59.565,13.1995],[-59.565,13.2],[-59.565,13.2005],[-59.565,13.201],[-59.565,13.2015],[-59.565,13.202],[-59.5655,13.2025],[-59.566,13.2035],[-59.573,13.208],[-59.5735,13.208],[-59.5735,13.2085],[-59.5735,13.209],[-59.5735,13.2095],[-59.5735,13.21],[-59.573,13.21],[-59.573,13.2105],[-59.573,13.211],[-59.573,13.2115],[-59.573,13.212],[-59.573,13.2125],[-59.573,13.213],[-59.573,13.2135],[-59.5725,13.2135],[-59.5725,13.214],[-59.572,13.214],[-59.572,13.2145],[-59.572,13.215],[-59.5715,13.215],[-59.571,13.215],[-59.5705,13.215],[-59.5705,13.2155],[-59.57,13.2155],[-59.57,13.216],[-59.5695,13.2165],[-59.5695,13.217],[-59.5695,13.2175],[-59.569,13.2175],[-59.569,13.218],[-59.5685,13.2185],[-59.5685,13.219],[-59.568,13.219],[-59.568,13.2195],[-59.5675,13.2195],[-59.5675,13.22],[-59.568,13.2205],[-59.5685,13.2205],[-59.5685,13.221],[-59.569,13.221],[-59.569,13.2215],[-59.5695,13.2215],[-59.57,13.2215],[-59.5705,13.2215],[-59.571,13.222],[-59.5715,13.222],[-59.572,13.2215],[-59.5725,13.2215],[-59.573,13.222],[-59.5735,13.2225],[-59.574,13.2225],[-59.5745,13.2225],[-59.5745,13.222],[-59.575,13.222],[-59.5755,13.222],[-59.5755,13.2215],[-59.5755,13.221],[-59.5755,13.2205],[-59.576,13.2205],[-59.576,13.22],[-59.576,13.2195],[-59.5765,13.2195],[-59.5765,13.219],[-59.5765,13.2185],[-59.5765,13.218],[-59.577,13.2175],[-59.5775,13.2175],[-59.578,13.2175],[-59.578,13.217],[-59.5785,13.217],[-59.579,13.217],[-59.579,13.2165],[-59.5795,13.2165],[-59.5795,13.216],[-59.58,13.216],[-59.58,13.2155],[-59.5805,13.2155],[-59.5805,13.215],[-59.581,13.215],[-59.581,13.2145],[-59.5815,13.2145],[-59.5815,13.214],[-59.582,13.214],[-59.5825,13.2135],[-59.583,13.2135],[-59.5835,13.213],[-59.584,13.213],[-59.584,13.2125],[-59.5845,13.2125],[-59.585,13.2125],[-59.5855,13.2125],[-59.586,13.2125],[-59.5865,13.2125],[-59.587,13.2125],[-59.587,13.213],[-59.587,13.2135],[-59.587,13.214],[-59.587,13.2145],[-59.587,13.215],[-59.587,13.2155],[-59.587,13.216],[-59.587,13.2165],[-59.587,13.217],[-59.5875,13.217],[-59.588,13.217],[-59.588,13.2175],[-59.5885,13.2175],[-59.589,13.2175],[-59.589,13.217],[-59.5895,13.217],[-59.59,13.2165],[-59.5905,13.2165],[-59.5905,13.216],[-59.591,13.216],[-59.591,13.2165],[-59.5915,13.2165],[-59.592,13.2165],[-59.592,13.216],[-59.5925,13.216],[-59.593,13.2155],[-59.5935,13.2155],[-59.5935,13.216],[-59.594,13.216],[-59.5945,13.216],[-59.5945,13.2165],[-59.595,13.2175],[-59.5955,13.2175],[-59.5955,13.217],[-59.596,13.2165],[-59.5965,13.2165],[-59.597,13.216],[-59.5975,13.216],[-59.5975,13.2155],[-59.598,13.2155],[-59.598,13.215],[-59.598,13.2145],[-59.5985,13.2145],[-59.5985,13.214],[-59.5985,13.2135],[-59.5985,13.213],[-59.599,13.213],[-59.599,13.2125],[-59.5995,13.2115],[-59.6,13.211],[-59.6,13.2105],[-59.6,13.21],[-59.6,13.209],[-59.6,13.2085],[-59.6005,13.2085],[-59.6005,13.208],[-59.601,13.208],[-59.601,13.2075],[-59.6015,13.2075],[-59.6015,13.207],[-59.602,13.2065],[-59.6025,13.2065],[-59.603,13.206],[-59.6035,13.206],[-59.604,13.206],[-59.605,13.2055],[-59.6055,13.2055],[-59.606,13.2055],[-59.606,13.205],[-59.6065,13.205],[-59.607,13.2045],[-59.6075,13.2045],[-59.608,13.2045],[-59.608,13.204],[-59.6085,13.204],[-59.6085,13.2035],[-59.609,13.2035],[-59.6095,13.203],[-59.61,13.203],[-59.6105,13.203],[-59.611,13.2025],[-59.6115,13.2025],[-59.612,13.2025],[-59.6125,13.2025],[-59.613,13.202],[-59.6135,13.2015],[-59.614,13.2015],[-59.6145,13.2015],[-59.615,13.201],[-59.6155,13.201],[-59.616,13.201],[-59.616,13.2005],[-59.6145,13.1995],[-59.6145,13.199],[-59.614,13.199],[-59.614,13.1985],[-59.6135,13.1985],[-59.6135,13.198],[-59.613,13.1975],[-59.613,13.197],[-59.6125,13.197],[-59.6125,13.1965],[-59.6125,13.196],[-59.6125,13.1955],[-59.6125,13.195],[-59.6125,13.1945],[-59.6125,13.194],[-59.612,13.194],[-59.612,13.1935],[-59.612,13.193],[-59.612,13.1925],[-59.612,13.192],[-59.612,13.191],[-59.6115,13.1905],[-59.6115,13.1895],[-59.6115,13.189],[-59.6115,13.1885],[-59.6115,13.188],[-59.6115,13.1875],[-59.6115,13.187],[-59.6115,13.1865],[-59.612,13.186],[-59.612,13.1865],[-59.6125,13.1865],[-59.6125,13.186],[-59.613,13.186],[-59.6135,13.186],[-59.614,13.186],[-59.614,13.1855],[-59.6145,13.1855],[-59.615,13.1855],[-59.6155,13.1855],[-59.6155,13.185],[-59.616,13.185],[-59.6165,13.185],[-59.617,13.185],[-59.617,13.1855],[-59.6175,13.1855],[-59.618,13.1855],[-59.6185,13.1855],[-59.619,13.1855],[-59.6195,13.1855],[-59.62,13.1855],[-59.6205,13.1855],[-59.621,13.1855],[-59.6215,13.1855],[-59.622,13.1855],[-59.6225,13.1855],[-59.623,13.1855],[-59.6235,13.1855],[-59.624,13.1855],[-59.624,13.185],[-59.6245,13.185],[-59.6255,13.185],[-59.626,13.185],[-59.6265,13.185],[-59.627,13.185],[-59.6275,13.185],[-59.6285,13.1845],[-59.629,13.1845],[-59.6295,13.1845],[-59.63,13.1845],[-59.6305,13.1845],[-59.6315,13.1845],[-59.632,13.1845],[-59.6325,13.1845],[-59.6325,13.184],[-59.633,13.184],[-59.6335,13.184],[-59.634,13.1845],[-59.634,13.185],[-59.6345,13.1855],[-59.635,13.1855],[-59.6355,13.1855],[-59.636,13.1855],[-59.636,13.186],[-59.6365,13.186],[-59.6365,13.1865],[-59.637,13.186],[-59.6385,13.186],[-59.6385,13.187],[-59.638,13.188],[-59.638,13.1885],[-59.6385,13.189],[-59.639,13.1895],[-59.6395,13.19],[-59.64,13.191],[-59.6405,13.1915],[-59.641,13.192],[-59.641,13.193],[-59.641,13.1945],[-59.641,13.195],[-59.6415,13.1955],[-59.642,13.1965],[-59.6425,13.197],[-59.6425,13.1975],[-59.6425,13.198],[-59.6425,13.1985],[-59.6425,13.1995],[-59.642,13.2],[-59.642,13.2005],[-59.6415,13.2015],[-59.641,13.202],[-59.6405,13.203],[-59.6405,13.2035],[-59.6405,13.205],[-59.64,13.2055],[-59.64,13.206],[-59.64,13.2065],[-59.64,13.207],[-59.64,13.208],[-59.64,13.2085],[-59.64,13.209],[-59.6405,13.2095],[-59.6405,13.2105],[-59.6405,13.2115],[-59.641,13.212],[-59.641,13.2125],[-59.641,13.213],[-59.641,13.2135],[-59.6415,13.214],[-59.6415,13.2145],[-59.6415,13.215],[-59.6415,13.2155],[-59.6415,13.2165],[-59.6415,13.217],[-59.642,13.2175],[-59.6425,13.2185],[-59.642,13.219],[-59.642,13.2195],[-59.642,13.22],[-59.6415,13.221],[-59.6415,13.222],[-59.642,13.2225],[-59.642,13.223],[-59.642,13.2235],[-59.642,13.224],[-59.6425,13.2245],[-59.6425,13.225],[-59.643,13.225],[-59.6435,13.2255],[-59.6435,13.226],[-59.6435,13.2265],[-59.643,13.227],[-59.643,13.2275],[-59.6425,13.228],[-59.643,13.229],[-59.643,13.2295],[-59.643,13.23],[-59.643,13.2305],[-59.643,13.231],[-59.643,13.2315],[-59.643,13.232],[-59.6425,13.233],[-59.6425,13.2335],[-59.6425,13.234],[-59.6425,13.2345],[-59.643,13.2355],[-59.6435,13.2355],[-59.6435,13.236],[-59.6435,13.2365],[-59.644,13.237],[-59.644,13.2375],[-59.6445,13.2375],[-59.6445,13.2385],[-59.6445,13.239],[-59.6445,13.24],[-59.645,13.24],[-59.645,13.2405],[-59.645,13.241],[-59.645,13.2415],[-59.6445,13.2415],[-59.6445,13.242],[-59.6445,13.2425],[-59.644,13.243],[-59.644,13.2435],[-59.644,13.244],[-59.644,13.2445],[-59.6445,13.2445],[-59.6445,13.245],[-59.6445,13.2455],[-59.645,13.2455],[-59.645,13.246],[-59.645,13.2465],[-59.6445,13.247],[-59.6445,13.2475],[-59.644,13.248],[-59.644,13.2485],[-59.644,13.249],[-59.644,13.2495],[-59.644,13.25],[-59.644,13.2505],[-59.6445,13.2505],[-59.6445,13.251],[-59.645,13.2515],[-59.645,13.252],[-59.645,13.2525],[-59.645,13.253],[-59.645,13.254],[-59.6445,13.2545],[-59.6445,13.255],[-59.6445,13.2555],[-59.6445,13.256],[-59.6445,13.2565],[-59.6445,13.257],[-59.6445,13.2575],[-59.644,13.2575],[-59.644,13.258],[-59.644,13.2585],[-59.644,13.259],[-59.6435,13.259],[-59.6435,13.2595],[-59.644,13.2595],[-59.644,13.26],[-59.644,13.2605],[-59.644,13.261],[-59.6435,13.261],[-59.6435,13.2615],[-59.6435,13.262],[-59.6435,13.2625],[-59.644,13.2625],[-59.6445,13.2625],[-59.645,13.263],[-59.645,13.2635],[-59.645,13.264],[-59.6445,13.264],[-59.6445,13.2645],[-59.644,13.2645],[-59.6435,13.2645],[-59.6435,13.265],[-59.6435,13.2655],[-59.6435,13.266],[-59.644,13.266],[-59.6445,13.266],[-59.6445,13.2665],[-59.6445,13.267],[-59.645,13.2675],[-59.645,13.268],[-59.6455,13.2685],[-59.6455,13.269],[-59.6455,13.2695],[-59.6455,13.27],[-59.646,13.27],[-59.646,13.2705],[-59.6465,13.271],[-59.6465,13.2715],[-59.6465,13.272],[-59.6465,13.2725],[-59.6465,13.273],[-59.647,13.2735],[-59.647,13.274],[-59.647,13.275],[-59.647,13.2755],[-59.647,13.276],[-59.6475,13.276],[-59.6475,13.2765],[-59.6475,13.277],[-59.6475,13.2775],[-59.6475,13.278],[-59.648,13.278],[-59.648,13.2785],[-59.648,13.279],[-59.648,13.2795],[-59.6485,13.28],[-59.6485,13.2805],[-59.649,13.2805],[-59.649,13.281],[-59.6495,13.2815],[-59.6495,13.282],[-59.6495,13.2825],[-59.65,13.2825],[-59.65,13.283],[-59.65,13.2835],[-59.65,13.284],[-59.65,13.2845],[-59.65,13.285],[-59.65,13.2855],[-59.65,13.286],[-59.65,13.2865],[-59.65,13.287],[-59.65,13.2875],[-59.65,13.288],[-59.65,13.2885],[-59.6495,13.289],[-59.6495,13.2895],[-59.6495,13.29],[-59.6495,13.2905],[-59.649,13.291],[-59.649,13.2915],[-59.649,13.292],[-59.649,13.2925],[-59.649,13.293],[-59.6495,13.2935],[-59.6495,13.294],[-59.6495,13.2945],[-59.6495,13.295],[-59.6495,13.2955],[-59.6495,13.296],[-59.6495,13.2965],[-59.6495,13.297],[-59.6495,13.2975],[-59.65,13.298],[-59.65,13.2985],[-59.65,13.299],[-59.65,13.2995],[-59.65,13.3],[-59.65,13.3005],[-59.65,13.301],[-59.65,13.3015],[-59.6505,13.302],[-59.6505,13.3025],[-59.6505,13.303],[-59.6505,13.3035],[-59.6505,13.304],[-59.6505,13.3045],[-59.6505,13.305],[-59.6505,13.3055],[-59.651,13.3055],[-59.651,13.306],[-59.6505,13.3065],[-59.6505,13.307],[-59.65,13.307],[-59.65,13.3075],[-59.65,13.308],[-59.6495,13.3085],[-59.6495,13.309],[-59.649,13.309],[-59.6485,13.3095],[-59.648,13.31],[-59.648,13.3105],[-59.6475,13.3105],[-59.6475,13.311],[-59.647,13.3115],[-59.6465,13.312],[-59.6465,13.3125],[-59.646,13.313],[-59.6455,13.3135],[-59.6455,13.314],[-59.645,13.314],[-59.645,13.3145],[-59.6445,13.315],[-59.644,13.3155],[-59.644,13.316],[-59.644,13.3165],[-59.6435,13.3165],[-59.6435,13.317],[-59.643,13.317],[-59.643,13.3175],[-59.6425,13.3175],[-59.642,13.318],[-59.6415,13.3185],[-59.641,13.319],[-59.6405,13.3195],[-59.64,13.32],[-59.64,13.3205],[-59.64,13.321],[-59.6395,13.3215],[-59.639,13.3215],[-59.639,13.322],[-59.639,13.3225],[-59.6385,13.3225],[-59.638,13.3225],[-59.638,13.323],[-59.638,13.3235],[-59.638,13.324],[-59.638,13.3245],[-59.638,13.325],[-59.638,13.3255],[-59.6375,13.3255],[-59.6375,13.326],[-59.637,13.326],[-59.637,13.3265],[-59.6365,13.3265],[-59.636,13.3265],[-59.636,13.327],[-59.6355,13.327],[-59.635,13.327],[-59.6345,13.3275],[-59.634,13.3275],[-59.634,13.328],[-59.634,13.3285],[-59.634,13.329],[-59.6335,13.329],[-59.6335,13.3285],[-59.633,13.3285],[-59.633,13.329],[-59.6325,13.329],[-59.6325,13.3285],[-59.632,13.3285],[-59.6315,13.3285],[-59.631,13.3285],[-59.631,13.329],[-59.6305,13.329],[-59.6305,13.3295],[-59.63,13.3295],[-59.63,13.33],[-59.6295,13.33],[-59.6295,13.3305],[-59.629,13.3305],[-59.629,13.331],[-59.6285,13.331],[-59.6285,13.3305],[-59.628,13.3305],[-59.6275,13.3305],[-59.6275,13.33],[-59.627,13.33],[-59.6265,13.33],[-59.6265,13.3305],[-59.626,13.3305],[-59.626,13.331],[-59.626,13.3315],[-59.6255,13.3315],[-59.625,13.3315],[-59.6245,13.3315],[-59.624,13.3315],[-59.6235,13.3315],[-59.623,13.3315],[-59.623,13.332],[-59.623,13.3325],[-59.6225,13.3325],[-59.622,13.3325],[-59.622,13.333],[-59.6215,13.333],[-59.6215,13.3335],[-59.621,13.3335],[-59.621,13.334],[-59.6205,13.334],[-59.6205,13.3345],[-59.62,13.3345],[-59.6195,13.334],[-59.6195,13.3335],[-59.619,13.3335],[-59.6185,13.3335],[-59.618,13.3335],[-59.6175,13.334],[-59.617,13.3335],[-59.6165,13.3335],[-59.6165,13.334],[-59.616,13.334],[-59.6155,13.334],[-59.615,13.334],[-59.615,13.3345],[-59.6145,13.3345],[-59.614,13.3345],[-59.6135,13.3345],[-59.6135,13.335],[-59.613,13.335],[-59.6125,13.335],[-59.6125,13.3345]]]},{"name":"David Thompson Health & Social Services Complex","short":"David Thompson","colour":"#7bb661","phone":"536-4453","email":"Dthssc.ehd@health.gov.bb","rings":[[[-59.51,13.1205],[-59.5115,13.12],[-59.512,13.12],[-59.513,13.12],[-59.5135,13.12],[-59.514,13.12],[-59.5145,13.12],[-59.515,13.12],[-59.5155,13.12],[-59.516,13.1195],[-59.5165,13.12],[-59.517,13.12],[-59.5175,13.12],[-59.518,13.12],[-59.519,13.12],[-59.5195,13.1195],[-59.52,13.1195],[-59.521,13.119],[-59.5215,13.1185],[-59.522,13.118],[-59.5225,13.1175],[-59.523,13.1175],[-59.5235,13.1175],[-59.524,13.117],[-59.5245,13.117],[-59.525,13.117],[-59.525,13.1165],[-59.5255,13.1165],[-59.5265,13.116],[-59.5275,13.1155],[-59.5275,13.1165],[-59.5275,13.1175],[-59.5275,13.1185],[-59.528,13.1195],[-59.5285,13.1195],[-59.529,13.1195],[-59.5295,13.1195],[-59.53,13.12],[-59.53,13.121],[-59.53,13.1215],[-59.53,13.1225],[-59.5305,13.1225],[-59.531,13.123],[-59.5305,13.1235],[-59.5305,13.124],[-59.531,13.1245],[-59.531,13.1255],[-59.5315,13.1265],[-59.5315,13.127],[-59.531,13.1285],[-59.531,13.1295],[-59.5305,13.1305],[-59.53,13.1315],[-59.5295,13.1325],[-59.5295,13.133],[-59.5295,13.134],[-59.53,13.1345],[-59.53,13.135],[-59.531,13.135],[-59.5315,13.135],[-59.5325,13.1355],[-59.532,13.136],[-59.532,13.1365],[-59.5315,13.137],[-59.531,13.138],[-59.5305,13.1385],[-59.5315,13.141],[-59.5315,13.144],[-59.5315,13.1455],[-59.5315,13.146],[-59.531,13.1465],[-59.531,13.147],[-59.5315,13.147],[-59.5315,13.1475],[-59.5315,13.148],[-59.5315,13.1495],[-59.5315,13.15],[-59.5325,13.1515],[-59.5325,13.153],[-59.533,13.1535],[-59.533,13.1545],[-59.5335,13.1555],[-59.533,13.1565],[-59.534,13.1565],[-59.5345,13.156],[-59.535,13.156],[-59.5355,13.156],[-59.5365,13.1555],[-59.5375,13.1555],[-59.5385,13.1555],[-59.539,13.1555],[-59.5405,13.1555],[-59.5415,13.1555],[-59.543,13.155],[-59.544,13.1545],[-59.5455,13.154],[-59.546,13.1535],[-59.5475,13.1525],[-59.5485,13.1515],[-59.55,13.151],[-59.5505,13.1505],[-59.551,13.15],[-59.5515,13.149],[-59.552,13.1485],[-59.5535,13.148],[-59.553,13.149],[-59.553,13.1495],[-59.553,13.1505],[-59.553,13.152],[-59.553,13.1525],[-59.5525,13.1545],[-59.5525,13.155],[-59.552,13.1555],[-59.551,13.1565],[-59.551,13.1575],[-59.551,13.158],[-59.552,13.158],[-59.5525,13.1585],[-59.553,13.1585],[-59.553,13.159],[-59.5535,13.159],[-59.5545,13.159],[-59.555,13.1595],[-59.556,13.1595],[-59.556,13.161],[-59.5555,13.164],[-59.5565,13.166],[-59.557,13.1675],[-59.5575,13.167],[-59.558,13.1665],[-59.5585,13.166],[-59.56,13.165],[-59.561,13.164],[-59.5615,13.164],[-59.5625,13.1635],[-59.564,13.163],[-59.564,13.1625],[-59.5645,13.162],[-59.565,13.162],[-59.5655,13.162],[-59.5665,13.1615],[-59.5675,13.1615],[-59.568,13.1615],[-59.57,13.161],[-59.571,13.161],[-59.572,13.161],[-59.5725,13.161],[-59.573,13.161],[-59.5735,13.161],[-59.5735,13.1615],[-59.574,13.1615],[-59.5745,13.162],[-59.575,13.162],[-59.5755,13.162],[-59.576,13.162],[-59.577,13.162],[-59.577,13.1625],[-59.577,13.163],[-59.577,13.1635],[-59.5765,13.164],[-59.576,13.165],[-59.5755,13.1655],[-59.575,13.1655],[-59.575,13.166],[-59.5745,13.1665],[-59.574,13.1665],[-59.5735,13.167],[-59.573,13.167],[-59.5725,13.167],[-59.572,13.1675],[-59.572,13.1685],[-59.572,13.169],[-59.572,13.1695],[-59.572,13.17],[-59.572,13.1705],[-59.572,13.171],[-59.572,13.1715],[-59.5715,13.172],[-59.5715,13.1725],[-59.571,13.1725],[-59.571,13.173],[-59.571,13.1735],[-59.571,13.174],[-59.571,13.1745],[-59.571,13.175],[-59.571,13.1755],[-59.5705,13.1755],[-59.5705,13.176],[-59.57,13.176],[-59.57,13.1765],[-59.5695,13.1765],[-59.5695,13.1775],[-59.569,13.1775],[-59.569,13.178],[-59.569,13.1785],[-59.569,13.179],[-59.569,13.1795],[-59.569,13.18],[-59.569,13.1805],[-59.569,13.181],[-59.5695,13.181],[-59.569,13.1815],[-59.569,13.182],[-59.569,13.1825],[-59.569,13.183],[-59.569,13.1835],[-59.569,13.184],[-59.5685,13.184],[-59.5685,13.1845],[-59.568,13.1845],[-59.568,13.185],[-59.568,13.186],[-59.5675,13.186],[-59.567,13.187],[-59.567,13.1875],[-59.566,13.189],[-59.5655,13.19],[-59.565,13.1905],[-59.5645,13.1905],[-59.5645,13.191],[-59.564,13.191],[-59.564,13.1915],[-59.564,13.192],[-59.564,13.193],[-59.5645,13.1935],[-59.5645,13.1945],[-59.5645,13.195],[-59.5645,13.1955],[-59.5635,13.1965],[-59.563,13.197],[-59.5625,13.197],[-59.5625,13.1975],[-59.5625,13.198],[-59.562,13.1985],[-59.562,13.199],[-59.562,13.1995],[-59.5615,13.1995],[-59.5615,13.2],[-59.561,13.2],[-59.561,13.2015],[-59.561,13.202],[-59.5615,13.202],[-59.5615,13.2025],[-59.5615,13.203],[-59.5615,13.2035],[-59.562,13.204],[-59.562,13.2045],[-59.5625,13.205],[-59.564,13.2055],[-59.564,13.2065],[-59.5645,13.2065],[-59.565,13.2065],[-59.565,13.207],[-59.565,13.2075],[-59.564,13.209],[-59.564,13.2095],[-59.5645,13.2095],[-59.5645,13.21],[-59.5645,13.2105],[-59.5635,13.2115],[-59.5635,13.212],[-59.5635,13.2125],[-59.564,13.2125],[-59.564,13.213],[-59.5645,13.213],[-59.5645,13.2135],[-59.5645,13.214],[-59.5645,13.2145],[-59.564,13.2145],[-59.5635,13.2145],[-59.563,13.2145],[-59.563,13.215],[-59.5625,13.215],[-59.5625,13.2155],[-59.563,13.2155],[-59.563,13.216],[-59.5625,13.216],[-59.5625,13.2165],[-59.5625,13.217],[-59.563,13.217],[-59.563,13.2175],[-59.563,13.218],[-59.563,13.2185],[-59.563,13.219],[-59.5625,13.219],[-59.5625,13.2195],[-59.5625,13.22],[-59.563,13.2205],[-59.563,13.221],[-59.5635,13.2215],[-59.5625,13.2225],[-59.5615,13.2225],[-59.5605,13.222],[-59.5605,13.2225],[-59.56,13.2225],[-59.5595,13.223],[-59.559,13.2235],[-59.559,13.224],[-59.558,13.2245],[-59.5575,13.2245],[-59.5575,13.224],[-59.557,13.224],[-59.5565,13.224],[-59.5565,13.2245],[-59.556,13.2245],[-59.5555,13.225],[-59.555,13.2255],[-59.554,13.224],[-59.5535,13.224],[-59.5535,13.2235],[-59.5535,13.2225],[-59.5525,13.2225],[-59.552,13.2225],[-59.5515,13.2225],[-59.551,13.2225],[-59.5505,13.2225],[-59.5505,13.222],[-59.55,13.222],[-59.5495,13.222],[-59.549,13.222],[-59.549,13.2205],[-59.548,13.2205],[-59.548,13.221],[-59.5475,13.221],[-59.5475,13.2215],[-59.547,13.221],[-59.5465,13.221],[-59.546,13.221],[-59.5455,13.221],[-59.545,13.221],[-59.5445,13.221],[-59.544,13.221],[-59.5435,13.221],[-59.5435,13.2215],[-59.5435,13.222],[-59.544,13.222],[-59.544,13.2225],[-59.544,13.223],[-59.5445,13.223],[-59.545,13.223],[-59.545,13.2235],[-59.545,13.224],[-59.5445,13.224],[-59.5445,13.2245],[-59.5445,13.225],[-59.5445,13.2255],[-59.544,13.2255],[-59.5435,13.2255],[-59.5435,13.2265],[-59.5415,13.227],[-59.541,13.227],[-59.5405,13.2275],[-59.5395,13.2285],[-59.5395,13.229],[-59.539,13.2295],[-59.5385,13.2295],[-59.5385,13.229],[-59.538,13.229],[-59.538,13.2285],[-59.538,13.228],[-59.5375,13.228],[-59.5375,13.2275],[-59.537,13.2275],[-59.537,13.227],[-59.5365,13.227],[-59.5365,13.2265],[-59.536,13.2265],[-59.536,13.226],[-59.5355,13.226],[-59.535,13.2255],[-59.5345,13.2255],[-59.5345,13.225],[-59.534,13.225],[-59.534,13.2245],[-59.534,13.2235],[-59.5335,13.2235],[-59.5335,13.223],[-59.533,13.223],[-59.533,13.2225],[-59.5325,13.2225],[-59.5325,13.222],[-59.532,13.222],[-59.532,13.2215],[-59.5315,13.2215],[-59.5315,13.221],[-59.531,13.2205],[-59.5305,13.22],[-59.5305,13.2195],[-59.53,13.2195],[-59.53,13.219],[-59.5295,13.219],[-59.529,13.219],[-59.529,13.2185],[-59.5285,13.2185],[-59.5285,13.218],[-59.528,13.218],[-59.5275,13.2175],[-59.527,13.2175],[-59.527,13.217],[-59.5265,13.217],[-59.5265,13.2165],[-59.526,13.2165],[-59.526,13.216],[-59.5255,13.216],[-59.5255,13.2155],[-59.525,13.2155],[-59.5245,13.2155],[-59.5245,13.215],[-59.524,13.215],[-59.524,13.2145],[-59.5235,13.2145],[-59.523,13.2145],[-59.5225,13.214],[-59.522,13.214],[-59.5215,13.214],[-59.5215,13.2135],[-59.521,13.2135],[-59.5205,13.2135],[-59.5205,13.213],[-59.52,13.213],[-59.5195,13.2125],[-59.5185,13.2125],[-59.518,13.2125],[-59.5175,13.2125],[-59.517,13.2125],[-59.5165,13.2125],[-59.516,13.2125],[-59.5155,13.2125],[-59.5155,13.212],[-59.515,13.212],[-59.5145,13.2115],[-59.514,13.2115],[-59.5135,13.211],[-59.513,13.211],[-59.5125,13.2105],[-59.512,13.2105],[-59.5115,13.2105],[-59.511,13.2105],[-59.5105,13.2105],[-59.5105,13.21],[-59.51,13.21],[-59.5095,13.21],[-59.5095,13.2095],[-59.509,13.2095],[-59.5085,13.2095],[-59.508,13.2095],[-59.508,13.209],[-59.5075,13.2085],[-59.5075,13.208],[-59.507,13.208],[-59.507,13.2075],[-59.5065,13.2075],[-59.506,13.207],[-59.5055,13.2065],[-59.5055,13.206],[-59.505,13.206],[-59.505,13.2055],[-59.5045,13.2055],[-59.5045,13.205],[-59.504,13.205],[-59.504,13.2045],[-59.5035,13.2045],[-59.5035,13.204],[-59.503,13.204],[-59.5025,13.204],[-59.5025,13.2035],[-59.502,13.2035],[-59.502,13.203],[-59.502,13.2025],[-59.5015,13.2025],[-59.5015,13.202],[-59.501,13.202],[-59.5005,13.202],[-59.5,13.2015],[-59.4995,13.201],[-59.4995,13.2005],[-59.499,13.2005],[-59.499,13.2],[-59.4985,13.2],[-59.498,13.2],[-59.498,13.1995],[-59.4975,13.1995],[-59.4975,13.199],[-59.497,13.199],[-59.4965,13.199],[-59.4965,13.1985],[-59.496,13.1985],[-59.496,13.198],[-59.4955,13.198],[-59.495,13.198],[-59.4945,13.198],[-59.4945,13.1975],[-59.494,13.1975],[-59.4935,13.1975],[-59.493,13.1975],[-59.4925,13.1975],[-59.492,13.1975],[-59.4915,13.1975],[-59.4915,13.198],[-59.491,13.198],[-59.4905,13.198],[-59.4905,13.1985],[-59.49,13.1985],[-59.4895,13.1985],[-59.4895,13.198],[-59.489,13.198],[-59.4885,13.198],[-59.4885,13.1975],[-59.488,13.1975],[-59.488,13.197],[-59.4875,13.197],[-59.487,13.197],[-59.487,13.1965],[-59.487,13.196],[-59.487,13.1955],[-59.4865,13.1955],[-59.4865,13.195],[-59.4865,13.1945],[-59.4865,13.194],[-59.4865,13.1935],[-59.4865,13.193],[-59.4865,13.1925],[-59.4865,13.192],[-59.4865,13.1915],[-59.486,13.1915],[-59.4855,13.1915],[-59.4855,13.191],[-59.485,13.191],[-59.4845,13.1905],[-59.484,13.1905],[-59.4835,13.1905],[-59.483,13.1905],[-59.483,13.191],[-59.4825,13.191],[-59.482,13.191],[-59.4815,13.191],[-59.481,13.191],[-59.481,13.1905],[-59.4805,13.1905],[-59.48,13.1905],[-59.48,13.19],[-59.4795,13.19],[-59.479,13.19],[-59.479,13.1895],[-59.4785,13.1895],[-59.478,13.1895],[-59.4775,13.1895],[-59.4775,13.189],[-59.4775,13.1885],[-59.477,13.1885],[-59.477,13.188],[-59.477,13.1875],[-59.4765,13.1875],[-59.476,13.1875],[-59.476,13.187],[-59.4755,13.187],[-59.475,13.187],[-59.4745,13.1865],[-59.474,13.1865],[-59.474,13.186],[-59.4735,13.186],[-59.4735,13.1855],[-59.473,13.1855],[-59.473,13.185],[-59.4725,13.185],[-59.4725,13.1845],[-59.472,13.1845],[-59.472,13.184],[-59.4715,13.184],[-59.4715,13.1835],[-59.471,13.183],[-59.471,13.1825],[-59.4705,13.1825],[-59.4705,13.182],[-59.47,13.182],[-59.4695,13.1815],[-59.469,13.181],[-59.4685,13.181],[-59.4685,13.1805],[-59.468,13.1805],[-59.468,13.18],[-59.4675,13.18],[-59.467,13.18],[-59.4665,13.18],[-59.466,13.18],[-59.4655,13.18],[-59.465,13.18],[-59.4645,13.18],[-59.464,13.18],[-59.464,13.1805],[-59.4635,13.1805],[-59.463,13.1805],[-59.463,13.181],[-59.463,13.1815],[-59.4625,13.1815],[-59.4625,13.182],[-59.4625,13.1825],[-59.462,13.1825],[-59.462,13.182],[-59.4615,13.182],[-59.4615,13.1825],[-59.461,13.1825],[-59.4605,13.1825],[-59.46,13.1825],[-59.46,13.183],[-59.46,13.1835],[-59.4595,13.1835],[-59.459,13.1835],[-59.4585,13.1835],[-59.458,13.1835],[-59.458,13.183],[-59.458,13.1825],[-59.4575,13.1825],[-59.4575,13.182],[-59.4575,13.1815],[-59.457,13.1815],[-59.457,13.181],[-59.4565,13.181],[-59.4565,13.1805],[-59.4575,13.18],[-59.4575,13.1795],[-59.458,13.1795],[-59.458,13.179],[-59.4585,13.179],[-59.4585,13.1785],[-59.459,13.1785],[-59.459,13.178],[-59.4595,13.178],[-59.4595,13.1775],[-59.46,13.1775],[-59.46,13.177],[-59.4605,13.177],[-59.4605,13.1765],[-59.461,13.1765],[-59.461,13.176],[-59.4615,13.176],[-59.4615,13.1755],[-59.462,13.1755],[-59.462,13.175],[-59.4625,13.175],[-59.4625,13.1745],[-59.463,13.1745],[-59.463,13.174],[-59.4635,13.174],[-59.4635,13.1735],[-59.463,13.1735],[-59.463,13.173],[-59.4625,13.173],[-59.4625,13.1725],[-59.4625,13.172],[-59.4625,13.1715],[-59.463,13.1715],[-59.463,13.171],[-59.4635,13.171],[-59.464,13.1705],[-59.4645,13.17],[-59.466,13.169],[-59.4655,13.167],[-59.4655,13.1665],[-59.466,13.1665],[-59.4665,13.166],[-59.467,13.166],[-59.467,13.1655],[-59.467,13.165],[-59.4675,13.165],[-59.4675,13.1645],[-59.468,13.1645],[-59.468,13.164],[-59.468,13.1635],[-59.4685,13.1635],[-59.4685,13.163],[-59.4685,13.1625],[-59.469,13.1625],[-59.4695,13.1625],[-59.47,13.1625],[-59.4705,13.1625],[-59.471,13.1625],[-59.471,13.163],[-59.4715,13.163],[-59.4715,13.1625],[-59.472,13.1625],[-59.4725,13.1625],[-59.473,13.1625],[-59.4735,13.1625],[-59.4735,13.163],[-59.474,13.163],[-59.475,13.163],[-59.4755,13.163],[-59.476,13.163],[-59.4765,13.163],[-59.477,13.163],[-59.477,13.1635],[-59.478,13.1635],[-59.4785,13.164],[-59.479,13.164],[-59.4795,13.164],[-59.48,13.1635],[-59.4805,13.1635],[-59.481,13.163],[-59.4815,13.163],[-59.482,13.1625],[-59.483,13.1625],[-59.4835,13.1625],[-59.484,13.162],[-59.4845,13.1615],[-59.4855,13.161],[-59.4865,13.161],[-59.487,13.161],[-59.4875,13.161],[-59.488,13.161],[-59.4885,13.1605],[-59.489,13.1605],[-59.4895,13.1605],[-59.49,13.1605],[-59.4905,13.1605],[-59.4905,13.161],[-59.4905,13.1615],[-59.491,13.1615],[-59.4915,13.1615],[-59.492,13.1615],[-59.493,13.1615],[-59.494,13.162],[-59.496,13.1625],[-59.4975,13.1625],[-59.499,13.1625],[-59.499,13.161],[-59.499,13.16],[-59.4985,13.1585],[-59.4985,13.158],[-59.498,13.1575],[-59.498,13.157],[-59.4975,13.157],[-59.4975,13.1565],[-59.4975,13.156],[-59.4975,13.1555],[-59.4975,13.155],[-59.4975,13.1545],[-59.4975,13.1535],[-59.498,13.1505],[-59.498,13.1495],[-59.4985,13.1495],[-59.499,13.1495],[-59.4995,13.1495],[-59.5,13.1495],[-59.5,13.15],[-59.5005,13.1495],[-59.5005,13.149],[-59.501,13.149],[-59.501,13.1485],[-59.501,13.148],[-59.5005,13.148],[-59.5005,13.1475],[-59.5,13.147],[-59.4995,13.147],[-59.499,13.147],[-59.4985,13.147],[-59.4985,13.1465],[-59.4985,13.1455],[-59.4985,13.145],[-59.499,13.145],[-59.4985,13.144],[-59.499,13.1435],[-59.499,13.143],[-59.499,13.1425],[-59.499,13.142],[-59.499,13.1415],[-59.499,13.141],[-59.4985,13.1405],[-59.4985,13.14],[-59.4985,13.1395],[-59.499,13.1395],[-59.4995,13.139],[-59.5,13.139],[-59.5005,13.1385],[-59.501,13.1385],[-59.501,13.139],[-59.502,13.138],[-59.504,13.1365],[-59.504,13.136],[-59.5035,13.1355],[-59.5035,13.135],[-59.503,13.135],[-59.503,13.1345],[-59.503,13.134],[-59.5025,13.134],[-59.5025,13.1335],[-59.502,13.1335],[-59.502,13.133],[-59.5025,13.133],[-59.503,13.133],[-59.5035,13.133],[-59.504,13.133],[-59.5045,13.133],[-59.505,13.133],[-59.505,13.1325],[-59.5055,13.1325],[-59.506,13.1325],[-59.5065,13.1325],[-59.5065,13.132],[-59.5065,13.1315],[-59.506,13.131],[-59.506,13.1305],[-59.506,13.13],[-59.506,13.1295],[-59.506,13.129],[-59.506,13.1285],[-59.506,13.128],[-59.506,13.1275],[-59.506,13.127],[-59.506,13.1265],[-59.5065,13.126],[-59.5065,13.1255],[-59.5065,13.125],[-59.507,13.1245],[-59.507,13.124],[-59.5075,13.124],[-59.508,13.1235],[-59.5085,13.1235],[-59.509,13.1235],[-59.509,13.123],[-59.509,13.1225],[-59.509,13.122],[-59.509,13.1215],[-59.5095,13.1215],[-59.5095,13.121],[-59.5095,13.1205],[-59.51,13.1205]]]},{"name":"Sir Winston Scott Polyclinic","short":"Sir Winston Scott","colour":"#9b8cc4","phone":"536-3476","email":"ehd.wspc@health.gov.bb","rings":[[[-59.5875,13.1185],[-59.5875,13.118],[-59.587,13.1175],[-59.586,13.1165],[-59.5855,13.116],[-59.5835,13.114],[-59.5835,13.1135],[-59.583,13.1135],[-59.583,13.113],[-59.5825,13.1125],[-59.582,13.112],[-59.5815,13.1115],[-59.5815,13.111],[-59.581,13.111],[-59.581,13.1105],[-59.5805,13.11],[-59.5805,13.1095],[-59.5805,13.109],[-59.58,13.1085],[-59.58,13.108],[-59.58,13.1075],[-59.58,13.107],[-59.58,13.1065],[-59.58,13.106],[-59.58,13.105],[-59.579,13.105],[-59.5785,13.1055],[-59.578,13.1055],[-59.5775,13.1055],[-59.577,13.1055],[-59.5765,13.106],[-59.576,13.106],[-59.5755,13.106],[-59.575,13.106],[-59.5745,13.1065],[-59.574,13.1065],[-59.5735,13.1065],[-59.573,13.1065],[-59.5725,13.106],[-59.572,13.106],[-59.5715,13.106],[-59.571,13.106],[-59.5705,13.106],[-59.57,13.106],[-59.5695,13.106],[-59.569,13.1065],[-59.5685,13.1065],[-59.568,13.1065],[-59.5675,13.1065],[-59.567,13.1065],[-59.5665,13.1065],[-59.566,13.1065],[-59.5655,13.1065],[-59.5645,13.1065],[-59.564,13.1065],[-59.5635,13.1065],[-59.563,13.1065],[-59.5625,13.1065],[-59.5625,13.107],[-59.562,13.107],[-59.5615,13.107],[-59.5615,13.1075],[-59.561,13.1075],[-59.5605,13.1075],[-59.56,13.1075],[-59.5595,13.1075],[-59.559,13.1075],[-59.5585,13.1075],[-59.558,13.1075],[-59.5575,13.1075],[-59.557,13.1075],[-59.5565,13.1075],[-59.5555,13.1075],[-59.555,13.108],[-59.5545,13.108],[-59.554,13.108],[-59.5535,13.108],[-59.553,13.108],[-59.553,13.1085],[-59.5525,13.1085],[-59.552,13.1085],[-59.551,13.109],[-59.5505,13.109],[-59.55,13.109],[-59.5495,13.109],[-59.549,13.109],[-59.5485,13.109],[-59.548,13.109],[-59.5475,13.109],[-59.547,13.109],[-59.5465,13.109],[-59.546,13.109],[-59.5455,13.109],[-59.545,13.109],[-59.5445,13.1085],[-59.544,13.1085],[-59.5435,13.1085],[-59.543,13.1085],[-59.543,13.108],[-59.5425,13.108],[-59.542,13.108],[-59.5415,13.108],[-59.541,13.108],[-59.5405,13.1085],[-59.54,13.1085],[-59.539,13.1085],[-59.5385,13.1085],[-59.538,13.109],[-59.5375,13.109],[-59.537,13.109],[-59.537,13.1095],[-59.5365,13.1095],[-59.536,13.1095],[-59.5355,13.1095],[-59.535,13.11],[-59.5345,13.11],[-59.534,13.11],[-59.5335,13.11],[-59.5335,13.1105],[-59.533,13.1105],[-59.533,13.111],[-59.5325,13.111],[-59.532,13.111],[-59.532,13.1115],[-59.5315,13.1115],[-59.5315,13.112],[-59.531,13.112],[-59.5305,13.112],[-59.5305,13.1125],[-59.53,13.1125],[-59.53,13.113],[-59.5295,13.1135],[-59.529,13.1135],[-59.529,13.114],[-59.5285,13.114],[-59.5285,13.1145],[-59.528,13.1145],[-59.5275,13.115],[-59.5275,13.1145],[-59.528,13.1135],[-59.528,13.113],[-59.528,13.112],[-59.528,13.111],[-59.528,13.1105],[-59.5285,13.11],[-59.5285,13.1095],[-59.5285,13.109],[-59.529,13.109],[-59.529,13.1085],[-59.5285,13.108],[-59.5285,13.1075],[-59.5285,13.107],[-59.5285,13.1065],[-59.5285,13.106],[-59.5285,13.1055],[-59.5285,13.105],[-59.528,13.1045],[-59.528,13.104],[-59.528,13.1035],[-59.5275,13.1035],[-59.5275,13.103],[-59.5275,13.1025],[-59.5275,13.102],[-59.528,13.1015],[-59.528,13.101],[-59.528,13.1005],[-59.528,13.1],[-59.528,13.0995],[-59.528,13.099],[-59.5285,13.0985],[-59.5285,13.098],[-59.5285,13.0975],[-59.5285,13.097],[-59.5285,13.0965],[-59.5285,13.096],[-59.5285,13.0955],[-59.5285,13.095],[-59.5285,13.0945],[-59.529,13.0945],[-59.529,13.094],[-59.529,13.0935],[-59.529,13.093],[-59.529,13.092],[-59.5295,13.091],[-59.5295,13.0905],[-59.5295,13.0895],[-59.529,13.0895],[-59.529,13.089],[-59.529,13.0885],[-59.529,13.088],[-59.529,13.0875],[-59.529,13.087],[-59.529,13.0865],[-59.5295,13.086],[-59.5295,13.0855],[-59.5295,13.085],[-59.5295,13.0845],[-59.5295,13.084],[-59.5295,13.0835],[-59.53,13.083],[-59.53,13.0825],[-59.5295,13.082],[-59.5295,13.0815],[-59.53,13.081],[-59.53,13.0805],[-59.5305,13.0805],[-59.531,13.0805],[-59.5315,13.081],[-59.5325,13.082],[-59.534,13.0825],[-59.535,13.083],[-59.5355,13.083],[-59.5355,13.0835],[-59.5355,13.084],[-59.536,13.084],[-59.536,13.0845],[-59.5365,13.0845],[-59.537,13.085],[-59.5375,13.0855],[-59.538,13.0855],[-59.539,13.086],[-59.5395,13.0865],[-59.54,13.0865],[-59.5405,13.0865],[-59.5405,13.087],[-59.541,13.087],[-59.541,13.0875],[-59.5415,13.0875],[-59.542,13.0875],[-59.5425,13.088],[-59.543,13.088],[-59.543,13.0885],[-59.5435,13.0885],[-59.544,13.0885],[-59.544,13.088],[-59.5445,13.088],[-59.545,13.0875],[-59.5455,13.0875],[-59.546,13.087],[-59.5465,13.087],[-59.547,13.0865],[-59.5475,13.0865],[-59.548,13.086],[-59.5485,13.086],[-59.5485,13.0855],[-59.549,13.0855],[-59.549,13.085],[-59.549,13.0845],[-59.5495,13.0845],[-59.5495,13.084],[-59.5495,13.0835],[-59.55,13.0835],[-59.5505,13.0835],[-59.551,13.0835],[-59.5515,13.083],[-59.552,13.083],[-59.5525,13.083],[-59.5525,13.0825],[-59.553,13.0825],[-59.5535,13.0825],[-59.554,13.0825],[-59.5545,13.0825],[-59.555,13.083],[-59.5555,13.083],[-59.556,13.083],[-59.5565,13.083],[-59.557,13.083],[-59.5575,13.0825],[-59.558,13.0825],[-59.5585,13.0825],[-59.559,13.0825],[-59.5595,13.082],[-59.56,13.082],[-59.5605,13.082],[-59.561,13.082],[-59.5615,13.0825],[-59.562,13.0825],[-59.563,13.0825],[-59.563,13.083],[-59.5635,13.083],[-59.564,13.083],[-59.5645,13.083],[-59.565,13.083],[-59.565,13.0825],[-59.5655,13.0825],[-59.566,13.0825],[-59.5665,13.0825],[-59.5675,13.0825],[-59.568,13.083],[-59.568,13.0835],[-59.5675,13.0845],[-59.568,13.085],[-59.5685,13.085],[-59.569,13.0855],[-59.5695,13.086],[-59.57,13.086],[-59.5705,13.0865],[-59.571,13.0865],[-59.5715,13.0865],[-59.572,13.0865],[-59.5725,13.0865],[-59.573,13.0865],[-59.5735,13.0865],[-59.574,13.0865],[-59.5745,13.0865],[-59.575,13.0865],[-59.5755,13.0865],[-59.576,13.0865],[-59.576,13.087],[-59.5765,13.087],[-59.577,13.087],[-59.5775,13.087],[-59.578,13.086],[-59.578,13.0855],[-59.578,13.085],[-59.578,13.0845],[-59.578,13.084],[-59.578,13.0835],[-59.5785,13.0835],[-59.5785,13.0825],[-59.579,13.082],[-59.5795,13.081],[-59.5795,13.0805],[-59.58,13.0805],[-59.58,13.08],[-59.5805,13.0795],[-59.5805,13.079],[-59.5805,13.0785],[-59.581,13.0785],[-59.581,13.078],[-59.581,13.0775],[-59.581,13.077],[-59.5815,13.0765],[-59.5815,13.0755],[-59.5815,13.075],[-59.582,13.075],[-59.5825,13.075],[-59.583,13.0755],[-59.5835,13.0755],[-59.5835,13.076],[-59.584,13.076],[-59.5845,13.076],[-59.585,13.0765],[-59.5855,13.077],[-59.586,13.077],[-59.586,13.0775],[-59.5865,13.0775],[-59.587,13.0775],[-59.5875,13.078],[-59.588,13.078],[-59.5885,13.078],[-59.589,13.078],[-59.5895,13.078],[-59.59,13.078],[-59.5905,13.078],[-59.591,13.0775],[-59.5915,13.0775],[-59.5915,13.078],[-59.592,13.078],[-59.592,13.0785],[-59.592,13.079],[-59.592,13.0795],[-59.592,13.08],[-59.5925,13.08],[-59.593,13.08],[-59.5935,13.08],[-59.594,13.08],[-59.5945,13.08],[-59.595,13.08],[-59.5955,13.0805],[-59.596,13.0805],[-59.5965,13.0805],[-59.597,13.0805],[-59.597,13.081],[-59.5975,13.081],[-59.598,13.081],[-59.5985,13.081],[-59.599,13.081],[-59.5995,13.081],[-59.6,13.081],[-59.6005,13.0805],[-59.601,13.0805],[-59.6015,13.0805],[-59.6015,13.081],[-59.602,13.081],[-59.6025,13.081],[-59.603,13.0805],[-59.603,13.08],[-59.6035,13.08],[-59.6035,13.0795],[-59.6035,13.079],[-59.604,13.079],[-59.604,13.0785],[-59.6045,13.0785],[-59.605,13.0785],[-59.6055,13.0785],[-59.606,13.0785],[-59.606,13.078],[-59.606,13.0775],[-59.606,13.077],[-59.6065,13.077],[-59.607,13.077],[-59.6075,13.077],[-59.6085,13.0775],[-59.609,13.0775],[-59.61,13.078],[-59.61,13.0775],[-59.6105,13.0775],[-59.6105,13.078],[-59.611,13.078],[-59.611,13.0775],[-59.6115,13.0775],[-59.612,13.0775],[-59.612,13.078],[-59.612,13.0785],[-59.6125,13.0785],[-59.613,13.0785],[-59.613,13.079],[-59.613,13.0795],[-59.6125,13.0795],[-59.6125,13.08],[-59.612,13.08],[-59.6115,13.08],[-59.611,13.0805],[-59.6105,13.0805],[-59.6105,13.081],[-59.6105,13.0815],[-59.61,13.0815],[-59.61,13.082],[-59.61,13.0825],[-59.6105,13.0825],[-59.6105,13.0835],[-59.6095,13.083],[-59.6095,13.0835],[-59.6095,13.084],[-59.61,13.0845],[-59.61,13.085],[-59.61,13.0855],[-59.61,13.086],[-59.6095,13.088],[-59.6095,13.0885],[-59.61,13.0895],[-59.6105,13.091],[-59.611,13.091],[-59.611,13.0915],[-59.6115,13.0915],[-59.612,13.092],[-59.6125,13.0925],[-59.613,13.0925],[-59.613,13.093],[-59.6135,13.093],[-59.614,13.0935],[-59.6145,13.094],[-59.615,13.0945],[-59.6155,13.0945],[-59.6155,13.095],[-59.616,13.095],[-59.6165,13.095],[-59.617,13.095],[-59.6175,13.095],[-59.6175,13.0955],[-59.617,13.096],[-59.6165,13.097],[-59.616,13.0975],[-59.616,13.098],[-59.616,13.0985],[-59.616,13.099],[-59.6155,13.099],[-59.6155,13.0995],[-59.6155,13.1],[-59.615,13.1005],[-59.615,13.101],[-59.615,13.1015],[-59.615,13.102],[-59.6145,13.102],[-59.6145,13.1025],[-59.614,13.1025],[-59.614,13.103],[-59.614,13.1035],[-59.6135,13.104],[-59.6135,13.1045],[-59.6135,13.105],[-59.613,13.1055],[-59.613,13.106],[-59.613,13.1065],[-59.613,13.107],[-59.6125,13.107],[-59.6125,13.1075],[-59.6125,13.108],[-59.612,13.1085],[-59.612,13.109],[-59.6115,13.1095],[-59.611,13.11],[-59.611,13.1105],[-59.6105,13.1115],[-59.61,13.112],[-59.61,13.1125],[-59.6095,13.113],[-59.6095,13.1135],[-59.609,13.1135],[-59.6085,13.1135],[-59.608,13.1135],[-59.608,13.114],[-59.6075,13.114],[-59.607,13.1145],[-59.6065,13.115],[-59.606,13.116],[-59.605,13.1165],[-59.604,13.1175],[-59.6035,13.118],[-59.603,13.118],[-59.6025,13.118],[-59.6015,13.118],[-59.6015,13.1175],[-59.601,13.1175],[-59.6005,13.1175],[-59.6,13.118],[-59.6,13.1185],[-59.6,13.119],[-59.599,13.1205],[-59.599,13.121],[-59.598,13.122],[-59.5975,13.1225],[-59.5965,13.124],[-59.596,13.125],[-59.596,13.1255],[-59.5955,13.126],[-59.5955,13.1265],[-59.595,13.1265],[-59.5935,13.125],[-59.593,13.124],[-59.5925,13.1235],[-59.5915,13.1225],[-59.59,13.121],[-59.5895,13.12],[-59.589,13.1195],[-59.588,13.119],[-59.588,13.1185],[-59.5875,13.1185]]]},{"name":"Randal Phillips Polyclinic","short":"Randal Phillips","colour":"#e0b24a","phone":"536-4338","email":"Rppc.ehd@health.gov.bb","rings":[[[-59.4465,13.1025],[-59.446,13.1025],[-59.446,13.102],[-59.4465,13.102],[-59.447,13.102],[-59.447,13.1015],[-59.447,13.101],[-59.4475,13.101],[-59.4475,13.1015],[-59.448,13.1015],[-59.4485,13.1015],[-59.4485,13.102],[-59.449,13.102],[-59.449,13.1015],[-59.4495,13.1015],[-59.4495,13.101],[-59.45,13.101],[-59.45,13.1005],[-59.45,13.1],[-59.4505,13.0995],[-59.4505,13.099],[-59.451,13.0985],[-59.451,13.098],[-59.4515,13.0975],[-59.4515,13.097],[-59.452,13.097],[-59.452,13.0965],[-59.452,13.096],[-59.452,13.0955],[-59.4525,13.0955],[-59.4525,13.095],[-59.453,13.0945],[-59.453,13.094],[-59.453,13.0935],[-59.4535,13.0935],[-59.4535,13.093],[-59.4535,13.0925],[-59.454,13.0925],[-59.454,13.092],[-59.4545,13.092],[-59.4545,13.0915],[-59.455,13.0915],[-59.4555,13.0915],[-59.4555,13.091],[-59.4555,13.0905],[-59.456,13.0905],[-59.456,13.09],[-59.4565,13.09],[-59.457,13.09],[-59.4575,13.09],[-59.4575,13.0895],[-59.4575,13.089],[-59.4575,13.0885],[-59.458,13.0885],[-59.458,13.088],[-59.4585,13.088],[-59.459,13.088],[-59.459,13.0875],[-59.459,13.087],[-59.4595,13.087],[-59.4595,13.0865],[-59.46,13.0865],[-59.4605,13.0865],[-59.4605,13.086],[-59.461,13.086],[-59.4615,13.086],[-59.4615,13.0855],[-59.462,13.0855],[-59.462,13.085],[-59.4625,13.085],[-59.4625,13.0845],[-59.463,13.0845],[-59.463,13.084],[-59.463,13.0835],[-59.463,13.083],[-59.4635,13.083],[-59.4635,13.0835],[-59.464,13.0835],[-59.464,13.084],[-59.4645,13.084],[-59.4645,13.0835],[-59.465,13.0835],[-59.465,13.083],[-59.4655,13.083],[-59.466,13.083],[-59.4665,13.0825],[-59.467,13.0825],[-59.467,13.082],[-59.4675,13.082],[-59.468,13.082],[-59.468,13.0815],[-59.4685,13.0815],[-59.469,13.0815],[-59.469,13.081],[-59.4695,13.081],[-59.4695,13.0805],[-59.47,13.0805],[-59.47,13.08],[-59.4705,13.08],[-59.471,13.08],[-59.471,13.0795],[-59.4715,13.0795],[-59.4715,13.079],[-59.472,13.079],[-59.472,13.0785],[-59.4725,13.0785],[-59.473,13.078],[-59.4735,13.078],[-59.4735,13.0775],[-59.474,13.0775],[-59.474,13.077],[-59.4745,13.077],[-59.4745,13.0765],[-59.475,13.0765],[-59.4755,13.076],[-59.476,13.076],[-59.476,13.0755],[-59.4765,13.0755],[-59.477,13.075],[-59.4775,13.075],[-59.4775,13.0745],[-59.478,13.0745],[-59.4785,13.0745],[-59.4785,13.074],[-59.479,13.074],[-59.479,13.0735],[-59.4795,13.0735],[-59.4795,13.073],[-59.48,13.073],[-59.48,13.0725],[-59.4805,13.0725],[-59.4805,13.072],[-59.481,13.072],[-59.481,13.0715],[-59.4815,13.0715],[-59.4815,13.071],[-59.482,13.071],[-59.482,13.0705],[-59.4825,13.0705],[-59.4825,13.07],[-59.483,13.07],[-59.4835,13.07],[-59.4835,13.0695],[-59.484,13.0695],[-59.484,13.069],[-59.4845,13.069],[-59.4845,13.0685],[-59.485,13.0685],[-59.4855,13.0685],[-59.486,13.0685],[-59.486,13.068],[-59.486,13.0675],[-59.4865,13.0675],[-59.487,13.068],[-59.4875,13.0675],[-59.488,13.0675],[-59.4885,13.0675],[-59.4885,13.067],[-59.489,13.067],[-59.4895,13.067],[-59.4895,13.0665],[-59.49,13.0665],[-59.4905,13.067],[-59.491,13.0665],[-59.4915,13.0665],[-59.4915,13.067],[-59.492,13.067],[-59.4925,13.067],[-59.4925,13.0665],[-59.493,13.0665],[-59.493,13.067],[-59.4935,13.067],[-59.4935,13.0665],[-59.494,13.0665],[-59.494,13.067],[-59.4945,13.067],[-59.4945,13.0665],[-59.495,13.0665],[-59.4955,13.0665],[-59.4955,13.066],[-59.4955,13.0655],[-59.496,13.0655],[-59.496,13.065],[-59.4965,13.065],[-59.4965,13.0645],[-59.497,13.064],[-59.497,13.0635],[-59.4975,13.0635],[-59.4975,13.063],[-59.498,13.063],[-59.498,13.0625],[-59.498,13.062],[-59.4985,13.062],[-59.4985,13.0615],[-59.499,13.0615],[-59.499,13.061],[-59.499,13.0605],[-59.4995,13.0605],[-59.4995,13.06],[-59.4995,13.0595],[-59.5,13.0595],[-59.5,13.059],[-59.5005,13.059],[-59.5005,13.0585],[-59.5005,13.058],[-59.501,13.058],[-59.501,13.0575],[-59.501,13.057],[-59.5015,13.057],[-59.5015,13.0565],[-59.502,13.0565],[-59.502,13.056],[-59.502,13.0555],[-59.5025,13.0555],[-59.5025,13.055],[-59.5025,13.0545],[-59.503,13.0545],[-59.503,13.054],[-59.5025,13.054],[-59.5025,13.0535],[-59.503,13.0535],[-59.503,13.053],[-59.5035,13.053],[-59.5035,13.0525],[-59.504,13.0525],[-59.504,13.052],[-59.5045,13.052],[-59.505,13.052],[-59.505,13.0525],[-59.505,13.053],[-59.5055,13.053],[-59.506,13.053],[-59.506,13.0525],[-59.5065,13.0525],[-59.507,13.0525],[-59.507,13.052],[-59.5075,13.052],[-59.5075,13.0515],[-59.508,13.0515],[-59.5085,13.0515],[-59.509,13.0515],[-59.509,13.051],[-59.5095,13.051],[-59.51,13.051],[-59.51,13.0505],[-59.5105,13.0505],[-59.511,13.0505],[-59.5115,13.0505],[-59.5115,13.05],[-59.512,13.05],[-59.512,13.0495],[-59.5125,13.0495],[-59.513,13.0495],[-59.5135,13.0495],[-59.5135,13.049],[-59.514,13.049],[-59.514,13.0485],[-59.5145,13.0485],[-59.5145,13.048],[-59.515,13.048],[-59.515,13.0475],[-59.5155,13.0475],[-59.516,13.0475],[-59.516,13.047],[-59.5165,13.047],[-59.517,13.047],[-59.5175,13.047],[-59.5175,13.0465],[-59.518,13.0465],[-59.5185,13.0465],[-59.519,13.0465],[-59.5195,13.0465],[-59.52,13.0465],[-59.5205,13.0465],[-59.521,13.0465],[-59.5215,13.0465],[-59.522,13.0465],[-59.5225,13.0465],[-59.5225,13.046],[-59.523,13.046],[-59.5235,13.046],[-59.5235,13.0455],[-59.524,13.0455],[-59.5245,13.0455],[-59.525,13.0455],[-59.5255,13.0455],[-59.5255,13.045],[-59.526,13.045],[-59.5265,13.045],[-59.527,13.045],[-59.5275,13.045],[-59.528,13.045],[-59.528,13.0455],[-59.5285,13.0455],[-59.529,13.0455],[-59.5295,13.0455],[-59.5295,13.046],[-59.53,13.046],[-59.5305,13.046],[-59.531,13.046],[-59.531,13.0465],[-59.5315,13.0465],[-59.532,13.0465],[-59.5325,13.047],[-59.533,13.047],[-59.533,13.0475],[-59.5335,13.048],[-59.5335,13.0485],[-59.534,13.0485],[-59.534,13.049],[-59.5345,13.049],[-59.535,13.049],[-59.535,13.0495],[-59.535,13.05],[-59.535,13.0505],[-59.535,13.051],[-59.535,13.0515],[-59.535,13.052],[-59.535,13.0525],[-59.535,13.053],[-59.535,13.0535],[-59.5355,13.0535],[-59.5355,13.054],[-59.5355,13.0545],[-59.536,13.0545],[-59.536,13.055],[-59.5365,13.055],[-59.5365,13.0555],[-59.537,13.0555],[-59.5375,13.056],[-59.5375,13.0565],[-59.5375,13.057],[-59.538,13.057],[-59.538,13.0575],[-59.5375,13.0575],[-59.5375,13.058],[-59.538,13.058],[-59.538,13.0585],[-59.538,13.059],[-59.5385,13.059],[-59.5385,13.0595],[-59.5385,13.06],[-59.539,13.06],[-59.539,13.0605],[-59.5395,13.0605],[-59.54,13.0605],[-59.54,13.061],[-59.5405,13.061],[-59.5405,13.0615],[-59.541,13.0615],[-59.5415,13.0615],[-59.5415,13.062],[-59.542,13.062],[-59.542,13.0625],[-59.542,13.063],[-59.5425,13.0635],[-59.543,13.0635],[-59.5435,13.0635],[-59.5435,13.064],[-59.544,13.064],[-59.5445,13.064],[-59.545,13.064],[-59.5455,13.064],[-59.5455,13.0645],[-59.546,13.0645],[-59.5465,13.0645],[-59.547,13.0645],[-59.5475,13.0645],[-59.548,13.0645],[-59.5485,13.0645],[-59.5485,13.065],[-59.549,13.065],[-59.5495,13.065],[-59.55,13.065],[-59.5505,13.065],[-59.551,13.065],[-59.5515,13.0655],[-59.552,13.0655],[-59.552,13.066],[-59.5525,13.066],[-59.5525,13.0655],[-59.553,13.0655],[-59.5535,13.0655],[-59.554,13.0655],[-59.5545,13.0655],[-59.555,13.0655],[-59.5555,13.0655],[-59.556,13.0655],[-59.5565,13.0655],[-59.5565,13.065],[-59.557,13.065],[-59.5575,13.065],[-59.558,13.065],[-59.5585,13.065],[-59.559,13.065],[-59.5595,13.065],[-59.56,13.065],[-59.5605,13.065],[-59.561,13.065],[-59.5615,13.065],[-59.562,13.065],[-59.5625,13.065],[-59.563,13.065],[-59.563,13.0645],[-59.5635,13.0645],[-59.5635,13.064],[-59.564,13.064],[-59.5645,13.064],[-59.565,13.064],[-59.5655,13.064],[-59.5655,13.0645],[-59.566,13.0645],[-59.566,13.065],[-59.5665,13.065],[-59.567,13.065],[-59.567,13.0655],[-59.5675,13.0655],[-59.5675,13.066],[-59.568,13.066],[-59.568,13.0665],[-59.5685,13.0665],[-59.569,13.0665],[-59.5695,13.0665],[-59.57,13.0665],[-59.5705,13.0665],[-59.571,13.0665],[-59.5715,13.0665],[-59.572,13.0665],[-59.572,13.067],[-59.5725,13.067],[-59.573,13.067],[-59.5735,13.067],[-59.574,13.067],[-59.5745,13.067],[-59.5745,13.0675],[-59.575,13.0675],[-59.5755,13.0675],[-59.5755,13.068],[-59.5755,13.0685],[-59.576,13.0685],[-59.5765,13.0685],[-59.577,13.0685],[-59.577,13.069],[-59.5775,13.069],[-59.578,13.069],[-59.5785,13.069],[-59.579,13.069],[-59.579,13.0695],[-59.5795,13.0695],[-59.58,13.0695],[-59.5805,13.0695],[-59.581,13.0695],[-59.581,13.07],[-59.5815,13.07],[-59.5815,13.0705],[-59.582,13.0705],[-59.582,13.071],[-59.5825,13.071],[-59.583,13.071],[-59.5835,13.071],[-59.584,13.071],[-59.584,13.0715],[-59.5845,13.0715],[-59.585,13.0715],[-59.5855,13.0715],[-59.586,13.0715],[-59.586,13.072],[-59.5865,13.072],[-59.587,13.072],[-59.587,13.0725],[-59.587,13.073],[-59.5875,13.073],[-59.588,13.073],[-59.5885,13.073],[-59.5885,13.0735],[-59.589,13.0735],[-59.5895,13.0735],[-59.59,13.0735],[-59.5905,13.0735],[-59.591,13.0735],[-59.5915,13.0735],[-59.592,13.0735],[-59.5925,13.0735],[-59.593,13.0735],[-59.5935,13.0735],[-59.594,13.0735],[-59.5945,13.0735],[-59.595,13.0735],[-59.5955,13.0735],[-59.596,13.0735],[-59.5965,13.0735],[-59.597,13.0735],[-59.5975,13.0735],[-59.5975,13.074],[-59.598,13.074],[-59.5985,13.074],[-59.599,13.074],[-59.5995,13.074],[-59.5995,13.0745],[-59.6,13.0745],[-59.6,13.075],[-59.6005,13.075],[-59.601,13.075],[-59.601,13.0755],[-59.6015,13.0755],[-59.602,13.0755],[-59.6025,13.0755],[-59.6025,13.076],[-59.603,13.076],[-59.6035,13.076],[-59.604,13.076],[-59.6045,13.076],[-59.605,13.076],[-59.6055,13.076],[-59.606,13.076],[-59.606,13.0765],[-59.6065,13.0765],[-59.607,13.0765],[-59.607,13.077],[-59.6065,13.077],[-59.606,13.077],[-59.606,13.0775],[-59.606,13.078],[-59.606,13.0785],[-59.6055,13.0785],[-59.605,13.0785],[-59.6045,13.0785],[-59.604,13.0785],[-59.604,13.079],[-59.6035,13.079],[-59.6035,13.0795],[-59.6035,13.08],[-59.603,13.08],[-59.603,13.0805],[-59.6025,13.081],[-59.602,13.081],[-59.6015,13.081],[-59.6015,13.0805],[-59.601,13.0805],[-59.6005,13.0805],[-59.6,13.081],[-59.5995,13.081],[-59.599,13.081],[-59.5985,13.081],[-59.598,13.081],[-59.5975,13.081],[-59.597,13.081],[-59.597,13.0805],[-59.5965,13.0805],[-59.596,13.0805],[-59.5955,13.0805],[-59.595,13.08],[-59.5945,13.08],[-59.594,13.08],[-59.5935,13.08],[-59.593,13.08],[-59.5925,13.08],[-59.592,13.08],[-59.592,13.0795],[-59.592,13.079],[-59.592,13.0785],[-59.592,13.078],[-59.5915,13.078],[-59.5915,13.0775],[-59.591,13.0775],[-59.5905,13.078],[-59.59,13.078],[-59.5895,13.078],[-59.589,13.078],[-59.5885,13.078],[-59.588,13.078],[-59.5875,13.078],[-59.587,13.0775],[-59.5865,13.0775],[-59.586,13.0775],[-59.586,13.077],[-59.5855,13.077],[-59.585,13.0765],[-59.5845,13.076],[-59.584,13.076],[-59.5835,13.076],[-59.5835,13.0755],[-59.583,13.0755],[-59.5825,13.075],[-59.582,13.075],[-59.5815,13.075],[-59.5815,13.0755],[-59.5815,13.0765],[-59.581,13.077],[-59.581,13.0775],[-59.581,13.078],[-59.581,13.0785],[-59.5805,13.0785],[-59.5805,13.079],[-59.5805,13.0795],[-59.58,13.08],[-59.58,13.0805],[-59.5795,13.0805],[-59.5795,13.081],[-59.579,13.082],[-59.5785,13.0825],[-59.5785,13.0835],[-59.578,13.0835],[-59.578,13.084],[-59.578,13.0845],[-59.578,13.085],[-59.578,13.0855],[-59.578,13.086],[-59.5775,13.087],[-59.577,13.087],[-59.5765,13.087],[-59.576,13.087],[-59.576,13.0865],[-59.5755,13.0865],[-59.575,13.0865],[-59.5745,13.0865],[-59.574,13.0865],[-59.5735,13.0865],[-59.573,13.0865],[-59.5725,13.0865],[-59.572,13.0865],[-59.5715,13.0865],[-59.571,13.0865],[-59.5705,13.0865],[-59.57,13.086],[-59.5695,13.086],[-59.569,13.0855],[-59.5685,13.085],[-59.568,13.085],[-59.5675,13.0845],[-59.568,13.0835],[-59.568,13.083],[-59.5675,13.0825],[-59.5665,13.0825],[-59.566,13.0825],[-59.5655,13.0825],[-59.565,13.0825],[-59.565,13.083],[-59.5645,13.083],[-59.564,13.083],[-59.5635,13.083],[-59.563,13.083],[-59.563,13.0825],[-59.562,13.0825],[-59.5615,13.0825],[-59.561,13.082],[-59.5605,13.082],[-59.56,13.082],[-59.5595,13.082],[-59.559,13.0825],[-59.5585,13.0825],[-59.558,13.0825],[-59.5575,13.0825],[-59.557,13.083],[-59.5565,13.083],[-59.556,13.083],[-59.5555,13.083],[-59.555,13.083],[-59.5545,13.0825],[-59.554,13.0825],[-59.5535,13.0825],[-59.553,13.0825],[-59.5525,13.0825],[-59.5525,13.083],[-59.552,13.083],[-59.5515,13.083],[-59.551,13.0835],[-59.5505,13.0835],[-59.55,13.0835],[-59.5495,13.0835],[-59.5495,13.084],[-59.5495,13.0845],[-59.549,13.0845],[-59.549,13.085],[-59.549,13.0855],[-59.5485,13.0855],[-59.5485,13.086],[-59.548,13.086],[-59.5475,13.0865],[-59.547,13.0865],[-59.5465,13.087],[-59.546,13.087],[-59.5455,13.0875],[-59.545,13.0875],[-59.5445,13.088],[-59.544,13.088],[-59.544,13.0885],[-59.5435,13.0885],[-59.543,13.0885],[-59.543,13.088],[-59.5425,13.088],[-59.542,13.0875],[-59.5415,13.0875],[-59.541,13.0875],[-59.541,13.087],[-59.5405,13.087],[-59.5405,13.0865],[-59.54,13.0865],[-59.5395,13.0865],[-59.539,13.086],[-59.538,13.0855],[-59.5375,13.0855],[-59.537,13.085],[-59.5365,13.0845],[-59.536,13.0845],[-59.536,13.084],[-59.5355,13.084],[-59.5355,13.0835],[-59.5355,13.083],[-59.535,13.083],[-59.534,13.0825],[-59.5325,13.082],[-59.5315,13.081],[-59.531,13.0805],[-59.5305,13.0805],[-59.53,13.0805],[-59.53,13.081],[-59.5295,13.0815],[-59.5295,13.082],[-59.53,13.0825],[-59.53,13.083],[-59.5295,13.0835],[-59.5295,13.084],[-59.5295,13.0845],[-59.5295,13.085],[-59.5295,13.0855],[-59.5295,13.086],[-59.529,13.0865],[-59.529,13.087],[-59.529,13.0875],[-59.529,13.088],[-59.529,13.0885],[-59.529,13.089],[-59.529,13.0895],[-59.5295,13.0895],[-59.5295,13.0905],[-59.5295,13.091],[-59.529,13.092],[-59.529,13.093],[-59.529,13.0935],[-59.529,13.094],[-59.529,13.0945],[-59.5285,13.0945],[-59.5285,13.095],[-59.5285,13.0955],[-59.5285,13.096],[-59.5285,13.0965],[-59.5285,13.097],[-59.5285,13.0975],[-59.5285,13.098],[-59.5285,13.0985],[-59.528,13.099],[-59.528,13.0995],[-59.528,13.1],[-59.528,13.1005],[-59.528,13.101],[-59.528,13.1015],[-59.5275,13.102],[-59.5275,13.1025],[-59.5275,13.103],[-59.5275,13.1035],[-59.528,13.1035],[-59.528,13.104],[-59.528,13.1045],[-59.5285,13.105],[-59.5285,13.1055],[-59.5285,13.106],[-59.5285,13.1065],[-59.5285,13.107],[-59.5285,13.1075],[-59.5285,13.108],[-59.529,13.1085],[-59.529,13.109],[-59.5285,13.109],[-59.5285,13.1095],[-59.5285,13.11],[-59.528,13.1105],[-59.528,13.111],[-59.528,13.112],[-59.528,13.113],[-59.528,13.1135],[-59.5275,13.1145],[-59.5275,13.115],[-59.5275,13.1155],[-59.5265,13.116],[-59.5255,13.1165],[-59.525,13.1165],[-59.525,13.117],[-59.5245,13.117],[-59.524,13.117],[-59.5235,13.1175],[-59.523,13.1175],[-59.5225,13.1175],[-59.522,13.118],[-59.5215,13.1185],[-59.521,13.119],[-59.52,13.1195],[-59.5195,13.1195],[-59.519,13.12],[-59.518,13.12],[-59.5175,13.12],[-59.517,13.12],[-59.5165,13.12],[-59.516,13.1195],[-59.5155,13.12],[-59.515,13.12],[-59.5145,13.12],[-59.514,13.12],[-59.5135,13.12],[-59.513,13.12],[-59.512,13.12],[-59.5115,13.12],[-59.51,13.1205],[-59.5095,13.1205],[-59.509,13.1205],[-59.508,13.1205],[-59.507,13.12],[-59.507,13.1195],[-59.507,13.1185],[-59.507,13.1175],[-59.507,13.1165],[-59.5065,13.1165],[-59.505,13.1165],[-59.503,13.1165],[-59.503,13.116],[-59.502,13.116],[-59.5015,13.116],[-59.501,13.1165],[-59.4995,13.1165],[-59.4985,13.1165],[-59.498,13.117],[-59.4975,13.117],[-59.497,13.1165],[-59.497,13.116],[-59.4965,13.116],[-59.4965,13.1155],[-59.4965,13.1145],[-59.497,13.1125],[-59.497,13.1115],[-59.4975,13.109],[-59.4975,13.1085],[-59.4975,13.108],[-59.4975,13.1075],[-59.4975,13.107],[-59.496,13.1065],[-59.4955,13.1065],[-59.4955,13.106],[-59.4955,13.1055],[-59.4955,13.105],[-59.4955,13.1045],[-59.4955,13.104],[-59.4955,13.1035],[-59.496,13.103],[-59.4965,13.1025],[-59.496,13.102],[-59.4965,13.102],[-59.496,13.101],[-59.496,13.1005],[-59.495,13.1005],[-59.495,13.101],[-59.4945,13.101],[-59.494,13.1015],[-59.4935,13.1015],[-59.4935,13.102],[-59.493,13.1025],[-59.4925,13.103],[-59.492,13.1035],[-59.4915,13.104],[-59.491,13.104],[-59.4905,13.104],[-59.49,13.1045],[-59.4895,13.1045],[-59.489,13.105],[-59.4885,13.1055],[-59.488,13.1055],[-59.4875,13.1055],[-59.486,13.1055],[-59.486,13.1045],[-59.486,13.104],[-59.486,13.1035],[-59.4855,13.1035],[-59.485,13.1035],[-59.4845,13.1035],[-59.484,13.1035],[-59.483,13.1035],[-59.4825,13.1035],[-59.482,13.1035],[-59.481,13.1035],[-59.4805,13.1035],[-59.48,13.1035],[-59.4795,13.1035],[-59.479,13.104],[-59.4785,13.104],[-59.4775,13.104],[-59.476,13.1035],[-59.4755,13.1035],[-59.4735,13.1035],[-59.472,13.1035],[-59.4715,13.1035],[-59.471,13.1035],[-59.4705,13.1035],[-59.47,13.104],[-59.4695,13.1045],[-59.469,13.1045],[-59.4685,13.1045],[-59.4675,13.1045],[-59.466,13.1045],[-59.4655,13.1045],[-59.4655,13.105],[-59.465,13.105],[-59.4645,13.105],[-59.464,13.105],[-59.4635,13.105],[-59.463,13.105],[-59.4625,13.105],[-59.462,13.1045],[-59.4615,13.1045],[-59.461,13.1045],[-59.46,13.1045],[-59.4595,13.1045],[-59.459,13.1045],[-59.4585,13.1045],[-59.458,13.104],[-59.4575,13.104],[-59.4565,13.104],[-59.456,13.104],[-59.455,13.104],[-59.4545,13.104],[-59.454,13.104],[-59.4535,13.104],[-59.453,13.104],[-59.4525,13.1035],[-59.4515,13.1035],[-59.451,13.1035],[-59.4505,13.1035],[-59.4495,13.1035],[-59.449,13.1035],[-59.4485,13.1035],[-59.448,13.1035],[-59.4475,13.1035],[-59.447,13.1035],[-59.447,13.103],[-59.4465,13.103],[-59.4465,13.1025]]]},{"name":"Frederick Miller Polyclinic","short":"Frederick Miller","colour":"#4aa3a5","phone":"","email":"","rings":[[[-59.5875,13.119],[-59.5875,13.12],[-59.587,13.121],[-59.587,13.1215],[-59.5865,13.123],[-59.586,13.1235],[-59.586,13.1245],[-59.5855,13.1245],[-59.5855,13.125],[-59.5855,13.126],[-59.5855,13.1265],[-59.5855,13.127],[-59.585,13.1275],[-59.585,13.128],[-59.5845,13.128],[-59.5845,13.1285],[-59.584,13.129],[-59.584,13.1295],[-59.5835,13.1305],[-59.5835,13.131],[-59.5835,13.1315],[-59.5835,13.132],[-59.5835,13.1325],[-59.5835,13.133],[-59.5835,13.134],[-59.5835,13.1345],[-59.584,13.1355],[-59.584,13.136],[-59.584,13.1365],[-59.584,13.137],[-59.5835,13.137],[-59.5835,13.1375],[-59.583,13.138],[-59.5825,13.138],[-59.5825,13.1385],[-59.582,13.1385],[-59.5825,13.139],[-59.5825,13.1395],[-59.5825,13.14],[-59.5825,13.1405],[-59.583,13.141],[-59.583,13.1415],[-59.583,13.142],[-59.5835,13.142],[-59.5835,13.1425],[-59.583,13.144],[-59.5825,13.144],[-59.582,13.143],[-59.581,13.145],[-59.5805,13.146],[-59.58,13.147],[-59.5805,13.147],[-59.581,13.147],[-59.581,13.1475],[-59.5815,13.1475],[-59.5815,13.148],[-59.5815,13.1485],[-59.5815,13.149],[-59.581,13.149],[-59.581,13.1495],[-59.581,13.15],[-59.581,13.1505],[-59.5805,13.1505],[-59.58,13.151],[-59.5795,13.1515],[-59.58,13.152],[-59.58,13.1525],[-59.5805,13.1525],[-59.581,13.1525],[-59.5815,13.1525],[-59.582,13.1525],[-59.582,13.153],[-59.5825,13.153],[-59.5825,13.1535],[-59.583,13.1535],[-59.584,13.154],[-59.584,13.1545],[-59.5835,13.1545],[-59.5835,13.155],[-59.584,13.155],[-59.584,13.1555],[-59.583,13.156],[-59.5825,13.1565],[-59.582,13.1565],[-59.582,13.157],[-59.5815,13.1575],[-59.5815,13.158],[-59.5815,13.1585],[-59.581,13.159],[-59.5805,13.159],[-59.58,13.1595],[-59.58,13.16],[-59.5795,13.16],[-59.579,13.1605],[-59.5785,13.161],[-59.578,13.161],[-59.578,13.1615],[-59.5775,13.1615],[-59.577,13.1615],[-59.577,13.162],[-59.576,13.162],[-59.5755,13.162],[-59.575,13.162],[-59.5745,13.162],[-59.574,13.1615],[-59.5735,13.1615],[-59.5735,13.161],[-59.573,13.161],[-59.5725,13.161],[-59.572,13.161],[-59.571,13.161],[-59.57,13.161],[-59.568,13.1615],[-59.5675,13.1615],[-59.5665,13.1615],[-59.5655,13.162],[-59.565,13.162],[-59.5645,13.162],[-59.564,13.1625],[-59.564,13.163],[-59.5625,13.1635],[-59.5615,13.164],[-59.561,13.164],[-59.56,13.165],[-59.5585,13.166],[-59.558,13.1665],[-59.5575,13.167],[-59.557,13.1675],[-59.5565,13.166],[-59.5555,13.164],[-59.556,13.161],[-59.556,13.1595],[-59.555,13.1595],[-59.5545,13.159],[-59.5535,13.159],[-59.553,13.159],[-59.553,13.1585],[-59.5525,13.1585],[-59.552,13.158],[-59.551,13.158],[-59.551,13.1575],[-59.551,13.1565],[-59.552,13.1555],[-59.5525,13.155],[-59.5525,13.1545],[-59.553,13.1525],[-59.553,13.152],[-59.553,13.1505],[-59.553,13.1495],[-59.553,13.149],[-59.5535,13.148],[-59.552,13.1485],[-59.5515,13.149],[-59.551,13.15],[-59.5505,13.1505],[-59.55,13.151],[-59.5485,13.1515],[-59.5475,13.1525],[-59.546,13.1535],[-59.5455,13.154],[-59.544,13.1545],[-59.543,13.155],[-59.5415,13.1555],[-59.5405,13.1555],[-59.539,13.1555],[-59.5385,13.1555],[-59.5375,13.1555],[-59.5365,13.1555],[-59.5355,13.156],[-59.535,13.156],[-59.5345,13.156],[-59.534,13.1565],[-59.533,13.1565],[-59.5335,13.1555],[-59.533,13.1545],[-59.533,13.1535],[-59.5325,13.153],[-59.5325,13.1515],[-59.5315,13.15],[-59.5315,13.1495],[-59.5315,13.148],[-59.5315,13.1475],[-59.5315,13.147],[-59.531,13.147],[-59.531,13.1465],[-59.5315,13.146],[-59.5315,13.1455],[-59.5315,13.144],[-59.5315,13.141],[-59.5305,13.1385],[-59.531,13.138],[-59.5315,13.137],[-59.532,13.1365],[-59.532,13.136],[-59.5325,13.1355],[-59.5315,13.135],[-59.531,13.135],[-59.53,13.135],[-59.53,13.1345],[-59.5295,13.134],[-59.5295,13.133],[-59.5295,13.1325],[-59.53,13.1315],[-59.5305,13.1305],[-59.531,13.1295],[-59.531,13.1285],[-59.5315,13.127],[-59.5315,13.1265],[-59.531,13.1255],[-59.531,13.1245],[-59.5305,13.124],[-59.5305,13.1235],[-59.531,13.123],[-59.5305,13.1225],[-59.53,13.1225],[-59.53,13.1215],[-59.53,13.121],[-59.53,13.12],[-59.5295,13.1195],[-59.529,13.1195],[-59.5285,13.1195],[-59.528,13.1195],[-59.5275,13.1185],[-59.5275,13.1175],[-59.5275,13.1165],[-59.5275,13.1155],[-59.5275,13.115],[-59.528,13.1145],[-59.5285,13.1145],[-59.5285,13.114],[-59.529,13.114],[-59.529,13.1135],[-59.5295,13.1135],[-59.53,13.113],[-59.53,13.1125],[-59.5305,13.1125],[-59.5305,13.112],[-59.531,13.112],[-59.5315,13.112],[-59.5315,13.1115],[-59.532,13.1115],[-59.532,13.111],[-59.5325,13.111],[-59.533,13.111],[-59.533,13.1105],[-59.5335,13.1105],[-59.5335,13.11],[-59.534,13.11],[-59.5345,13.11],[-59.535,13.11],[-59.5355,13.1095],[-59.536,13.1095],[-59.5365,13.1095],[-59.537,13.1095],[-59.537,13.109],[-59.5375,13.109],[-59.538,13.109],[-59.5385,13.1085],[-59.539,13.1085],[-59.54,13.1085],[-59.5405,13.1085],[-59.541,13.108],[-59.5415,13.108],[-59.542,13.108],[-59.5425,13.108],[-59.543,13.108],[-59.543,13.1085],[-59.5435,13.1085],[-59.544,13.1085],[-59.5445,13.1085],[-59.545,13.109],[-59.5455,13.109],[-59.546,13.109],[-59.5465,13.109],[-59.547,13.109],[-59.5475,13.109],[-59.548,13.109],[-59.5485,13.109],[-59.549,13.109],[-59.5495,13.109],[-59.55,13.109],[-59.5505,13.109],[-59.551,13.109],[-59.552,13.1085],[-59.5525,13.1085],[-59.553,13.1085],[-59.553,13.108],[-59.5535,13.108],[-59.554,13.108],[-59.5545,13.108],[-59.555,13.108],[-59.5555,13.1075],[-59.5565,13.1075],[-59.557,13.1075],[-59.5575,13.1075],[-59.558,13.1075],[-59.5585,13.1075],[-59.559,13.1075],[-59.5595,13.1075],[-59.56,13.1075],[-59.5605,13.1075],[-59.561,13.1075],[-59.5615,13.1075],[-59.5615,13.107],[-59.562,13.107],[-59.5625,13.107],[-59.5625,13.1065],[-59.563,13.1065],[-59.5635,13.1065],[-59.564,13.1065],[-59.5645,13.1065],[-59.5655,13.1065],[-59.566,13.1065],[-59.5665,13.1065],[-59.567,13.1065],[-59.5675,13.1065],[-59.568,13.1065],[-59.5685,13.1065],[-59.569,13.1065],[-59.5695,13.106],[-59.57,13.106],[-59.5705,13.106],[-59.571,13.106],[-59.5715,13.106],[-59.572,13.106],[-59.5725,13.106],[-59.573,13.1065],[-59.5735,13.1065],[-59.574,13.1065],[-59.5745,13.1065],[-59.575,13.106],[-59.5755,13.106],[-59.576,13.106],[-59.5765,13.106],[-59.577,13.1055],[-59.5775,13.1055],[-59.578,13.1055],[-59.5785,13.1055],[-59.579,13.105],[-59.58,13.105],[-59.58,13.106],[-59.58,13.1065],[-59.58,13.107],[-59.58,13.1075],[-59.58,13.108],[-59.58,13.1085],[-59.5805,13.109],[-59.5805,13.1095],[-59.5805,13.11],[-59.581,13.1105],[-59.581,13.111],[-59.5815,13.111],[-59.5815,13.1115],[-59.582,13.112],[-59.5825,13.1125],[-59.583,13.113],[-59.583,13.1135],[-59.5835,13.1135],[-59.5835,13.114],[-59.5855,13.116],[-59.586,13.1165],[-59.587,13.1175],[-59.5875,13.118],[-59.5875,13.1185],[-59.588,13.1185],[-59.5875,13.119]]]}];
+var PLACES=[{"n":"Arthur Seat","p":"St. Thomas","c":[-59.60404,13.14882]},{"n":"Bagatelle","p":"St. James","c":[-59.61508,13.16104]},{"n":"Bathsheba","p":"St. Joseph","c":[-59.52272,13.21294]},{"n":"Bennetts","p":"St. Thomas","c":[-59.61248,13.17244]},{"n":"Black Rock","p":"St. Michael","c":[-59.62625,13.12686]},{"n":"Bridgetown","p":"St. Michael","c":[-59.61842,13.09778]},{"n":"Cane Garden","p":"St. Thomas","c":[-59.59618,13.15069]},{"n":"Carrington","p":"St. Thomas","c":[-59.57652,13.19592]},{"n":"Cave Hill","p":"St. Michael","c":[-59.62843,13.13542]},{"n":"Clermont Gardens","p":"St. Michael","c":[-59.61679,13.14399]},{"n":"Deacons","p":"St. Michael","c":[-59.62313,13.11618]},{"n":"Durants","p":"St. James","c":[-59.63186,13.15862]},{"n":"Eagle Hall","p":"St. Michael","c":[-59.61474,13.11325]},{"n":"Edgehill Heights","p":"St. Thomas","c":[-59.59979,13.15987]},{"n":"Holders Hill","p":"St. James","c":[-59.63426,13.16125]},{"n":"Holetown","p":"St. James","c":[-59.63729,13.18561]},{"n":"Hoytes Village","p":"St. James","c":[-59.62125,13.16174]},{"n":"Jackson","p":"St. Michael","c":[-59.60104,13.1439]},{"n":"Lancaster","p":"St. James","c":[-59.61962,13.20348]},{"n":"Lower Estate","p":"St. Michael","c":[-59.58384,13.13106]},{"n":"Mount Standfast","p":"St. James","c":[-59.63485,13.21028]},{"n":"Oistins","p":"Christ Church","c":[-59.54224,13.06319]},{"n":"Porters","p":"St. James","c":[-59.63811,13.20152]},{"n":"Prospect","p":"St. James","c":[-59.636,13.14091]},{"n":"Redmans","p":"St. Thomas","c":[-59.61361,13.15902]},{"n":"Rock Hall","p":"St. Thomas","c":[-59.60007,13.18816]},{"n":"Sharon","p":"St. Thomas","c":[-59.60155,13.1518]},{"n":"Shop Hill","p":"St. Thomas","c":[-59.60114,13.16374]},{"n":"Six Cross Roads","p":"St. Philip","c":[-59.47703,13.11776]},{"n":"Speightstown","p":"St. Peter","c":[-59.64238,13.25005]},{"n":"Trents","p":"St. James","c":[-59.63757,13.1916]},{"n":"Vaucluse","p":"St. Thomas","c":[-59.59826,13.17203]},{"n":"Warrens","p":"St. Michael","c":[-59.60762,13.14049]},{"n":"Welches","p":"St. Thomas","c":[-59.61247,13.15327]},{"n":"Welchman Hall","p":"St. Thomas","c":[-59.57715,13.18635]},{"n":"Wildey","p":"St. Michael","c":[-59.58431,13.09243]}];
+
+var EG_NAME = 'Eunice Gibson Polyclinic';
+var EDGE_M  = 150;              /* within this of the boundary, don't assert a side */
+var MINISTRY = '(246) 536-3800';
+
+var SITES = [
+  { name:'Eunice Gibson Polyclinic', kind:'poly', where:'Warrens, St. Michael',
+    lat:13.14102, lng:-59.60607,
+    days:'Monday to Friday', hours:'8:30am to 4:30pm',
+    tel:'(246) 536-4000',
+    extra:['Medical records (246) 536-4004','Environmental health (246) 536-4033'] },
+  { name:'St. Thomas Outpatient Clinic', kind:'poly', where:'Rock Hall, St. Thomas',
+    lat:13.18699, lng:-59.60434,
+    days:'Tuesday, Thursday and Friday', hours:'8:30am to 4:30pm',
+    tel:null,
+    note:'No direct number is published. Call the Ministry on ' + '(246) 536-3800' + '.',
+    extra:['Reopened 5 May 2026 after refurbishment; the pharmacy reopened on 12 May 2026.'] }
+];
+
+/* ---------------------------------------------------------------------------
+   WEEKLY TIMETABLES — scraped 1 October 2026 from polyclinics.wixsite.com/egpc
+   (/outpatient-clinics, /specialist-services, /public-health-services,
+   /medical-records-services).
+
+   *** TIER D. NOT AN OFFICIAL SOURCE. *** health.gov.bb publishes no clinic
+   days at all. That site is a free-tier Wix subdomain, © 2023, not linked from
+   health.gov.bb or gov.bb, carrying pre-migration phone numbers (417-2101 and
+   425-2996, where health.gov.bb gives 536-4000/536-4033). Its own General
+   Practice page describes staffing "at the Randal Phillips Polyclinic" — proof
+   that content is copy-pasted between the polyclinic sites. Treat every day
+   below as UNCONFIRMED and label it on the page.
+
+   KNOWN CONFLICT: this source lists the St. Thomas Outpatient Clinic as running
+   Monday to Friday. Barbados Today (1 May 2026) reports it reopening after
+   refurbishment on Tuesday, Thursday and Friday. The 2023 timetable is almost
+   certainly pre-refurbishment. Both are shown; neither is asserted.
+
+   NOT FOUND: no source gives a blood-test or laboratory DAY for either site.
+   "Blood tests" appear only in an undated General Practice service list.
+   --------------------------------------------------------------------------- */
+var WEEK = [
+  /* ---- Eunice Gibson Polyclinic (Warrens) ----
+     s:true  = scraped from the polyclinic's own site (unofficial, 2023)
+     ex:true = EXAMPLE DATA, invented for this prototype. The service is real —
+               dentistry, family planning and blood tests are all published
+               services — but NO SOURCE GIVES A DAY for any of them, and STI
+               testing is not published for this site at all. Shown only to
+               demonstrate the "what's on today" pattern. Every one is labelled
+               "Example" on the page. Replace with Ministry-confirmed days
+               before this goes near a real user. */
+  { open:[1,2,3,4,5],
+    everyday:['General practice','Pharmacy, 8:30am to 4:30pm','Medical records'],
+
+    /* Published at every polyclinic but WITH NO PUBLISHED DAY. These are real —
+       the 15-service primary care list on health.gov.bb, plus the six programmes
+       the 2011 Polyclinic Procedure Manual mandates at every polyclinic — so they
+       are NOT example data. What is unknown is the day, and the page says so
+       rather than inventing one. */
+    unscheduled:[
+      {n:'Antenatal and postnatal'}, {n:'Immunization'}, {n:'Podiatry (chiropody)'},
+      {n:'Nutrition'}, {n:'Counselling'}, {n:'Physiotherapy and speech'},
+      {n:'Community (district) nursing'}, {n:'Health promotion'},
+      {n:'Diabetic programme'}, {n:'Hypertension programme'}, {n:'Asthma programme'},
+      {n:'Breast feeding programme'}, {n:"Men's health programme"},
+      {n:'Adolescent health programme'},
+      {n:'Environmental health', note:'Environmental health department — (246) 536-4033'}
+    ],
+    /* Listed by the polyclinic as not running at present. Worth surfacing: a
+       blank result would leave someone assuming it is available. */
+    unavailable:[{n:'Surgery'}, {n:'Catheter change'}],
+
+    days:{
+      1:[{n:'Child health clinic', note:'Appointments', s:true},
+         {n:'School health', note:'By appointment', s:true},
+         {n:'Dental health', note:'Appointments', ex:true}],
+      2:[{n:'School health', note:'Walk-in', s:true},
+         {n:'Dermatology', nth:[4], note:'4th Tuesday of the month only', s:true},
+         {n:'Blood testing', note:'Mornings, no appointment needed', ex:true},
+         {n:'Family planning', ex:true}],
+      3:[{n:'Mental health', note:'Mornings', s:true},
+         {n:'School health', note:'Walk-in', s:true},
+         {n:'Dental health', note:'Appointments', ex:true}],
+      4:[{n:'Child health clinic', note:'Appointments', s:true},
+         {n:'Blood testing', note:'Mornings, no appointment needed', ex:true},
+         {n:'STI testing', note:'Walk-in, confidential', ex:true}],
+      5:[{n:'Family planning', ex:true},
+         {n:'Dental health', note:'Appointments', ex:true},
+         {n:'Gynaecology', note:'Appointments', ex:true}]
+    } },
+
+  /* ---- St. Thomas Outpatient Clinic (Rock Hall) ----
+     OPEN THREE DAYS A WEEK ONLY — Tuesday, Thursday and Friday, as reported on
+     its reopening after refurbishment (Barbados Today, 1 May 2026). The 2023
+     Wix timetable listed it Monday to Friday; those Monday and Wednesday
+     clinics are pre-refurbishment and have been dropped. The Tue/Thu/Fri
+     clinics below are that source's, kept because they match the reported
+     opening days. */
+  { open:[2,4,5],
+    everyday:[], unscheduled:[], unavailable:[],
+    days:{
+      1:[],
+      2:[{n:'General practice', s:true},{n:'Pharmacy', s:true}],
+      3:[],
+      4:[{n:'Mental health', s:true},{n:'Dressings clinic', s:true},
+         {n:'Pharmacy', ex:true}],
+      5:[{n:'General practice', s:true},{n:'Pharmacy', s:true}]
+    } }
+];
+var DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+/* Which occurrence of this weekday the date is — "4th Tuesday" etc. */
+function nthOfMonth(d){ return Math.floor((d.getDate() - 1) / 7) + 1; }
+
+function whatsOnToday(i, when){
+  var d = when || new Date(), dow = d.getDay(), w = WEEK[i];
+  if (w.open.indexOf(dow) === -1)
+    return { day:DAY_NAMES[dow], closed:true, items:[],
+             openDays:w.open.map(function(x){ return DAY_NAMES[x]; }) };
+  var items = (w.days[dow] || []).filter(function(it){
+    return !it.nth || it.nth.indexOf(nthOfMonth(d)) !== -1;
+  });
+  return { day:DAY_NAMES[dow], closed:false, items:items, everyday:w.everyday };
+}
+
+var state = { lng:null, lat:null, label:null, site:null };
+
+/* ---------- geometry ------------------------------------------------- */
+
+var M_DEG = 111320;
+function mPerLon(lat){ return M_DEG * Math.cos(lat * Math.PI / 180); }
+
+/* Ray casting. Rings are closed exterior rings; no holes in this dataset. */
+/* Outside the catchment still reads as a map, not a void — each polyclinic
+   keeps its own hue, pulled most of the way toward its own grey. */
+function dull(hex){
+  var r = parseInt(hex.substr(1,2),16), g = parseInt(hex.substr(3,2),16), b = parseInt(hex.substr(5,2),16);
+  var grey = 0.299*r + 0.587*g + 0.114*b, m = 0.70;
+  function mix(v){ return Math.round(v + (grey - v) * m); }
+  return '#' + [mix(r),mix(g),mix(b)].map(function(v){ return ('0'+v.toString(16)).slice(-2); }).join('');
+}
+
+function pointInRing(lng, lat, ring){
+  var inside = false, i, j;
+  for (i = 0, j = ring.length - 1; i < ring.length; j = i++){
+    var xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+    if (((yi > lat) !== (yj > lat)) &&
+        (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi)) inside = !inside;
+  }
+  return inside;
+}
+
+function inCatchment(lng, lat, c){
+  for (var i = 0; i < c.rings.length; i++) if (pointInRing(lng, lat, c.rings[i])) return true;
+  return false;
+}
+
+function findCatchment(lng, lat){
+  for (var i = 0; i < CATCHMENTS.length; i++)
+    if (inCatchment(lng, lat, CATCHMENTS[i])) return CATCHMENTS[i];
+  return null;
+}
+
+/* The catchment coastline is drawn slightly inland of the real shore, so a
+   genuine coastal address can sit a few metres outside every polygon — Oistins
+   misses by 2 m. Snap to the nearest catchment within COAST_M rather than
+   telling someone on dry land they are offshore. */
+var COAST_M = 250;
+function nearestCatchment(lng, lat){
+  var best = null, bestD = Infinity;
+  for (var i = 0; i < CATCHMENTS.length; i++){
+    var d = distToBoundaryM(lng, lat, CATCHMENTS[i]);
+    if (d < bestD){ bestD = d; best = CATCHMENTS[i]; }
+  }
+  return bestD <= COAST_M ? { c: best, d: bestD } : null;
+}
+
+/* Shortest distance in metres from a point to a ring's edge. */
+function distToSegM(px, py, ax, ay, bx, by, kx){
+  var x = (px - ax) * kx, y = (py - ay) * M_DEG;
+  var dx = (bx - ax) * kx, dy = (by - ay) * M_DEG;
+  var len = dx * dx + dy * dy;
+  var t = len ? Math.max(0, Math.min(1, (x * dx + y * dy) / len)) : 0;
+  var ox = x - dx * t, oy = y - dy * t;
+  return Math.sqrt(ox * ox + oy * oy);
+}
+
+function distToBoundaryM(lng, lat, c){
+  var kx = mPerLon(lat), best = Infinity;
+  for (var r = 0; r < c.rings.length; r++){
+    var ring = c.rings[r];
+    for (var i = 0, j = ring.length - 1; i < ring.length; j = i++){
+      var d = distToSegM(lng, lat, ring[j][0], ring[j][1], ring[i][0], ring[i][1], kx);
+      if (d < best) best = d;
+    }
+  }
+  return best;
+}
+
+function distanceM(aLng, aLat, bLng, bLat){
+  var kx = mPerLon((aLat + bLat) / 2);
+  var x = (aLng - bLng) * kx, y = (aLat - bLat) * M_DEG;
+  return Math.sqrt(x * x + y * y);
+}
+
+function listWords(a){
+  return a.length < 2 ? (a[0] || '')
+       : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+}
+
+function fmtDist(m){
+  if (m < 1000) return Math.max(10, Math.round(m / 10) * 10) + ' m';
+  return (m / 1000).toFixed(1) + ' km';
+}
+
+/* The edge case needs words, not a rounded number: "about 0 m" reads as broken. */
+function fmtEdge(m){
+  if (m < 25)  return 'right on the edge of the Eunice Gibson catchment';
+  if (m < 100) return 'within ' + (Math.ceil(m / 25) * 25) + ' m of the edge of the Eunice Gibson catchment';
+  return 'about ' + fmtDist(m) + ' from the edge of the Eunice Gibson catchment';
+}
+
+var EG = (function(){
+  for (var i = 0; i < CATCHMENTS.length; i++)
+    if (CATCHMENTS[i].name === EG_NAME) return CATCHMENTS[i];
+  return null;
+})();
+
+/* ---------- address autocomplete ------------------------------------- */
+
+var elInput  = document.getElementById('v1-addr');
+var elList   = document.getElementById('v1-listbox');
+var elStatus = document.getElementById('v1-combo-status');
+
+var suggestions = [], active = -1, timer = null, controller = null, usedFallback = false;
+
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function fallbackSearch(q){
+  var n = q.toLowerCase();
+  return PLACES.filter(function(p){ return p.n.toLowerCase().indexOf(n) !== -1; })
+               .slice(0, 7)
+               .map(function(p){ return { name:p.n, where:p.p, lng:p.c[0], lat:p.c[1] }; });
+}
+
+function photonSearch(q){
+  if (controller) controller.abort();
+  controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  var url = 'https://photon.komoot.io/api/?q=' + encodeURIComponent(q) +
+            '&limit=8&lat=13.17&lon=-59.60&bbox=-59.70,13.03,-59.40,13.34';
+  return fetch(url, controller ? { signal: controller.signal } : undefined)
+    .then(function(r){ if (!r.ok) throw new Error('bad status'); return r.json(); })
+    .then(function(d){
+      return (d.features || [])
+        .filter(function(f){ return f.properties && f.properties.countrycode === 'BB'; })
+        .map(function(f){
+          var p = f.properties, c = f.geometry.coordinates;
+          /* Parish matters: Barbados has two Rock Halls and two Welcheses. */
+          var where = [p.street, p.district, p.city, p.county || p.state]
+            .filter(Boolean)
+            .filter(function(v, i, a){ return a.indexOf(v) === i; })
+            .join(', ').replace(/\bSaint\b/g, 'St.');
+          return { name: p.name || p.street || q, where: where, lng: c[0], lat: c[1] };
+        })
+        .filter(function(s){ return s.name; })
+        .slice(0, 7);
+    });
+}
+
+function renderList(){
+  if (!suggestions.length){
+    elList.className = 'v1-listbox';
+    elList.innerHTML = '';
+    elInput.setAttribute('aria-expanded', 'false');
+    elInput.removeAttribute('aria-activedescendant');
+    return;
+  }
+  elList.innerHTML = suggestions.map(function(s, i){
+    return '<li class="v1-opt" id="v1-opt-' + i + '" role="option" data-i="' + i + '" ' +
+           'aria-selected="' + (i === active) + '">' +
+           '<span class="v1-opt__name">' + esc(s.name) + '</span>' +
+           (s.where ? '<span class="v1-opt__where">' + esc(s.where) + '</span>' : '') + '</li>';
+  }).join('');
+  elList.className = 'v1-listbox is-open';
+  elInput.setAttribute('aria-expanded', 'true');
+  if (active >= 0) elInput.setAttribute('aria-activedescendant', 'v1-opt-' + active);
+  else elInput.removeAttribute('aria-activedescendant');
+}
+
+function closeList(){ suggestions = []; active = -1; renderList(); }
+
+function say(msg){ elStatus.textContent = msg || ''; }
+
+var lastQuery = '';
+
+function search(q){
+  if (q.length < 2){ closeList(); say(''); return; }
+  /* Photon can take several seconds. Drop the previous query's suggestions
+     first — otherwise they stay clickable and someone who typed "rock h" can
+     still pick "Redmans" from the list left over from "redman". */
+  lastQuery = q;
+  closeList();
+  say('Searching…');
+  photonSearch(q)
+    .then(function(res){
+      if (q !== lastQuery) return;          /* a newer keystroke has overtaken this */
+      if (!res.length){ res = fallbackSearch(q); if (res.length) usedFallback = true; }
+      suggestions = res; active = -1; renderList();
+      say(res.length
+        ? res.length + (res.length === 1 ? ' address found. Use the arrow keys to choose one.'
+                                         : ' addresses found. Use the arrow keys to choose one.')
+        : 'No address found. Try a nearby village, or drag the pin on the map.');
+    })
+    .catch(function(err){
+      if (err && err.name === 'AbortError') return;
+      if (q !== lastQuery) return;
+      usedFallback = true;
+      suggestions = fallbackSearch(q); active = -1; renderList();
+      say(suggestions.length
+        ? 'Address lookup is unavailable, so these come from the built-in village list.'
+        : 'Address lookup is unavailable. Drag the pin on the map instead.');
+    });
+}
+
+elInput.addEventListener('input', function(){
+  var q = elInput.value.trim();
+  /* Close immediately, not after the debounce — otherwise the previous query's
+     options stay clickable for the first 250 ms of typing the next one. */
+  if (suggestions.length) closeList();
+  clearTimeout(timer);
+  timer = setTimeout(function(){ search(q); }, 250);
+});
+
+elInput.addEventListener('keydown', function(e){
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+    if (!suggestions.length) return;
+    e.preventDefault();
+    active += (e.key === 'ArrowDown' ? 1 : -1);
+    if (active < 0) active = suggestions.length - 1;
+    if (active >= suggestions.length) active = 0;
+    renderList();
+    var opt = document.getElementById('v1-opt-' + active);
+    if (opt && opt.scrollIntoView) opt.scrollIntoView({ block:'nearest' });
+  } else if (e.key === 'Enter'){
+    if (active >= 0 && suggestions[active]){ e.preventDefault(); choose(suggestions[active]); }
+  } else if (e.key === 'Escape'){
+    closeList(); say('');
+  }
+});
+
+elList.addEventListener('mousedown', function(e){
+  var li = e.target.closest ? e.target.closest('.v1-opt') : null;
+  if (!li) return;
+  e.preventDefault();
+  choose(suggestions[Number(li.getAttribute('data-i'))]);
+});
+
+document.addEventListener('click', function(e){
+  if (!elInput.contains(e.target) && !elList.contains(e.target)) closeList();
+});
+
+function choose(s){
+  if (!s) return;
+  elInput.value = s.name + (s.where ? ', ' + s.where : '');
+  closeList();
+  say(usedFallback ? 'Chosen from the built-in village list.' : '');
+  setPoint(s.lng, s.lat, s.name + (s.where ? ', ' + s.where : ''));
+}
+
+/* ---------- map ------------------------------------------------------ */
+
+var map = null, pin = null, siteMarkers = [], ISLAND_BOUNDS = null;
+
+function initMap(){
+  if (typeof L === 'undefined'){
+    document.getElementById('v1-map').innerHTML =
+      '<p style="padding:1rem">The map could not be loaded. You can still search for your address above.</p>';
+    return;
+  }
+  /* Locked to the island: you cannot pan out into open ocean or the wider
+     Caribbean, and cannot zoom past the point where the catchment is legible. */
+  var BARBADOS_BOUNDS = L.latLngBounds([12.99, -59.72], [13.36, -59.40]);
+  map = L.map('v1-map', {
+    center:[13.16, -59.57], zoom:11, minZoom:10, maxZoom:15,
+    zoomSnap:0.25, zoomDelta:0.5,        /* so fitBounds can fill the frame */
+    maxBounds:BARBADOS_BOUNDS, maxBoundsViscosity:1.0, scrollWheelZoom:false
+  });
+
+  /* Esri, key-free. CARTO and raw OSM both serve silent placeholder tiles for
+     Barbados (200 OK, so `tileerror` never fires and the failure is invisible). */
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    { attribution:'Tiles &copy; Esri — Esri, DeLorme, NAVTEQ, and contributors',
+      minZoom:10, maxZoom:17 }).addTo(map);
+
+  /* Other catchments: context only, never the subject of phase one. */
+  CATCHMENTS.forEach(function(c){
+    if (c.name === EG_NAME) return;
+    c.rings.forEach(function(r){
+      L.polygon(r.map(function(p){ return [p[1], p[0]]; }),
+        { color:'#ffffff', weight:1.5, fillColor:dull(c.colour), fillOpacity:0.55,
+          interactive:false }).addTo(map);
+    });
+  });
+
+  if (EG) EG.rings.forEach(function(r){
+    L.polygon(r.map(function(p){ return [p[1], p[0]]; }),
+      { color:'#ffffff', weight:3, fillColor:EG.colour, fillOpacity:0.45, interactive:false }).addTo(map);
+  });
+
+  SITES.forEach(function(s, i){
+    var m = L.marker([s.lat, s.lng], {
+      keyboard:true, alt:s.name, title:s.name, zIndexOffset:500,
+      icon: L.divIcon({ className:'v1-pin v1-pin--' + s.kind, iconSize:[30,30], iconAnchor:[15,15],
+                        html:'<span aria-hidden="true">' + (s.kind === 'poly' ? 'P' : '') + '</span>' })
+    }).addTo(map);
+    m.bindTooltip(s.name, { direction:'top', offset:[0,-18] });
+    m.on('click', function(){ selectSite(i, true); });
+    m.on('keypress', function(e){ if (e.originalEvent.key === 'Enter') selectSite(i, true); });
+    siteMarkers[i] = m;
+  });
+
+  /* Fit to the island itself, not to the padded pan limit — otherwise Barbados
+     floats in half a frame of open sea. */
+  ISLAND_BOUNDS = L.latLngBounds([]);
+  CATCHMENTS.forEach(function(c){
+    c.rings.forEach(function(r){
+      r.forEach(function(pt){ ISLAND_BOUNDS.extend([pt[1], pt[0]]); });
+    });
+  });
+  map.fitBounds(ISLAND_BOUNDS, { padding:[8, 8] });
+}
+
+function showIslandBtn(on){
+  var el = document.getElementById('v1-whole');
+  if (el) el.hidden = !on;
+}
+
+function placePin(lng, lat){
+  if (!map) return;
+  if (!pin){
+    pin = L.marker([lat, lng], { draggable:true, autoPan:true, alt:'Your address — drag to move' })
+          .addTo(map);
+    pin.bindTooltip('Your address — drag to move', { direction:'top' });
+    pin.on('dragend', function(){
+      var ll = pin.getLatLng();
+      setPoint(ll.lng, ll.lat, 'the pin you placed', true);
+    });
+  } else {
+    pin.setLatLng([lat, lng]);
+  }
+  /* Zoom to the area searched so the pin can be checked against real streets.
+     Dragging the pin only pans (handled by the caller), so adjusting it does not
+     keep yanking the zoom. "Show the whole island" returns to the catchment view. */
+  map.setView([lat, lng], Math.max(map.getZoom(), 14));
+  showIslandBtn(true);
+}
+
+/* ---------- the answer ----------------------------------------------- */
+
+function siteHtml(s, nearest, idx){
+  var sel = (state.site === idx);
+  var h = '<div class="v1-site' + (nearest ? ' v1-site--near' : '') +
+          '" data-site="' + idx + '" data-selected="' + sel + '">';
+  h += '<h3>' + esc(s.name) +
+       (nearest ? ' <span class="v1-chip v1-chip--near">Nearer to you</span>' : '') + '</h3>';
+  h += '<p>' + esc(s.where) + '</p>';
+  h += '<p><span class="v1-chip v1-chip--days">' + esc(s.days) + '</span> ' + esc(s.hours) + '</p>';
+  if (s.tel) h += '<p class="v1-site__tel">' + esc(s.tel) + '</p>';
+  if (s.note) h += '<p>' + esc(s.note) + '</p>';
+  (s.extra || []).forEach(function(x){ h += '<p>' + esc(x) + '</p>'; });
+  if (s._dist) h += '<p>About ' + fmtDist(s._dist) + ' from your address.</p>';
+
+  /* What is on today, and the whole week behind a disclosure. */
+  var t = whatsOnToday(idx);
+  h += '<div class="v1-today">';
+  h += '<p class="v1-today__head">Today, ' + t.day + '</p>';
+  if (t.closed){
+    h += '<p class="v1-today__none">Closed today. ' +
+         (t.openDays && t.openDays.length
+            ? 'This site opens on ' + listWords(t.openDays) + '.'
+            : 'Closed at the weekend.') + '</p>';
+  } else if (!t.items.length && !(t.everyday || []).length){
+    h += '<p class="v1-today__none">No clinic is listed for ' + t.day + '.</p>';
+  } else {
+    h += '<ul class="v1-today__list">';
+    t.items.forEach(function(it){
+      h += '<li>' + esc(it.n) +
+           (it.ex ? ' <span class="v1-tag v1-tag--ex">Example</span>' : '') +
+           (it.note ? ' <span class="v1-today__note">' + esc(it.note) + '</span>' : '') + '</li>';
+    });
+    (t.everyday || []).forEach(function(x){
+      h += '<li>' + esc(x) + ' <span class="v1-today__note">Every weekday</span></li>';
+    });
+    h += '</ul>';
+  }
+  h += '<details class="v1-week"><summary>See the whole week</summary><dl class="v1-week__list">';
+  for (var d = 1; d <= 5; d++){
+    var list = WEEK[idx].days[d] || [], shut = WEEK[idx].open.indexOf(d) === -1;
+    h += '<dt' + (shut ? ' class="v1-week__shut"' : '') + '>' + DAY_NAMES[d] + '</dt>' +
+         '<dd' + (shut ? ' class="v1-week__shut"' : '') + '>' +
+         (shut
+            ? 'Closed'
+            : list.length
+              ? list.map(function(it){
+                  return esc(it.n) + (it.note ? ' (' + esc(it.note) + ')' : '') +
+                         (it.ex ? ' <span class="v1-tag v1-tag--ex">Example</span>' : '');
+                }).join(', ')
+              : 'No clinic listed') + '</dd>';
+  }
+  h += '</dl><p class="v1-today__note">Clinic days are not published by the Ministry. These come ' +
+       'from the polyclinic\'s own website, which is unofficial and dates from 2023 — confirm by ' +
+       'phone before you travel.</p>' +
+       (idx === 0
+          ? '<p class="v1-today__note">Other services are offered here without a published day — ' +
+            'use “Or look up a service” above.</p>' +
+            '<p class="v1-today__note">Entries marked <span class="v1-tag v1-tag--ex">Example</span> ' +
+            'are placeholder days for this prototype. The services are real — dentistry, ' +
+            'family planning, gynaecology and blood tests are all published here — but no source ' +
+            'says which day they run on.</p>'
+          : '<p class="v1-today__note">This site opens three days a week. It was reported as ' +
+            'reopening on Tuesday, Thursday and Friday in May 2026, so the Monday and Wednesday ' +
+            'clinics listed on the 2023 source have been left out.</p>') +
+       '</details>';
+  h += '</div>';
+
+  h += '<button type="button" class="v1-site__pick" data-site="' + idx + '" aria-pressed="' + sel + '">' +
+       (sel ? 'Showing on the map' : 'Show on the map') + '</button>';
+  return h + '</div>';
+}
+
+function unconfirmed(name){
+  return '<div class="v1-warn">' +
+    '<p><span class="v1-warn__title">This has not been confirmed by ' + esc(name) + '.</span>' +
+    'Phase one has local approval for the Eunice Gibson catchment only. The boundary used here comes ' +
+    'from a dataset that was validated for environmental health routing, not for deciding where you ' +
+    'get clinical care.</p>' +
+    '<p>Call the Ministry of Health and Wellness on <span class="govbb-text-bold">' + MINISTRY +
+    '</span> to confirm before you travel.</p></div>';
+}
+
+function render(){
+  var el = document.getElementById('v1-answer');
+  var empty = document.getElementById('v1-empty');
+  if (empty) empty.hidden = (state.lng !== null);
+  if (state.lng === null){ el.className = 'v1-answer'; el.innerHTML = ''; return; }
+
+  var inside = EG ? inCatchment(state.lng, state.lat, EG) : false;
+  var edgeM  = EG ? distToBoundaryM(state.lng, state.lat, EG) : Infinity;
+  var near   = edgeM <= EDGE_M;
+  var where  = esc(state.label);
+  var h = '';
+
+  if (inside && !near){
+    var sites = SITES.map(function(s){
+      var c = Object.create(s); c._dist = distanceM(state.lng, state.lat, s.lng, s.lat); return c;
+    });
+    var nearest = sites[0]._dist <= sites[1]._dist ? 0 : 1;
+    if (state.site === null) state.site = nearest;   /* default to the nearer site */
+    h += '<div class="v1-answer__head"><h2 class="govbb-text-h2">Your polyclinic is Eunice Gibson</h2>' +
+         '<p class="v1-answer__sub">' + where + ' is in the Eunice Gibson catchment.</p></div>' +
+         '<div class="v1-answer__body">' +
+         '<p class="govbb-text-body">Book repeat appointments at either site below, and send ' +
+         'environmental health forms to Eunice Gibson Polyclinic.</p>' +
+         siteHtml(sites[nearest], true, nearest) +
+         siteHtml(sites[1 - nearest], false, 1 - nearest) +
+         '<p class="govbb-text-body" style="margin-top:var(--govbb-space-s)">The St. Thomas ' +
+         'Outpatient Clinic is run as part of Eunice Gibson Polyclinic. It opens on three days a ' +
+         'week, so check the days before you travel.</p>' +
+         '</div>';
+    el.className = 'v1-answer v1-answer--in is-shown';
+
+  } else if (near){
+    var likely = findCatchment(state.lng, state.lat);
+    h += '<div class="v1-answer__head"><h2 class="govbb-text-h2">This address sits on the boundary</h2>' +
+         '<p class="v1-answer__sub">' + where + ' is ' + fmtEdge(edgeM) + '.</p></div>' +
+         '<div class="v1-answer__body">' +
+         '<p class="govbb-text-body">We cannot tell you which polyclinic serves this address with ' +
+         'confidence. Addresses this close to a boundary are exactly the ones the catchment data ' +
+         'does not settle — and the published parish of an address can disagree with the map.</p>' +
+         '<p class="govbb-text-body"><span class="govbb-text-bold">Call the Ministry of Health and ' +
+         'Wellness on ' + MINISTRY + '</span> and they will confirm which catchment you are in.</p>' +
+         (likely
+           ? '<p class="govbb-text-body">On the boundary data alone it falls just inside ' +
+             esc(likely.name) + '.</p>' +
+             (likely.name === EG_NAME ? '' : unconfirmed(likely.name))
+           : '') +
+         '<p class="govbb-text-body" style="margin-top:var(--govbb-space-s)">If the pin is not on ' +
+         'your actual address, drag it on the map below — that may be enough to settle it.</p>' +
+         '</div>';
+    el.className = 'v1-answer v1-answer--edge is-shown';
+
+  } else {
+    var c = findCatchment(state.lng, state.lat), coastal = null;
+    if (!c){ var nc = nearestCatchment(state.lng, state.lat); if (nc){ c = nc.c; coastal = nc.d; } }
+    h += '<div class="v1-answer__head"><h2 class="govbb-text-h2">Not the Eunice Gibson catchment</h2>' +
+         '<p class="v1-answer__sub">' + where + ' is outside the area phase one covers.</p></div>' +
+         '<div class="v1-answer__body">';
+    if (c){
+      h += '<p class="govbb-text-body">It looks like <span class="govbb-text-bold">' + esc(c.name) +
+           '</span> serves this address.</p>';
+      if (coastal !== null)
+        h += '<p class="govbb-text-body">This address is right on the coast, just outside the mapped ' +
+             'area. It has been matched to the nearest catchment.</p>';
+      if (c.phone || c.email){
+        h += '<div class="v1-site"><h3>' + esc(c.name) + '</h3>';
+        if (c.phone) h += '<p class="v1-site__tel">(246) ' + esc(c.phone) + '</p>';
+        if (c.email) h += '<p>Environmental health: ' + esc(c.email) + '</p>';
+        h += '</div>';
+      }
+      h += unconfirmed(c.name);
+    } else {
+      h += '<p class="govbb-text-body">This point is not inside any catchment on record — it may be ' +
+           'offshore, or the pin may be in the wrong place. Drag it on the map below, or call the ' +
+           'Ministry on <span class="govbb-text-bold">' + MINISTRY + '</span>.</p>';
+    }
+    h += '</div>';
+    el.className = 'v1-answer v1-answer--out is-shown';
+  }
+  el.innerHTML = h;
+}
+
+/* Linking the two sites to the map: choosing a card selects its pin, and
+   clicking a pin selects the card. The St. Thomas clinic is only open three
+   days a week, so being able to pick between the two sites matters. */
+function selectSite(i, fromMap){
+  state.site = i;
+  siteMarkers.forEach(function(m, j){
+    var el = m.getElement();
+    if (el) el.classList.toggle('is-active', j === i);
+    m.setZIndexOffset(j === i ? 900 : 500);
+    if (j !== i) m.closeTooltip();          /* only the active site keeps its label */
+  });
+  var cards = document.querySelectorAll('#v1-answer .v1-site[data-site]');
+  Array.prototype.forEach.call(cards, function(card){
+    var on = Number(card.getAttribute('data-site')) === i;
+    card.setAttribute('data-selected', on);
+    var pick = card.querySelector('.v1-site__pick');
+    if (pick){
+      pick.setAttribute('aria-pressed', on);
+      pick.textContent = on ? 'Showing on the map' : 'Show on the map';
+    }
+    if (on && fromMap && card.scrollIntoView) card.scrollIntoView({ block:'nearest' });
+  });
+  var m = siteMarkers[i];
+  if (m && map){
+    if (!fromMap) map.panInside(m.getLatLng(), { padding:[40,40] });
+    m.openTooltip();
+  }
+}
+
+document.getElementById('v1-answer').addEventListener('click', function(e){
+  var btn = e.target.closest ? e.target.closest('.v1-site__pick') : null;
+  if (btn) selectSite(Number(btn.getAttribute('data-site')), false);
+});
+
+function setPoint(lng, lat, label, fromPin){
+  state.lng = lng; state.lat = lat; state.label = label;
+  if (!fromPin) placePin(lng, lat); else if (map) map.panTo([lat, lng]);
+  render();
+  if (state.site !== null && siteMarkers.length) selectSite(state.site, true);
+}
+
+/* ---------- controls -------------------------------------------------- */
+
+document.getElementById('v1-loc').addEventListener('click', function(){
+  if (!navigator.geolocation){ say('This browser cannot share your location. Search for your address instead.'); return; }
+  say('Finding your location…');
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      say('');
+      elInput.value = '';
+      setPoint(pos.coords.longitude, pos.coords.latitude, 'your current location');
+    },
+    function(){ say('We could not get your location. Search for your address instead.'); },
+    { enableHighAccuracy:true, timeout:10000, maximumAge:60000 }
+  );
+});
+
+document.getElementById('v1-clear').addEventListener('click', function(){
+  state = { lng:null, lat:null, label:null, site:null };
+  elInput.value = '';
+  closeList(); say('');
+  if (pin && map){ map.removeLayer(pin); pin = null; }
+  siteMarkers.forEach(function(m){
+    var el = m.getElement(); if (el) el.classList.remove('is-active');
+    m.setZIndexOffset(500); m.closeTooltip();
+  });
+  render();
+  if (map && ISLAND_BOUNDS) map.fitBounds(ISLAND_BOUNDS, { padding:[8, 8] });
+  showIslandBtn(false);
+  elInput.focus();
+});
+
+document.getElementById('v1-whole').addEventListener('click', function(){
+  if (map && ISLAND_BOUNDS) map.fitBounds(ISLAND_BOUNDS, { padding:[8, 8] });
+  showIslandBtn(false);
+});
+
+initMap();
+
+/* ---------- find a service ------------------------------------------- */
+
+/* One index over both sites: service name -> which site, which days, and
+   whether the day is example data. "Pharmacy, 8:30am to 4:30pm" indexes as
+   "Pharmacy" so it matches what people actually type. */
+function buildServiceIndex(){
+  var idx = {};
+  function add(name, si, day, ex, note, status){
+    var key = name.split(',')[0].trim();
+    var e = idx[key] || (idx[key] = { name:key, sites:{} });
+    var site = e.sites[si] || (e.sites[si] = { days:[], notes:[], ex:false, status:'day' });
+    if (day && site.days.indexOf(day) === -1) site.days.push(day);
+    if (note && site.notes.indexOf(note) === -1) site.notes.push(note);
+    if (ex) site.ex = true;
+    if (status) site.status = status;
+  }
+  WEEK.forEach(function(w, si){
+    (w.everyday || []).forEach(function(n){ add(n, si, 'Every weekday', false, null, 'day'); });
+    for (var d = 1; d <= 5; d++){
+      if (w.open.indexOf(d) === -1) continue;
+      (w.days[d] || []).forEach(function(it){ add(it.n, si, DAY_NAMES[d], it.ex, it.note, 'day'); });
+    }
+    (w.unscheduled || []).forEach(function(it){ add(it.n, si, null, false, it.note, 'unscheduled'); });
+    (w.unavailable || []).forEach(function(it){ add(it.n, si, null, false, it.note, 'unavailable'); });
+  });
+  return idx;
+}
+
+var SERVICES = buildServiceIndex();
+var SERVICE_NAMES = Object.keys(SERVICES).sort();
+
+(function fillServiceSelect(){
+  var sel = document.getElementById('v1-svc');
+  sel.innerHTML = '<option value="">Choose a service</option>' +
+    SERVICE_NAMES.map(function(n){
+      return '<option value="' + esc(n) + '">' + esc(n) + '</option>';
+    }).join('');
+})();
+
+/* ---------------------------------------------------------------------------
+   PLAIN-LANGUAGE GLOSSES.
+
+   These say what a service IS, in general terms — a dictionary fact, not a
+   claim about this polyclinic. Nothing here describes what happens at Warrens
+   or Rock Hall; that would be inventing clinical detail. Services whose name
+   already carries itself (Blood testing, Pharmacy) get none.
+
+   "Surgery" is deliberately NOT glossed. On the polyclinic's specialist list it
+   sits beside gynaecology, dermatology and the catheter clinic, which points to
+   a minor-operations clinic — but in Caribbean and British usage "surgery" also
+   just means a doctor's consulting room. The two readings are opposite and a
+   wrong gloss would mislead. One for the Ministry, alongside the Example days.
+   --------------------------------------------------------------------------- */
+var GLOSS = {
+  'Antenatal and postnatal'     : 'Care during pregnancy and after your baby is born',
+  'Child health clinic'         : 'Check-ups, weighing and development checks for babies and young children',
+  'Immunization'                : 'Vaccinations for children and adults',
+  'Family planning'             : 'Contraception and advice on planning a family',
+  'Dental health'               : 'Check-ups, fillings and other dental care',
+  'Podiatry (chiropody)'        : 'Care for feet and lower legs',
+  'Nutrition'                   : 'Advice on food and diet',
+  'Counselling'                 : 'Talking support for personal or emotional difficulties',
+  'Physiotherapy and speech'    : 'Help with movement, recovery and speech',
+  'School health'               : 'Health checks for schoolchildren',
+  'Community (district) nursing': 'Nursing care in your own home',
+  'Health promotion'            : 'Advice and classes on staying well',
+  'Medical records'             : 'Your patient file, appointment cards and booking',
+  'General practice'            : 'Seeing a doctor about everyday health problems',
+  'Pharmacy'                    : 'Collecting and refilling prescribed medication',
+  'Mental health'               : 'Support for your mental and emotional health',
+  'Dermatology'                 : 'Skin conditions',
+  'Gynaecology'                 : "Women's reproductive health",
+  'Dressings clinic'            : 'Wound care and related procedures',
+  'Catheter change'             : 'Replacing a urinary catheter',
+  'STI testing'                 : 'Testing for sexually transmitted infections (STIs)',
+  'Environmental health'        : 'Inspections, business licences and public health complaints — not a clinic',
+  'Diabetic programme'          : 'Ongoing care and check-ups if you have diabetes',
+  'Hypertension programme'      : 'Ongoing care and check-ups for high blood pressure',
+  'Asthma programme'            : 'Ongoing care, inhaler checks and asthma advice',
+  'Breast feeding programme'    : 'Help and advice with breastfeeding',
+  "Men's health programme"      : 'Health checks and advice for men',
+  'Adolescent health programme' : 'Health support for teenagers'
+};
+
+/* What a service covers. The four procedures below ARE published — they appear
+   on the polyclinic's general practice procedure list (Medical examinations,
+   School entry certificates, Nebulizations, Blood pressure checks, Blood sugar
+   checks, Blood tests, Dressings, Removal of sutures, Injections, Swabs).
+   What is NOT published is that they run at the dressings clinic specifically:
+   grouping them here is our inference, and the page says so. */
+var COVERS = {
+  'Dressings clinic': {
+    items: ['Wound dressings', 'Removal of sutures', 'Injections', 'Swabs'],
+    note : 'These are published as general practice procedures. The polyclinic does not say ' +
+           'which of them run at the dressings clinic — check when you call.'
+  }
+};
+
+function renderServiceResults(name){
+  var box = document.getElementById('v1-svc-results');
+  var e = SERVICES[name];
+  if (!e){ box.innerHTML = ''; return; }
+  var h = '<div class="v1-svc__hit"><p class="v1-svc__name">' + esc(e.name) + '</p>';
+  if (GLOSS[e.name]) h += '<p class="v1-svc__gloss">' + esc(GLOSS[e.name]) + '</p>';
+  var cov = COVERS[e.name];
+  if (cov){
+    h += '<p class="v1-svc__covers-h">What it covers</p><ul class="v1-svc__covers">' +
+         cov.items.map(function(i){ return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>' +
+         '<p class="v1-svc__gloss v1-svc__gloss--query">' + esc(cov.note) + '</p>';
+  }
+  if (e.name === 'Surgery')
+    h += '<p class="v1-svc__gloss v1-svc__gloss--query">The polyclinic does not say whether this ' +
+         'means minor operations or a doctor&rsquo;s consulting room. Ask when you call.</p>';
+  h += '<dl class="v1-svc__where">';
+  [0,1].forEach(function(si){
+    var site = e.sites[si];
+    if (!site) return;
+    var when;
+    if (site.status === 'unavailable'){
+      when = '<span class="v1-svc__off">Not currently available</span>';
+    } else if (site.status === 'unscheduled'){
+      when = 'Offered here <span class="v1-today__note">— no day is published. ' +
+             'Call to book.</span>';
+    } else {
+      when = listWords(site.days);
+    }
+    h += '<dt>' + esc(SITES[si].name) + '</dt><dd>' + when +
+         (site.notes.length ? ' <span class="v1-today__note">' + esc(site.notes.join('; ')) + '</span>' : '') +
+         (site.ex ? ' <span class="v1-tag v1-tag--ex">Example</span>' : '') + '</dd>';
+  });
+  h += '</dl>';
+  var missing = [0,1].filter(function(si){ return !e.sites[si]; });
+  if (missing.length === 1)
+    h += '<p class="v1-today__note">Not listed at ' + esc(SITES[missing[0]].name) + '.</p>';
+  h += '<p class="v1-today__note">Not sure? Call the Ministry of Health and Wellness on ' +
+       MINISTRY + '.</p>';
+  box.innerHTML = h + '</div>';
+}
+
+(function wireServiceSelect(){
+  var el = document.getElementById('v1-svc'), clear = document.getElementById('v1-svc-clear');
+
+  function sync(){
+    renderServiceResults(el.value);
+    clear.hidden = !el.value;          /* nothing chosen, nothing to clear */
+  }
+  el.addEventListener('change', sync);
+  clear.addEventListener('click', function(){
+    el.value = '';
+    sync();
+    el.focus();
+  });
+
+  /* "Start again" resets the whole page, so it clears the service too. */
+  document.getElementById('v1-clear').addEventListener('click', function(){
+    el.value = '';
+    sync();
+  });
+})();
+</script>
+</body>
+</html>
