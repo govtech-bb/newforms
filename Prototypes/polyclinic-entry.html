@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Polyclinics — Government of Barbados</title>
+<link rel="icon" href="https://alpha.gov.bb/favicon.ico" />
+
+<!-- The stylesheet the LIVE alpha.gov.bb service pages use, vendored locally.
+     NOT the npm @govtech-bb/styles@alpha package the Olive template loads: the
+     live build uses different class names and token prefixes (govbb-width-container
+     / govbb-button / --govbb-*). This page uses the live build so it matches
+     find-your-polyclinic-version-one.html, which it leads into. -->
+<link rel="stylesheet" href="govbb-alpha-styles.css" />
+
+<style>
+  /* Page-local styles only, prefixed `entry-`. Chrome, type, buttons and the
+     feedback block come from the live alpha.gov.bb stylesheet. */
+  /* --govbb-color-focus (#30C0C8) is 2.21:1 on white, below the 3:1 SC 1.4.11
+     needs. Darkened locally until the token is fixed upstream. */
+  :root{--govbb-color-focus:#0a6c73}
+  .entry-lede{font-size:var(--govbb-font-size-body-lg,1.125rem);line-height:1.5;
+    margin:0 0 var(--govbb-space-m);max-width:44rem}
+  .entry-section{margin:0 0 var(--govbb-space-m,1.5rem)}
+  .entry-section h2{margin:0 0 var(--govbb-space-xs)}
+  .entry-section > p{margin:0 0 var(--govbb-space-s)}
+  .entry-section > p:last-child,
+  .entry-section > dl:last-child{margin-bottom:0}
+
+  .entry-callout{border-left:4px solid var(--govbb-blue-60);background:var(--govbb-blue-10);
+    padding:var(--govbb-space-s);border-radius:var(--govbb-radius);margin:0 0 var(--govbb-space-m)}
+  .entry-callout p{margin:0}
+  .entry-callout p + p{margin-top:var(--govbb-space-xs)}
+
+  /* Emergencies must not read as one more paragraph. */
+  .entry-emergency{border:2px solid var(--govbb-color-error,#b10e1e);border-radius:var(--govbb-radius);
+    padding:var(--govbb-space-s);margin:0 0 var(--govbb-space-l,2rem)}
+  .entry-emergency h2{margin:0 0 var(--govbb-space-xxs);color:var(--govbb-color-error,#b10e1e)}
+  .entry-emergency p{margin:0}
+  .entry-emergency p + p{margin-top:var(--govbb-space-xs)}
+
+  .entry-start{margin:0 0 var(--govbb-space-l,2rem)}
+  .entry-start .govbb-button{margin:0}
+
+  .entry-hours{margin:0 0 var(--govbb-space-s)}
+  .entry-hours dt{font-weight:700}
+  .entry-hours dd{margin:0 0 var(--govbb-space-xs);min-width:0;overflow-wrap:anywhere}
+
+  .entry-poly{border:1px solid var(--govbb-grey-20);border-radius:var(--govbb-radius);
+    padding:var(--govbb-space-s);margin:0 0 var(--govbb-space-s)}
+  .entry-poly__name{margin:0 0 var(--govbb-space-xs);font-size:var(--govbb-font-size-body);
+    font-weight:700}
+  .entry-poly__meta{display:grid;grid-template-columns:7.5rem 1fr;gap:2px var(--govbb-space-s);
+    margin:0;font-size:var(--govbb-font-size-body-sm)}
+  .entry-poly__meta dt{font-weight:700;color:var(--govbb-color-muted)}
+  .entry-poly__meta dd{margin:0;min-width:0;overflow-wrap:anywhere}
+  .entry-poly__urgent{font-weight:700}
+  @media (max-width:30rem){
+    .entry-poly__meta{grid-template-columns:1fr}
+    .entry-poly__meta dd{margin-bottom:var(--govbb-space-xs)}
+  }
+  .entry-jump{margin:0 0 var(--govbb-space-m)}
+  .entry-jump__h{margin:0 0 var(--govbb-space-xxs);font-weight:700;
+    font-size:var(--govbb-font-size-body-sm)}
+  .entry-jump__list{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;
+    gap:var(--govbb-space-xs)}
+  .entry-jump__list li{margin:0}
+  /* Buttons, not a run of links — each area is a thing you press. */
+  .entry-jump__btn{display:inline-block;padding:10px 14px;min-height:44px;
+    border:2px solid var(--govbb-color-interactive,#0a6c73);border-radius:var(--govbb-radius);
+    background:var(--govbb-color-surface,#fff);color:var(--govbb-color-interactive,#0a6c73);
+    font-size:var(--govbb-font-size-body-sm);font-weight:700;text-decoration:none;line-height:1.4}
+  .entry-jump__btn:hover{background:var(--govbb-color-interactive,#0a6c73);color:#fff}
+  .entry-jump__btn:focus-visible{outline:4px solid var(--govbb-color-focus);outline-offset:2px}
+  .entry-poly:target{outline:4px solid var(--govbb-color-focus);outline-offset:2px}
+  .entry-note{font-size:var(--govbb-font-size-body-sm);color:var(--govbb-color-muted)}
+  .entry-list{columns:2;column-gap:var(--govbb-space-l,2rem);margin:0 0 var(--govbb-space-s)}
+  .entry-list li{break-inside:avoid}
+  @media (max-width:40rem){ .entry-list{columns:1} }
+
+
+  .placeholder{background:#fff2d6;border:2px dashed #d9a441;padding:2px 6px;
+    font-weight:700;font-family:monospace;font-size:0.9em}
+
+  /* The live stylesheet ships fixed heading sizes with no mobile scaling. */
+  @media (max-width:48rem){
+    :root{--govbb-font-size-h1:1.75rem;--govbb-font-size-h2:1.375rem;--govbb-font-size-h3:1.125rem}
+  }
+</style>
+</head>
+<body class="govbb-page">
+<a class="govbb-skip-link" href="#main-content">Skip to main content</a>
+
+<div class="govbb-official-banner">
+  <div class="govbb-official-banner__inner govbb-width-container">
+    <span class="govbb-official-banner__crest">
+      <img class="govbb-official-banner__icon" src="https://alpha.gov.bb/images/coat-of-arms.png"
+           alt="" width="20" height="20" />
+    </span>
+    <span class="govbb-official-banner__text">An official website of the Government of Barbados</span>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-header__inner govbb-width-container">
+    <a class="govbb-header__home" href="#">
+      <img class="govbb-header__logo" src="https://alpha.gov.bb/assets/govbb-logo-dweJzbng.svg"
+           alt="Government of Barbados" height="32" />
+    </a>
+  </div>
+</header>
+
+<div class="govbb-status-banner govbb-status-banner--alpha govbb-status-banner--full-width">
+  <div class="govbb-status-banner__inner govbb-width-container">
+    <p><span class="govbb-text-bold">Alpha</span> — this is a prototype. Opening hours and services
+    are not confirmed by the Ministry of Health and Wellness.</p>
+  </div>
+</div>
+
+<div class="govbb-width-container">
+  <!-- MDA NOTE: Confirm this service sits under "Health and emergency services" before publishing. -->
+  <nav class="govbb-breadcrumbs govbb-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
+    <ol class="govbb-breadcrumbs__list">
+      <li class="govbb-breadcrumbs__item">
+        <a class="govbb-link govbb-breadcrumbs__link" href="#">Home</a></li>
+      <li class="govbb-breadcrumbs__item">
+        <a class="govbb-link govbb-breadcrumbs__link" href="#">Health and emergency services</a></li>
+      <li class="govbb-breadcrumbs__item">
+        <a class="govbb-link govbb-breadcrumbs__link" href="#" aria-current="page">Polyclinics</a></li>
+    </ol>
+  </nav>
+</div>
+
+<main id="main-content" tabindex="-1">
+  <div class="govbb-width-container govbb-main-wrapper">
+
+    <p class="govbb-text-caption">Last updated on October 8th, 2026</p>
+    <h1 class="govbb-text-h1">Polyclinics</h1>
+    <p class="govbb-text-body entry-lede">Each catchment area in Barbados has a polyclinic. A
+    catchment is the area a polyclinic looks after. Find out which polyclinic is for your area, when
+    it is open, and what services it offers.</p>
+
+    <section class="entry-emergency">
+      <h2 class="govbb-text-h3">In an emergency</h2>
+      <p class="govbb-text-body">Go to the Queen Elizabeth Hospital Accident and Emergency Department,
+      which is open 24 hours a day.</p>
+      <p class="govbb-text-body">You will always be seen in an emergency. No polyclinic turns away a
+      walk-in who needs urgent care, wherever you live.</p>
+    </section>
+
+    <section class="entry-section">
+      <h2 class="govbb-text-h2">Who can use a polyclinic</h2>
+      <p class="govbb-text-body">If you are a Barbadian citizen who needs free health care, there are
+      nine polyclinics across the island.</p>
+      <p class="govbb-text-body">Find the closest one to you and check its opening hours and services
+      before you go. Call ahead to confirm that the service you need is available.</p>
+      <!-- MDA NOTE: Confirm whether non-citizens, residents and visitors can use a polyclinic, and
+           on what terms. The guidance says "Barbadian citizen" but the Ministry should confirm
+           whether that excludes residents who are not citizens. -->
+    </section>
+
+    <section class="entry-section">
+      <h2 class="govbb-text-h2">Cost</h2>
+      <p class="govbb-text-body">Health care at a polyclinic is free.</p>
+      <p class="govbb-text-body">Polyclinic pharmacies give you prescription medication covered by the
+      Barbados Drug Service free of charge.</p>
+      <!-- MDA NOTE: Confirm whether any service at a polyclinic carries a charge, and whether
+           medication outside the Barbados Drug Service formulary must be paid for. -->
+    </section>
+
+    <section class="entry-section">
+      <h2 class="govbb-text-h2">What you need</h2>
+      <p class="govbb-text-body">To find your polyclinic you need your home address. You do not need
+      to give any other details.</p>
+    </section>
+
+    <div class="entry-start">
+      <a class="govbb-button" href="find-your-polyclinic-version-one.html" role="button"
+         draggable="false">Find your polyclinic</a>
+      <p class="govbb-text-body-sm entry-note" style="margin-top:var(--govbb-space-xs)">Check your
+      address against the catchment areas.</p>
+    </div>
+
+    <div class="entry-callout">
+      <p><span class="govbb-text-bold">This service is being built in phases.</span> At the moment it
+      covers one catchment area — Eunice Gibson Polyclinic at Warrens, and the St. Thomas Outpatient
+      Clinic at Rock Hall, which is run as part of it.</p>
+      <p>For any other area, contact the Ministry of Health and Wellness on
+      <a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a> or
+      <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a>.</p>
+    </div>
+
+    <section class="entry-section">
+      <h2 class="govbb-text-h2">Services at every polyclinic</h2>
+      <p class="govbb-text-body">Every polyclinic offers:</p>
+      <ul class="govbb-list govbb-list--bullet entry-list">
+        <li>General practice</li>
+        <li>Antenatal and postnatal care</li>
+        <li>Child health and immunization</li>
+        <li>Family planning</li>
+        <li>Dental health</li>
+        <li>Podiatry (chiropody)</li>
+        <li>Nutrition</li>
+        <li>Pharmacy</li>
+        <li>Counselling</li>
+        <li>Physiotherapy and speech</li>
+        <li>School health</li>
+        <li>Community (district) nursing</li>
+        <li>Health promotion</li>
+        <li>Medical records</li>
+      </ul>
+      <p class="govbb-text-body">Every polyclinic also runs programmes for diabetes, high blood
+      pressure, asthma, breastfeeding, men's health and adolescent health.</p>
+      <!-- MDA NOTE: This 15-service list comes from health.gov.bb Primary Health Care. The six
+           programmes come from the 2011 Polyclinic Procedure Manual. Confirm both are current. -->
+    </section>
+
+    <section class="entry-section">
+      <h2 class="govbb-text-h2">Specialist clinics</h2>
+      <p class="govbb-text-body">Some polyclinics also run specialist clinics, including mental
+      health, dermatology, gynaecology and minor surgery. These run on set days that differ from one
+      polyclinic to another, and some are not running at present.</p>
+      <p class="govbb-text-body">Call the polyclinic before you travel to check that the clinic you
+      need is running.</p>
+      <!-- MDA NOTE: Specialist clinic days are published only on the polyclinics' own websites
+           (polyclinics.wixsite.com), which are unofficial, date from 2023, and repeat the same
+           timetable across five sites. Days are deliberately not listed here. Ask the Ministry for
+           a current, confirmed specialist clinic timetable. -->
+    </section>
+
+    <section class="entry-section">
+      <h2 class="govbb-text-h2">Where the polyclinics are</h2>
+      <p class="govbb-text-body">Opening hours vary by location. Sir Winston Scott Polyclinic is open
+      24 hours a day, every day.</p>
+      <nav class="entry-jump" aria-label="Jump to a polyclinic">
+        <p class="entry-jump__h" id="entry-jump-h">Go straight to a polyclinic:</p>
+        <ul class="entry-jump__list" aria-labelledby="entry-jump-h">
+          <li><a class="entry-jump__btn" href="#p-winston-scott">Sir Winston Scott</a></li>
+          <li><a class="entry-jump__btn" href="#p-branford-taitt">Branford Taitt</a></li>
+          <li><a class="entry-jump__btn" href="#p-edgar-cochrane">Edgar Cochrane</a></li>
+          <li><a class="entry-jump__btn" href="#p-eunice-gibson">Eunice Gibson</a></li>
+          <li><a class="entry-jump__btn" href="#p-frederick-miller">Frederick Miller</a></li>
+          <li><a class="entry-jump__btn" href="#p-david-thompson">David Thompson</a></li>
+          <li><a class="entry-jump__btn" href="#p-maurice-byer">Maurice Byer</a></li>
+          <li><a class="entry-jump__btn" href="#p-randal-phillips">Randal Phillips</a></li>
+          <li><a class="entry-jump__btn" href="#p-st-philip">St. Philip</a></li>
+        </ul>
+      </nav>
+      <div class="entry-poly" id="p-winston-scott">
+        <h3 class="entry-poly__name">Sir Winston Scott Polyclinic</h3>
+        <dl class="entry-poly__meta">
+          <dt>Where</dt><dd>Ladymeade Gardens, Jemmotts Lane, St. Michael</dd>
+          <dt>Open</dt><dd>Open 24 hours a day, 7 days a week</dd>
+        <dt>Urgent care</dt><dd class="entry-poly__urgent">Fast Track urgent care — Monday to Friday 10:00am to 10:00pm, Saturday 9:00am to 4:00pm</dd>
+          <dt>Phone</dt><dd><a class="govbb-link" href="tel:+12465363400">(246) 536-3400</a></dd>
+          <dt>Email</dt><dd><a class="govbb-link" href="mailto:wspc@health.gov.bb">wspc@health.gov.bb</a></dd>
+        </dl>
+      </div>
+      <div class="entry-poly" id="p-branford-taitt">
+        <h3 class="entry-poly__name">Branford Taitt Polyclinic</h3>
+        <dl class="entry-poly__meta">
+          <dt>Where</dt><dd>Black Rock Main Road, St. Michael</dd>
+          <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
+        <dt>Urgent care</dt><dd class="entry-poly__urgent">Urgent care until 6:30pm</dd>
+          <dt>Phone</dt><dd><a class="govbb-link" href="tel:+12465363700">(246) 536-3700</a></dd>
+          <dt>Email</dt><dd><a class="govbb-link" href="mailto:btpc@health.gov.bb">btpc@health.gov.bb</a></dd>
+        </dl>
+      </div>
+      <div class="entry-poly" id="p-edgar-cochrane">
+        <h3 class="entry-poly__name">Edgar Cochrane Polyclinic</h3>
+        <dl class="entry-poly__meta">
+          <dt>Where</dt><dd>Wildey, St. Michael</dd>
+          <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
+          <dt>Phone</dt><dd><a class="govbb-link" href="tel:+12465364100">(246) 536-4100</a></dd>
+          <dt>Email</dt><dd><a class="govbb-link" href="mailto:ecpc@health.gov.bb">ecpc@health.gov.bb</a></dd>
+        </dl>
+      </div>
+      <div class="entry-poly" id="p-eunice-gibson">
+        <h3 class="entry-poly__name">Eunice Gibson Polyclinic</h3>
+        <dl class="entry-poly__meta">
+          <dt>Where</dt><dd>Warrens, St. Michael</dd>
+          <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
+          <dt>Phone</dt><dd><a class="govbb-link" href="tel:+12465364000">(246) 536-4000</a></dd>
+          <dt>Email</dt><dd><a class="govbb-link" href="mailto:egpc@health.gov.bb">egpc@health.gov.bb</a></dd>
+        </dl>
+      </div>
+      <div class="entry-poly" id="p-frederick-miller">
+        <h3 class="entry-poly__name">Frederick "Freddie" Miller Polyclinic</h3>
+        <dl class="entry-poly__meta">
+          <dt>Where</dt><dd>The Glebe, St. George</dd>
+          <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
+          <dt>Phone</dt><dd><a class="govbb-link" href="tel:+12465363940">(246) 536-3940</a></dd>
+          <dt>Email</dt><dd><a class="govbb-link" href="mailto:gpc@health.gov.bb">gpc@health.gov.bb</a></dd>
+        </dl>
+      </div>
+      <div class="entry-poly" id="p-david-thompson">
+        <h3 class="entry-poly__name">David Thompson Health &amp; Social Services Complex</h3>
+        <dl class="entry-poly__meta">
+          <dt>Where</dt><dd>Colleton Road, Glebe Land, St. John</dd>
+          <dt>Open</dt><dd>Open 24 hours a day, 7 days a week</dd>
+        <dt>Urgent care</dt><dd class="entry-poly__urgent">Urgent care 24 hours</dd>
+          <dt>Phone</dt><dd><a class="govbb-link" href="tel:+12465364440">(246) 536-4440</a></dd>
+          <dt>Email</dt><dd><a class="govbb-link" href="mailto:dthssc@health.gov.bb">dthssc@health.gov.bb</a></dd>
+        </dl>
+      </div>
+      <div class="entry-poly" id="p-maurice-byer">
+        <h3 class="entry-poly__name">Maurice Byer Polyclinic</h3>
+        <dl class="entry-poly__meta">
+          <dt>Where</dt><dd>Litchfield, Station Hill, St. Peter</dd>
+          <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
+        <dt>Urgent care</dt><dd class="entry-poly__urgent">Urgent care until 8:30pm</dd>
+          <dt>Phone</dt><dd><a class="govbb-link" href="tel:+12465363200">(246) 536-3200</a></dd>
+          <dt>Email</dt><dd><a class="govbb-link" href="mailto:mbpc@health.gov.bb">mbpc@health.gov.bb</a></dd>
+        </dl>
+      </div>
+      <div class="entry-poly" id="p-randal-phillips">
+        <h3 class="entry-poly__name">Randal Phillips Polyclinic</h3>
+        <dl class="entry-poly__meta">
+          <dt>Where</dt><dd>Oistins Main Road, Christ Church</dd>
+          <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
+        <dt>Urgent care</dt><dd class="entry-poly__urgent">Urgent care until 8:30pm</dd>
+          <dt>Phone</dt><dd><a class="govbb-link" href="tel:+12465364300">(246) 536-4300</a></dd>
+          <dt>Email</dt><dd><a class="govbb-link" href="mailto:rppc@health.gov.bb">rppc@health.gov.bb</a></dd>
+        </dl>
+      </div>
+      <div class="entry-poly" id="p-st-philip">
+        <h3 class="entry-poly__name">St. Philip Polyclinic</h3>
+        <dl class="entry-poly__meta">
+          <dt>Where</dt><dd>Six Roads Cross Roads, St. Philip</dd>
+          <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
+          <dt>Phone</dt><dd>Medical records <a class="govbb-link" href="tel:+12465364212">(246) 536-4212</a></dd>
+          <dt>Email</dt><dd><a class="govbb-link" href="mailto:sppc@health.gov.bb">sppc@health.gov.bb</a></dd>
+        </dl>
+      </div>
+      <p class="govbb-text-body entry-note">Urgent care times come from the polyclinics' own
+      websites and are not confirmed by the Ministry. Call before you travel.</p>
+      <p class="govbb-text-body entry-note"><span class="govbb-text-bold">Email addresses on this
+      page are placeholders for the prototype.</span> Do not use them. Confirmed addresses will
+      replace them before this page goes live.</p>
+      <!-- MDA NOTE: EMAIL ADDRESSES ARE PLACEHOLDERS, not confirmed contact points. They follow the
+           pattern published on the polyclinics' own 2023 websites (xxpc@health.gov.bb). Replace every
+           one with a Ministry-confirmed address before publishing.
+           Addresses, opening hours and 536-xxxx phone numbers come from the health.gov.bb
+           Institution pages. The polyclinics' own websites carry older pre-migration numbers
+           (for example 425-6950 for Branford Taitt) — those are NOT used here. Confirm urgent-care
+           closing times, which come from the unofficial 2023 sites. -->
+    </section>
+
+    <section class="entry-section">
+      <h2 class="govbb-text-h2">Get help</h2>
+      <p class="govbb-text-body">Find out which polyclinic is for your area by
+      <a class="govbb-link" href="find-your-polyclinic-version-one.html">checking your address</a>
+      or contacting the Ministry of Health and Wellness.</p>
+      <dl class="entry-poly__meta">
+        <dt>Telephone</dt><dd><a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a></dd>
+        <dt>Email</dt><dd><a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a></dd>
+        <dt>Address</dt><dd>Frank Walcott Building, Culloden Road, St. Michael</dd>
+      </dl>
+      <p class="govbb-text-body entry-note">If you are overseas, email rather than call.</p>
+      <!-- MDA NOTE: Ministry telephone, email and address supplied by the service team.
+           The per-polyclinic email addresses in the directory are still placeholders. -->
+    </section>
+
+    <aside class="govbb-feedback mb-4 lg:mb-16">
+      <h3 class="govbb-feedback__heading">Was this helpful?</h3>
+      <p class="govbb-text-body">Tell us what you were trying to do and whether this page helped.</p>
+      <a class="govbb-link" href="#">Help us improve alpha.gov.bb</a>
+    </aside>
+
+  </div>
+</main>
+
+<footer class="govbb-footer print:hidden">
+  <div class="govbb-footer__inner govbb-width-container">
+    <nav class="govbb-footer__nav" aria-label="Footer navigation">
+      <ul class="govbb-footer__list">
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">Home</a></li>
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">Terms and conditions</a></li>
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">What we mean by alpha</a></li>
+      </ul>
+    </nav>
+    <hr class="govbb-footer__divider" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="https://alpha.gov.bb/images/coat-of-arms.png"
+           alt="" width="36" height="36" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

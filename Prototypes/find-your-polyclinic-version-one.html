@@ -24,6 +24,19 @@
      =================================================================== */
 
   .v1-lede{font-size:var(--govbb-font-size-body-lg,1.125rem)}
+  .v1-ministry{margin-top:var(--govbb-space-s);padding-top:var(--govbb-space-s);
+    border-top:1px solid var(--govbb-grey-20)}
+  .v1-ministry__lead{margin:0 0 var(--govbb-space-xs)!important;font-weight:700}
+  .v1-ministry__list{display:grid;grid-template-columns:6.5rem 1fr;gap:2px var(--govbb-space-s);
+    margin:0;font-size:var(--govbb-font-size-body-sm)}
+  .v1-ministry__list dt{font-weight:700;color:var(--govbb-color-muted)}
+  .v1-ministry__list dd{margin:0;min-width:0;overflow-wrap:anywhere}
+  @media (max-width:30rem){
+    .v1-ministry__list{grid-template-columns:1fr}
+    .v1-ministry__list dd{margin-bottom:var(--govbb-space-xxs)}
+  }
+  .v1-backlink{padding:5px 0}
+  .v1-backlink a{display:inline-block;padding:5px 0}
 
   .v1-phase{border-left:4px solid var(--govbb-blue-60);background:var(--govbb-blue-10);
     padding:var(--govbb-space-s);border-radius:var(--govbb-radius);margin:0 0 var(--govbb-space-m)}
@@ -38,6 +51,8 @@
 
   .v1-finder{background:var(--govbb-grey-10,#f3f2f1);padding:var(--govbb-space-s);
     border-radius:var(--govbb-radius);margin:0 0 var(--govbb-space-m)}
+  .v1-finder__h{margin:0 0 var(--govbb-space-xs)}
+  .v1-map__h{margin:0 0 var(--govbb-space-xs)}
   .v1-finder__row{display:grid;grid-template-columns:1fr 1fr;gap:var(--govbb-space-m);
     align-items:start}
   @media (max-width:60rem){
@@ -86,8 +101,9 @@
   .v1-answer--in    {border-color:var(--govbb-teal-80)}
   .v1-answer--edge  .v1-answer__head{background:#8a5a00}
   .v1-answer--edge  {border-color:#8a5a00}
-  .v1-answer--out   .v1-answer__head{background:var(--govbb-color-ink)}
-  .v1-answer--out   {border-color:var(--govbb-color-ink)}
+  /* Not a refusal: an answer about a different polyclinic. */
+  .v1-answer--out   .v1-answer__head{background:#2e5a7a}
+  .v1-answer--out   {border-color:#2e5a7a}
 
   /* The card holds a disclosure, so it cannot itself be a button — it carries
      its own "Show on the map" button instead. */
@@ -208,6 +224,10 @@
   .v1-empty p{margin:0}
 
 
+  /* The design system's --govbb-color-focus (#30C0C8) is 2.21:1 on white, below
+     the 3:1 SC 1.4.11 needs. Darkened locally until the token is fixed upstream. */
+  :root{--govbb-color-focus:#0a6c73}
+
   /* The live stylesheet ships fixed heading sizes with no mobile scaling. */
   @media (max-width:48rem){
     :root{--govbb-font-size-h1:1.75rem;--govbb-font-size-h2:1.375rem;--govbb-font-size-h3:1.125rem}
@@ -253,6 +273,8 @@
       <li class="govbb-breadcrumbs__item">
         <a class="govbb-link govbb-breadcrumbs__link" href="#">Health and emergency services</a></li>
       <li class="govbb-breadcrumbs__item">
+        <a class="govbb-link govbb-breadcrumbs__link" href="polyclinic-entry.html">Polyclinics</a></li>
+      <li class="govbb-breadcrumbs__item">
         <a class="govbb-link govbb-breadcrumbs__link" href="#" aria-current="page">Find your polyclinic</a></li>
     </ol>
   </nav>
@@ -261,33 +283,37 @@
 <main id="main-content" tabindex="-1">
   <div class="govbb-width-container govbb-main-wrapper">
 
+    <p class="govbb-text-caption">Last updated on October 8th, 2026</p>
     <h1 class="govbb-text-h1">Find your polyclinic</h1>
-    <p class="govbb-text-body v1-lede">Find out which polyclinic serves your address, so you book
-    repeat appointments at the right place.</p>
+    <p class="govbb-text-body v1-lede">Find out which polyclinic serves your address. A catchment is
+    the area a polyclinic looks after.</p>
+    <p class="govbb-text-body v1-backlink"><a class="govbb-link" href="polyclinic-entry.html">All
+    nine polyclinics: opening hours, services and what to do in an emergency</a></p>
 
-    <div class="v1-phase">
-      <p><span class="govbb-text-bold">This is phase one.</span> It covers one catchment —
-      Eunice&nbsp;Gibson Polyclinic at Warrens, and the St.&nbsp;Thomas Outpatient Clinic at Rock&nbsp;Hall,
-      which is run as part of it.</p>
-      <p>If your address falls outside that catchment, this page tells you which polyclinic it looks
-      like — but that has not been confirmed by the polyclinic concerned.</p>
-    </div>
+    <noscript>
+      <div class="v1-safety">
+        <p><span class="govbb-text-bold">This page needs JavaScript to look up your address.</span>
+        To find out which polyclinic serves you, call the Ministry of Health and Wellness on
+        <a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a> or email
+        <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a>.</p>
+        <p>Frank Walcott Building, Culloden Road, St. Michael.</p>
+        <p>You will always be seen in an emergency. No polyclinic turns away a walk-in who needs
+        urgent care, wherever you live.</p>
+      </div>
+    </noscript>
 
     <div class="v1-safety">
       <p><span class="govbb-text-bold">You will always be seen in an emergency.</span> No polyclinic
       turns away a walk-in who needs urgent care, wherever you live.</p>
-      <p>The catchment decides where you book <span class="govbb-text-bold">repeat appointments</span>
-      and where you send <span class="govbb-text-bold">environmental health forms</span>. It does not
-      decide where you can get help.</p>
     </div>
 
     <div class="v1-finder">
       <div class="v1-finder__row">
 
         <div class="govbb-form-group">
+          <h2 class="govbb-text-h3 v1-finder__h">Find by address</h2>
           <label class="govbb-label" for="v1-addr">Enter your address</label>
-          <p class="govbb-hint" id="v1-addr-hint">Start typing your village, road or neighbourhood —
-          for example Redmans, Highway&nbsp;2A, or Rock Hall. Then choose from the list.</p>
+          <p class="govbb-hint" id="v1-addr-hint">For example Redmans, Highway&nbsp;2A, or Rock Hall.</p>
           <div class="v1-combo">
             <input class="govbb-input" id="v1-addr" type="text" role="combobox"
                    aria-expanded="false" aria-controls="v1-listbox" aria-autocomplete="list"
@@ -302,9 +328,9 @@
         </div>
 
         <div class="govbb-form-group">
-          <label class="govbb-label" for="v1-svc">Or look up a service</label>
-          <p class="govbb-hint" id="v1-svc-hint">See which of the two sites offers it, and on which
-          day — for example dentistry, blood testing or pharmacy.</p>
+          <h2 class="govbb-text-h3 v1-finder__h">Find by service</h2>
+          <label class="govbb-label" for="v1-svc">Look up a service</label>
+          <p class="govbb-hint" id="v1-svc-hint">For example dental health, blood testing or pharmacy.</p>
           <select class="govbb-select" id="v1-svc" aria-describedby="v1-svc-hint">
             <option value="">Choose a service</option>
           </select>
@@ -321,22 +347,17 @@
 
     <div class="v1-layout">
       <div class="v1-layout__main">
-        <div class="v1-answer" id="v1-answer" role="status" aria-live="polite" aria-atomic="true"></div>
+        <div class="v1-answer" id="v1-answer" role="status" aria-live="polite"></div>
         <div class="v1-empty" id="v1-empty">
           <p>Enter your address above, or drag the pin on the map, to see which polyclinic serves you.</p>
         </div>
       </div>
 
       <div class="v1-layout__map">
+        <h2 class="govbb-text-h3 v1-map__h">Map of the catchment</h2>
         <div id="v1-map" role="region" aria-label="Map of the Eunice Gibson catchment area"></div>
-        <p class="v1-map-note"><span class="govbb-text-bold">Reading the map.</span> The shaded area is
-        the Eunice Gibson catchment. White outlines are the other catchments, shown for context only —
-        phase one does not cover them. The two <span class="govbb-text-bold">P</span> badges are the
-        catchment's two sites — Eunice Gibson Polyclinic at Warrens and the St. Thomas Outpatient
-        Clinic at Rock Hall, which opens three days a week. The filled badge is the one you have
-        selected.</p>
-        <p class="v1-map-note">Drag your pin to your exact address if it is not quite right. The answer
-        updates as you move it.</p>
+        <p class="v1-map-note">The shaded area is the Eunice Gibson catchment. Drag your pin if it
+        is not quite right.</p>
         <button type="button" class="govbb-button govbb-button--secondary" id="v1-whole" hidden>
           Show the whole island
         </button>
@@ -345,9 +366,13 @@
 
     <aside class="govbb-feedback mb-4 lg:mb-16">
       <h3 class="govbb-feedback__heading">Was this helpful?</h3>
-      <p class="govbb-text-body">Tell us what happened when you looked up your address. If you are not
-      sure which polyclinic serves you, call the Ministry of Health and Wellness on
-      <span class="govbb-text-bold">(246) 536-3800</span>.</p>
+      <p class="govbb-text-body">Tell us what happened when you looked up your address, or contact
+      the Ministry of Health and Wellness on
+      <a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a> or
+      <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a>.</p>
+      <p class="govbb-text-body-sm" style="color:var(--govbb-color-muted)">Frank Walcott Building,
+      Culloden Road, St. Michael. Per-polyclinic email addresses on this prototype are placeholders
+      and are not monitored.</p>
       <a class="govbb-link" href="#">Help us improve alpha.gov.bb</a>
     </aside>
 
@@ -395,19 +420,42 @@ var PLACES=[{"n":"Arthur Seat","p":"St. Thomas","c":[-59.60404,13.14882]},{"n":"
 
 var EG_NAME = 'Eunice Gibson Polyclinic';
 var EDGE_M  = 150;              /* within this of the boundary, don't assert a side */
-var MINISTRY = '(246) 536-3800';
+var MINISTRY = '1 (246) 536-3800';
+var MINISTRY_EMAIL = 'info@health.gov.bb';
+var MINISTRY_ADDRESS = 'Frank Walcott Building, Culloden Road, St. Michael';
+var MINISTRY_TEL = '<a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a>';
+
+/* The Ministry's full contact details. Used wherever the page tells someone to
+   get in touch, so phone, email and address always travel together. */
+function ministryBlock(lead){
+  return '<div class="v1-ministry">' +
+    (lead ? '<p class="v1-ministry__lead">' + lead + '</p>' : '') +
+    '<dl class="v1-ministry__list">' +
+      '<dt>Telephone</dt><dd>' + MINISTRY_TEL + '</dd>' +
+      '<dt>Email</dt><dd><a class="govbb-link" href="mailto:' + MINISTRY_EMAIL + '">' +
+        MINISTRY_EMAIL + '</a></dd>' +
+      '<dt>Address</dt><dd>' + MINISTRY_ADDRESS + '</dd>' +
+    '</dl></div>';
+}
+
+/* (246) 536-4000 -> a tappable link. Every number on the page goes through
+   this, so no branch can quietly ship plain text again. */
+function telLink(n){
+  var d = String(n).replace(/\D/g, '').slice(-7);
+  return d ? '<a class="govbb-link" href="tel:+1246' + d + '">' + esc(n) + '</a>' : esc(n);
+}
 
 var SITES = [
   { name:'Eunice Gibson Polyclinic', kind:'poly', where:'Warrens, St. Michael',
     lat:13.14102, lng:-59.60607,
     days:'Monday to Friday', hours:'8:30am to 4:30pm',
-    tel:'(246) 536-4000',
+    tel:'(246) 536-4000', email:'egpc@health.gov.bb',
     extra:['Medical records (246) 536-4004','Environmental health (246) 536-4033'] },
   { name:'St. Thomas Outpatient Clinic', kind:'poly', where:'Rock Hall, St. Thomas',
     lat:13.18699, lng:-59.60434,
     days:'Tuesday, Thursday and Friday', hours:'8:30am to 4:30pm',
-    tel:null,
-    note:'No direct number is published. Call the Ministry on ' + '(246) 536-3800' + '.',
+    tel:null, email:'egpc@health.gov.bb',
+    note:'No direct number is published. Call the Ministry on 1 (246) 536-3800.',
     extra:['Reopened 5 May 2026 after refurbishment; the pharmacy reopened on 12 May 2026.'] }
 ];
 
@@ -861,9 +909,13 @@ function siteHtml(s, nearest, idx){
        (nearest ? ' <span class="v1-chip v1-chip--near">Nearer to you</span>' : '') + '</h3>';
   h += '<p>' + esc(s.where) + '</p>';
   h += '<p><span class="v1-chip v1-chip--days">' + esc(s.days) + '</span> ' + esc(s.hours) + '</p>';
-  if (s.tel) h += '<p class="v1-site__tel">' + esc(s.tel) + '</p>';
-  if (s.note) h += '<p>' + esc(s.note) + '</p>';
-  (s.extra || []).forEach(function(x){ h += '<p>' + esc(x) + '</p>'; });
+  if (s.tel) h += '<p class="v1-site__tel">' + telLink(s.tel) + '</p>';
+  if (s.email) h += '<p>Email <a class="govbb-link" href="mailto:' + esc(s.email) + '">' +
+                    esc(s.email) + '</a></p>';
+  if (s.note) h += '<p>' + s.note.replace(/\(246\)\s?[\d-]+/g, function(m){ return telLink(m); }) + '</p>';
+  (s.extra || []).forEach(function(x){
+    h += '<p>' + x.replace(/\(246\)\s?[\d-]+/g, function(m){ return telLink(m); }) + '</p>';
+  });
   if (s._dist) h += '<p>About ' + fmtDist(s._dist) + ' from your address.</p>';
 
   /* What is on today, and the whole week behind a disclosure. */
@@ -930,8 +982,8 @@ function unconfirmed(name){
     'Phase one has local approval for the Eunice Gibson catchment only. The boundary used here comes ' +
     'from a dataset that was validated for environmental health routing, not for deciding where you ' +
     'get clinical care.</p>' +
-    '<p>Call the Ministry of Health and Wellness on <span class="govbb-text-bold">' + MINISTRY +
-    '</span> to confirm before you travel.</p></div>';
+    ministryBlock('Contact the Ministry of Health and Wellness to confirm before you travel.') +
+    '</div>';
 }
 
 function render(){
@@ -973,8 +1025,7 @@ function render(){
          '<p class="govbb-text-body">We cannot tell you which polyclinic serves this address with ' +
          'confidence. Addresses this close to a boundary are exactly the ones the catchment data ' +
          'does not settle — and the published parish of an address can disagree with the map.</p>' +
-         '<p class="govbb-text-body"><span class="govbb-text-bold">Call the Ministry of Health and ' +
-         'Wellness on ' + MINISTRY + '</span> and they will confirm which catchment you are in.</p>' +
+         ministryBlock('The Ministry of Health and Wellness will confirm which catchment you are in.') +
          (likely
            ? '<p class="govbb-text-body">On the boundary data alone it falls just inside ' +
              esc(likely.name) + '.</p>' +
@@ -988,26 +1039,33 @@ function render(){
   } else {
     var c = findCatchment(state.lng, state.lat), coastal = null;
     if (!c){ var nc = nearestCatchment(state.lng, state.lat); if (nc){ c = nc.c; coastal = nc.d; } }
-    h += '<div class="v1-answer__head"><h2 class="govbb-text-h2">Not the Eunice Gibson catchment</h2>' +
-         '<p class="v1-answer__sub">' + where + ' is outside the area phase one covers.</p></div>' +
-         '<div class="v1-answer__body">';
+    /* Lead with the answer, not with a refusal. The earlier wording opened with
+       "Not the Eunice Gibson catchment" under a black bar, which read as a
+       restriction and risked deterring people who are perfectly entitled to
+       care. The caveat still appears, as one line under the contact details. */
     if (c){
-      h += '<p class="govbb-text-body">It looks like <span class="govbb-text-bold">' + esc(c.name) +
-           '</span> serves this address.</p>';
-      if (coastal !== null)
-        h += '<p class="govbb-text-body">This address is right on the coast, just outside the mapped ' +
-             'area. It has been matched to the nearest catchment.</p>';
-      if (c.phone || c.email){
-        h += '<div class="v1-site"><h3>' + esc(c.name) + '</h3>';
-        if (c.phone) h += '<p class="v1-site__tel">(246) ' + esc(c.phone) + '</p>';
-        if (c.email) h += '<p>Environmental health: ' + esc(c.email) + '</p>';
-        h += '</div>';
-      }
-      h += unconfirmed(c.name);
+      h += '<div class="v1-answer__head"><h2 class="govbb-text-h2">Your polyclinic looks like ' +
+           esc(c.name) + '</h2>' +
+           '<p class="v1-answer__sub">' + where +
+           (coastal !== null
+              ? ' is on the coast, just outside the mapped area, so it has been matched to the '
+                + 'nearest catchment.'
+              : ' is outside the area this service covers so far.') +
+           '</p></div><div class="v1-answer__body">';
+      h += '<div class="v1-site"><h3>' + esc(c.name) + '</h3>';
+      if (c.phone) h += '<p class="v1-site__tel"><a class="govbb-link" href="tel:+1246' +
+                        esc(c.phone.replace(/-/g, '')) + '">(246) ' + esc(c.phone) + '</a></p>';
+      if (c.email) h += '<p>Environmental health: <a class="govbb-link" href="mailto:' +
+                        esc(c.email) + '">' + esc(c.email) + '</a></p>';
+      h += '</div>';
+      h += '<p class="v1-today__note">' + esc(c.name) + ' has not confirmed this.</p>' +
+           ministryBlock('Check with the Ministry of Health and Wellness.');
     } else {
-      h += '<p class="govbb-text-body">This point is not inside any catchment on record — it may be ' +
-           'offshore, or the pin may be in the wrong place. Drag it on the map below, or call the ' +
-           'Ministry on <span class="govbb-text-bold">' + MINISTRY + '</span>.</p>';
+      h += '<div class="v1-answer__head"><h2 class="govbb-text-h2">We could not match this address</h2>' +
+           '<p class="v1-answer__sub">' + where + ' is not inside any catchment on record.</p></div>' +
+           '<div class="v1-answer__body">';
+      h += '<p class="govbb-text-body">The pin may be in the wrong place. Drag it on the map, or ' +
+           'contact the Ministry of Health and Wellness.</p>' + ministryBlock('');
     }
     h += '</div>';
     el.className = 'v1-answer v1-answer--out is-shown';
@@ -1228,8 +1286,9 @@ function renderServiceResults(name){
   var missing = [0,1].filter(function(si){ return !e.sites[si]; });
   if (missing.length === 1)
     h += '<p class="v1-today__note">Not listed at ' + esc(SITES[missing[0]].name) + '.</p>';
-  h += '<p class="v1-today__note">Not sure? Call the Ministry of Health and Wellness on ' +
-       MINISTRY + '.</p>';
+  h += '<p class="v1-today__note">Not sure? Contact the Ministry of Health and Wellness on ' +
+       MINISTRY_TEL + ' or <a class="govbb-link" href="mailto:' + MINISTRY_EMAIL + '">' +
+       MINISTRY_EMAIL + '</a>.</p>';
   box.innerHTML = h + '</div>';
 }
 
