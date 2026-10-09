@@ -218,6 +218,9 @@
     color:var(--govbb-white-00,#fff);box-shadow:none}
   .govbb-button--secondary:active{background:color-mix(in oklab,var(--govbb-color-interactive),black 18%);
     color:var(--govbb-white-00,#fff)}
+  .v1-feedback-note{color:var(--govbb-color-muted);margin-bottom:var(--govbb-space-m)}
+  /* Deliberate departure from alpha.gov.bb: text blocks run the full content width, as on the entry page. */
+  .govbb-main-wrapper > :where(p,ul,ol,dl){max-inline-size:none}
 </style>
 </head>
 <body class="govbb-page">
@@ -342,15 +345,16 @@
       </div>
     </div>
 
+    <p class="govbb-text-body">If you need help, contact the Ministry of Health and Wellness on
+    <a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a> or
+    <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a>,
+    Frank Walcott Building, Culloden Road, St. Michael.</p>
+    <p class="govbb-text-body-sm v1-feedback-note">Per-polyclinic email addresses on this prototype are
+    placeholders and are not monitored.</p>
+
     <aside class="govbb-feedback mb-4 lg:mb-16">
       <h3 class="govbb-feedback__heading">Was this helpful?</h3>
-      <p class="govbb-text-body">Tell us what happened when you looked up your address, or contact
-      the Ministry of Health and Wellness on
-      <a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a> or
-      <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a>.</p>
-      <p class="govbb-text-body-sm" style="color:var(--govbb-color-muted)">Frank Walcott Building,
-      Culloden Road, St. Michael. Per-polyclinic email addresses on this prototype are placeholders
-      and are not monitored.</p>
+      <p class="govbb-text-body">Tell us what happened when you looked up your address.</p>
       <a class="govbb-link" href="#">Help us improve alpha.gov.bb</a>
     </aside>
 
