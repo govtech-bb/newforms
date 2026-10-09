@@ -19,16 +19,22 @@
   /* --govbb-color-focus (#30C0C8) is 2.21:1 on white, below the 3:1 SC 1.4.11
      needs. Darkened locally until the token is fixed upstream. */
   :root{--govbb-color-focus:#0a6c73}
-  .entry-lede{font-size:var(--govbb-font-size-body-lg,1.125rem);line-height:1.5;
-    margin:0 0 var(--govbb-space-m);max-width:44rem}
+  .entry-lede{margin:0 0 var(--govbb-space-m)}
+
+  /* The design system caps reading measure with
+     `.govbb-main-wrapper > :where(p,ul,ol,dl){max-inline-size:var(--govbb-measure)}` (42em).
+     Wrapping content in section divs breaks that child combinator, so the body
+     copy ran the full 1070px while the lede stayed at its proper measure — the
+     lede looked wrong when it was the only thing that was right. Re-apply the
+     same rule one level down. Cards and nav keep their own full-width layout. */
+  .entry-section > :where(p,ul,ol,dl){max-inline-size:var(--govbb-measure)}
   .entry-section{margin:0 0 var(--govbb-space-m,1.5rem)}
   .entry-section h2{margin:0 0 var(--govbb-space-xs)}
   .entry-section > p{margin:0 0 var(--govbb-space-s)}
   .entry-section > p:last-child,
   .entry-section > dl:last-child{margin-bottom:0}
 
-  .entry-callout{border-left:4px solid var(--govbb-blue-60);background:var(--govbb-blue-10);
-    padding:var(--govbb-space-s);border-radius:var(--govbb-radius);margin:0 0 var(--govbb-space-m)}
+  .entry-callout{margin:0 0 var(--govbb-space-m)}
   .entry-callout p{margin:0}
   .entry-callout p + p{margin-top:var(--govbb-space-xs)}
 
@@ -46,10 +52,8 @@
   .entry-hours dt{font-weight:700}
   .entry-hours dd{margin:0 0 var(--govbb-space-xs);min-width:0;overflow-wrap:anywhere}
 
-  .entry-poly{border:1px solid var(--govbb-grey-20);border-radius:var(--govbb-radius);
-    padding:var(--govbb-space-s);margin:0 0 var(--govbb-space-s)}
-  .entry-poly__name{margin:0 0 var(--govbb-space-xs);font-size:var(--govbb-font-size-body);
-    font-weight:700}
+  .entry-poly{margin:0 0 var(--govbb-space-s)}
+  .entry-poly__name{margin:0 0 var(--govbb-space-xs)}
   .entry-poly__meta{display:grid;grid-template-columns:7.5rem 1fr;gap:2px var(--govbb-space-s);
     margin:0;font-size:var(--govbb-font-size-body-sm)}
   .entry-poly__meta dt{font-weight:700;color:var(--govbb-color-muted)}
@@ -66,12 +70,6 @@
     gap:var(--govbb-space-xs)}
   .entry-jump__list li{margin:0}
   /* Buttons, not a run of links — each area is a thing you press. */
-  .entry-jump__btn{display:inline-block;padding:10px 14px;min-height:44px;
-    border:2px solid var(--govbb-color-interactive,#0a6c73);border-radius:var(--govbb-radius);
-    background:var(--govbb-color-surface,#fff);color:var(--govbb-color-interactive,#0a6c73);
-    font-size:var(--govbb-font-size-body-sm);font-weight:700;text-decoration:none;line-height:1.4}
-  .entry-jump__btn:hover{background:var(--govbb-color-interactive,#0a6c73);color:#fff}
-  .entry-jump__btn:focus-visible{outline:4px solid var(--govbb-color-focus);outline-offset:2px}
   .entry-poly:target{outline:4px solid var(--govbb-color-focus);outline-offset:2px}
   .entry-note{font-size:var(--govbb-font-size-body-sm);color:var(--govbb-color-muted)}
   .entry-list{columns:2;column-gap:var(--govbb-space-l,2rem);margin:0 0 var(--govbb-space-s)}
@@ -82,10 +80,14 @@
   .placeholder{background:#fff2d6;border:2px dashed #d9a441;padding:2px 6px;
     font-weight:700;font-family:monospace;font-size:0.9em}
 
-  /* The live stylesheet ships fixed heading sizes with no mobile scaling. */
-  @media (max-width:48rem){
-    :root{--govbb-font-size-h1:1.75rem;--govbb-font-size-h2:1.375rem;--govbb-font-size-h3:1.125rem}
-  }
+
+  /* Secondary buttons: teal hover, as the jump links had before they moved to
+     the design-system button. The design system's own hover is only a faint
+     inset shadow on the grey. */
+  .govbb-button--secondary:hover{background:var(--govbb-color-interactive);
+    color:var(--govbb-white-00,#fff);box-shadow:none}
+  .govbb-button--secondary:active{background:color-mix(in oklab,var(--govbb-color-interactive),black 18%);
+    color:var(--govbb-white-00,#fff)}
 </style>
 </head>
 <body class="govbb-page">
@@ -134,18 +136,20 @@
 <main id="main-content" tabindex="-1">
   <div class="govbb-width-container govbb-main-wrapper">
 
-    <p class="govbb-text-caption">Last updated on October 8th, 2026</p>
-    <h1 class="govbb-text-h1">Polyclinics</h1>
-    <p class="govbb-text-body entry-lede">Each catchment area in Barbados has a polyclinic. A
-    catchment is the area a polyclinic looks after. Find out which polyclinic is for your area, when
-    it is open, and what services it offers.</p>
+    <div class="flex flex-col gap-xs mb-m">
+      <h1 class="govbb-text-h1">Polyclinics</h1>
+      <div class="border-blue-10 border-b-4 pb-4 text-grey-70">
+        <p class="govbb-text-body-sm">Last updated on October 9th, 2026</p>
+      </div>
+    </div>
+    <p class="govbb-text-body entry-lede">Each area in Barbados has a polyclinic that offers health
+    care to the people who live there. This is called a catchment area. Find out which polyclinic
+    looks after your area, when it is open, and what services it offers.</p>
 
     <section class="entry-emergency">
       <h2 class="govbb-text-h3">In an emergency</h2>
-      <p class="govbb-text-body">Go to the Queen Elizabeth Hospital Accident and Emergency Department,
-      which is open 24 hours a day.</p>
-      <p class="govbb-text-body">You will always be seen in an emergency. No polyclinic turns away a
-      walk-in who needs urgent care, wherever you live.</p>
+      <p class="govbb-text-body">For emergencies, go to the Queen Elizabeth Hospital’s Accident and
+      Emergency Department, which is open 24 hours a day.</p>
     </section>
 
     <section class="entry-section">
@@ -181,12 +185,12 @@
       address against the catchment areas.</p>
     </div>
 
-    <div class="entry-callout">
-      <p><span class="govbb-text-bold">This service is being built in phases.</span> At the moment it
-      covers one catchment area — Eunice Gibson Polyclinic at Warrens, and the St. Thomas Outpatient
-      Clinic at Rock Hall, which is run as part of it.</p>
-      <p>For any other area, contact the Ministry of Health and Wellness on
-      <a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a> or
+    <div class="entry-callout border-l-4 px-s py-xs border-grey-70 bg-grey-20">
+      <p><span class="govbb-text-bold">This service is being introduced in phases.</span> It currently
+      covers the area served by Eunice Gibson Polyclinic at Warrens and St. Thomas Outpatient Clinic
+      at Rock Hall, which operates as part of the polyclinic.</p>
+      <p>For information about other areas, contact the Ministry of Health and Wellness at
+      <a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a> or email
       <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a>.</p>
     </div>
 
@@ -208,20 +212,20 @@
         <li>Community (district) nursing</li>
         <li>Health promotion</li>
         <li>Medical records</li>
+        <li>Health programmes for diabetes, high blood pressure, asthma, breastfeeding, men's health
+        and adolescent health.</li>
       </ul>
-      <p class="govbb-text-body">Every polyclinic also runs programmes for diabetes, high blood
-      pressure, asthma, breastfeeding, men's health and adolescent health.</p>
       <!-- MDA NOTE: This 15-service list comes from health.gov.bb Primary Health Care. The six
            programmes come from the 2011 Polyclinic Procedure Manual. Confirm both are current. -->
     </section>
 
     <section class="entry-section">
       <h2 class="govbb-text-h2">Specialist clinics</h2>
-      <p class="govbb-text-body">Some polyclinics also run specialist clinics, including mental
-      health, dermatology, gynaecology and minor surgery. These run on set days that differ from one
-      polyclinic to another, and some are not running at present.</p>
-      <p class="govbb-text-body">Call the polyclinic before you travel to check that the clinic you
-      need is running.</p>
+      <p class="govbb-text-body">Some polyclinics also offer specialist clinics, such as mental health,
+      dermatology, gynaecology and minor surgery. These clinics run on set days, which vary by
+      location. Some are currently unavailable.</p>
+      <p class="govbb-text-body">Call the polyclinic before you go to find out if the service you
+      need is available.</p>
       <!-- MDA NOTE: Specialist clinic days are published only on the polyclinics' own websites
            (polyclinics.wixsite.com), which are unofficial, date from 2023, and repeat the same
            timetable across five sites. Days are deliberately not listed here. Ask the Ministry for
@@ -229,25 +233,25 @@
     </section>
 
     <section class="entry-section">
-      <h2 class="govbb-text-h2">Where the polyclinics are</h2>
+      <h2 class="govbb-text-h2">Opening hours</h2>
       <p class="govbb-text-body">Opening hours vary by location. Sir Winston Scott Polyclinic is open
       24 hours a day, every day.</p>
       <nav class="entry-jump" aria-label="Jump to a polyclinic">
         <p class="entry-jump__h" id="entry-jump-h">Go straight to a polyclinic:</p>
         <ul class="entry-jump__list" aria-labelledby="entry-jump-h">
-          <li><a class="entry-jump__btn" href="#p-winston-scott">Sir Winston Scott</a></li>
-          <li><a class="entry-jump__btn" href="#p-branford-taitt">Branford Taitt</a></li>
-          <li><a class="entry-jump__btn" href="#p-edgar-cochrane">Edgar Cochrane</a></li>
-          <li><a class="entry-jump__btn" href="#p-eunice-gibson">Eunice Gibson</a></li>
-          <li><a class="entry-jump__btn" href="#p-frederick-miller">Frederick Miller</a></li>
-          <li><a class="entry-jump__btn" href="#p-david-thompson">David Thompson</a></li>
-          <li><a class="entry-jump__btn" href="#p-maurice-byer">Maurice Byer</a></li>
-          <li><a class="entry-jump__btn" href="#p-randal-phillips">Randal Phillips</a></li>
-          <li><a class="entry-jump__btn" href="#p-st-philip">St. Philip</a></li>
+          <li><a class="govbb-button govbb-button--secondary entry-jump__btn" href="#p-winston-scott">Sir Winston Scott</a></li>
+          <li><a class="govbb-button govbb-button--secondary entry-jump__btn" href="#p-branford-taitt">Branford Taitt</a></li>
+          <li><a class="govbb-button govbb-button--secondary entry-jump__btn" href="#p-edgar-cochrane">Edgar Cochrane</a></li>
+          <li><a class="govbb-button govbb-button--secondary entry-jump__btn" href="#p-eunice-gibson">Eunice Gibson</a></li>
+          <li><a class="govbb-button govbb-button--secondary entry-jump__btn" href="#p-frederick-miller">Frederick Miller</a></li>
+          <li><a class="govbb-button govbb-button--secondary entry-jump__btn" href="#p-david-thompson">David Thompson</a></li>
+          <li><a class="govbb-button govbb-button--secondary entry-jump__btn" href="#p-maurice-byer">Maurice Byer</a></li>
+          <li><a class="govbb-button govbb-button--secondary entry-jump__btn" href="#p-randal-phillips">Randal Phillips</a></li>
+          <li><a class="govbb-button govbb-button--secondary entry-jump__btn" href="#p-st-philip">St. Philip</a></li>
         </ul>
       </nav>
-      <div class="entry-poly" id="p-winston-scott">
-        <h3 class="entry-poly__name">Sir Winston Scott Polyclinic</h3>
+      <div class="entry-poly rounded-lg border border-grey-20 bg-white-00 p-5" id="p-winston-scott">
+        <h3 class="entry-poly__name govbb-text-h4">Sir Winston Scott Polyclinic</h3>
         <dl class="entry-poly__meta">
           <dt>Where</dt><dd>Ladymeade Gardens, Jemmotts Lane, St. Michael</dd>
           <dt>Open</dt><dd>Open 24 hours a day, 7 days a week</dd>
@@ -256,8 +260,8 @@
           <dt>Email</dt><dd><a class="govbb-link" href="mailto:wspc@health.gov.bb">wspc@health.gov.bb</a></dd>
         </dl>
       </div>
-      <div class="entry-poly" id="p-branford-taitt">
-        <h3 class="entry-poly__name">Branford Taitt Polyclinic</h3>
+      <div class="entry-poly rounded-lg border border-grey-20 bg-white-00 p-5" id="p-branford-taitt">
+        <h3 class="entry-poly__name govbb-text-h4">Branford Taitt Polyclinic</h3>
         <dl class="entry-poly__meta">
           <dt>Where</dt><dd>Black Rock Main Road, St. Michael</dd>
           <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
@@ -266,8 +270,8 @@
           <dt>Email</dt><dd><a class="govbb-link" href="mailto:btpc@health.gov.bb">btpc@health.gov.bb</a></dd>
         </dl>
       </div>
-      <div class="entry-poly" id="p-edgar-cochrane">
-        <h3 class="entry-poly__name">Edgar Cochrane Polyclinic</h3>
+      <div class="entry-poly rounded-lg border border-grey-20 bg-white-00 p-5" id="p-edgar-cochrane">
+        <h3 class="entry-poly__name govbb-text-h4">Edgar Cochrane Polyclinic</h3>
         <dl class="entry-poly__meta">
           <dt>Where</dt><dd>Wildey, St. Michael</dd>
           <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
@@ -275,8 +279,8 @@
           <dt>Email</dt><dd><a class="govbb-link" href="mailto:ecpc@health.gov.bb">ecpc@health.gov.bb</a></dd>
         </dl>
       </div>
-      <div class="entry-poly" id="p-eunice-gibson">
-        <h3 class="entry-poly__name">Eunice Gibson Polyclinic</h3>
+      <div class="entry-poly rounded-lg border border-grey-20 bg-white-00 p-5" id="p-eunice-gibson">
+        <h3 class="entry-poly__name govbb-text-h4">Eunice Gibson Polyclinic</h3>
         <dl class="entry-poly__meta">
           <dt>Where</dt><dd>Warrens, St. Michael</dd>
           <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
@@ -284,8 +288,8 @@
           <dt>Email</dt><dd><a class="govbb-link" href="mailto:egpc@health.gov.bb">egpc@health.gov.bb</a></dd>
         </dl>
       </div>
-      <div class="entry-poly" id="p-frederick-miller">
-        <h3 class="entry-poly__name">Frederick "Freddie" Miller Polyclinic</h3>
+      <div class="entry-poly rounded-lg border border-grey-20 bg-white-00 p-5" id="p-frederick-miller">
+        <h3 class="entry-poly__name govbb-text-h4">Frederick "Freddie" Miller Polyclinic</h3>
         <dl class="entry-poly__meta">
           <dt>Where</dt><dd>The Glebe, St. George</dd>
           <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
@@ -293,8 +297,8 @@
           <dt>Email</dt><dd><a class="govbb-link" href="mailto:gpc@health.gov.bb">gpc@health.gov.bb</a></dd>
         </dl>
       </div>
-      <div class="entry-poly" id="p-david-thompson">
-        <h3 class="entry-poly__name">David Thompson Health &amp; Social Services Complex</h3>
+      <div class="entry-poly rounded-lg border border-grey-20 bg-white-00 p-5" id="p-david-thompson">
+        <h3 class="entry-poly__name govbb-text-h4">David Thompson Health &amp; Social Services Complex</h3>
         <dl class="entry-poly__meta">
           <dt>Where</dt><dd>Colleton Road, Glebe Land, St. John</dd>
           <dt>Open</dt><dd>Open 24 hours a day, 7 days a week</dd>
@@ -303,8 +307,8 @@
           <dt>Email</dt><dd><a class="govbb-link" href="mailto:dthssc@health.gov.bb">dthssc@health.gov.bb</a></dd>
         </dl>
       </div>
-      <div class="entry-poly" id="p-maurice-byer">
-        <h3 class="entry-poly__name">Maurice Byer Polyclinic</h3>
+      <div class="entry-poly rounded-lg border border-grey-20 bg-white-00 p-5" id="p-maurice-byer">
+        <h3 class="entry-poly__name govbb-text-h4">Maurice Byer Polyclinic</h3>
         <dl class="entry-poly__meta">
           <dt>Where</dt><dd>Litchfield, Station Hill, St. Peter</dd>
           <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
@@ -313,8 +317,8 @@
           <dt>Email</dt><dd><a class="govbb-link" href="mailto:mbpc@health.gov.bb">mbpc@health.gov.bb</a></dd>
         </dl>
       </div>
-      <div class="entry-poly" id="p-randal-phillips">
-        <h3 class="entry-poly__name">Randal Phillips Polyclinic</h3>
+      <div class="entry-poly rounded-lg border border-grey-20 bg-white-00 p-5" id="p-randal-phillips">
+        <h3 class="entry-poly__name govbb-text-h4">Randal Phillips Polyclinic</h3>
         <dl class="entry-poly__meta">
           <dt>Where</dt><dd>Oistins Main Road, Christ Church</dd>
           <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
@@ -323,8 +327,8 @@
           <dt>Email</dt><dd><a class="govbb-link" href="mailto:rppc@health.gov.bb">rppc@health.gov.bb</a></dd>
         </dl>
       </div>
-      <div class="entry-poly" id="p-st-philip">
-        <h3 class="entry-poly__name">St. Philip Polyclinic</h3>
+      <div class="entry-poly rounded-lg border border-grey-20 bg-white-00 p-5" id="p-st-philip">
+        <h3 class="entry-poly__name govbb-text-h4">St. Philip Polyclinic</h3>
         <dl class="entry-poly__meta">
           <dt>Where</dt><dd>Six Roads Cross Roads, St. Philip</dd>
           <dt>Open</dt><dd>Monday to Friday, 8:30am to 4:30pm</dd>
@@ -349,7 +353,7 @@
     <section class="entry-section">
       <h2 class="govbb-text-h2">Get help</h2>
       <p class="govbb-text-body">Find out which polyclinic is for your area by
-      <a class="govbb-link" href="find-your-polyclinic-version-one.html">checking your address</a>
+      <a class="govbb-link" href="find-your-polyclinic-version-one.html">entering your address</a>
       or contacting the Ministry of Health and Wellness.</p>
       <dl class="entry-poly__meta">
         <dt>Telephone</dt><dd><a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a></dd>

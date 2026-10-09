@@ -19,11 +19,11 @@
      Page-local styles only, prefixed `v1-`. All chrome, type, buttons,
      inputs, the summary list and the feedback block come from the live
      alpha.gov.bb stylesheet. Tokens are --govbb-*.
-     `govbb-inset-text` / `govbb-warning-text` do NOT exist in the live
-     build, so callouts are local (.v1-callout, .v1-warn).
+     Callouts, cards and status chips use the same utility classes the
+     live alpha.gov.bb pages use (e.g. find-an-open-pharmacy/find).
      =================================================================== */
 
-  .v1-lede{font-size:var(--govbb-font-size-body-lg,1.125rem)}
+  .v1-lede{margin-bottom:var(--govbb-space-m)}
   .v1-ministry{margin-top:var(--govbb-space-s);padding-top:var(--govbb-space-s);
     border-top:1px solid var(--govbb-grey-20)}
   .v1-ministry__lead{margin:0 0 var(--govbb-space-xs)!important;font-weight:700}
@@ -35,23 +35,14 @@
     .v1-ministry__list{grid-template-columns:1fr}
     .v1-ministry__list dd{margin-bottom:var(--govbb-space-xxs)}
   }
-  .v1-backlink{padding:5px 0}
-  .v1-backlink a{display:inline-block;padding:5px 0}
-
-  .v1-phase{border-left:4px solid var(--govbb-blue-60);background:var(--govbb-blue-10);
-    padding:var(--govbb-space-s);border-radius:var(--govbb-radius);margin:0 0 var(--govbb-space-m)}
-  .v1-phase p{margin:0;font-size:var(--govbb-font-size-body-sm)}
-  .v1-phase p + p{margin-top:var(--govbb-space-xs)}
 
   /* Clinical-safety reassurance. Always visible, never behind a result. */
-  .v1-safety{border:2px solid var(--govbb-teal-80);border-radius:var(--govbb-radius);
-    padding:var(--govbb-space-s);margin:0 0 var(--govbb-space-m);background:var(--govbb-teal-10)}
+  .v1-safety{margin:0 0 var(--govbb-space-m)}
   .v1-safety p{margin:0}
   .v1-safety p + p{margin-top:var(--govbb-space-xs);font-size:var(--govbb-font-size-body-sm)}
 
   .v1-finder{background:var(--govbb-grey-10,#f3f2f1);padding:var(--govbb-space-s);
     border-radius:var(--govbb-radius);margin:0 0 var(--govbb-space-m)}
-  .v1-finder__h{margin:0 0 var(--govbb-space-xs)}
   .v1-map__h{margin:0 0 var(--govbb-space-xs)}
   .v1-finder__row{display:grid;grid-template-columns:1fr 1fr;gap:var(--govbb-space-m);
     align-items:start}
@@ -71,16 +62,10 @@
   .v1-finder .govbb-hint{display:block;margin:0 0 var(--govbb-space-xs)}
   .v1-combo{position:relative;width:100%}
   .v1-combo .govbb-input{width:100%;min-width:0}
-  .v1-listbox{position:absolute;z-index:1200;left:0;right:0;top:100%;margin:2px 0 0;padding:0;
-    list-style:none;background:var(--govbb-color-surface,#fff);border:2px solid var(--govbb-color-ink);
-    border-radius:var(--govbb-radius);max-height:17rem;overflow-y:auto;display:none;
-    box-shadow:0 4px 12px rgba(0,0,0,.18)}
-  .v1-listbox.is-open{display:block}
-  .v1-opt{padding:var(--govbb-space-xs) var(--govbb-space-s);cursor:pointer;
-    border-bottom:1px solid var(--govbb-grey-20)}
-  .v1-opt:last-child{border-bottom:0}
-  .v1-opt[aria-selected="true"]{background:var(--govbb-teal-10);
-    box-shadow:inset 4px 0 0 var(--govbb-teal-80)}
+  /* List and options come from the design system's govbb-combobox. Only the
+     stacking is local: Leaflet's panes sit at z-index 400+, above the
+     design system's 10. */
+  .v1-listbox{z-index:1200}
   .v1-opt__name{font-weight:700;display:block;min-width:0;overflow-wrap:anywhere}
   .v1-opt__where{font-size:var(--govbb-font-size-body-sm);color:var(--govbb-color-muted);
     display:block;min-width:0;overflow-wrap:anywhere}
@@ -107,13 +92,11 @@
 
   /* The card holds a disclosure, so it cannot itself be a button — it carries
      its own "Show on the map" button instead. */
+  /* Selected card keeps the white card ground so the teal-10 status chip
+     stays visible; the teal border and inset bar mark the selection. */
   .v1-site[data-selected="true"]{border:2px solid var(--govbb-teal-80);
-    background:var(--govbb-teal-10);box-shadow:inset 4px 0 0 var(--govbb-teal-80)}
-  .v1-site__pick{display:inline-block;margin-top:var(--govbb-space-s);font:inherit;cursor:pointer;
-    font-size:var(--govbb-font-size-body-sm);font-weight:700;
-    color:var(--govbb-color-interactive);background:none;border:0;padding:4px 0;
-    text-decoration:underline;text-underline-offset:3px}
-  .v1-site__pick:focus-visible{outline:4px solid var(--govbb-color-focus);outline-offset:2px}
+    box-shadow:inset 4px 0 0 var(--govbb-teal-80)}
+  .v1-site__pick{margin-top:var(--govbb-space-s)}
   .v1-site__pick[aria-pressed="true"]{color:var(--govbb-color-ink);text-decoration:none}
 
   /* What is on today */
@@ -127,8 +110,7 @@
     color:var(--govbb-color-muted)}
   .v1-finder .govbb-select{width:100%}
   .v1-svc__clear{margin-top:var(--govbb-space-xs);min-height:1.5rem}
-  #v1-svc-results .v1-svc__hit{border:1px solid var(--govbb-grey-20);border-radius:var(--govbb-radius);
-    padding:var(--govbb-space-s);margin-top:var(--govbb-space-s);background:var(--govbb-color-surface,#fff)}
+  #v1-svc-results .v1-svc__hit{margin-top:var(--govbb-space-s)}
   #v1-svc-results .v1-svc__name{margin:0 0 var(--govbb-space-s);padding-bottom:var(--govbb-space-xs);
     border-bottom:2px solid var(--govbb-color-ink);
     font-size:var(--govbb-font-size-h4,1.125rem);font-weight:700}
@@ -184,22 +166,17 @@
     box-shadow:0 0 0 3px #ffc726,0 1px 4px rgba(0,0,0,.6)}
 
 
-  .v1-site{border:1px solid var(--govbb-grey-20);border-radius:var(--govbb-radius);
-    padding:var(--govbb-space-s);margin-top:var(--govbb-space-s);background:var(--govbb-color-surface,#fff)}
+  .v1-site{margin-top:var(--govbb-space-s)}
   .v1-site--near{border-color:var(--govbb-color-ink)}
-  .v1-site h3{margin:0 0 var(--govbb-space-xxs);font-size:var(--govbb-font-size-body)}
+  .v1-site h3{margin:0 0 var(--govbb-space-xxs)}
   .v1-site p{margin:0;font-size:var(--govbb-font-size-body-sm);min-width:0;overflow-wrap:anywhere}
   .v1-site p + p{margin-top:var(--govbb-space-xxs)}
   .v1-site__tel{font-weight:700;font-size:var(--govbb-font-size-body)}
 
-  .v1-chip{display:inline-block;font-size:var(--govbb-font-size-body-sm);font-weight:700;
-    padding:2px 8px;border-radius:999px;margin-left:var(--govbb-space-xxs)}
-  .v1-chip--near{background:var(--govbb-teal-80);color:var(--govbb-white-00,#fff)}
-  .v1-chip--days{background:var(--govbb-grey-20);color:var(--govbb-color-ink)}
+  .v1-chip{vertical-align:middle}
 
   /* Unconfirmed = anything this page asserts about another polyclinic. */
-  .v1-warn{border-left:6px solid #8a5a00;background:#fff7e6;padding:var(--govbb-space-s);
-    border-radius:var(--govbb-radius);margin-top:var(--govbb-space-s)}
+  .v1-warn{margin-top:var(--govbb-space-s)}
   .v1-warn p{margin:0;font-size:var(--govbb-font-size-body-sm)}
   .v1-warn p + p{margin-top:var(--govbb-space-xs)}
   .v1-warn__title{font-weight:700;display:block;margin-bottom:var(--govbb-space-xxs)}
@@ -228,12 +205,14 @@
      the 3:1 SC 1.4.11 needs. Darkened locally until the token is fixed upstream. */
   :root{--govbb-color-focus:#0a6c73}
 
-  /* The live stylesheet ships fixed heading sizes with no mobile scaling. */
-  @media (max-width:48rem){
-    :root{--govbb-font-size-h1:1.75rem;--govbb-font-size-h2:1.375rem;--govbb-font-size-h3:1.125rem}
-  }
-  /* Long emails/addresses must not push the page sideways on a phone. */
-  .govbb-summary-list__key,.govbb-summary-list__value{min-width:0;overflow-wrap:anywhere}
+
+  /* Secondary buttons: teal hover, as the jump links had before they moved to
+     the design-system button. The design system's own hover is only a faint
+     inset shadow on the grey. */
+  .govbb-button--secondary:hover{background:var(--govbb-color-interactive);
+    color:var(--govbb-white-00,#fff);box-shadow:none}
+  .govbb-button--secondary:active{background:color-mix(in oklab,var(--govbb-color-interactive),black 18%);
+    color:var(--govbb-white-00,#fff)}
 </style>
 </head>
 <body class="govbb-page">
@@ -283,42 +262,37 @@
 <main id="main-content" tabindex="-1">
   <div class="govbb-width-container govbb-main-wrapper">
 
-    <p class="govbb-text-caption">Last updated on October 8th, 2026</p>
-    <h1 class="govbb-text-h1">Find your polyclinic</h1>
-    <p class="govbb-text-body v1-lede">Find out which polyclinic serves your address. A catchment is
-    the area a polyclinic looks after.</p>
-    <p class="govbb-text-body v1-backlink"><a class="govbb-link" href="polyclinic-entry.html">All
-    nine polyclinics: opening hours, services and what to do in an emergency</a></p>
+    <div class="flex flex-col gap-xs mb-m">
+      <h1 class="govbb-text-h1">Find your polyclinic</h1>
+      <div class="border-blue-10 border-b-4 pb-4 text-grey-70">
+        <p class="govbb-text-body-sm">Last updated on October 9th, 2026</p>
+      </div>
+    </div>
+    <p class="govbb-text-body v1-lede">Each area in Barbados has a polyclinic that offers health
+    care to the people who live there. This is called a catchment area. Find out which polyclinic
+    looks after your area, when it is open, and what services it offers.</p>
 
     <noscript>
-      <div class="v1-safety">
+      <div class="v1-safety border-l-4 px-s py-xs border-teal-80 bg-teal-10">
         <p><span class="govbb-text-bold">This page needs JavaScript to look up your address.</span>
         To find out which polyclinic serves you, call the Ministry of Health and Wellness on
         <a class="govbb-link" href="tel:+12465363800">1 (246) 536-3800</a> or email
         <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a>.</p>
         <p>Frank Walcott Building, Culloden Road, St. Michael.</p>
-        <p>You will always be seen in an emergency. No polyclinic turns away a walk-in who needs
-        urgent care, wherever you live.</p>
       </div>
     </noscript>
-
-    <div class="v1-safety">
-      <p><span class="govbb-text-bold">You will always be seen in an emergency.</span> No polyclinic
-      turns away a walk-in who needs urgent care, wherever you live.</p>
-    </div>
 
     <div class="v1-finder">
       <div class="v1-finder__row">
 
         <div class="govbb-form-group">
-          <h2 class="govbb-text-h3 v1-finder__h">Find by address</h2>
           <label class="govbb-label" for="v1-addr">Enter your address</label>
-          <p class="govbb-hint" id="v1-addr-hint">For example Redmans, Highway&nbsp;2A, or Rock Hall.</p>
-          <div class="v1-combo">
+          <p class="govbb-hint" id="v1-addr-hint">For example: Redmans, Highway&nbsp;2A, or Rock Hall.</p>
+          <div class="govbb-combobox v1-combo">
             <input class="govbb-input" id="v1-addr" type="text" role="combobox"
                    aria-expanded="false" aria-controls="v1-listbox" aria-autocomplete="list"
                    aria-describedby="v1-addr-hint" autocomplete="off" spellcheck="false" />
-            <ul class="v1-listbox" id="v1-listbox" role="listbox" aria-label="Address suggestions"></ul>
+            <ul class="govbb-combobox__list v1-listbox" id="v1-listbox" hidden role="listbox" aria-label="Address suggestions"></ul>
           </div>
           <p class="v1-combo__status" id="v1-combo-status" role="status" aria-live="polite"></p>
           <div class="v1-finder__actions">
@@ -328,9 +302,8 @@
         </div>
 
         <div class="govbb-form-group">
-          <h2 class="govbb-text-h3 v1-finder__h">Find by service</h2>
-          <label class="govbb-label" for="v1-svc">Look up a service</label>
-          <p class="govbb-hint" id="v1-svc-hint">For example dental health, blood testing or pharmacy.</p>
+          <label class="govbb-label" for="v1-svc">Find a service</label>
+          <p class="govbb-hint" id="v1-svc-hint">For example: dental health, blood testing or pharmacy.</p>
           <select class="govbb-select" id="v1-svc" aria-describedby="v1-svc-hint">
             <option value="">Choose a service</option>
           </select>
@@ -713,19 +686,19 @@ function photonSearch(q){
 
 function renderList(){
   if (!suggestions.length){
-    elList.className = 'v1-listbox';
+    elList.hidden = true;
     elList.innerHTML = '';
     elInput.setAttribute('aria-expanded', 'false');
     elInput.removeAttribute('aria-activedescendant');
     return;
   }
   elList.innerHTML = suggestions.map(function(s, i){
-    return '<li class="v1-opt" id="v1-opt-' + i + '" role="option" data-i="' + i + '" ' +
+    return '<li class="govbb-combobox__option v1-opt" id="v1-opt-' + i + '" role="option" data-i="' + i + '" ' +
            'aria-selected="' + (i === active) + '">' +
            '<span class="v1-opt__name">' + esc(s.name) + '</span>' +
            (s.where ? '<span class="v1-opt__where">' + esc(s.where) + '</span>' : '') + '</li>';
   }).join('');
-  elList.className = 'v1-listbox is-open';
+  elList.hidden = false;
   elInput.setAttribute('aria-expanded', 'true');
   if (active >= 0) elInput.setAttribute('aria-activedescendant', 'v1-opt-' + active);
   else elInput.removeAttribute('aria-activedescendant');
@@ -903,12 +876,12 @@ function placePin(lng, lat){
 
 function siteHtml(s, nearest, idx){
   var sel = (state.site === idx);
-  var h = '<div class="v1-site' + (nearest ? ' v1-site--near' : '') +
+  var h = '<div class="v1-site rounded-lg border border-grey-20 bg-white-00 p-5' + (nearest ? ' v1-site--near' : '') +
           '" data-site="' + idx + '" data-selected="' + sel + '">';
-  h += '<h3>' + esc(s.name) +
-       (nearest ? ' <span class="v1-chip v1-chip--near">Nearer to you</span>' : '') + '</h3>';
+  h += '<h3 class="govbb-text-h4">' + esc(s.name) +
+       (nearest ? ' <span class="v1-chip govbb-text-body-sm govbb-text-bold inline-flex w-fit items-center rounded-md px-3 py-1 bg-teal-10 text-teal-80">Nearer to you</span>' : '') + '</h3>';
   h += '<p>' + esc(s.where) + '</p>';
-  h += '<p><span class="v1-chip v1-chip--days">' + esc(s.days) + '</span> ' + esc(s.hours) + '</p>';
+  h += '<p><span class="v1-chip govbb-text-body-sm govbb-text-bold inline-flex w-fit items-center rounded-md px-3 py-1 bg-grey-20">' + esc(s.days) + '</span> ' + esc(s.hours) + '</p>';
   if (s.tel) h += '<p class="v1-site__tel">' + telLink(s.tel) + '</p>';
   if (s.email) h += '<p>Email <a class="govbb-link" href="mailto:' + esc(s.email) + '">' +
                     esc(s.email) + '</a></p>';
@@ -960,7 +933,7 @@ function siteHtml(s, nearest, idx){
        'phone before you travel.</p>' +
        (idx === 0
           ? '<p class="v1-today__note">Other services are offered here without a published day — ' +
-            'use “Or look up a service” above.</p>' +
+            'use “Find a service” above.</p>' +
             '<p class="v1-today__note">Entries marked <span class="v1-tag v1-tag--ex">Example</span> ' +
             'are placeholder days for this prototype. The services are real — dentistry, ' +
             'family planning, gynaecology and blood tests are all published here — but no source ' +
@@ -971,13 +944,13 @@ function siteHtml(s, nearest, idx){
        '</details>';
   h += '</div>';
 
-  h += '<button type="button" class="v1-site__pick" data-site="' + idx + '" aria-pressed="' + sel + '">' +
+  h += '<button type="button" class="govbb-button govbb-button--text v1-site__pick" data-site="' + idx + '" aria-pressed="' + sel + '">' +
        (sel ? 'Showing on the map' : 'Show on the map') + '</button>';
   return h + '</div>';
 }
 
 function unconfirmed(name){
-  return '<div class="v1-warn">' +
+  return '<div class="v1-warn border-l-4 px-s py-xs border-yellow-80 bg-yellow-20">' +
     '<p><span class="v1-warn__title">This has not been confirmed by ' + esc(name) + '.</span>' +
     'Phase one has local approval for the Eunice Gibson catchment only. The boundary used here comes ' +
     'from a dataset that was validated for environmental health routing, not for deciding where you ' +
@@ -1052,7 +1025,7 @@ function render(){
                 + 'nearest catchment.'
               : ' is outside the area this service covers so far.') +
            '</p></div><div class="v1-answer__body">';
-      h += '<div class="v1-site"><h3>' + esc(c.name) + '</h3>';
+      h += '<div class="v1-site rounded-lg border border-grey-20 bg-white-00 p-5"><h3 class="govbb-text-h4">' + esc(c.name) + '</h3>';
       if (c.phone) h += '<p class="v1-site__tel"><a class="govbb-link" href="tel:+1246' +
                         esc(c.phone.replace(/-/g, '')) + '">(246) ' + esc(c.phone) + '</a></p>';
       if (c.email) h += '<p>Environmental health: <a class="govbb-link" href="mailto:' +
@@ -1254,7 +1227,7 @@ function renderServiceResults(name){
   var box = document.getElementById('v1-svc-results');
   var e = SERVICES[name];
   if (!e){ box.innerHTML = ''; return; }
-  var h = '<div class="v1-svc__hit"><p class="v1-svc__name">' + esc(e.name) + '</p>';
+  var h = '<div class="v1-svc__hit rounded-lg border border-grey-20 bg-white-00 p-5"><p class="v1-svc__name">' + esc(e.name) + '</p>';
   if (GLOSS[e.name]) h += '<p class="v1-svc__gloss">' + esc(GLOSS[e.name]) + '</p>';
   var cov = COVERS[e.name];
   if (cov){
