@@ -23,7 +23,7 @@
      live alpha.gov.bb pages use (e.g. find-an-open-pharmacy/find).
      =================================================================== */
 
-  .v1-lede{margin-bottom:var(--govbb-space-m)}
+  .v1-lede{margin-bottom:var(--govbb-space-m);max-inline-size:none}
   .v1-ministry{margin-top:var(--govbb-space-s);padding-top:var(--govbb-space-s);
     border-top:1px solid var(--govbb-grey-20)}
   .v1-ministry__lead{margin:0 0 var(--govbb-space-xs)!important;font-weight:700}
@@ -66,6 +66,11 @@
      stacking is local: Leaflet's panes sit at z-index 400+, above the
      design system's 10. */
   .v1-listbox{z-index:1200}
+  /* The design system marks the active option with --govbb-color-highlight
+     (#e5e9f2, 1.22:1 on white) and a transparent outline, so keyboard users
+     cannot see where the arrow keys are (WCAG 2.4.7, 1.4.11). The teal bar is
+     7.4:1. */
+  .v1-opt[aria-selected="true"]{box-shadow:inset 4px 0 0 var(--govbb-teal-80)}
   .v1-opt__name{font-weight:700;display:block;min-width:0;overflow-wrap:anywhere}
   .v1-opt__where{font-size:var(--govbb-font-size-body-sm);color:var(--govbb-color-muted);
     display:block;min-width:0;overflow-wrap:anywhere}
@@ -245,7 +250,7 @@
 </div>
 
 <div class="govbb-width-container">
-  <nav class="govbb-breadcrumbs govbb-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
+  <nav class="govbb-breadcrumbs" aria-label="Breadcrumb">
     <ol class="govbb-breadcrumbs__list">
       <li class="govbb-breadcrumbs__item">
         <a class="govbb-link govbb-breadcrumbs__link" href="#">Home</a></li>
@@ -253,8 +258,6 @@
         <a class="govbb-link govbb-breadcrumbs__link" href="#">Health and emergency services</a></li>
       <li class="govbb-breadcrumbs__item">
         <a class="govbb-link govbb-breadcrumbs__link" href="polyclinic-entry.html">Polyclinics</a></li>
-      <li class="govbb-breadcrumbs__item">
-        <a class="govbb-link govbb-breadcrumbs__link" href="#" aria-current="page">Find your polyclinic</a></li>
     </ol>
   </nav>
 </div>
@@ -312,7 +315,8 @@
               Clear service
             </button>
           </div>
-          <div id="v1-svc-results" role="status" aria-live="polite"></div>
+          <p class="govbb-visually-hidden" id="v1-svc-status" role="status"></p>
+          <div id="v1-svc-results"></div>
         </div>
 
       </div>
@@ -320,7 +324,8 @@
 
     <div class="v1-layout">
       <div class="v1-layout__main">
-        <div class="v1-answer" id="v1-answer" role="status" aria-live="polite"></div>
+        <p class="govbb-visually-hidden" id="v1-answer-status" role="status"></p>
+        <div class="v1-answer" id="v1-answer"></div>
         <div class="v1-empty" id="v1-empty">
           <p>Enter your address above, or drag the pin on the map, to see which polyclinic serves you.</p>
         </div>
@@ -963,7 +968,8 @@ function render(){
   var el = document.getElementById('v1-answer');
   var empty = document.getElementById('v1-empty');
   if (empty) empty.hidden = (state.lng !== null);
-  if (state.lng === null){ el.className = 'v1-answer'; el.innerHTML = ''; return; }
+  var status = document.getElementById('v1-answer-status');
+  if (state.lng === null){ el.className = 'v1-answer'; el.innerHTML = ''; status.textContent = ''; return; }
 
   var inside = EG ? inCatchment(state.lng, state.lat, EG) : false;
   var edgeM  = EG ? distToBoundaryM(state.lng, state.lat, EG) : Infinity;
@@ -1044,6 +1050,10 @@ function render(){
     el.className = 'v1-answer v1-answer--out is-shown';
   }
   el.innerHTML = h;
+  /* Announce the answer's heading only. The panel used to be the live region,
+     so screen readers read all of it (about 2,750 characters) on every change. */
+  var head = el.querySelector('h2');
+  status.textContent = head ? head.textContent + '. Details are below the search.' : '';
 }
 
 /* Linking the two sites to the map: choosing a card selects its pin, and
@@ -1225,8 +1235,10 @@ var COVERS = {
 
 function renderServiceResults(name){
   var box = document.getElementById('v1-svc-results');
+  var svcStatus = document.getElementById('v1-svc-status');
   var e = SERVICES[name];
-  if (!e){ box.innerHTML = ''; return; }
+  if (!e){ box.innerHTML = ''; svcStatus.textContent = ''; return; }
+  svcStatus.textContent = 'Showing where ' + e.name + ' is offered.';
   var h = '<div class="v1-svc__hit rounded-lg border border-grey-20 bg-white-00 p-5"><p class="v1-svc__name">' + esc(e.name) + '</p>';
   if (GLOSS[e.name]) h += '<p class="v1-svc__gloss">' + esc(GLOSS[e.name]) + '</p>';
   var cov = COVERS[e.name];

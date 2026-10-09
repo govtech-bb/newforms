@@ -19,15 +19,12 @@
   /* --govbb-color-focus (#30C0C8) is 2.21:1 on white, below the 3:1 SC 1.4.11
      needs. Darkened locally until the token is fixed upstream. */
   :root{--govbb-color-focus:#0a6c73}
-  .entry-lede{margin:0 0 var(--govbb-space-m)}
+  .entry-lede{margin:0 0 var(--govbb-space-m);max-inline-size:none}
 
-  /* The design system caps reading measure with
-     `.govbb-main-wrapper > :where(p,ul,ol,dl){max-inline-size:var(--govbb-measure)}` (42em).
-     Wrapping content in section divs breaks that child combinator, so the body
-     copy ran the full 1070px while the lede stayed at its proper measure — the
-     lede looked wrong when it was the only thing that was right. Re-apply the
-     same rule one level down. Cards and nav keep their own full-width layout. */
-  .entry-section > :where(p,ul,ol,dl){max-inline-size:var(--govbb-measure)}
+  /* Deliberate departure from alpha.gov.bb (which caps body text at
+     --govbb-measure): the service team wants every block on this page to
+     run the full content width. */
+  .govbb-main-wrapper :where(p,ul,ol,dl){max-inline-size:none}
   .entry-section{margin:0 0 var(--govbb-space-m,1.5rem)}
   .entry-section h2{margin:0 0 var(--govbb-space-xs)}
   .entry-section > p{margin:0 0 var(--govbb-space-s)}
@@ -121,14 +118,12 @@
 
 <div class="govbb-width-container">
   <!-- MDA NOTE: Confirm this service sits under "Health and emergency services" before publishing. -->
-  <nav class="govbb-breadcrumbs govbb-breadcrumbs--collapse-on-mobile" aria-label="Breadcrumb">
+  <nav class="govbb-breadcrumbs" aria-label="Breadcrumb">
     <ol class="govbb-breadcrumbs__list">
       <li class="govbb-breadcrumbs__item">
         <a class="govbb-link govbb-breadcrumbs__link" href="#">Home</a></li>
       <li class="govbb-breadcrumbs__item">
         <a class="govbb-link govbb-breadcrumbs__link" href="#">Health and emergency services</a></li>
-      <li class="govbb-breadcrumbs__item">
-        <a class="govbb-link govbb-breadcrumbs__link" href="#" aria-current="page">Polyclinics</a></li>
     </ol>
   </nav>
 </div>
@@ -179,7 +174,7 @@
     </section>
 
     <div class="entry-start">
-      <a class="govbb-button" href="find-your-polyclinic-version-one.html" role="button"
+      <a class="govbb-button" href="find-your-polyclinic-version-one.html"
          draggable="false">Find your polyclinic</a>
       <p class="govbb-text-body-sm entry-note" style="margin-top:var(--govbb-space-xs)">Check your
       address against the catchment areas.</p>
