@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Find a polyclinic | Government of Barbados</title>
+<meta name="description" content="Find a polyclinic or outpatient clinic in Barbados, check when it is open and what services it offers." />
+<link rel="icon" href="https://alpha.gov.bb/favicon.ico" />
+<link rel="stylesheet" href="govbb-alpha-styles.css" />
+
+<style>
+  :root{--govbb-color-focus:#0a6c73}
+  /* No mobile heading override: the live build scales headings itself. */
+  .pc-section{display:flex;flex-direction:column;gap:var(--govbb-space-s)}
+  .pc-section > :where(p,ul,ol,dl){max-inline-size:var(--govbb-measure);margin:0}
+  .pc-dot{display:inline-block;width:.5rem;height:.5rem;border-radius:50%;margin-right:.5rem;vertical-align:middle;background:var(--govbb-grey-70,#595959)}
+  .pc-dot--open{background:#00703c} .pc-dot--soon{background:#b35c00} .pc-dot--closed{background:#b10e1e}
+  .pc-st--open{color:#00703c} .pc-st--soon{color:#8a4600} .pc-st--closed{color:#b10e1e} .pc-st--unknown{color:#3d3d3d}
+  .pc-muted{color:var(--govbb-color-muted,#595959)}
+  .pc-today{background:var(--govbb-blue-10,#e5e9f2);font-weight:700}
+  .pc-cols{columns:2;column-gap:var(--govbb-space-l,2rem)} .pc-cols li{break-inside:avoid}
+  @media (max-width:40rem){.pc-cols{columns:1}}
+  .pc-meta{display:grid;grid-template-columns:11rem 1fr;gap:4px var(--govbb-space-s)}
+  .pc-meta dt{font-weight:700} .pc-meta dd{margin:0;min-width:0;overflow-wrap:anywhere}
+  @media (max-width:30rem){.pc-meta{grid-template-columns:1fr} .pc-meta dd{margin-bottom:var(--govbb-space-xs)}}
+  .pc-map{display:block;width:100%;max-inline-size:var(--govbb-measure);height:240px;border:1px solid var(--govbb-grey-20);border-radius:var(--govbb-radius)}
+  .pc-emergency{border:2px solid var(--govbb-color-error,#b10e1e);border-radius:var(--govbb-radius);padding:var(--govbb-space-s);max-inline-size:var(--govbb-measure)}
+  .pc-emergency > *{margin:0} .pc-emergency > * + *{margin-top:var(--govbb-space-xs)}
+  .placeholder{background:#fff2d6;border:2px dashed #d9a441;padding:1px 6px;font-size:.85em}
+</style>
+</head>
+<body class="govbb-page">
+<a class="govbb-skip-link" href="#main-content">Skip to main content</a>
+
+<div class="govbb-official-banner">
+  <div class="govbb-official-banner__inner govbb-width-container">
+    <span class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="https://alpha.gov.bb/images/coat-of-arms.png" alt="" width="20" height="20" /></span>
+    <span class="govbb-official-banner__text">An official website of the Government of Barbados</span>
+  </div>
+</div>
+
+<header class="govbb-header" data-govbb-header-enhanced="true">
+  <div class="govbb-width-container govbb-header__inner">
+    <a href="#" class="govbb-header__home"><img class="govbb-header__logo" src="https://alpha.gov.bb/assets/govbb-logo-dweJzbng.svg" alt="Go to the alpha.gov.bb homepage" /></a>
+    <div class="govbb-header__controls">
+      <button type="button" class="govbb-button govbb-button--ghost govbb-header__toggle" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    </div>
+    <nav id="site-nav" class="govbb-header__nav" aria-label="Primary navigation" data-expanded="false">
+      <div class="govbb-header__nav-inner">
+        <a href="#" class="govbb-link">Services</a>
+        <a class="govbb-link" href="#">Track my application</a>
+        <a class="govbb-button" href="#">Ask Assistant</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="govbb-status-banner govbb-status-banner--alpha govbb-status-banner--full-width">
+  <div class="govbb-status-banner__inner govbb-width-container">
+    <p><span class="govbb-text-bold">Alpha</span> — this is a prototype. Opening hours and services are not confirmed by the Ministry of Health and Wellness.</p>
+  </div>
+</div>
+
+<div class="govbb-width-container">
+  <nav class="govbb-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="govbb-breadcrumbs__list"><li class="govbb-breadcrumbs__item"><a class="govbb-link govbb-breadcrumbs__link" href="#">Home</a></li><li class="govbb-breadcrumbs__item"><a class="govbb-link govbb-breadcrumbs__link" href="#">Health and emergency services</a></li></ol>
+  </nav>
+</div>
+
+<main id="main-content" tabindex="-1">
+  <div class="govbb-width-container govbb-main-wrapper">
+    <div class="mb-xm lg:grid lg:grid-cols-3 lg:gap-16">
+      <div class="space-y-6 lg:col-span-2 lg:space-y-8">
+        <div class="space-y-4 lg:space-y-6">
+          <h1 class="govbb-text-h1 wrap-anywhere">Find a polyclinic</h1>
+          <div class="flex flex-col gap-xs"><div class="border-blue-10 border-b-4 pb-4 text-grey-70"><p class="govbb-text-body-sm">Last updated on October 9th, 2026</p></div></div>
+        </div>
+        <div class="govbb-prose">
+          <p>Each area in Barbados has a polyclinic that offers health care to the people who live there. This is called a catchment area. Find out which polyclinic looks after your area, when it is open, and what services it offers.</p>
+          <h2 id="in-an-emergency">In an emergency</h2>
+          <p>For emergencies, go to the Queen Elizabeth Hospital’s Accident and Emergency Department, which is open 24 hours a day.</p>
+
+          <h2 id="who-can-use-a-polyclinic">Who can use a polyclinic</h2>
+          <p>If you are a Barbadian citizen who needs free health care, there are nine polyclinics across the island. Find the closest one to you and check its opening hours and services online before you go.</p>
+          <p>While opening hours vary by location, Sir Winston Scott Polyclinic is open 24 hours a day, every day. Call ahead to confirm that the service you need is available.</p>
+          <p><a class="govbb-button" href="find-a-polyclinic/find.html">Find a polyclinic</a></p>
+
+          <h2 id="cost">Cost</h2>
+          <p>Health care at a polyclinic is free. Polyclinic pharmacies provide prescription medication covered by the Barbados Drug Service free of charge.</p>
+
+          <h2 id="get-help">Get help</h2>
+          <p>Find out which polyclinic is for your area by entering your address or contacting the Ministry of Health and Wellness on <a class="govbb-link" style="white-space:nowrap" href="tel:+12465363800">(246) 536-3800</a> or <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="govbb-width-container print:hidden">
+    <aside class="govbb-feedback mb-4 lg:mb-16">
+      <h3 class="govbb-feedback__heading">Was this helpful?</h3>
+      <p class="govbb-text-body">Give us your feedback about this page.</p>
+      <a class="govbb-link" href="#">Help us improve alpha.gov.bb</a>
+    </aside>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-footer__inner govbb-width-container">
+    <nav class="govbb-footer__nav" aria-label="Footer navigation">
+      <ul class="govbb-footer__list">
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">Home</a></li>
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="#">Terms and conditions</a></li>
+      </ul>
+    </nav>
+    <hr class="govbb-footer__divider" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="https://alpha.gov.bb/images/coat-of-arms.png" alt="" width="36" height="36" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+<script>
+/* Header menu toggle (the live header hides the nav behind "Menu" on small screens). */
+(function(){var b=document.querySelector('.govbb-header__toggle'),n=document.getElementById('site-nav');
+  if(!b||!n)return;b.addEventListener('click',function(){var o=b.getAttribute('aria-expanded')==='true';
+  b.setAttribute('aria-expanded',String(!o));n.setAttribute('data-expanded',String(!o));});})();
+</script>
+
+</body>
+</html>
