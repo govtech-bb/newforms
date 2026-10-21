@@ -108,7 +108,9 @@
       "maker": "Caribpharm Ltd",
       "group": "A",
       "how": "Take it with food. Your doctor will start you on a small amount and slowly give you more.",
-      "safe": "Not always. If your kidneys or liver are not well, your doctor may give you less or choose a different medication."
+      "safe": "Not always. If your kidneys or liver are not well, your doctor may give you less or choose a different medication.",
+      "price": "18",
+      "pack": "60 tablets (500 mg)"
     },
     {
       "slug": "gliclazide",
@@ -123,7 +125,9 @@
       "maker": "Island Generics Inc",
       "group": "A",
       "how": "Take it with breakfast, or with breakfast and your evening meal. Do not skip meals while you take it.",
-      "safe": "Not always. It can make your blood sugar go too low, so you may feel shaky, sweaty or confused. Eat or drink something sugary and tell your doctor if this happens."
+      "safe": "Not always. It can make your blood sugar go too low, so you may feel shaky, sweaty or confused. Eat or drink something sugary and tell your doctor if this happens.",
+      "price": "22",
+      "pack": "60 tablets (80 mg)"
     },
     {
       "slug": "amlodipine",
@@ -138,7 +142,9 @@
       "maker": "Caribpharm Ltd",
       "group": "A",
       "how": "Take it once a day, at the same time each day. You can take it with or without food.",
-      "safe": "Most people can take it. Your ankles may swell at first. Tell your doctor if it does not go away."
+      "safe": "Most people can take it. Your ankles may swell at first. Tell your doctor if it does not go away.",
+      "price": "15",
+      "pack": "30 tablets (5 mg)"
     },
     {
       "slug": "lisinopril",
@@ -154,7 +160,9 @@
       "maker": "Westpoint Pharma",
       "group": "A",
       "how": "Take it once a day, at the same time each day. You can take it with or without food.",
-      "safe": "Not always. Do not take it if you are pregnant or trying to get pregnant. Tell your doctor if you get a dry cough that will not go away."
+      "safe": "Not always. Do not take it if you are pregnant or trying to get pregnant. Tell your doctor if you get a dry cough that will not go away.",
+      "price": "20",
+      "pack": "30 tablets (10 mg)"
     },
     {
       "slug": "hydrochlorothiazide",
@@ -169,7 +177,26 @@
       "maker": "Island Generics Inc",
       "group": "A",
       "how": "Take it once a day in the morning. If you take it late in the day, you may need to get up in the night to pee.",
-      "safe": "Most people can take it. Your doctor may check your blood now and then, because it can change the salt levels in your body."
+      "safe": "Most people can take it. Your doctor may check your blood now and then, because it can change the salt levels in your body.",
+      "price": "9",
+      "pack": "30 tablets (25 mg)"
+    },
+    {
+      "slug": "natrixam",
+      "name": "Natrixam",
+      "brands": [
+        "indapamide and amlodipine"
+      ],
+      "condition": "high-blood-pressure",
+      "summary": "Natrixam is one tablet with 2 blood pressure medications in it. It lowers your blood pressure.",
+      "treats": "High blood pressure. It has indapamide, a water tablet, and amlodipine, which relaxes your blood vessels. Your doctor may give you this if you already take both medications, so you have 1 tablet instead of 2.",
+      "looks": "They are tablets. They come in 2 strengths: 1.5 mg indapamide with 5 mg amlodipine, and 1.5 mg indapamide with 10 mg amlodipine.",
+      "maker": "Servier",
+      "group": "A",
+      "how": "Take 1 tablet each morning. Swallow it whole with water. Do not crush or chew it.",
+      "safe": "Not always. Do not take it if you are pregnant or breastfeeding, or if you have serious kidney or liver problems. Your doctor may check your blood, because it can lower the potassium in your body.",
+      "price": "48",
+      "pack": "30 tablets (1.5 mg/5 mg)"
     },
     {
       "slug": "salbutamol-inhaler",
@@ -184,7 +211,9 @@
       "maker": "Westpoint Pharma",
       "group": "A",
       "how": "Breathe in 1 or 2 puffs when you need them. Ask your pharmacist to show you how to use it. A spacer can help.",
-      "safe": "Most people can use it. Your hands may shake or your heart may beat faster for a short time. If you need it more than 3 times a week, tell your doctor."
+      "safe": "Most people can use it. Your hands may shake or your heart may beat faster for a short time. If you need it more than 3 times a week, tell your doctor.",
+      "price": "35",
+      "pack": "1 inhaler"
     },
     {
       "slug": "beclometasone-inhaler",
@@ -200,7 +229,9 @@
       "maker": "Caribpharm Ltd",
       "group": "B",
       "how": "Use it twice a day, every day. Rinse your mouth with water after you use it.",
-      "safe": "Most people can use it. It can give you a sore mouth or throat. Rinsing your mouth after each use helps stop this."
+      "safe": "Most people can use it. It can give you a sore mouth or throat. Rinsing your mouth after each use helps stop this.",
+      "price": "68",
+      "pack": "1 inhaler"
     },
     {
       "slug": "carbamazepine",
@@ -215,7 +246,9 @@
       "maker": "Northgate Laboratories",
       "group": "B",
       "how": "Take it 2 or 3 times a day, at the same times each day. Do not stop taking it suddenly. Talk to your doctor first.",
-      "safe": "Not always. It can affect other medications, including the contraceptive pill. Tell your doctor about everything you take."
+      "safe": "Not always. It can affect other medications, including the contraceptive pill. Tell your doctor about everything you take.",
+      "price": "42",
+      "pack": "60 tablets (200 mg)"
     },
     {
       "slug": "timolol-eye-drops",
@@ -231,7 +264,9 @@
       "maker": "Northgate Laboratories",
       "group": "A",
       "how": "Put 1 drop in each eye that needs it, twice a day. Keep using them even if your eyes feel fine.",
-      "safe": "Not always. Tell your doctor if you have asthma or a slow heartbeat. The drops can affect your breathing and heart."
+      "safe": "Not always. Tell your doctor if you have asthma or a slow heartbeat. The drops can affect your breathing and heart.",
+      "price": "30",
+      "pack": "1 bottle (5 ml)"
     },
     {
       "slug": "tamoxifen",
@@ -246,7 +281,9 @@
       "maker": "Westpoint Pharma",
       "group": "A",
       "how": "Take it once a day, at the same time each day. Most people take it for 5 years or more.",
-      "safe": "Not always. Do not take it if you are pregnant. Get help straight away if one leg becomes painful and swollen, or if you are suddenly short of breath."
+      "safe": "Not always. Do not take it if you are pregnant. Get help straight away if one leg becomes painful and swollen, or if you are suddenly short of breath.",
+      "price": "55",
+      "pack": "30 tablets (20 mg)"
     },
     {
       "slug": "amoxicillin",
@@ -261,7 +298,9 @@
       "maker": "Island Generics Inc",
       "group": "A",
       "how": "Take it 3 times a day. Finish the whole course, even if you feel better.",
-      "safe": "Not always. Do not take it if you are allergic to penicillin. Tell the pharmacist if you have ever had a rash from an antibiotic."
+      "safe": "Not always. Do not take it if you are allergic to penicillin. Tell the pharmacist if you have ever had a rash from an antibiotic.",
+      "price": "16",
+      "pack": "21 capsules (500 mg)"
     },
     {
       "slug": "cetirizine",
@@ -276,7 +315,9 @@
       "maker": "Northgate Laboratories",
       "group": "C",
       "how": "Take 1 tablet once a day. You can take it with or without food.",
-      "safe": "Most people can take it. It can make some people sleepy, so do not drive if it affects you. Tell your doctor if you have kidney problems."
+      "safe": "Most people can take it. It can make some people sleepy, so do not drive if it affects you. Tell your doctor if you have kidney problems.",
+      "price": "12",
+      "pack": "30 tablets (10 mg)"
     }
   ],
   "groupsSource": "BNDF Formulary Categories, formulary.drugservice.gov.bb/bndf2022/formulary_categories_dashboard.php, read 21 Oct 2026"
