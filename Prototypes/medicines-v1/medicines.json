@@ -1,9 +1,9 @@
 {
-  "updated": "October 21st, 2026",
+  "updated": "October 22nd, 2026",
   "groups": {
-    "A": "Group A medications are free for many people. Any doctor or dentist can give you a prescription for them.",
-    "B": "Group B medications need approval first. A polyclinic doctor and a hospital specialist have to ask the Drug Service for it. If it is agreed, it is free at polyclinic pharmacies.",
-    "C": "Group C medications are not free. You pay for them at a private pharmacy, but the price is lower because there is no duty or VAT on them."
+    "A": "Any doctor or dentist can give you a prescription for it.",
+    "B": "Your doctor has to get approval from the Barbados Drug Service before you can have it.",
+    "C": "You pay for these medications."
   },
   "conditions": {
     "diabetes": {
@@ -309,7 +309,7 @@
         "Zyrtec"
       ],
       "condition": "allergies",
-      "summary": "Cetirizine is an antihistamine tablet that eases allergy symptoms like sneezing, itching and a runny nose.",
+      "summary": "Cetirizine is an allergy tablet (an antihistamine). It eases sneezing, itching and a runny nose.",
       "treats": "Allergies, such as hay fever, itchy skin and hives.",
       "looks": "They are small white tablets. They come in 1 size: 10 mg. There is also a liquid for children.",
       "maker": "Northgate Laboratories",
