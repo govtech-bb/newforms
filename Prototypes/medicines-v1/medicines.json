@@ -26,6 +26,12 @@
     "hypertension",
     "bp",
     "pressure tablets"
+   ],
+   "notWith": [
+    "eye",
+    "eyes",
+    "sore",
+    "sores"
    ]
   },
   "asthma": {
@@ -59,7 +65,24 @@
    "words": [
     "eye drops",
     "eyes",
-    "eye pressure"
+    "eye pressure",
+    "pressure in my eye",
+    "pressure in my eyes",
+    "pressure in the eye",
+    "high eye pressure"
+   ],
+   "notWith": [
+    "hurt",
+    "hurts",
+    "hurting",
+    "sore",
+    "pain",
+    "painful",
+    "itchy",
+    "itch",
+    "red",
+    "burning",
+    "watery"
    ]
   },
   "cancer": {
@@ -111,7 +134,82 @@
     "aches",
     "period pain",
     "arthritis",
-    "sprain"
+    "sprain",
+    "head hurts",
+    "head hurt",
+    "migraine",
+    "backache",
+    "joint pain",
+    "muscle pain",
+    "knee pain",
+    "neck pain",
+    "hurting",
+    "hurts",
+    "aching"
+   ],
+   "notWith": [
+    "stomach",
+    "belly",
+    "tummy",
+    "abdominal",
+    "abdomen",
+    "kidney",
+    "kidneys",
+    "eye",
+    "eyes",
+    "ear",
+    "ears",
+    "chest",
+    "heart",
+    "earache",
+    "earaches",
+    "swollen",
+    "swelling",
+    "swolen",
+    "calf"
+   ]
+  },
+  "inflammation": {
+   "label": "Inflammation",
+   "benefit": false,
+   "words": [
+    "inflammation",
+    "inflamation",
+    "inflamed",
+    "anti-inflammatory",
+    "anti inflammatory",
+    "steroid",
+    "steroids",
+    "swollen joints",
+    "flare up",
+    "flare-up"
+   ],
+   "notWith": [
+    "ankle",
+    "ankles",
+    "leg",
+    "legs",
+    "feet",
+    "foot",
+    "face",
+    "lip",
+    "lips",
+    "tongue",
+    "throat",
+    "chest",
+    "heart",
+    "stomach",
+    "belly",
+    "tummy",
+    "abdomen",
+    "abdominal",
+    "kidney",
+    "kidneys",
+    "eye",
+    "eyes",
+    "ear",
+    "ears",
+    "calf"
    ]
   }
  },
@@ -124,11 +222,10 @@
    ],
    "condition": "diabetes",
    "summary": "Metformin is a tablet that helps control the sugar in your blood if you have type 2 diabetes.",
-   "treats": "Type 2 diabetes. This is when there is too much sugar in your blood.",
+   "treats": "It helps your body use its own insulin better, so less sugar stays in your blood.",
    "looks": "They are tablets. They come in 2 sizes: 500 mg and 850 mg.",
    "maker": "Caribpharm Ltd",
    "group": "A",
-   "how": "Take it with food. Your doctor will start you on a small amount and slowly give you more.",
    "safe": "Not always. If your kidneys or liver are not well, your doctor may give you less or choose a different medication.",
    "price": "18",
    "pack": "60 tablets (500 mg)",
@@ -142,11 +239,10 @@
    ],
    "condition": "diabetes",
    "summary": "Gliclazide is a tablet that lowers the sugar in your blood if you have type 2 diabetes.",
-   "treats": "Type 2 diabetes. It helps your body make more insulin, which brings your blood sugar down.",
-   "looks": "They are white tablets. They come in 1 size: 80 mg.",
+   "treats": "It helps your body make more insulin, which brings your blood sugar down.",
+   "looks": "They are white tablets. They come in one size: 80 mg.",
    "maker": "Island Generics Inc",
    "group": "A",
-   "how": "Take it with breakfast, or with breakfast and your evening meal. Do not skip meals while you take it.",
    "safe": "Not always. It can make your blood sugar go too low, so you may feel shaky, sweaty or confused. Eat or drink something sugary and tell your doctor if this happens.",
    "price": "22",
    "pack": "60 tablets (80 mg)",
@@ -160,11 +256,10 @@
    ],
    "condition": "high-blood-pressure",
    "summary": "Amlodipine is a tablet that lowers your blood pressure.",
-   "treats": "High blood pressure. It relaxes your blood vessels so blood flows through them more easily.",
+   "treats": "It relaxes your blood vessels so blood flows through them more easily.",
    "looks": "They are white tablets. They come in 2 sizes: 5 mg and 10 mg.",
    "maker": "Caribpharm Ltd",
    "group": "A",
-   "how": "Take it once a day, at the same time each day. You can take it with or without food.",
    "safe": "Most people can take it. Your ankles may swell at first. Tell your doctor if it does not go away.",
    "price": "15",
    "pack": "30 tablets (5 mg)",
@@ -179,11 +274,10 @@
    ],
    "condition": "high-blood-pressure",
    "summary": "Lisinopril is a tablet that lowers your blood pressure and protects your heart and kidneys.",
-   "treats": "High blood pressure. Doctors also use it after a heart attack and for some kidney problems.",
+   "treats": "Doctors also use it after a heart attack and for some kidney problems.",
    "looks": "They are tablets. They come in 3 sizes: 5 mg, 10 mg and 20 mg.",
    "maker": "Westpoint Pharma",
    "group": "A",
-   "how": "Take it once a day, at the same time each day. You can take it with or without food.",
    "safe": "Not always. Do not take it if you are pregnant or trying to get pregnant. Tell your doctor if you get a dry cough that will not go away.",
    "price": "20",
    "pack": "30 tablets (10 mg)",
@@ -195,11 +289,10 @@
    "brands": [],
    "condition": "high-blood-pressure",
    "summary": "Hydrochlorothiazide is a water tablet that lowers your blood pressure.",
-   "treats": "High blood pressure. It makes your body get rid of extra water and salt when you pee.",
-   "looks": "They are small white tablets. They come in 1 size: 25 mg.",
+   "treats": "It makes your body get rid of extra water and salt when you pee.",
+   "looks": "They are small white tablets. They come in one size: 25 mg.",
    "maker": "Island Generics Inc",
    "group": "A",
-   "how": "Take it once a day in the morning. If you take it late in the day, you may need to get up in the night to pee.",
    "safe": "Most people can take it. Your doctor may check your blood now and then, because it can change the salt levels in your body.",
    "price": "9",
    "pack": "30 tablets (25 mg)",
@@ -224,11 +317,10 @@
    ],
    "condition": "high-blood-pressure",
    "summary": "Natrixam is one tablet with 2 blood pressure medications in it. It lowers your blood pressure.",
-   "treats": "High blood pressure. It has indapamide, a water tablet, and amlodipine, which relaxes your blood vessels. Your doctor may give you this if you already take both medications, so you have 1 tablet instead of 2.",
+   "treats": "It has indapamide, a water tablet, and amlodipine, which relaxes your blood vessels. Your doctor may give you this if you already take both, so you have 1 tablet instead of 2.",
    "looks": "They are tablets. They come in 2 strengths: 1.5 mg indapamide with 5 mg amlodipine, and 1.5 mg indapamide with 10 mg amlodipine.",
    "maker": "Servier",
    "group": "A",
-   "how": "Take 1 tablet each morning. Swallow it whole with water. Do not crush or chew it.",
    "safe": "Not always. Do not take it if you are pregnant or breastfeeding, or if you have serious kidney or liver problems. Your doctor may check your blood, because it can lower the potassium in your body.",
    "price": "48",
    "pack": "30 tablets (1.5 mg/5 mg)",
@@ -248,12 +340,16 @@
    ],
    "condition": "asthma",
    "summary": "A salbutamol inhaler quickly opens up your airways when you are wheezy or short of breath.",
-   "treats": "Asthma. It is a reliever: you use it when you need it, not every day.",
+   "treats": "It is a reliever: you use it when you need it, not every day.",
    "looks": "It is a blue inhaler, sometimes called a pump.",
    "maker": "Westpoint Pharma",
    "group": "A",
-   "how": "Breathe in 1 or 2 puffs when you need them. Ask your pharmacist to show you how to use it. A spacer can help.",
-   "safe": "Most people can use it. Your hands may shake or your heart may beat faster for a short time. If you need it more than 3 times a week, tell your doctor.",
+   "safe": [
+    "Most people can use it.",
+    "Your hands may shake or your heart may beat faster for a short time.",
+    "If you need it more than 3 times a week, tell your doctor.",
+    "If your inhaler is not helping and you still cannot breathe, call 511."
+   ],
    "price": "35",
    "pack": "1 inhaler",
    "popular": 4,
@@ -274,11 +370,10 @@
    ],
    "condition": "asthma",
    "summary": "A beclometasone inhaler stops asthma attacks from starting if you use it every day.",
-   "treats": "Asthma. It is a preventer: you use it every day, even when you feel well.",
+   "treats": "It is a preventer: you use it every day, even when you feel well.",
    "looks": "It is a brown inhaler.",
    "maker": "Caribpharm Ltd",
    "group": "B",
-   "how": "Use it twice a day, every day. Rinse your mouth with water after you use it.",
    "safe": "Most people can use it. It can give you a sore mouth or throat. Rinsing your mouth after each use helps stop this.",
    "price": "68",
    "pack": "1 inhaler",
@@ -288,7 +383,9 @@
     "preventer inhaler",
     "brown inhaler",
     "brown pump",
-    "brown puffer"
+    "brown puffer",
+    "steroid inhaler",
+    "steroid inhalers"
    ]
   },
   {
@@ -299,12 +396,11 @@
    ],
    "condition": "epilepsy",
    "summary": "Carbamazepine is a tablet that helps stop seizures (fits) if you have epilepsy.",
-   "treats": "Epilepsy. Doctors also use it for some kinds of nerve pain.",
+   "treats": "Doctors also use it for some kinds of nerve pain.",
    "looks": "They are white tablets. They come in 2 sizes: 200 mg and 400 mg.",
    "maker": "Northgate Laboratories",
    "group": "B",
-   "how": "Take it 2 or 3 times a day, at the same times each day. Do not stop taking it suddenly. Talk to your doctor first.",
-   "safe": "Not always. It can affect other medications, including the contraceptive pill. Tell your doctor about everything you take.",
+   "safe": "Not always. It can affect other medications, including the contraceptive pill. Tell your doctor about everything you take. Do not stop taking it suddenly. Talk to your doctor first.",
    "price": "42",
    "pack": "60 tablets (200 mg)",
    "popular": 11
@@ -318,11 +414,10 @@
    ],
    "condition": "glaucoma",
    "summary": "Timolol eye drops lower the pressure inside your eye if you have glaucoma.",
-   "treats": "Glaucoma. This is when pressure builds up in your eye and can damage your sight.",
+   "treats": "Glaucoma is when pressure builds up in your eye and can damage your sight.",
    "looks": "It is a small bottle of eye drops.",
    "maker": "Northgate Laboratories",
    "group": "A",
-   "how": "Put 1 drop in each eye that needs it, twice a day. Keep using them even if your eyes feel fine.",
    "safe": "Not always. Tell your doctor if you have asthma or a slow heartbeat. The drops can affect your breathing and heart.",
    "price": "30",
    "pack": "1 bottle (5 ml)",
@@ -339,12 +434,11 @@
    ],
    "condition": "cancer",
    "summary": "Tamoxifen is a tablet that helps stop some breast cancers from growing or coming back.",
-   "treats": "Breast cancer. It blocks a hormone that some breast cancers need to grow.",
-   "looks": "They are white tablets. They come in 1 size: 20 mg.",
+   "treats": "It blocks a hormone that some breast cancers need to grow.",
+   "looks": "They are white tablets. They come in one size: 20 mg.",
    "maker": "Westpoint Pharma",
    "group": "A",
-   "how": "Take it once a day, at the same time each day. Most people take it for 5 years or more.",
-   "safe": "Not always. Do not take it if you are pregnant. Get help straight away if one leg becomes painful and swollen, or if you are suddenly short of breath.",
+   "safe": "Not always. Do not take it if you are pregnant. Call 511 straight away if one leg becomes painful and swollen, or if you are suddenly short of breath.",
    "price": "55",
    "pack": "30 tablets (20 mg)",
    "popular": 13
@@ -357,11 +451,10 @@
    ],
    "condition": "infections",
    "summary": "Amoxicillin is an antibiotic that treats infections caused by bacteria.",
-   "treats": "Infections such as chest, ear and throat infections. It does not work on colds or flu.",
+   "treats": "Chest, ear and throat infections. It does not work on colds or flu.",
    "looks": "They are capsules. They come in 2 sizes: 250 mg and 500 mg. There is also a liquid for children.",
    "maker": "Island Generics Inc",
    "group": "A",
-   "how": "Take it 3 times a day. Finish the whole course, even if you feel better.",
    "safe": "Not always. Do not take it if you are allergic to penicillin. Tell the pharmacist if you have ever had a rash from an antibiotic.",
    "price": "16",
    "pack": "21 capsules (500 mg)",
@@ -375,15 +468,15 @@
    ],
    "condition": "allergies",
    "summary": "Cetirizine is an allergy tablet (an antihistamine). It eases sneezing, itching and a runny nose.",
-   "treats": "Allergies, such as hay fever, itchy skin and hives.",
-   "looks": "They are small white tablets. They come in 1 size: 10 mg. There is also a liquid for children.",
+   "treats": "Hay fever, itchy skin and hives.",
+   "looks": "They are small white tablets. They come in one size: 10 mg. There is also a liquid for children.",
    "maker": "Northgate Laboratories",
    "group": "C",
-   "how": "Take 1 tablet once a day. You can take it with or without food.",
    "safe": "Most people can take it. It can make some people sleepy, so do not drive if it affects you. Tell your doctor if you have kidney problems.",
    "price": "12",
    "pack": "30 tablets (10 mg)",
-   "popular": 9
+   "popular": 9,
+   "otc": true
   },
   {
    "slug": "paracetamol",
@@ -392,13 +485,18 @@
     "Panadol"
    ],
    "condition": "pain",
-   "summary": "Paracetamol is a tablet that eases pain and brings down a high temperature.",
-   "treats": "Mild to moderate pain, such as a headache, toothache or back pain. It also brings down a high temperature.",
-   "looks": "They are white tablets. They come in 1 size: 500 mg.",
+   "summary": "Paracetamol is a tablet that eases pain and brings down a high temperature (fever).",
+   "treats": "Headache, toothache, back pain and other mild to moderate pain.",
+   "looks": "They are white tablets. They come in one size: 500 mg.",
    "maker": "Island Generics Inc",
    "group": "A",
-   "how": "Take 1 or 2 tablets up to 4 times in 24 hours. Leave at least 4 hours between doses.",
-   "safe": "Most people can take it. Do not take more than 8 tablets in 24 hours, and do not take other medications that also have paracetamol in them. Too much can harm your liver.",
+   "safe": [
+    "Most people can take it.",
+    "Do not take more than the label says.",
+    "Some cold and flu medications also have paracetamol in them. Do not take them at the same time.",
+    "Too much can harm your liver.",
+    "If someone took too much, call 511 straight away, even if they feel well."
+   ],
    "price": "6",
    "pack": "24 tablets (500 mg)",
    "popular": 2,
@@ -406,7 +504,16 @@
     "fever",
     "temperature",
     "high temperature"
-   ]
+   ],
+   "otc": true,
+   "alias": [
+    "acetaminophen",
+    "tylenol",
+    "calpol"
+   ],
+   "aliasNote": {
+    "calpol": "Calpol is a children's paracetamol liquid. This page is about tablets."
+   }
   },
   {
    "slug": "ibuprofen",
@@ -417,15 +524,37 @@
    ],
    "condition": "pain",
    "summary": "Ibuprofen is a tablet that eases pain and swelling.",
-   "treats": "Pain and swelling, such as back pain, period pain, a sprain or arthritis.",
+   "treats": "Back pain, period pain, a sprain or arthritis.",
    "looks": "They are white tablets. They come in 2 sizes: 200 mg and 400 mg.",
    "maker": "Caribpharm Ltd",
    "group": "C",
-   "how": "Take it with food or a glass of milk, up to 3 times a day.",
-   "safe": "Not always. Do not take it if you have had a stomach ulcer. Ask your doctor first if you have asthma, or heart, kidney or blood pressure problems.",
+   "safe": [
+    "Not always.",
+    "Do not take more than the label says.",
+    "Do not take it if you have had a stomach ulcer.",
+    "Do not take it with diclofenac, aspirin or other anti-inflammatory painkillers. You can take paracetamol with it.",
+    "Ask your doctor first if you are 65 or over, are pregnant, take a blood thinner, or have asthma or heart, kidney or blood pressure problems."
+   ],
    "price": "8",
    "pack": "24 tablets (200 mg)",
-   "popular": 3
+   "popular": 3,
+   "otc": true,
+   "words": [
+    "inflammation",
+    "anti-inflammatory",
+    "anti inflammatory"
+   ],
+   "alias": [
+    "brufen"
+   ],
+   "notWith": [
+    "throat",
+    "face",
+    "lip",
+    "lips",
+    "tongue",
+    "mouth"
+   ]
   },
   {
    "slug": "diclofenac",
@@ -436,15 +565,65 @@
    ],
    "condition": "pain",
    "summary": "Diclofenac is a tablet that eases pain and swelling in your joints and muscles.",
-   "treats": "Pain and swelling, such as arthritis, back pain or a sprain.",
-   "looks": "They are round tablets. They come in 2 sizes: 25 mg and 50 mg.",
+   "treats": "Arthritis, back pain or a sprain.",
+   "looks": "They are white tablets. They come in 2 sizes: 25 mg and 50 mg. Voltaren gel, which you rub on your skin, is a different product.",
    "maker": "Northgate Laboratories",
    "group": "A",
-   "how": "Take it with food or just after eating, 2 or 3 times a day. Your doctor will tell you how much.",
-   "safe": "Not always. It is not right for people with a stomach ulcer, heart problems or kidney problems. Do not take it with other painkillers like ibuprofen.",
+   "safe": [
+    "Not always.",
+    "Do not take it if you have had a stomach ulcer, or have heart or kidney problems.",
+    "Do not take it with ibuprofen, aspirin or other anti-inflammatory painkillers. You can take paracetamol with it.",
+    "Ask your doctor first if you are 65 or over, are pregnant or take a blood thinner."
+   ],
    "price": "14",
    "pack": "30 tablets (50 mg)",
-   "popular": 9
+   "popular": 9,
+   "words": [
+    "inflammation",
+    "anti-inflammatory",
+    "anti inflammatory"
+   ],
+   "notWith": [
+    "throat",
+    "face",
+    "lip",
+    "lips",
+    "tongue",
+    "mouth"
+   ]
+  },
+  {
+   "slug": "prednisolone",
+   "name": "Prednisolone",
+   "brands": [],
+   "condition": "inflammation",
+   "summary": "Prednisolone is a steroid tablet that calms inflammation (swelling, redness and pain) in your body.",
+   "treats": "For example, after a bad asthma attack, or in arthritis or some skin and bowel conditions. Your doctor will decide if it is right for you.",
+   "looks": "They are white tablets. They come in 2 sizes: 1 mg and 5 mg.",
+   "maker": "Island Generics Inc",
+   "group": "A",
+   "safe": [
+    "Not always.",
+    "If you have taken it for more than 3 weeks, do not stop suddenly. Ask your doctor before you stop.",
+    "It can raise your blood sugar and blood pressure.",
+    "It can make infections harder to fight.",
+    "Tell your doctor if you have diabetes, high blood pressure or an infection.",
+    "If you take it for a long time, your doctor may check your bones and eyes."
+   ],
+   "price": "7",
+   "pack": "28 tablets (5 mg)",
+   "popular": 2,
+   "words": [
+    "inflammation"
+   ],
+   "alias": [
+    "prednisone",
+    "pred"
+   ],
+   "aliasNote": {
+    "prednisone": "Prednisone is a similar medication. Ask your pharmacist if it is the one you were given.",
+    "pred": "Pred is short for prednisolone."
+   }
   }
  ],
  "groupsSource": "BNDF Formulary Categories, formulary.drugservice.gov.bb/bndf2022/formulary_categories_dashboard.php, read 21 Oct 2026",
