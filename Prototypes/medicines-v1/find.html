@@ -55,7 +55,7 @@
   @media (width>=40rem){.md-az-cols{columns:2;column-gap:var(--govbb-space-l)}}
   @media (width>=64rem){.md-az-cols{columns:3}}
   .md-az{list-style:none;padding:0;margin:0 0 var(--govbb-space-s)} .md-az li{margin:0 0 var(--govbb-space-xxs)}
-  #brand-note[hidden],#results-emergency[hidden],#results-info[hidden],#results-carer[hidden],#results-511[hidden],#results-crisis[hidden],#results-notemerg[hidden]{display:none}
+  #brand-note[hidden],#results-emergency[hidden],#results-info[hidden],#results-carer[hidden],#results-511[hidden],#results-crisis[hidden],#results-notemerg[hidden],#emergency-default[hidden]{display:none}
   /* Results sit straight under the search box, boxed off so they read as the answer to the search. */
   .md-results-area{margin-top:var(--govbb-space-m);padding-top:var(--govbb-space-s);border-top:4px solid var(--govbb-blue-10);display:flex;flex-direction:column;gap:var(--govbb-space-s)}
   .md-results-area > *{margin:0;max-inline-size:var(--govbb-measure)}
@@ -108,10 +108,10 @@
       
       <h1 class="govbb-text-h1 wrap-anywhere">Find a medication</h1>
       <div class="border-blue-10 border-b-4 pb-4 text-grey-70">
-        <p class="govbb-text-body-sm">Last updated on October 26th, 2026</p>
+        <p class="govbb-text-body-sm">Last updated on October 28th, 2026</p>
       </div>
     </div>
-    <p class="govbb-text-body">Find out what a medication is for, how to take it, and if you can get it for free.</p>
+    <p class="govbb-text-body">Find out what a medication is for, how to take it, and if you can get it free or at a lower price.</p>
 
     <form role="search" class="govbb-search md-search" action="" method="get" novalidate>
       <div class="govbb-form-group">
@@ -182,15 +182,28 @@
       </div>
     </section>
 
+    <div id="emergency-default"><!-- MDA NOTE (Ministry of Health): confirm the emergency wording and number (511 ambulance). -->
+    <section class="md-emergency" aria-labelledby="emergency-h">
+      <h2 class="govbb-text-h3" id="emergency-h">In an emergency</h2>
+      <p class="govbb-text-body">Call <a class="govbb-link" href="tel:511">511</a> for an ambulance if someone:</p>
+      <ul class="govbb-list govbb-list--bullet">
+        <li>took too much of a medication</li>
+        <li>has chest pain or trouble breathing</li>
+        <li>has a swollen face</li>
+      </ul>
+      <p class="govbb-text-body">You can also go to Accident and Emergency at the Queen Elizabeth Hospital.</p>
+    </section></div>
+
     <section class="md-section">
       <h2 id="by-use-h" class="govbb-text-h2">Search by what it is for</h2>
-      <ul class="md-quick"><li><a class="govbb-link" href="?q=diabetes">Diabetes</a></li><li><a class="govbb-link" href="?q=high%20blood%20pressure">High blood pressure</a></li><li><a class="govbb-link" href="?q=asthma">Asthma</a></li><li><a class="govbb-link" href="?q=epilepsy">Epilepsy</a></li><li><a class="govbb-link" href="?q=glaucoma">Glaucoma</a></li><li><a class="govbb-link" href="?q=breast%20cancer">Breast cancer</a></li><li><a class="govbb-link" href="?q=infections">Infections</a></li><li><a class="govbb-link" href="?q=allergies">Allergies</a></li></ul>
+      <ul class="md-quick"><li><a class="govbb-link" href="?q=diabetes">Diabetes</a></li><li><a class="govbb-link" href="?q=high%20blood%20pressure">High blood pressure</a></li><li><a class="govbb-link" href="?q=asthma">Asthma</a></li><li><a class="govbb-link" href="?q=epilepsy">Epilepsy</a></li><li><a class="govbb-link" href="?q=glaucoma">Glaucoma</a></li><li><a class="govbb-link" href="?q=breast%20cancer">Breast cancer</a></li><li><a class="govbb-link" href="?q=infections">Infections</a></li><li><a class="govbb-link" href="?q=allergies">Allergies</a></li><li><a class="govbb-link" href="?q=pain">Pain</a></li></ul>
     </section>
 
     <section class="md-section">
       <h2 id="browse-h" class="govbb-text-h2">Medications A to Z</h2>
       <nav aria-label="Jump to a letter"><ul class="md-letters"><li><a class="govbb-link" href="#az-a"><span class="govbb-visually-hidden">Medications starting with </span>A</a></li><li><a class="govbb-link" href="#az-b"><span class="govbb-visually-hidden">Medications starting with </span>B</a></li><li><a class="govbb-link" href="#az-c"><span class="govbb-visually-hidden">Medications starting with </span>C</a></li><li><a class="govbb-link" href="#az-d"><span class="govbb-visually-hidden">Medications starting with </span>D</a></li><li><a class="govbb-link" href="#az-g"><span class="govbb-visually-hidden">Medications starting with </span>G</a></li><li><a class="govbb-link" href="#az-h"><span class="govbb-visually-hidden">Medications starting with </span>H</a></li><li><a class="govbb-link" href="#az-i"><span class="govbb-visually-hidden">Medications starting with </span>I</a></li><li><a class="govbb-link" href="#az-l"><span class="govbb-visually-hidden">Medications starting with </span>L</a></li><li><a class="govbb-link" href="#az-m"><span class="govbb-visually-hidden">Medications starting with </span>M</a></li><li><a class="govbb-link" href="#az-n"><span class="govbb-visually-hidden">Medications starting with </span>N</a></li><li><a class="govbb-link" href="#az-p"><span class="govbb-visually-hidden">Medications starting with </span>P</a></li><li><a class="govbb-link" href="#az-q"><span class="govbb-visually-hidden">Medications starting with </span>Q</a></li><li><a class="govbb-link" href="#az-s"><span class="govbb-visually-hidden">Medications starting with </span>S</a></li><li><a class="govbb-link" href="#az-t"><span class="govbb-visually-hidden">Medications starting with </span>T</a></li><li><a class="govbb-link" href="#az-v"><span class="govbb-visually-hidden">Medications starting with </span>V</a></li><li><a class="govbb-link" href="#az-z"><span class="govbb-visually-hidden">Medications starting with </span>Z</a></li></ul></nav>
 <div class="md-az-cols"><div><h3 class="govbb-text-h4" id="az-a">A</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="ibuprofen.html?brand=Advil">Advil: see Ibuprofen</a></li>
 <li><a class="govbb-link" href="amlodipine.html">Amlodipine</a></li>
 <li><a class="govbb-link" href="amoxicillin.html">Amoxicillin</a></li>
 <li><a class="govbb-link" href="amoxicillin.html?brand=Amoxil">Amoxil: see Amoxicillin</a></li>
@@ -200,21 +213,23 @@
 </ul></div>
 <div><h3 class="govbb-text-h4" id="az-c">C</h3><ul class="govbb-list md-az">
 <li><a class="govbb-link" href="carbamazepine.html">Carbamazepine</a></li>
+<li><a class="govbb-link" href="diclofenac.html?brand=Cataflam">Cataflam: see Diclofenac</a></li>
 <li><a class="govbb-link" href="cetirizine.html">Cetirizine</a></li>
 <li><a class="govbb-link" href="beclometasone-inhaler.html?brand=Clenil">Clenil: see Beclometasone inhaler</a></li>
 </ul></div>
 <div><h3 class="govbb-text-h4" id="az-d">D</h3><ul class="govbb-list md-az">
 <li><a class="govbb-link" href="gliclazide.html?brand=Diamicron">Diamicron: see Gliclazide</a></li>
+<li><a class="govbb-link" href="diclofenac.html">Diclofenac</a></li>
 </ul></div>
 <div><h3 class="govbb-text-h4" id="az-g">G</h3><ul class="govbb-list md-az">
 <li><a class="govbb-link" href="gliclazide.html">Gliclazide</a></li>
 <li><a class="govbb-link" href="metformin.html?brand=Glucophage">Glucophage: see Metformin</a></li>
 </ul></div>
 <div><h3 class="govbb-text-h4" id="az-h">H</h3><ul class="govbb-list md-az">
-<li><a class="govbb-link" href="hydrochlorothiazide.html">HCTZ: short for hydrochlorothiazide</a></li>
 <li><a class="govbb-link" href="hydrochlorothiazide.html">Hydrochlorothiazide</a></li>
 </ul></div>
 <div><h3 class="govbb-text-h4" id="az-i">I</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="ibuprofen.html">Ibuprofen</a></li>
 <li><a class="govbb-link" href="natrixam.html">Indapamide and amlodipine: see Natrixam</a></li>
 </ul></div>
 <div><h3 class="govbb-text-h4" id="az-l">L</h3><ul class="govbb-list md-az">
@@ -227,8 +242,11 @@
 <li><a class="govbb-link" href="natrixam.html">Natrixam</a></li>
 <li><a class="govbb-link" href="tamoxifen.html?brand=Nolvadex">Nolvadex: see Tamoxifen</a></li>
 <li><a class="govbb-link" href="amlodipine.html?brand=Norvasc">Norvasc: see Amlodipine</a></li>
+<li><a class="govbb-link" href="ibuprofen.html?brand=Nurofen">Nurofen: see Ibuprofen</a></li>
 </ul></div>
 <div><h3 class="govbb-text-h4" id="az-p">P</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="paracetamol.html?brand=Panadol">Panadol: see Paracetamol</a></li>
+<li><a class="govbb-link" href="paracetamol.html">Paracetamol</a></li>
 <li><a class="govbb-link" href="lisinopril.html?brand=Prinivil">Prinivil: see Lisinopril</a></li>
 </ul></div>
 <div><h3 class="govbb-text-h4" id="az-q">Q</h3><ul class="govbb-list md-az">
@@ -246,6 +264,7 @@
 </ul></div>
 <div><h3 class="govbb-text-h4" id="az-v">V</h3><ul class="govbb-list md-az">
 <li><a class="govbb-link" href="salbutamol-inhaler.html?brand=Ventolin">Ventolin: see Salbutamol inhaler</a></li>
+<li><a class="govbb-link" href="diclofenac.html?brand=Voltaren">Voltaren: see Diclofenac</a></li>
 </ul></div>
 <div><h3 class="govbb-text-h4" id="az-z">Z</h3><ul class="govbb-list md-az">
 <li><a class="govbb-link" href="lisinopril.html?brand=Zestril">Zestril: see Lisinopril</a></li>
@@ -256,7 +275,7 @@
     <section class="md-section">
       <h2 id="free-h" class="govbb-text-h2">Is my medication free?</h2>
       <p class="govbb-text-body">Each medication page tells you if you can get it free, and how to check.</p>
-      <p class="govbb-text-body"><a class="govbb-link" href="index.html#free-h">Find out which medications are free, and for whom</a></p>
+      <p class="govbb-text-body"><a class="govbb-link" href="index.html#free-h">Read what groups A, B and C mean</a></p>
     </section>
 
     <section class="md-section">
@@ -301,7 +320,7 @@
 </footer>
 
 <script>
-var MEDS = [{"slug": "metformin", "name": "Metformin", "brands": ["Glucophage"], "short": [], "summary": "Metformin is a tablet that helps control the sugar in your blood if you have type 2 diabetes.", "condition": "Diabetes", "cwords": ["sugar", "sugar diabetes", "blood sugar", "diabetic", "type 2"], "free": "Free for some people", "popular": 1, "bt": false, "mwords": []}, {"slug": "gliclazide", "name": "Gliclazide", "brands": ["Diamicron"], "short": [], "summary": "Gliclazide is a tablet that lowers the sugar in your blood if you have type 2 diabetes.", "condition": "Diabetes", "cwords": ["sugar", "sugar diabetes", "blood sugar", "diabetic", "type 2"], "free": "Free for some people", "popular": 6, "bt": false, "mwords": []}, {"slug": "amlodipine", "name": "Amlodipine", "brands": ["Norvasc"], "short": [], "summary": "Amlodipine is a tablet that lowers your blood pressure.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 2, "bt": false, "mwords": []}, {"slug": "lisinopril", "name": "Lisinopril", "brands": ["Zestril", "Prinivil"], "short": [], "summary": "Lisinopril is a tablet that lowers your blood pressure and protects your heart and kidneys.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 3, "bt": false, "mwords": []}, {"slug": "hydrochlorothiazide", "name": "Hydrochlorothiazide", "brands": [], "short": ["HCTZ"], "summary": "Hydrochlorothiazide is a water tablet that lowers your blood pressure.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 5, "bt": false, "mwords": ["water pill", "water pills", "water tablet", "water tablets", "diuretic"]}, {"slug": "natrixam", "name": "Natrixam", "brands": ["indapamide and amlodipine"], "short": [], "summary": "Natrixam is one tablet with 2 blood pressure medications in it. It lowers your blood pressure.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 10, "bt": true, "mwords": ["water pill", "water pills", "diuretic"]}, {"slug": "salbutamol-inhaler", "name": "Salbutamol inhaler", "brands": ["Ventolin"], "short": [], "summary": "A salbutamol inhaler quickly opens up your airways when you are wheezy or short of breath.", "condition": "Asthma", "cwords": ["inhaler", "pump", "wheeze", "wheezing", "breathing", "puffer", "asma", "asthmatic", "breath", "breathless"], "free": "Free for some people", "popular": 4, "bt": false, "mwords": ["reliever", "reliever inhaler", "blue inhaler", "blue pump", "blue puffer"]}, {"slug": "beclometasone-inhaler", "name": "Beclometasone inhaler", "brands": ["Qvar", "Clenil"], "short": [], "summary": "A beclometasone inhaler stops asthma attacks from starting if you use it every day.", "condition": "Asthma", "cwords": ["inhaler", "pump", "wheeze", "wheezing", "breathing", "puffer", "asma", "asthmatic", "breath", "breathless"], "free": "Free after the Drug Service agrees", "popular": 8, "bt": false, "mwords": ["preventer", "preventer inhaler", "brown inhaler", "brown pump", "brown puffer"]}, {"slug": "carbamazepine", "name": "Carbamazepine", "brands": ["Tegretol"], "short": [], "summary": "Carbamazepine is a tablet that helps stop seizures (fits) if you have epilepsy.", "condition": "Epilepsy", "cwords": ["fits", "seizures", "seizure"], "free": "Free after the Drug Service agrees", "popular": 11, "bt": false, "mwords": []}, {"slug": "timolol-eye-drops", "name": "Timolol eye drops", "brands": ["Timoptol", "Timoptic"], "short": [], "summary": "Timolol eye drops lower the pressure inside your eye if you have glaucoma.", "condition": "Glaucoma", "cwords": ["eye drops", "eyes", "eye pressure"], "free": "Free for some people", "popular": 12, "bt": false, "mwords": ["glaucoma drops"]}, {"slug": "tamoxifen", "name": "Tamoxifen", "brands": ["Nolvadex"], "short": [], "summary": "Tamoxifen is a tablet that helps stop some breast cancers from growing or coming back.", "condition": "Cancer", "cwords": ["breast cancer", "tumour"], "free": "Free for some people", "popular": 13, "bt": false, "mwords": []}, {"slug": "amoxicillin", "name": "Amoxicillin", "brands": ["Amoxil"], "short": [], "summary": "Amoxicillin is an antibiotic that treats infections caused by bacteria.", "condition": "Infections", "cwords": ["antibiotic", "antibiotics", "infection", "chest infection", "ear infection"], "free": "Free for some people", "popular": 7, "bt": false, "mwords": []}, {"slug": "cetirizine", "name": "Cetirizine", "brands": ["Zyrtec"], "short": [], "summary": "Cetirizine is an allergy tablet (an antihistamine). It eases sneezing, itching and a runny nose.", "condition": "Allergies", "cwords": ["allergy", "hay fever", "itching", "itchy", "sneezing", "antihistamine", "hives"], "free": "You pay a lower price", "popular": 9, "bt": false, "mwords": []}];
+var MEDS = [{"slug": "metformin", "name": "Metformin", "brands": ["Glucophage"], "short": [], "summary": "Metformin is a tablet that helps control the sugar in your blood if you have type 2 diabetes.", "condition": "Diabetes", "cwords": ["sugar", "sugar diabetes", "blood sugar", "diabetic", "type 2"], "free": "Free for some people", "popular": 1, "bt": false, "mwords": []}, {"slug": "gliclazide", "name": "Gliclazide", "brands": ["Diamicron"], "short": [], "summary": "Gliclazide is a tablet that lowers the sugar in your blood if you have type 2 diabetes.", "condition": "Diabetes", "cwords": ["sugar", "sugar diabetes", "blood sugar", "diabetic", "type 2"], "free": "Free for some people", "popular": 6, "bt": false, "mwords": []}, {"slug": "amlodipine", "name": "Amlodipine", "brands": ["Norvasc"], "short": [], "summary": "Amlodipine is a tablet that lowers your blood pressure.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 2, "bt": false, "mwords": []}, {"slug": "lisinopril", "name": "Lisinopril", "brands": ["Zestril", "Prinivil"], "short": [], "summary": "Lisinopril is a tablet that lowers your blood pressure and protects your heart and kidneys.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 3, "bt": false, "mwords": []}, {"slug": "hydrochlorothiazide", "name": "Hydrochlorothiazide", "brands": [], "short": ["HCTZ"], "summary": "Hydrochlorothiazide is a water tablet that lowers your blood pressure.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 5, "bt": false, "mwords": ["water pill", "water pills", "water tablet", "water tablets", "diuretic"]}, {"slug": "natrixam", "name": "Natrixam", "brands": ["indapamide and amlodipine"], "short": [], "summary": "Natrixam is one tablet with 2 blood pressure medications in it. It lowers your blood pressure.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 10, "bt": true, "mwords": ["water pill", "water pills", "diuretic"]}, {"slug": "salbutamol-inhaler", "name": "Salbutamol inhaler", "brands": ["Ventolin"], "short": [], "summary": "A salbutamol inhaler quickly opens up your airways when you are wheezy or short of breath.", "condition": "Asthma", "cwords": ["inhaler", "pump", "wheeze", "wheezing", "breathing", "puffer", "asma", "asthmatic", "breath", "breathless"], "free": "Free for some people", "popular": 4, "bt": false, "mwords": ["reliever", "reliever inhaler", "blue inhaler", "blue pump", "blue puffer"]}, {"slug": "beclometasone-inhaler", "name": "Beclometasone inhaler", "brands": ["Qvar", "Clenil"], "short": [], "summary": "A beclometasone inhaler stops asthma attacks from starting if you use it every day.", "condition": "Asthma", "cwords": ["inhaler", "pump", "wheeze", "wheezing", "breathing", "puffer", "asma", "asthmatic", "breath", "breathless"], "free": "Free after the Drug Service agrees", "popular": 8, "bt": false, "mwords": ["preventer", "preventer inhaler", "brown inhaler", "brown pump", "brown puffer"]}, {"slug": "carbamazepine", "name": "Carbamazepine", "brands": ["Tegretol"], "short": [], "summary": "Carbamazepine is a tablet that helps stop seizures (fits) if you have epilepsy.", "condition": "Epilepsy", "cwords": ["fits", "seizures", "seizure"], "free": "Free after the Drug Service agrees", "popular": 11, "bt": false, "mwords": []}, {"slug": "timolol-eye-drops", "name": "Timolol eye drops", "brands": ["Timoptol", "Timoptic"], "short": [], "summary": "Timolol eye drops lower the pressure inside your eye if you have glaucoma.", "condition": "Glaucoma", "cwords": ["eye drops", "eyes", "eye pressure"], "free": "Free for some people", "popular": 12, "bt": false, "mwords": ["glaucoma drops"]}, {"slug": "tamoxifen", "name": "Tamoxifen", "brands": ["Nolvadex"], "short": [], "summary": "Tamoxifen is a tablet that helps stop some breast cancers from growing or coming back.", "condition": "Cancer", "cwords": ["breast cancer", "tumour"], "free": "Free for some people", "popular": 13, "bt": false, "mwords": []}, {"slug": "amoxicillin", "name": "Amoxicillin", "brands": ["Amoxil"], "short": [], "summary": "Amoxicillin is an antibiotic that treats infections caused by bacteria.", "condition": "Infections", "cwords": ["antibiotic", "antibiotics", "infection", "chest infection", "ear infection"], "free": "Free for some people", "popular": 7, "bt": false, "mwords": []}, {"slug": "cetirizine", "name": "Cetirizine", "brands": ["Zyrtec"], "short": [], "summary": "Cetirizine is an allergy tablet (an antihistamine). It eases sneezing, itching and a runny nose.", "condition": "Allergies", "cwords": ["allergy", "hay fever", "itching", "itchy", "sneezing", "antihistamine", "hives"], "free": "You pay a lower price", "popular": 9, "bt": false, "mwords": []}, {"slug": "paracetamol", "name": "Paracetamol", "brands": ["Panadol"], "short": [], "summary": "Paracetamol is a tablet that eases pain and brings down a high temperature.", "condition": "Pain", "cwords": ["painkiller", "painkillers", "pain killer", "pain killers", "pain tablets", "pain relief", "headache", "toothache", "back pain", "aches", "period pain", "arthritis", "sprain"], "free": "Free for some people", "popular": 2, "bt": false, "mwords": ["fever", "temperature", "high temperature"]}, {"slug": "ibuprofen", "name": "Ibuprofen", "brands": ["Advil", "Nurofen"], "short": [], "summary": "Ibuprofen is a tablet that eases pain and swelling.", "condition": "Pain", "cwords": ["painkiller", "painkillers", "pain killer", "pain killers", "pain tablets", "pain relief", "headache", "toothache", "back pain", "aches", "period pain", "arthritis", "sprain"], "free": "You pay a lower price", "popular": 3, "bt": false, "mwords": []}, {"slug": "diclofenac", "name": "Diclofenac", "brands": ["Voltaren", "Cataflam"], "short": [], "summary": "Diclofenac is a tablet that eases pain and swelling in your joints and muscles.", "condition": "Pain", "cwords": ["painkiller", "painkillers", "pain killer", "pain killers", "pain tablets", "pain relief", "headache", "toothache", "back pain", "aches", "period pain", "arthritis", "sprain"], "free": "Free for some people", "popular": 9, "bt": false, "mwords": []}];
 
 (function(){
   function norm(s){return (s||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();}
@@ -324,12 +343,16 @@ var MEDS = [{"slug": "metformin", "name": "Metformin", "brands": ["Glucophage"],
      once matched "breath"). This list can never be complete — the 511 line on every result is the net. */
   var MEDW='(pills|tablets|tablet|medication|medications|medicine|medicines|meds|bottle|bleach)';
   function emergency(q){var n=' '+q+' ';
-    return / (over ?dose|over ?dosed|over ?doses|overdoes|over ?doze|overdosing|od|poison|poisoned|poisoning|posion|poisen|bleach|kerosene|rat poison|weed killer|paraquat|gramoxone|unconscious|unresponsive|collapsed|fainted|passed out|pass out|past out|pasted out|passout|not waking|wont wake|cant wake|chestpain|(chest|chess|chist) (pain|pains|hurt|hurts|hurting|tight|tightness)|tight chest|(heart|hart) (attack|attak)|stroke|emergency|a and e|a e|anaphylaxis|anaphylactic|allergic reaction|reaction to|asthma attack|having a (seizure|fit)|(seizure|seizures|fit|fits|fitting) now|is fitting|double dose|took (it|them) twice|took (extra|double|the wrong|wrong|someones|someone elses|somebodys)|(wont|will not|cant) stop bleeding|bleeding (a lot|heavily|badly|wont stop)|heavy bleeding|coughing (up )?blood|vomiting blood|throat (closing|closed|swelling|swollen|tight)|wheezing (badly|bad|a lot)) /.test(n)
+    return / (over ?dose|over ?dosed|over ?doses|ova ?dose|ova ?dosed|overdoes|over ?doze|overdosing|od|poison|poisoned|poisoning|posion|poisen|bleach|kerosene|rat poison|weed killer|paraquat|gramoxone|unconscious|unconcious|unconsious|unresponsive|collapsed|fainted|passed out|pass out|past out|pasted out|passout|not waking|wont wake|cant wake|chestpain|(chest|chess|chist) (pain|pains|hurt|hurts|hurting|tight|tightness)|tight chest|(heart|hart) (attack|attak|atack|attac|atak)|emergency|a and e|anaphylaxis|anaphylactic|allergic reaction|asthma attack|having a (seizure|fit)|(seizure|seizures|fit|fits|fitting) now|is fitting|(he|she|baby|child|son|daughter|kid) (is )?(fitting|fiting|fitin)|double dose|took (it|them) twice|took (extra|double|the wrong|wrong|someones|someone elses|somebodys)|(wont|will not|cant) stop bleeding|bleeding (a lot|heavily|badly|wont stop)|heavy bleeding|coughing (up )?blood|vomiting blood|throat (closing|closed|swelling|swollen|tight)|wheezing (badly|bad|a lot)) /.test(n)
       ||/ (swollen|swelling|swell|swelled|swole) (up )?(face|lip|lips|tongue|throat|mouth) /.test(n)||/ (face|lip|lips|tongue|throat|mouth) (is |are |has |have |all )?(swollen|swelling|swell|swelled|swole|blowing up) /.test(n)
       ||/ (son|daughter|child|children|kid|kids|baby|toddler|grandchild|grandson|granddaughter|boy|girl|he|she) (took|ate|eaten|swallowed|drank|got into|has eaten|has taken|has swallowed) /.test(n)
       ||new RegExp(' (ate|eaten|got into|chewed|drank|swallowed) ((my|his|her|their|the|some|all|a|all my|all the) )?'+MEDW+' ').test(n)
-      ||/ (took|taken|take|had|swallowed|ate|eaten|drank|gave|given) (too?|2) (much|many) /.test(n)||/ (too?|2) (much|many) (pills|tablets|medication|medications|medicine|medicines|meds|doses|of) /.test(n)||/^ (too?|2) (much|many) $/.test(n)
-      ||/ (cant|cannot|can not|cnt|short of|trouble|difficulty|not|stopped|struggling to|hard to|cant get my|cannot get my) (breath|breathe|breathing|breth|brethe|brething|breathin|breating) /.test(n);}
+      ||/ (took|tuk|tok|tek|taken|take|had|swallowed|ate|eaten|drank|gave|given) (too?|2) (much|many) /.test(n)||/ (too?|2) (much|many) (pills|tablets|medication|medications|medicine|medicines|meds|doses|of) /.test(n)||/^ (too?|2) (much|many) $/.test(n)
+      ||/ (cant|cannot|can not|cnt|short of|trouble|difficulty|not|stopped|struggling to|hard to|cant get my|cannot get my) (?!breast)bre[a-z]* /.test(n)
+      /* "a e" is A&E typed with "&", but not "vitamin a e". A stroke now, not stroke medication. A reaction now, not one in the past. */
+      ||(/ a e /.test(n)&&!/ vitamin /.test(n))
+      ||(/ (stroke|strock|strok) /.test(n)&&!/ (medication|medications|medicine|medicines|meds|tablets|pills|after|prevent|prevention|risk|had a|history) /.test(n))
+      ||(/ reaction to /.test(n)&&!/ (before|in the past|last time|ago|previously|history|had a reaction) /.test(n));}
   /* Self-harm: its own answer, no medications listed. MDA NOTE in the page. */
   function crisis(q){return / (suicide|suicidal|kill (myself|my self)|killing (myself|my self)|end (my|it) (life|all)|want to die|wanna die|want to be dead|hurt (myself|my self)|harm (myself|my self)|self harm|take my (own )?life) /.test(' '+q+' ');}
   /* Questions about who gets it free ("child", "free medication"): answered, not "still adding". */
@@ -341,6 +364,8 @@ var MEDS = [{"slug": "metformin", "name": "Metformin", "brands": ["Glucophage"],
       ||(/ (collect|collecting|pick up|picking up|pickup|get|getting) /.test(n)&&new RegExp(' (for (a|an|my|his|her|their|someone|somebody) |my '+FAM+' )').test(n));}
 
   /* Score one medication. Exact and partial names beat condition words. */
+  /* Every condition phrase: a search that IS one ("hay fever") ignores own words inside it (paracetamol's "fever"). */
+  var ALLC={};MEDS.forEach(function(m){[m.condition].concat(m.cwords).forEach(function(w){ALLC[norm(w)]=1;});});
   function score(m,q){
     var names=[m.name].concat(m.brands).concat(m.short).map(norm), words=[norm(m.condition)].concat(m.cwords.map(norm)), own=(m.mwords||[]).map(norm), best=0, via='';
     names.forEach(function(n,i){var s=0;
@@ -348,7 +373,7 @@ var MEDS = [{"slug": "metformin", "name": "Metformin", "brands": ["Glucophage"],
       if(s>best){best=s;via=i>0&&i<=m.brands.length?m.brands[i-1]:'';}});
     /* A medication's own words ("water pill", "preventer") beat shared condition words; a whole
        condition phrase ("eye pressure") beats one shared word ("pressure"). */
-    own.forEach(function(w){if(w===q||(q.length>=3&&(w.indexOf(q)===0||q.indexOf(w)!==-1))){if(52>best){best=52;via='';}}});
+    own.forEach(function(w){if(w===q||(q.length>=3&&(w.indexOf(q)===0||q.indexOf(w)!==-1))){if(w!==q&&ALLC[q])return;if(52>best){best=52;via='';}}});
     words.forEach(function(w){var s=w===q?51:(q.length>=3&&(w.indexOf(q)===0||q.indexOf(w)!==-1))?50:0;if(s>best){best=s;via='';}});
     return {s:best,brand:via};
   }
@@ -369,7 +394,8 @@ var MEDS = [{"slug": "metformin", "name": "Metformin", "brands": ["Glucophage"],
     var q0=norm(raw); if(!q0)return null;
     var cr=crisis(q0), noFuzzy=cr||emergency(q0);
     function run(q){
-      var hits=MEDS.map(function(m){var r=score(m,q);return {m:m,s:r.s,brand:r.brand};}).filter(function(h){return h.s>0;})
+      /* An emergency search lists medications only by name: "chest pain" must not list the painkillers. */
+      var hits=MEDS.map(function(m){var r=score(m,q);return {m:m,s:r.s,brand:r.brand};}).filter(function(h){return h.s>0&&(!noFuzzy||h.s>=55);})
         .sort(function(a,b){return b.s-a.s||a.m.popular-b.m.popular||a.m.name.localeCompare(b.m.name);});
       if(hits.length||noFuzzy)return {hits:hits,closest:false};
       hits=MEDS.map(function(m){var d=fuzzy(m,q),b='';m.brands.forEach(function(x){if(!b&&dist(norm(x),q)===d&&d<=allowed(q.length)&&dist(norm(m.name),q)>d)b=x;});return {m:m,d:d,brand:b};}).filter(function(h){return h.d<99;})
@@ -393,6 +419,7 @@ var MEDS = [{"slug": "metformin", "name": "Metformin", "brands": ["Glucophage"],
 
   function render(raw){
     var r=search(raw), clear=document.getElementById('clear-search'); clear.hidden=!r;
+    document.getElementById('emergency-default').hidden=!!r;
     if(!r){box.hidden=true;return;}
     var shown=raw.trim();
     box.hidden=false; ul.innerHTML=''; none.hidden=true; note.hidden=true; emerg.hidden=!r.emergency; infoBox.hidden=true; carerBox.hidden=true;
@@ -420,19 +447,23 @@ var MEDS = [{"slug": "metformin", "name": "Metformin", "brands": ["Glucophage"],
           '<p class="govbb-text-body-sm md-muted">For '+esc(m.condition.toLowerCase())+(m.brands.length&&!x.brand?(m.bt?'. Contains ':'. Also called ')+esc(m.brands.join(m.bt?' and ':' or ')):'')+'.</p>'+
           '<p class="govbb-text-body"><span class="govbb-text-bold">Is it free?</span> '+esc(m.free)+'</p></li>';}).join('');
     }
+    document.title=(r.crisis?'Get help now':r.emergency?'Emergency':h.textContent)+' - '+TITLE;
     h.focus();
   }
 
   /* Suggestions come from search(), so "asth", "pressure" and "metfromin" suggest exactly what
      Search would find. Each option says what it is; a brand option names its medication. */
   var ACT={};
+  /* Half-typed emergencies ("allergic r", "chest p", "asthma attac") get no suggestions either:
+     a tap would skip the 511 answer. Search still runs on Enter. */
+  function nearEmergency(q){return / (chest|allergic r[a-z]*|[a-z]*attac[a-z]*|attak|overd[a-z]*|poison[a-z]*|too much|too many|collaps[a-z]*|unconc[a-z]*|uncons[a-z]*|swallowed|cant b[a-z]*|cannot b[a-z]*|short of b[a-z]*)( |$)/.test(' '+q);}
   function suggest(){
     /* Choosing an option puts its label in the box and fires "input" BEFORE the select event:
        don't rebuild the options from that label, or the choice is lost (Ventolin went nowhere). */
     if(ACT[input.value])return;
     var r=search(input.value),opts=[];ACT={};
     /* Emergency words: no suggestions, so Enter always reaches the 511 answer. */
-    if(r&&!r.emergency&&!r.crisis&&norm(input.value).length>=1&&r.hits.length){
+    if(r&&!r.emergency&&!r.crisis&&!nearEmergency(norm(input.value))&&norm(input.value).length>=1&&r.hits.length){
       r.hits.slice(0,6).forEach(function(x){var label=x.brand?(x.m.bt?x.brand.charAt(0).toUpperCase()+x.brand.slice(1)+' ('+x.m.name+')':x.brand+' ('+x.m.name.toLowerCase()+')'):x.m.name;ACT[label]=x;opts.push(label);});
     }
     list.replaceChildren.apply(list,opts.map(function(o){return new Option(o);}));

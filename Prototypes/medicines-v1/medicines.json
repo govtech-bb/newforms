@@ -1,5 +1,5 @@
 {
- "updated": "October 26th, 2026",
+ "updated": "October 28th, 2026",
  "groups": {
   "A": "Any doctor or dentist can give you a prescription for it.",
   "B": "Your doctor has to get approval from the Barbados Drug Service before you can have it.",
@@ -93,6 +93,25 @@
     "sneezing",
     "antihistamine",
     "hives"
+   ]
+  },
+  "pain": {
+   "label": "Pain",
+   "benefit": false,
+   "words": [
+    "painkiller",
+    "painkillers",
+    "pain killer",
+    "pain killers",
+    "pain tablets",
+    "pain relief",
+    "headache",
+    "toothache",
+    "back pain",
+    "aches",
+    "period pain",
+    "arthritis",
+    "sprain"
    ]
   }
  },
@@ -194,7 +213,8 @@
    ],
    "short": [
     "HCTZ"
-   ]
+   ],
+   "breaks": "Hydro|chloro|thiazide"
   },
   {
    "slug": "natrixam",
@@ -363,6 +383,67 @@
    "safe": "Most people can take it. It can make some people sleepy, so do not drive if it affects you. Tell your doctor if you have kidney problems.",
    "price": "12",
    "pack": "30 tablets (10 mg)",
+   "popular": 9
+  },
+  {
+   "slug": "paracetamol",
+   "name": "Paracetamol",
+   "brands": [
+    "Panadol"
+   ],
+   "condition": "pain",
+   "summary": "Paracetamol is a tablet that eases pain and brings down a high temperature.",
+   "treats": "Mild to moderate pain, such as a headache, toothache or back pain. It also brings down a high temperature.",
+   "looks": "They are white tablets. They come in 1 size: 500 mg.",
+   "maker": "Island Generics Inc",
+   "group": "A",
+   "how": "Take 1 or 2 tablets up to 4 times in 24 hours. Leave at least 4 hours between doses.",
+   "safe": "Most people can take it. Do not take more than 8 tablets in 24 hours, and do not take other medications that also have paracetamol in them. Too much can harm your liver.",
+   "price": "6",
+   "pack": "24 tablets (500 mg)",
+   "popular": 2,
+   "words": [
+    "fever",
+    "temperature",
+    "high temperature"
+   ]
+  },
+  {
+   "slug": "ibuprofen",
+   "name": "Ibuprofen",
+   "brands": [
+    "Advil",
+    "Nurofen"
+   ],
+   "condition": "pain",
+   "summary": "Ibuprofen is a tablet that eases pain and swelling.",
+   "treats": "Pain and swelling, such as back pain, period pain, a sprain or arthritis.",
+   "looks": "They are white tablets. They come in 2 sizes: 200 mg and 400 mg.",
+   "maker": "Caribpharm Ltd",
+   "group": "C",
+   "how": "Take it with food or a glass of milk, up to 3 times a day.",
+   "safe": "Not always. Do not take it if you have had a stomach ulcer. Ask your doctor first if you have asthma, or heart, kidney or blood pressure problems.",
+   "price": "8",
+   "pack": "24 tablets (200 mg)",
+   "popular": 3
+  },
+  {
+   "slug": "diclofenac",
+   "name": "Diclofenac",
+   "brands": [
+    "Voltaren",
+    "Cataflam"
+   ],
+   "condition": "pain",
+   "summary": "Diclofenac is a tablet that eases pain and swelling in your joints and muscles.",
+   "treats": "Pain and swelling, such as arthritis, back pain or a sprain.",
+   "looks": "They are round tablets. They come in 2 sizes: 25 mg and 50 mg.",
+   "maker": "Northgate Laboratories",
+   "group": "A",
+   "how": "Take it with food or just after eating, 2 or 3 times a day. Your doctor will tell you how much.",
+   "safe": "Not always. It is not right for people with a stomach ulcer, heart problems or kidney problems. Do not take it with other painkillers like ibuprofen.",
+   "price": "14",
+   "pack": "30 tablets (50 mg)",
    "popular": 9
   }
  ],
