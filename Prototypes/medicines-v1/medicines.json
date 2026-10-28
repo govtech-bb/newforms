@@ -1,324 +1,371 @@
 {
-  "updated": "October 22nd, 2026",
-  "groups": {
-    "A": "Any doctor or dentist can give you a prescription for it.",
-    "B": "Your doctor has to get approval from the Barbados Drug Service before you can have it.",
-    "C": "You pay for these medications."
+ "updated": "October 26th, 2026",
+ "groups": {
+  "A": "Any doctor or dentist can give you a prescription for it.",
+  "B": "Your doctor has to get approval from the Barbados Drug Service before you can have it.",
+  "C": "You pay for these medications."
+ },
+ "conditions": {
+  "diabetes": {
+   "label": "Diabetes",
+   "benefit": true,
+   "words": [
+    "sugar",
+    "sugar diabetes",
+    "blood sugar",
+    "diabetic",
+    "type 2"
+   ]
   },
-  "conditions": {
-    "diabetes": {
-      "label": "Diabetes",
-      "benefit": true,
-      "words": [
-        "sugar",
-        "sugar diabetes",
-        "blood sugar",
-        "diabetic",
-        "type 2"
-      ]
-    },
-    "high-blood-pressure": {
-      "label": "High blood pressure",
-      "benefit": true,
-      "words": [
-        "pressure",
-        "blood pressure",
-        "hypertension",
-        "bp",
-        "water tablet",
-        "water pill",
-        "water pills",
-        "pressure tablets"
-      ]
-    },
-    "asthma": {
-      "label": "Asthma",
-      "benefit": true,
-      "words": [
-        "inhaler",
-        "pump",
-        "wheeze",
-        "wheezing",
-        "breathing",
-        "puffer"
-      ]
-    },
-    "epilepsy": {
-      "label": "Epilepsy",
-      "benefit": true,
-      "words": [
-        "fits",
-        "seizures",
-        "seizure"
-      ]
-    },
-    "glaucoma": {
-      "label": "Glaucoma",
-      "benefit": true,
-      "words": [
-        "eye drops",
-        "eyes",
-        "eye pressure"
-      ]
-    },
-    "cancer": {
-      "label": "Cancer",
-      "benefit": true,
-      "words": [
-        "breast cancer",
-        "tumour"
-      ]
-    },
-    "infections": {
-      "label": "Infections",
-      "benefit": false,
-      "words": [
-        "antibiotic",
-        "antibiotics",
-        "infection",
-        "chest infection",
-        "ear infection"
-      ]
-    },
-    "allergies": {
-      "label": "Allergies",
-      "benefit": false,
-      "words": [
-        "allergy",
-        "hay fever",
-        "itching",
-        "itchy",
-        "sneezing",
-        "antihistamine",
-        "hives"
-      ]
-    }
+  "high-blood-pressure": {
+   "label": "High blood pressure",
+   "benefit": true,
+   "words": [
+    "pressure",
+    "blood pressure",
+    "hypertension",
+    "bp",
+    "pressure tablets"
+   ]
   },
-  "medicines": [
-    {
-      "slug": "metformin",
-      "name": "Metformin",
-      "brands": [
-        "Glucophage"
-      ],
-      "condition": "diabetes",
-      "summary": "Metformin is a tablet that helps control the sugar in your blood if you have type 2 diabetes.",
-      "treats": "Type 2 diabetes. This is when there is too much sugar in your blood.",
-      "looks": "They are tablets. They come in 2 sizes: 500 mg and 850 mg.",
-      "maker": "Caribpharm Ltd",
-      "group": "A",
-      "how": "Take it with food. Your doctor will start you on a small amount and slowly give you more.",
-      "safe": "Not always. If your kidneys or liver are not well, your doctor may give you less or choose a different medication.",
-      "price": "18",
-      "pack": "60 tablets (500 mg)"
-    },
-    {
-      "slug": "gliclazide",
-      "name": "Gliclazide",
-      "brands": [
-        "Diamicron"
-      ],
-      "condition": "diabetes",
-      "summary": "Gliclazide is a tablet that lowers the sugar in your blood if you have type 2 diabetes.",
-      "treats": "Type 2 diabetes. It helps your body make more insulin, which brings your blood sugar down.",
-      "looks": "They are white tablets. They come in 1 size: 80 mg.",
-      "maker": "Island Generics Inc",
-      "group": "A",
-      "how": "Take it with breakfast, or with breakfast and your evening meal. Do not skip meals while you take it.",
-      "safe": "Not always. It can make your blood sugar go too low, so you may feel shaky, sweaty or confused. Eat or drink something sugary and tell your doctor if this happens.",
-      "price": "22",
-      "pack": "60 tablets (80 mg)"
-    },
-    {
-      "slug": "amlodipine",
-      "name": "Amlodipine",
-      "brands": [
-        "Norvasc"
-      ],
-      "condition": "high-blood-pressure",
-      "summary": "Amlodipine is a tablet that lowers your blood pressure.",
-      "treats": "High blood pressure. It relaxes your blood vessels so blood flows through them more easily.",
-      "looks": "They are white tablets. They come in 2 sizes: 5 mg and 10 mg.",
-      "maker": "Caribpharm Ltd",
-      "group": "A",
-      "how": "Take it once a day, at the same time each day. You can take it with or without food.",
-      "safe": "Most people can take it. Your ankles may swell at first. Tell your doctor if it does not go away.",
-      "price": "15",
-      "pack": "30 tablets (5 mg)"
-    },
-    {
-      "slug": "lisinopril",
-      "name": "Lisinopril",
-      "brands": [
-        "Zestril",
-        "Prinivil"
-      ],
-      "condition": "high-blood-pressure",
-      "summary": "Lisinopril is a tablet that lowers your blood pressure and protects your heart and kidneys.",
-      "treats": "High blood pressure. Doctors also use it after a heart attack and for some kidney problems.",
-      "looks": "They are tablets. They come in 3 sizes: 5 mg, 10 mg and 20 mg.",
-      "maker": "Westpoint Pharma",
-      "group": "A",
-      "how": "Take it once a day, at the same time each day. You can take it with or without food.",
-      "safe": "Not always. Do not take it if you are pregnant or trying to get pregnant. Tell your doctor if you get a dry cough that will not go away.",
-      "price": "20",
-      "pack": "30 tablets (10 mg)"
-    },
-    {
-      "slug": "hydrochlorothiazide",
-      "name": "Hydrochlorothiazide",
-      "brands": [
-        "HCTZ"
-      ],
-      "condition": "high-blood-pressure",
-      "summary": "Hydrochlorothiazide is a water tablet that lowers your blood pressure.",
-      "treats": "High blood pressure. It makes your body get rid of extra water and salt when you pee.",
-      "looks": "They are small white tablets. They come in 1 size: 25 mg.",
-      "maker": "Island Generics Inc",
-      "group": "A",
-      "how": "Take it once a day in the morning. If you take it late in the day, you may need to get up in the night to pee.",
-      "safe": "Most people can take it. Your doctor may check your blood now and then, because it can change the salt levels in your body.",
-      "price": "9",
-      "pack": "30 tablets (25 mg)"
-    },
-    {
-      "slug": "natrixam",
-      "name": "Natrixam",
-      "brands": [
-        "indapamide and amlodipine"
-      ],
-      "condition": "high-blood-pressure",
-      "summary": "Natrixam is one tablet with 2 blood pressure medications in it. It lowers your blood pressure.",
-      "treats": "High blood pressure. It has indapamide, a water tablet, and amlodipine, which relaxes your blood vessels. Your doctor may give you this if you already take both medications, so you have 1 tablet instead of 2.",
-      "looks": "They are tablets. They come in 2 strengths: 1.5 mg indapamide with 5 mg amlodipine, and 1.5 mg indapamide with 10 mg amlodipine.",
-      "maker": "Servier",
-      "group": "A",
-      "how": "Take 1 tablet each morning. Swallow it whole with water. Do not crush or chew it.",
-      "safe": "Not always. Do not take it if you are pregnant or breastfeeding, or if you have serious kidney or liver problems. Your doctor may check your blood, because it can lower the potassium in your body.",
-      "price": "48",
-      "pack": "30 tablets (1.5 mg/5 mg)"
-    },
-    {
-      "slug": "salbutamol-inhaler",
-      "name": "Salbutamol inhaler",
-      "brands": [
-        "Ventolin"
-      ],
-      "condition": "asthma",
-      "summary": "A salbutamol inhaler quickly opens up your airways when you are wheezy or short of breath.",
-      "treats": "Asthma. It is a reliever: you use it when you need it, not every day.",
-      "looks": "It is a blue inhaler, sometimes called a pump.",
-      "maker": "Westpoint Pharma",
-      "group": "A",
-      "how": "Breathe in 1 or 2 puffs when you need them. Ask your pharmacist to show you how to use it. A spacer can help.",
-      "safe": "Most people can use it. Your hands may shake or your heart may beat faster for a short time. If you need it more than 3 times a week, tell your doctor.",
-      "price": "35",
-      "pack": "1 inhaler"
-    },
-    {
-      "slug": "beclometasone-inhaler",
-      "name": "Beclometasone inhaler",
-      "brands": [
-        "Qvar",
-        "Clenil"
-      ],
-      "condition": "asthma",
-      "summary": "A beclometasone inhaler stops asthma attacks from starting if you use it every day.",
-      "treats": "Asthma. It is a preventer: you use it every day, even when you feel well.",
-      "looks": "It is a brown inhaler.",
-      "maker": "Caribpharm Ltd",
-      "group": "B",
-      "how": "Use it twice a day, every day. Rinse your mouth with water after you use it.",
-      "safe": "Most people can use it. It can give you a sore mouth or throat. Rinsing your mouth after each use helps stop this.",
-      "price": "68",
-      "pack": "1 inhaler"
-    },
-    {
-      "slug": "carbamazepine",
-      "name": "Carbamazepine",
-      "brands": [
-        "Tegretol"
-      ],
-      "condition": "epilepsy",
-      "summary": "Carbamazepine is a tablet that helps stop seizures (fits) if you have epilepsy.",
-      "treats": "Epilepsy. Doctors also use it for some kinds of nerve pain.",
-      "looks": "They are white tablets. They come in 2 sizes: 200 mg and 400 mg.",
-      "maker": "Northgate Laboratories",
-      "group": "B",
-      "how": "Take it 2 or 3 times a day, at the same times each day. Do not stop taking it suddenly. Talk to your doctor first.",
-      "safe": "Not always. It can affect other medications, including the contraceptive pill. Tell your doctor about everything you take.",
-      "price": "42",
-      "pack": "60 tablets (200 mg)"
-    },
-    {
-      "slug": "timolol-eye-drops",
-      "name": "Timolol eye drops",
-      "brands": [
-        "Timoptol",
-        "Timoptic"
-      ],
-      "condition": "glaucoma",
-      "summary": "Timolol eye drops lower the pressure inside your eye if you have glaucoma.",
-      "treats": "Glaucoma. This is when pressure builds up in your eye and can damage your sight.",
-      "looks": "It is a small bottle of eye drops.",
-      "maker": "Northgate Laboratories",
-      "group": "A",
-      "how": "Put 1 drop in each eye that needs it, twice a day. Keep using them even if your eyes feel fine.",
-      "safe": "Not always. Tell your doctor if you have asthma or a slow heartbeat. The drops can affect your breathing and heart.",
-      "price": "30",
-      "pack": "1 bottle (5 ml)"
-    },
-    {
-      "slug": "tamoxifen",
-      "name": "Tamoxifen",
-      "brands": [
-        "Nolvadex"
-      ],
-      "condition": "cancer",
-      "summary": "Tamoxifen is a tablet that helps stop some breast cancers from growing or coming back.",
-      "treats": "Breast cancer. It blocks a hormone that some breast cancers need to grow.",
-      "looks": "They are white tablets. They come in 1 size: 20 mg.",
-      "maker": "Westpoint Pharma",
-      "group": "A",
-      "how": "Take it once a day, at the same time each day. Most people take it for 5 years or more.",
-      "safe": "Not always. Do not take it if you are pregnant. Get help straight away if one leg becomes painful and swollen, or if you are suddenly short of breath.",
-      "price": "55",
-      "pack": "30 tablets (20 mg)"
-    },
-    {
-      "slug": "amoxicillin",
-      "name": "Amoxicillin",
-      "brands": [
-        "Amoxil"
-      ],
-      "condition": "infections",
-      "summary": "Amoxicillin is an antibiotic that treats infections caused by bacteria.",
-      "treats": "Infections such as chest, ear and throat infections. It does not work on colds or flu.",
-      "looks": "They are capsules. They come in 2 sizes: 250 mg and 500 mg. There is also a liquid for children.",
-      "maker": "Island Generics Inc",
-      "group": "A",
-      "how": "Take it 3 times a day. Finish the whole course, even if you feel better.",
-      "safe": "Not always. Do not take it if you are allergic to penicillin. Tell the pharmacist if you have ever had a rash from an antibiotic.",
-      "price": "16",
-      "pack": "21 capsules (500 mg)"
-    },
-    {
-      "slug": "cetirizine",
-      "name": "Cetirizine",
-      "brands": [
-        "Zyrtec"
-      ],
-      "condition": "allergies",
-      "summary": "Cetirizine is an allergy tablet (an antihistamine). It eases sneezing, itching and a runny nose.",
-      "treats": "Allergies, such as hay fever, itchy skin and hives.",
-      "looks": "They are small white tablets. They come in 1 size: 10 mg. There is also a liquid for children.",
-      "maker": "Northgate Laboratories",
-      "group": "C",
-      "how": "Take 1 tablet once a day. You can take it with or without food.",
-      "safe": "Most people can take it. It can make some people sleepy, so do not drive if it affects you. Tell your doctor if you have kidney problems.",
-      "price": "12",
-      "pack": "30 tablets (10 mg)"
-    }
-  ],
-  "groupsSource": "BNDF Formulary Categories, formulary.drugservice.gov.bb/bndf2022/formulary_categories_dashboard.php, read 21 Oct 2026"
+  "asthma": {
+   "label": "Asthma",
+   "benefit": true,
+   "words": [
+    "inhaler",
+    "pump",
+    "wheeze",
+    "wheezing",
+    "breathing",
+    "puffer",
+    "asma",
+    "asthmatic",
+    "breath",
+    "breathless"
+   ]
+  },
+  "epilepsy": {
+   "label": "Epilepsy",
+   "benefit": true,
+   "words": [
+    "fits",
+    "seizures",
+    "seizure"
+   ]
+  },
+  "glaucoma": {
+   "label": "Glaucoma",
+   "benefit": true,
+   "words": [
+    "eye drops",
+    "eyes",
+    "eye pressure"
+   ]
+  },
+  "cancer": {
+   "label": "Cancer",
+   "benefit": true,
+   "words": [
+    "breast cancer",
+    "tumour"
+   ],
+   "quick": "Breast cancer"
+  },
+  "infections": {
+   "label": "Infections",
+   "benefit": false,
+   "words": [
+    "antibiotic",
+    "antibiotics",
+    "infection",
+    "chest infection",
+    "ear infection"
+   ]
+  },
+  "allergies": {
+   "label": "Allergies",
+   "benefit": false,
+   "words": [
+    "allergy",
+    "hay fever",
+    "itching",
+    "itchy",
+    "sneezing",
+    "antihistamine",
+    "hives"
+   ]
+  }
+ },
+ "medicines": [
+  {
+   "slug": "metformin",
+   "name": "Metformin",
+   "brands": [
+    "Glucophage"
+   ],
+   "condition": "diabetes",
+   "summary": "Metformin is a tablet that helps control the sugar in your blood if you have type 2 diabetes.",
+   "treats": "Type 2 diabetes. This is when there is too much sugar in your blood.",
+   "looks": "They are tablets. They come in 2 sizes: 500 mg and 850 mg.",
+   "maker": "Caribpharm Ltd",
+   "group": "A",
+   "how": "Take it with food. Your doctor will start you on a small amount and slowly give you more.",
+   "safe": "Not always. If your kidneys or liver are not well, your doctor may give you less or choose a different medication.",
+   "price": "18",
+   "pack": "60 tablets (500 mg)",
+   "popular": 1
+  },
+  {
+   "slug": "gliclazide",
+   "name": "Gliclazide",
+   "brands": [
+    "Diamicron"
+   ],
+   "condition": "diabetes",
+   "summary": "Gliclazide is a tablet that lowers the sugar in your blood if you have type 2 diabetes.",
+   "treats": "Type 2 diabetes. It helps your body make more insulin, which brings your blood sugar down.",
+   "looks": "They are white tablets. They come in 1 size: 80 mg.",
+   "maker": "Island Generics Inc",
+   "group": "A",
+   "how": "Take it with breakfast, or with breakfast and your evening meal. Do not skip meals while you take it.",
+   "safe": "Not always. It can make your blood sugar go too low, so you may feel shaky, sweaty or confused. Eat or drink something sugary and tell your doctor if this happens.",
+   "price": "22",
+   "pack": "60 tablets (80 mg)",
+   "popular": 6
+  },
+  {
+   "slug": "amlodipine",
+   "name": "Amlodipine",
+   "brands": [
+    "Norvasc"
+   ],
+   "condition": "high-blood-pressure",
+   "summary": "Amlodipine is a tablet that lowers your blood pressure.",
+   "treats": "High blood pressure. It relaxes your blood vessels so blood flows through them more easily.",
+   "looks": "They are white tablets. They come in 2 sizes: 5 mg and 10 mg.",
+   "maker": "Caribpharm Ltd",
+   "group": "A",
+   "how": "Take it once a day, at the same time each day. You can take it with or without food.",
+   "safe": "Most people can take it. Your ankles may swell at first. Tell your doctor if it does not go away.",
+   "price": "15",
+   "pack": "30 tablets (5 mg)",
+   "popular": 2
+  },
+  {
+   "slug": "lisinopril",
+   "name": "Lisinopril",
+   "brands": [
+    "Zestril",
+    "Prinivil"
+   ],
+   "condition": "high-blood-pressure",
+   "summary": "Lisinopril is a tablet that lowers your blood pressure and protects your heart and kidneys.",
+   "treats": "High blood pressure. Doctors also use it after a heart attack and for some kidney problems.",
+   "looks": "They are tablets. They come in 3 sizes: 5 mg, 10 mg and 20 mg.",
+   "maker": "Westpoint Pharma",
+   "group": "A",
+   "how": "Take it once a day, at the same time each day. You can take it with or without food.",
+   "safe": "Not always. Do not take it if you are pregnant or trying to get pregnant. Tell your doctor if you get a dry cough that will not go away.",
+   "price": "20",
+   "pack": "30 tablets (10 mg)",
+   "popular": 3
+  },
+  {
+   "slug": "hydrochlorothiazide",
+   "name": "Hydrochlorothiazide",
+   "brands": [],
+   "condition": "high-blood-pressure",
+   "summary": "Hydrochlorothiazide is a water tablet that lowers your blood pressure.",
+   "treats": "High blood pressure. It makes your body get rid of extra water and salt when you pee.",
+   "looks": "They are small white tablets. They come in 1 size: 25 mg.",
+   "maker": "Island Generics Inc",
+   "group": "A",
+   "how": "Take it once a day in the morning. If you take it late in the day, you may need to get up in the night to pee.",
+   "safe": "Most people can take it. Your doctor may check your blood now and then, because it can change the salt levels in your body.",
+   "price": "9",
+   "pack": "30 tablets (25 mg)",
+   "popular": 5,
+   "words": [
+    "water pill",
+    "water pills",
+    "water tablet",
+    "water tablets",
+    "diuretic"
+   ],
+   "short": [
+    "HCTZ"
+   ]
+  },
+  {
+   "slug": "natrixam",
+   "name": "Natrixam",
+   "brands": [
+    "indapamide and amlodipine"
+   ],
+   "condition": "high-blood-pressure",
+   "summary": "Natrixam is one tablet with 2 blood pressure medications in it. It lowers your blood pressure.",
+   "treats": "High blood pressure. It has indapamide, a water tablet, and amlodipine, which relaxes your blood vessels. Your doctor may give you this if you already take both medications, so you have 1 tablet instead of 2.",
+   "looks": "They are tablets. They come in 2 strengths: 1.5 mg indapamide with 5 mg amlodipine, and 1.5 mg indapamide with 10 mg amlodipine.",
+   "maker": "Servier",
+   "group": "A",
+   "how": "Take 1 tablet each morning. Swallow it whole with water. Do not crush or chew it.",
+   "safe": "Not always. Do not take it if you are pregnant or breastfeeding, or if you have serious kidney or liver problems. Your doctor may check your blood, because it can lower the potassium in your body.",
+   "price": "48",
+   "pack": "30 tablets (1.5 mg/5 mg)",
+   "popular": 10,
+   "brandTitled": true,
+   "words": [
+    "water pill",
+    "water pills",
+    "diuretic"
+   ]
+  },
+  {
+   "slug": "salbutamol-inhaler",
+   "name": "Salbutamol inhaler",
+   "brands": [
+    "Ventolin"
+   ],
+   "condition": "asthma",
+   "summary": "A salbutamol inhaler quickly opens up your airways when you are wheezy or short of breath.",
+   "treats": "Asthma. It is a reliever: you use it when you need it, not every day.",
+   "looks": "It is a blue inhaler, sometimes called a pump.",
+   "maker": "Westpoint Pharma",
+   "group": "A",
+   "how": "Breathe in 1 or 2 puffs when you need them. Ask your pharmacist to show you how to use it. A spacer can help.",
+   "safe": "Most people can use it. Your hands may shake or your heart may beat faster for a short time. If you need it more than 3 times a week, tell your doctor.",
+   "price": "35",
+   "pack": "1 inhaler",
+   "popular": 4,
+   "words": [
+    "reliever",
+    "reliever inhaler",
+    "blue inhaler",
+    "blue pump",
+    "blue puffer"
+   ]
+  },
+  {
+   "slug": "beclometasone-inhaler",
+   "name": "Beclometasone inhaler",
+   "brands": [
+    "Qvar",
+    "Clenil"
+   ],
+   "condition": "asthma",
+   "summary": "A beclometasone inhaler stops asthma attacks from starting if you use it every day.",
+   "treats": "Asthma. It is a preventer: you use it every day, even when you feel well.",
+   "looks": "It is a brown inhaler.",
+   "maker": "Caribpharm Ltd",
+   "group": "B",
+   "how": "Use it twice a day, every day. Rinse your mouth with water after you use it.",
+   "safe": "Most people can use it. It can give you a sore mouth or throat. Rinsing your mouth after each use helps stop this.",
+   "price": "68",
+   "pack": "1 inhaler",
+   "popular": 8,
+   "words": [
+    "preventer",
+    "preventer inhaler",
+    "brown inhaler",
+    "brown pump",
+    "brown puffer"
+   ]
+  },
+  {
+   "slug": "carbamazepine",
+   "name": "Carbamazepine",
+   "brands": [
+    "Tegretol"
+   ],
+   "condition": "epilepsy",
+   "summary": "Carbamazepine is a tablet that helps stop seizures (fits) if you have epilepsy.",
+   "treats": "Epilepsy. Doctors also use it for some kinds of nerve pain.",
+   "looks": "They are white tablets. They come in 2 sizes: 200 mg and 400 mg.",
+   "maker": "Northgate Laboratories",
+   "group": "B",
+   "how": "Take it 2 or 3 times a day, at the same times each day. Do not stop taking it suddenly. Talk to your doctor first.",
+   "safe": "Not always. It can affect other medications, including the contraceptive pill. Tell your doctor about everything you take.",
+   "price": "42",
+   "pack": "60 tablets (200 mg)",
+   "popular": 11
+  },
+  {
+   "slug": "timolol-eye-drops",
+   "name": "Timolol eye drops",
+   "brands": [
+    "Timoptol",
+    "Timoptic"
+   ],
+   "condition": "glaucoma",
+   "summary": "Timolol eye drops lower the pressure inside your eye if you have glaucoma.",
+   "treats": "Glaucoma. This is when pressure builds up in your eye and can damage your sight.",
+   "looks": "It is a small bottle of eye drops.",
+   "maker": "Northgate Laboratories",
+   "group": "A",
+   "how": "Put 1 drop in each eye that needs it, twice a day. Keep using them even if your eyes feel fine.",
+   "safe": "Not always. Tell your doctor if you have asthma or a slow heartbeat. The drops can affect your breathing and heart.",
+   "price": "30",
+   "pack": "1 bottle (5 ml)",
+   "popular": 12,
+   "words": [
+    "glaucoma drops"
+   ]
+  },
+  {
+   "slug": "tamoxifen",
+   "name": "Tamoxifen",
+   "brands": [
+    "Nolvadex"
+   ],
+   "condition": "cancer",
+   "summary": "Tamoxifen is a tablet that helps stop some breast cancers from growing or coming back.",
+   "treats": "Breast cancer. It blocks a hormone that some breast cancers need to grow.",
+   "looks": "They are white tablets. They come in 1 size: 20 mg.",
+   "maker": "Westpoint Pharma",
+   "group": "A",
+   "how": "Take it once a day, at the same time each day. Most people take it for 5 years or more.",
+   "safe": "Not always. Do not take it if you are pregnant. Get help straight away if one leg becomes painful and swollen, or if you are suddenly short of breath.",
+   "price": "55",
+   "pack": "30 tablets (20 mg)",
+   "popular": 13
+  },
+  {
+   "slug": "amoxicillin",
+   "name": "Amoxicillin",
+   "brands": [
+    "Amoxil"
+   ],
+   "condition": "infections",
+   "summary": "Amoxicillin is an antibiotic that treats infections caused by bacteria.",
+   "treats": "Infections such as chest, ear and throat infections. It does not work on colds or flu.",
+   "looks": "They are capsules. They come in 2 sizes: 250 mg and 500 mg. There is also a liquid for children.",
+   "maker": "Island Generics Inc",
+   "group": "A",
+   "how": "Take it 3 times a day. Finish the whole course, even if you feel better.",
+   "safe": "Not always. Do not take it if you are allergic to penicillin. Tell the pharmacist if you have ever had a rash from an antibiotic.",
+   "price": "16",
+   "pack": "21 capsules (500 mg)",
+   "popular": 7
+  },
+  {
+   "slug": "cetirizine",
+   "name": "Cetirizine",
+   "brands": [
+    "Zyrtec"
+   ],
+   "condition": "allergies",
+   "summary": "Cetirizine is an allergy tablet (an antihistamine). It eases sneezing, itching and a runny nose.",
+   "treats": "Allergies, such as hay fever, itchy skin and hives.",
+   "looks": "They are small white tablets. They come in 1 size: 10 mg. There is also a liquid for children.",
+   "maker": "Northgate Laboratories",
+   "group": "C",
+   "how": "Take 1 tablet once a day. You can take it with or without food.",
+   "safe": "Most people can take it. It can make some people sleepy, so do not drive if it affects you. Tell your doctor if you have kidney problems.",
+   "price": "12",
+   "pack": "30 tablets (10 mg)",
+   "popular": 9
+  }
+ ],
+ "groupsSource": "BNDF Formulary Categories, formulary.drugservice.gov.bb/bndf2022/formulary_categories_dashboard.php, read 21 Oct 2026",
+ "popularSource": "EXAMPLE order (most-used first) for this prototype. Replace with Drug Service dispensing volumes."
 }

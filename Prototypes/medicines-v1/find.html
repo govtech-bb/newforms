@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Find a medication - Government of Barbados</title>
+<meta name="description" content="Search for a medication by name, use or condition." />
+<link rel="icon" href="https://alpha.gov.bb/favicon.ico" />
+<!-- OUTSIDE SERVICES: cdn.jsdelivr.net (GovBB design system: CSS, fonts, logo, crest, combobox
+     script) and alpha.gov.bb (favicon). Each receives the visitor's IP address. Searches run in
+     the page; nothing typed leaves it. Links (not loaded) go to alpha.gov.bb and govtech-bb.github.io
+     (the polyclinic finder). -->
+<style id="govbb-design">/* GovBB design: https://cdn.jsdelivr.net/npm/@govtech-bb/frontend@1.0.0-alpha.29/dist/govbb.css + live /assets/styles-CYpijkTB.css, filled 28 October 2026 */@layer theme,base,components,utilities;@import url("https://cdn.jsdelivr.net/npm/@govtech-bb/frontend@1.0.0-alpha.29/dist/govbb.css") layer(components);@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-space-y-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-divide-y-reverse{syntax:"*";inherits:false;initial-value:0}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-leading{syntax:"*";inherits:false}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-tracking{syntax:"*";inherits:false}@property --tw-ordinal{syntax:"*";inherits:false}@property --tw-slashed-zero{syntax:"*";inherits:false}@property --tw-numeric-figure{syntax:"*";inherits:false}@property --tw-numeric-spacing{syntax:"*";inherits:false}@property --tw-numeric-fraction{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-blur{syntax:"*";inherits:false}@property --tw-brightness{syntax:"*";inherits:false}@property --tw-contrast{syntax:"*";inherits:false}@property --tw-grayscale{syntax:"*";inherits:false}@property --tw-hue-rotate{syntax:"*";inherits:false}@property --tw-invert{syntax:"*";inherits:false}@property --tw-opacity{syntax:"*";inherits:false}@property --tw-saturate{syntax:"*";inherits:false}@property --tw-sepia{syntax:"*";inherits:false}@property --tw-drop-shadow{syntax:"*";inherits:false}@property --tw-drop-shadow-color{syntax:"*";inherits:false}@property --tw-drop-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:"*";inherits:false}@property --tw-duration{syntax:"*";inherits:false}@property --tw-outline-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-content{syntax:"*";inherits:false;initial-value:""}@layer theme{:root,:host{--color-black:#000;--color-white:#fff;--spacing:.25rem;--container-2xl:42rem;--container-3xl:48rem;--text-sm:.875rem;--text-sm--line-height:calc(1.25 / .875);--text-3xl:1.875rem;--text-3xl--line-height:calc(2.25 / 1.875);--text-4xl:2.25rem;--text-4xl--line-height:calc(2.5 / 2.25);--font-weight-normal:400;--font-weight-medium:500;--font-weight-semibold:600;--font-weight-bold:700;--tracking-tight:-.025em;--tracking-wide:.025em;--tracking-wider:.05em;--tracking-widest:.1em;--leading-tight:1.25;--leading-snug:1.375;--leading-normal:1.5;--radius-xs:.125rem;--radius-sm:.25rem;--radius-md:.375rem;--radius-lg:.5rem;--radius-xl:.75rem;--radius-2xl:1rem;--radius-3xl:1.5rem;--animate-pulse:pulse 2s cubic-bezier(.4, 0, .6, 1) infinite;--default-transition-duration:.15s;--default-transition-timing-function:cubic-bezier(.4, 0, .2, 1);--default-font-family:var(--govbb-font-sans);--default-mono-font-family:var(--govbb-font-mono);--color-teal-80:var(--govbb-teal-80);--color-blue-40:var(--govbb-blue-40);--spacing-m:var(--govbb-space-m);--spacing-l:var(--govbb-space-l)}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring{outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab, red, red)){::placeholder{color:color-mix(in oklab, currentcolor 50%, transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}}@layer utilities{.mb-4{margin-bottom:calc(var(--spacing) * 4)}.mb-m{margin-bottom:var(--govbb-space-m)}.mb-xm{margin-bottom:var(--govbb-space-xm)}.flex{display:flex}.hidden{display:none}.inline-flex{display:inline-flex}.w-fit{width:fit-content}.flex-col{flex-direction:column}.items-center{align-items:center}.gap-xs{gap:var(--govbb-space-xs)}.rounded-md{border-radius:var(--radius-md)}.border{border-style:var(--tw-border-style);border-width:1px}.border-b-4{border-bottom-style:var(--tw-border-style);border-bottom-width:4px}.border-l-4{border-left-style:var(--tw-border-style);border-left-width:4px}.border-blue-10{border-color:var(--govbb-blue-10)}.border-blue-40{border-color:var(--govbb-blue-40)}.border-teal-80{border-color:var(--govbb-teal-80)}.bg-blue-10{background-color:var(--govbb-blue-10)}.bg-teal-10{background-color:var(--govbb-teal-10)}.px-3{padding-inline:calc(var(--spacing) * 3)}.px-s{padding-inline:var(--govbb-space-s)}.py-1{padding-block:var(--spacing)}.py-xs{padding-block:var(--govbb-space-xs)}.pb-4{padding-bottom:calc(var(--spacing) * 4)}.wrap-anywhere{overflow-wrap:anywhere}.text-grey-70{color:var(--govbb-grey-70)}.text-teal-80{color:var(--govbb-teal-80)}@media (width>=64rem){.lg\:mb-16{margin-bottom:calc(var(--spacing) * 16)}}@media print{.print\:hidden{display:none}}}@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-space-y-reverse:0;--tw-divide-y-reverse:0;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-tracking:initial;--tw-ordinal:initial;--tw-slashed-zero:initial;--tw-numeric-figure:initial;--tw-numeric-spacing:initial;--tw-numeric-fraction:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-blur:initial;--tw-brightness:initial;--tw-contrast:initial;--tw-grayscale:initial;--tw-hue-rotate:initial;--tw-invert:initial;--tw-opacity:initial;--tw-saturate:initial;--tw-sepia:initial;--tw-drop-shadow:initial;--tw-drop-shadow-color:initial;--tw-drop-shadow-alpha:100%;--tw-drop-shadow-size:initial;--tw-duration:initial;--tw-outline-style:solid;--tw-content:""}}}</style>
+<style>
+  /* Design-system accessibility gaps (barbs-design-system live-build.md section 6). */
+  :root{--govbb-color-focus:#0a6c73}
+  .govbb-link:focus-visible{box-shadow:0 -2px var(--govbb-color-brand-accent),0 4px #0b0c0c}
+  .govbb-combobox__option[aria-selected="true"]{box-shadow:inset 4px 0 0 var(--govbb-teal-80)}
+  /* No mobile heading override: the live build scales headings itself. */
+  .md-section{display:flex;flex-direction:column;gap:var(--govbb-space-s);margin-top:var(--govbb-space-l)}
+  .md-section > :where(p,ul,ol,dl,div){max-inline-size:var(--govbb-measure);margin:0}
+  .md-section h3{margin:var(--govbb-space-xs) 0 0}
+  .md-qa{display:flex;flex-direction:column;gap:var(--govbb-space-xxs)}
+  .md-qa > *{margin:0}
+  .md-results{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:var(--govbb-space-s)}
+  .md-results li{border-bottom:1px solid var(--govbb-grey-20);padding-bottom:var(--govbb-space-s)}
+  .md-results li > *{margin:0} .md-results li > * + *{margin-top:var(--govbb-space-xxs)}
+    .md-callout{max-inline-size:var(--govbb-measure);margin-top:var(--govbb-space-s)} .md-callout p{margin:0}
+  .md-search{margin-top:var(--govbb-space-m)}
+  .md-search--top{margin:0 0 var(--govbb-space-m)}
+  /* Emergency box: the same red border as the polyclinic finder's "In an emergency". */
+  .md-emergency{border:2px solid var(--govbb-color-error,#b10e1e);border-radius:var(--govbb-radius);padding:var(--govbb-space-s);max-inline-size:var(--govbb-measure);margin-top:var(--govbb-space-m)}
+  .md-emergency > *{margin:0} .md-emergency > * + *{margin-top:var(--govbb-space-xs)}
+  .md-results-area .md-emergency{margin-top:0}
+  /* Design A: "Getting your medication" as one at-a-glance box. Each answer appears once. */
+  .md-glance{border:1px solid var(--govbb-grey-40);border-top:4px solid var(--govbb-teal-80);border-radius:var(--govbb-radius);padding:var(--govbb-space-s);margin-top:var(--govbb-space-m);max-inline-size:52rem}
+  @media (width>=50rem){.md-glance{padding:var(--govbb-space-m)}}
+  .md-glance > h2{margin:0 0 var(--govbb-space-s)}
+  .md-rows{display:flex;flex-direction:column;gap:var(--govbb-space-s)}
+  .md-rows > .md-qa{border-bottom:1px solid var(--govbb-grey-20);padding-bottom:var(--govbb-space-s)}
+  .md-rows > .md-qa:last-child{border-bottom:0;padding-bottom:0}
+  .md-rows > .md-qa > * + *{margin-top:var(--govbb-space-xs)}
+  .md-intro{max-inline-size:var(--govbb-measure)} .md-intro > *{margin:0} .md-intro > * + *{margin-top:var(--govbb-space-s)}
+  .md-summary .govbb-summary-list__row{border-bottom:1px solid var(--govbb-grey-20);padding-bottom:var(--govbb-space-s)}
+  .md-summary .govbb-summary-list__row:last-child{border-bottom:0;padding-bottom:0}
+  .md-summary dd > *{margin:0} .md-summary dd > * + *{margin-top:var(--govbb-space-xs)}
+  .md-section > dl.md-summary{max-inline-size:52rem}
+  /* Search page: conditions as quick-search links, and an A to Z with letter links and columns. */
+  .md-quick{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:var(--govbb-space-xs)}
+  .md-quick a{display:inline-block;padding:.5rem .875rem;border:1px solid var(--govbb-teal-80);border-radius:999px;line-height:1.5}
+  .md-letters{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:var(--govbb-space-xxs)}
+  .md-letters a{display:inline-block;min-width:2.75rem;min-height:2.75rem;line-height:2.75rem;text-align:center;font-weight:700}
+  .md-az-cols > div{break-inside:avoid;margin-bottom:var(--govbb-space-s)}
+  .md-az-cols h3{margin:0 0 var(--govbb-space-xxs)}
+  @media (width>=40rem){.md-az-cols{columns:2;column-gap:var(--govbb-space-l)}}
+  @media (width>=64rem){.md-az-cols{columns:3}}
+  .md-az{list-style:none;padding:0;margin:0 0 var(--govbb-space-s)} .md-az li{margin:0 0 var(--govbb-space-xxs)}
+  #brand-note[hidden],#results-emergency[hidden],#results-info[hidden],#results-carer[hidden],#results-511[hidden],#results-crisis[hidden],#results-notemerg[hidden]{display:none}
+  /* Results sit straight under the search box, boxed off so they read as the answer to the search. */
+  .md-results-area{margin-top:var(--govbb-space-m);padding-top:var(--govbb-space-s);border-top:4px solid var(--govbb-blue-10);display:flex;flex-direction:column;gap:var(--govbb-space-s)}
+  .md-results-area > *{margin:0;max-inline-size:var(--govbb-measure)}
+  .md-search .govbb-form-group{margin-bottom:0}
+  /* Long medication names (Hydrochlorothiazide) break with a hyphen instead of scrolling sideways. */
+  .govbb-text-h1{hyphens:auto}
+  .md-contact{list-style:none;padding:0} .md-contact li + li{margin-top:var(--govbb-space-xxs)}
+  .md-clear{margin:var(--govbb-space-xs) 0 0}
+  .md-results-area[hidden]{display:none}
+  #results-none{display:flex;flex-direction:column;gap:var(--govbb-space-s)} #results-none[hidden]{display:none} #results-none > *{margin:0}
+  #results-h:focus{outline:none}
+  .md-muted{color:var(--govbb-grey-70,#595959)}
+  .md-break{min-width:0;overflow-wrap:anywhere}
+  /* "Example" marks made-up details (prototype only). Dashed so it never reads as official. */
+  .md-ex{display:inline-block;margin-left:.125rem;padding:0 .375rem;border:1px dashed #8a4600;border-radius:4px;background:#fff2d6;color:#3d3d3d;font-size:.8125rem;font-weight:700;line-height:1.5;vertical-align:middle}
+</style>
+
+</head>
+<body class="govbb-page">
+<a class="govbb-skip-link" href="#main-content">Skip to main content</a>
+
+<div class="govbb-official-banner">
+  <div class="govbb-official-banner__inner govbb-width-container">
+    <span class="govbb-official-banner__crest"><img class="govbb-official-banner__icon" src="https://cdn.jsdelivr.net/npm/@govtech-bb/frontend@1.0.0-alpha.29/assets/images/govbb-crest.svg" alt="" width="20" height="20" /></span>
+    <span class="govbb-official-banner__text">An official website of the Government of Barbados</span>
+  </div>
+</div>
+
+<header class="govbb-header">
+  <div class="govbb-width-container govbb-header__inner">
+    <a href="https://alpha.gov.bb/" class="govbb-header__home"><img class="govbb-header__logo" src="https://cdn.jsdelivr.net/npm/@govtech-bb/frontend@1.0.0-alpha.29/assets/images/govbb-logo.svg" alt="Go to the alpha.gov.bb homepage" /></a>
+  </div>
+</header>
+
+<div class="govbb-status-banner govbb-status-banner--alpha govbb-status-banner--full-width">
+  <div class="govbb-status-banner__inner govbb-width-container">
+    <p><span class="govbb-text-bold">Alpha</span> prototype: medication details are sample content for testing, not medical advice.</p>
+  </div>
+</div>
+
+<div class="govbb-width-container">
+  <nav class="govbb-breadcrumbs" aria-label="Breadcrumb">
+    <ol class="govbb-breadcrumbs__list"><li class="govbb-breadcrumbs__item"><a class="govbb-link govbb-breadcrumbs__link" href="https://alpha.gov.bb/">Home</a></li><li class="govbb-breadcrumbs__item"><a class="govbb-link govbb-breadcrumbs__link" href="https://alpha.gov.bb/health-and-emergency-services">Health and emergency services</a></li><li class="govbb-breadcrumbs__item"><a class="govbb-link govbb-breadcrumbs__link" href="index.html">Find out about a medication</a></li></ol>
+  </nav>
+</div>
+
+<main id="main-content" tabindex="-1">
+  <div class="govbb-width-container govbb-main-wrapper mb-xm">
+    <div class="flex flex-col gap-xs mb-m">
+      
+      <h1 class="govbb-text-h1 wrap-anywhere">Find a medication</h1>
+      <div class="border-blue-10 border-b-4 pb-4 text-grey-70">
+        <p class="govbb-text-body-sm">Last updated on October 26th, 2026</p>
+      </div>
+    </div>
+    <p class="govbb-text-body">Find out what a medication is for, how to take it, and if you can get it for free.</p>
+
+    <form role="search" class="govbb-search md-search" action="" method="get" novalidate>
+      <div class="govbb-form-group">
+        <label class="govbb-label" id="q-label" for="q">Search for a medication by name, use or condition</label>
+        <span class="govbb-hint" id="q-hint">For example: metformin, Ventolin, inhaler or blood pressure.</span>
+        <div class="flex">
+          <div class="govbb-combobox govbb-combobox--inline" data-govbb-module="combobox" style="flex:1;min-width:0">
+            <input class="govbb-search__input" id="q" name="q" type="text" enterkeyhint="search" autocomplete="off" spellcheck="false" list="q-suggestions" aria-describedby="q-hint" />
+            <datalist id="q-suggestions"></datalist>
+          </div>
+          <button class="govbb-search__button" type="submit">Search</button>
+        </div>
+      </div>
+    </form>
+    <noscript><p class="govbb-text-body md-clear">Search is not working on your device. You can look through the A to Z of medications below.</p></noscript>
+    <p id="clear-search" class="govbb-text-body md-clear" hidden><a class="govbb-link" href="find.html">Clear search</a></p>
+
+    <section id="results" class="md-results-area" aria-labelledby="results-h" hidden>
+      <h2 id="results-h" class="govbb-text-h2" tabindex="-1"></h2>
+      <p id="results-511" class="govbb-text-body" hidden>If this is an emergency, call <a class="govbb-link" href="tel:511">511</a> for an ambulance.</p>
+      <!-- MDA NOTE (Ministry of Health): confirm this wording for searches about self-harm, and whether to list a mental health crisis line. -->
+      <div id="results-crisis" hidden><div class="md-emergency">
+        <p class="govbb-text-body">Call <a class="govbb-link" href="tel:511">511</a> for an ambulance, or go to Accident and Emergency at the Queen Elizabeth Hospital.</p>
+        <p class="govbb-text-body">If you can, tell someone you trust how you are feeling and ask them to stay with you.</p>
+      </div></div>
+      <div id="results-emergency" hidden><div class="md-emergency">
+        <p class="govbb-text-body">Call <a class="govbb-link" href="tel:511">511</a> for an ambulance if someone:</p>
+      <ul class="govbb-list govbb-list--bullet">
+        <li>took too much of a medication</li>
+        <li>has chest pain or trouble breathing</li>
+        <li>has a swollen face</li>
+      </ul>
+      <p class="govbb-text-body">You can also go to Accident and Emergency at the Queen Elizabeth Hospital.</p>
+      </div></div>
+      <div id="results-notemerg" hidden>
+        <p class="govbb-text-body">If it is not an emergency, you can:</p>
+        <ul class="govbb-list govbb-list--bullet">
+          <li>search for a medication by name</li>
+          <li><a class="govbb-link" href="#browse-h">look through the A to Z of medications</a></li>
+          <li>call the Barbados Drug Service on <a class="govbb-link" href="tel:+12465354300">(246) 535-4300</a></li>
+        </ul>
+      </div>
+      <p id="results-note" class="govbb-text-body" hidden></p>
+      <div id="results-carer" hidden>
+        <!-- MDA NOTE (Barbados Drug Service): can a carer collect for someone else, and what do they bring? -->
+        <p class="govbb-text-body">Before you go, call the Barbados Drug Service on <a class="govbb-link" href="tel:+12465354300">(246) 535-4300</a> to check if you can collect medication for someone else, and what you need to bring.</p>
+        <p class="govbb-text-body">To find out about their medication, search for it by name.</p>
+      </div>
+      <div id="results-info" hidden>
+        <p class="govbb-text-body">Some medications are free for children under 16, people 65 or over, and people living with diabetes, high blood pressure, asthma, epilepsy, glaucoma or cancer. You usually need to be a Barbadian citizen or permanent resident.</p>
+        <!-- MDA NOTE (Barbados Drug Service): Group B pages include CARICOM nationals; confirm who is eligible for each group. -->
+        <p class="govbb-text-body">Search for your medication by name to see if it is free for you.</p>
+        <p class="govbb-text-body"><a class="govbb-link" href="https://alpha.gov.bb/health-and-emergency-services/free-or-subsidised-medication">Read more about free or cheaper medication</a></p>
+      </div>
+      <ul id="results-list" class="md-results"></ul>
+      <div id="results-none" hidden>
+        <div class="border-l-4 px-s py-xs border-teal-80 bg-teal-10 md-callout">
+          <p class="govbb-text-body">We are still adding medications to this list. Your medication may still be free or cheaper.</p>
+        </div>
+        <p class="govbb-text-body">You can:</p>
+        <ul class="govbb-list govbb-list--bullet">
+          <li>check the spelling</li>
+          <li>type the name printed on the box or label</li>
+          <li>search for what it is for, like <a class="govbb-link" href="?q=blood%20pressure">blood pressure</a> or <a class="govbb-link" href="?q=inhaler">inhaler</a></li>
+          <li><a class="govbb-link" href="#browse-h">look through the A to Z of medications</a></li>
+        </ul>
+        <p class="govbb-text-body">To check if your medication is free, call the Barbados Drug Service on <a class="govbb-link" href="tel:+12465354300">(246) 535-4300</a> or email <a class="govbb-link md-break" href="mailto:management@drugservice.gov.bb">management@drugservice.gov.bb</a>. Your pharmacist can also tell you.</p>
+      </div>
+    </section>
+
+    <section class="md-section">
+      <h2 id="by-use-h" class="govbb-text-h2">Search by what it is for</h2>
+      <ul class="md-quick"><li><a class="govbb-link" href="?q=diabetes">Diabetes</a></li><li><a class="govbb-link" href="?q=high%20blood%20pressure">High blood pressure</a></li><li><a class="govbb-link" href="?q=asthma">Asthma</a></li><li><a class="govbb-link" href="?q=epilepsy">Epilepsy</a></li><li><a class="govbb-link" href="?q=glaucoma">Glaucoma</a></li><li><a class="govbb-link" href="?q=breast%20cancer">Breast cancer</a></li><li><a class="govbb-link" href="?q=infections">Infections</a></li><li><a class="govbb-link" href="?q=allergies">Allergies</a></li></ul>
+    </section>
+
+    <section class="md-section">
+      <h2 id="browse-h" class="govbb-text-h2">Medications A to Z</h2>
+      <nav aria-label="Jump to a letter"><ul class="md-letters"><li><a class="govbb-link" href="#az-a"><span class="govbb-visually-hidden">Medications starting with </span>A</a></li><li><a class="govbb-link" href="#az-b"><span class="govbb-visually-hidden">Medications starting with </span>B</a></li><li><a class="govbb-link" href="#az-c"><span class="govbb-visually-hidden">Medications starting with </span>C</a></li><li><a class="govbb-link" href="#az-d"><span class="govbb-visually-hidden">Medications starting with </span>D</a></li><li><a class="govbb-link" href="#az-g"><span class="govbb-visually-hidden">Medications starting with </span>G</a></li><li><a class="govbb-link" href="#az-h"><span class="govbb-visually-hidden">Medications starting with </span>H</a></li><li><a class="govbb-link" href="#az-i"><span class="govbb-visually-hidden">Medications starting with </span>I</a></li><li><a class="govbb-link" href="#az-l"><span class="govbb-visually-hidden">Medications starting with </span>L</a></li><li><a class="govbb-link" href="#az-m"><span class="govbb-visually-hidden">Medications starting with </span>M</a></li><li><a class="govbb-link" href="#az-n"><span class="govbb-visually-hidden">Medications starting with </span>N</a></li><li><a class="govbb-link" href="#az-p"><span class="govbb-visually-hidden">Medications starting with </span>P</a></li><li><a class="govbb-link" href="#az-q"><span class="govbb-visually-hidden">Medications starting with </span>Q</a></li><li><a class="govbb-link" href="#az-s"><span class="govbb-visually-hidden">Medications starting with </span>S</a></li><li><a class="govbb-link" href="#az-t"><span class="govbb-visually-hidden">Medications starting with </span>T</a></li><li><a class="govbb-link" href="#az-v"><span class="govbb-visually-hidden">Medications starting with </span>V</a></li><li><a class="govbb-link" href="#az-z"><span class="govbb-visually-hidden">Medications starting with </span>Z</a></li></ul></nav>
+<div class="md-az-cols"><div><h3 class="govbb-text-h4" id="az-a">A</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="amlodipine.html">Amlodipine</a></li>
+<li><a class="govbb-link" href="amoxicillin.html">Amoxicillin</a></li>
+<li><a class="govbb-link" href="amoxicillin.html?brand=Amoxil">Amoxil: see Amoxicillin</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-b">B</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="beclometasone-inhaler.html">Beclometasone inhaler</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-c">C</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="carbamazepine.html">Carbamazepine</a></li>
+<li><a class="govbb-link" href="cetirizine.html">Cetirizine</a></li>
+<li><a class="govbb-link" href="beclometasone-inhaler.html?brand=Clenil">Clenil: see Beclometasone inhaler</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-d">D</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="gliclazide.html?brand=Diamicron">Diamicron: see Gliclazide</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-g">G</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="gliclazide.html">Gliclazide</a></li>
+<li><a class="govbb-link" href="metformin.html?brand=Glucophage">Glucophage: see Metformin</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-h">H</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="hydrochlorothiazide.html">HCTZ: short for hydrochlorothiazide</a></li>
+<li><a class="govbb-link" href="hydrochlorothiazide.html">Hydrochlorothiazide</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-i">I</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="natrixam.html">Indapamide and amlodipine: see Natrixam</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-l">L</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="lisinopril.html">Lisinopril</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-m">M</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="metformin.html">Metformin</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-n">N</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="natrixam.html">Natrixam</a></li>
+<li><a class="govbb-link" href="tamoxifen.html?brand=Nolvadex">Nolvadex: see Tamoxifen</a></li>
+<li><a class="govbb-link" href="amlodipine.html?brand=Norvasc">Norvasc: see Amlodipine</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-p">P</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="lisinopril.html?brand=Prinivil">Prinivil: see Lisinopril</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-q">Q</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="beclometasone-inhaler.html?brand=Qvar">Qvar: see Beclometasone inhaler</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-s">S</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="salbutamol-inhaler.html">Salbutamol inhaler</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-t">T</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="tamoxifen.html">Tamoxifen</a></li>
+<li><a class="govbb-link" href="carbamazepine.html?brand=Tegretol">Tegretol: see Carbamazepine</a></li>
+<li><a class="govbb-link" href="timolol-eye-drops.html">Timolol eye drops</a></li>
+<li><a class="govbb-link" href="timolol-eye-drops.html?brand=Timoptic">Timoptic: see Timolol eye drops</a></li>
+<li><a class="govbb-link" href="timolol-eye-drops.html?brand=Timoptol">Timoptol: see Timolol eye drops</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-v">V</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="salbutamol-inhaler.html?brand=Ventolin">Ventolin: see Salbutamol inhaler</a></li>
+</ul></div>
+<div><h3 class="govbb-text-h4" id="az-z">Z</h3><ul class="govbb-list md-az">
+<li><a class="govbb-link" href="lisinopril.html?brand=Zestril">Zestril: see Lisinopril</a></li>
+<li><a class="govbb-link" href="cetirizine.html?brand=Zyrtec">Zyrtec: see Cetirizine</a></li>
+</ul></div></div>
+    </section>
+
+    <section class="md-section">
+      <h2 id="free-h" class="govbb-text-h2">Is my medication free?</h2>
+      <p class="govbb-text-body">Each medication page tells you if you can get it free, and how to check.</p>
+      <p class="govbb-text-body"><a class="govbb-link" href="index.html#free-h">Find out which medications are free, and for whom</a></p>
+    </section>
+
+    <section class="md-section">
+      <h2 id="need-help-h" class="govbb-text-h2">Need help?</h2>
+      <p class="govbb-text-body">Contact the Drug Service if you have a problem getting your medication. For example, if:</p>
+      <ul class="govbb-list govbb-list--bullet">
+        <li>your ID is not accepted</li>
+        <li>you are asked to pay more than you expected</li>
+        <li>the pharmacy does not have it</li>
+      </ul>
+      <ul class="govbb-list md-contact">
+        <li>Telephone: <a class="govbb-link" href="tel:+12465354300">(246) 535-4300</a></li>
+        <li>Email: <a class="govbb-link md-break" href="mailto:management@drugservice.gov.bb">management@drugservice.gov.bb</a></li>
+        <li>Address: 6th Floor, Warrens Tower II, Warrens, St. Michael</li>
+      </ul>
+    </section>
+
+  </div>
+  <div class="govbb-width-container print:hidden">
+    <aside class="govbb-feedback mb-4 lg:mb-16">
+      <h2 class="govbb-feedback__heading">Was this helpful?</h2>
+      <p class="govbb-text-body">Give us your feedback about this page.</p>
+      <a class="govbb-link" href="#">Help us improve alpha.gov.bb</a>
+    </aside>
+  </div>
+</main>
+
+<footer class="govbb-footer">
+  <div class="govbb-footer__inner govbb-width-container">
+    <nav class="govbb-footer__nav" aria-label="Footer navigation">
+      <ul class="govbb-footer__list">
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="https://alpha.gov.bb/">Home</a></li>
+        <li class="govbb-footer__item"><a class="govbb-footer__link" href="https://alpha.gov.bb/terms-conditions">Terms and conditions</a></li>
+      </ul>
+    </nav>
+    <hr class="govbb-footer__divider" />
+    <div class="govbb-footer__end">
+      <img class="govbb-footer__coat" src="https://cdn.jsdelivr.net/npm/@govtech-bb/frontend@1.0.0-alpha.29/assets/images/govbb-crest.svg" alt="" width="36" height="36" />
+      <p class="govbb-footer__copy">&copy; 2026 Government of Barbados</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+var MEDS = [{"slug": "metformin", "name": "Metformin", "brands": ["Glucophage"], "short": [], "summary": "Metformin is a tablet that helps control the sugar in your blood if you have type 2 diabetes.", "condition": "Diabetes", "cwords": ["sugar", "sugar diabetes", "blood sugar", "diabetic", "type 2"], "free": "Free for some people", "popular": 1, "bt": false, "mwords": []}, {"slug": "gliclazide", "name": "Gliclazide", "brands": ["Diamicron"], "short": [], "summary": "Gliclazide is a tablet that lowers the sugar in your blood if you have type 2 diabetes.", "condition": "Diabetes", "cwords": ["sugar", "sugar diabetes", "blood sugar", "diabetic", "type 2"], "free": "Free for some people", "popular": 6, "bt": false, "mwords": []}, {"slug": "amlodipine", "name": "Amlodipine", "brands": ["Norvasc"], "short": [], "summary": "Amlodipine is a tablet that lowers your blood pressure.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 2, "bt": false, "mwords": []}, {"slug": "lisinopril", "name": "Lisinopril", "brands": ["Zestril", "Prinivil"], "short": [], "summary": "Lisinopril is a tablet that lowers your blood pressure and protects your heart and kidneys.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 3, "bt": false, "mwords": []}, {"slug": "hydrochlorothiazide", "name": "Hydrochlorothiazide", "brands": [], "short": ["HCTZ"], "summary": "Hydrochlorothiazide is a water tablet that lowers your blood pressure.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 5, "bt": false, "mwords": ["water pill", "water pills", "water tablet", "water tablets", "diuretic"]}, {"slug": "natrixam", "name": "Natrixam", "brands": ["indapamide and amlodipine"], "short": [], "summary": "Natrixam is one tablet with 2 blood pressure medications in it. It lowers your blood pressure.", "condition": "High blood pressure", "cwords": ["pressure", "blood pressure", "hypertension", "bp", "pressure tablets"], "free": "Free for some people", "popular": 10, "bt": true, "mwords": ["water pill", "water pills", "diuretic"]}, {"slug": "salbutamol-inhaler", "name": "Salbutamol inhaler", "brands": ["Ventolin"], "short": [], "summary": "A salbutamol inhaler quickly opens up your airways when you are wheezy or short of breath.", "condition": "Asthma", "cwords": ["inhaler", "pump", "wheeze", "wheezing", "breathing", "puffer", "asma", "asthmatic", "breath", "breathless"], "free": "Free for some people", "popular": 4, "bt": false, "mwords": ["reliever", "reliever inhaler", "blue inhaler", "blue pump", "blue puffer"]}, {"slug": "beclometasone-inhaler", "name": "Beclometasone inhaler", "brands": ["Qvar", "Clenil"], "short": [], "summary": "A beclometasone inhaler stops asthma attacks from starting if you use it every day.", "condition": "Asthma", "cwords": ["inhaler", "pump", "wheeze", "wheezing", "breathing", "puffer", "asma", "asthmatic", "breath", "breathless"], "free": "Free after the Drug Service agrees", "popular": 8, "bt": false, "mwords": ["preventer", "preventer inhaler", "brown inhaler", "brown pump", "brown puffer"]}, {"slug": "carbamazepine", "name": "Carbamazepine", "brands": ["Tegretol"], "short": [], "summary": "Carbamazepine is a tablet that helps stop seizures (fits) if you have epilepsy.", "condition": "Epilepsy", "cwords": ["fits", "seizures", "seizure"], "free": "Free after the Drug Service agrees", "popular": 11, "bt": false, "mwords": []}, {"slug": "timolol-eye-drops", "name": "Timolol eye drops", "brands": ["Timoptol", "Timoptic"], "short": [], "summary": "Timolol eye drops lower the pressure inside your eye if you have glaucoma.", "condition": "Glaucoma", "cwords": ["eye drops", "eyes", "eye pressure"], "free": "Free for some people", "popular": 12, "bt": false, "mwords": ["glaucoma drops"]}, {"slug": "tamoxifen", "name": "Tamoxifen", "brands": ["Nolvadex"], "short": [], "summary": "Tamoxifen is a tablet that helps stop some breast cancers from growing or coming back.", "condition": "Cancer", "cwords": ["breast cancer", "tumour"], "free": "Free for some people", "popular": 13, "bt": false, "mwords": []}, {"slug": "amoxicillin", "name": "Amoxicillin", "brands": ["Amoxil"], "short": [], "summary": "Amoxicillin is an antibiotic that treats infections caused by bacteria.", "condition": "Infections", "cwords": ["antibiotic", "antibiotics", "infection", "chest infection", "ear infection"], "free": "Free for some people", "popular": 7, "bt": false, "mwords": []}, {"slug": "cetirizine", "name": "Cetirizine", "brands": ["Zyrtec"], "short": [], "summary": "Cetirizine is an allergy tablet (an antihistamine). It eases sneezing, itching and a runny nose.", "condition": "Allergies", "cwords": ["allergy", "hay fever", "itching", "itchy", "sneezing", "antihistamine", "hives"], "free": "You pay a lower price", "popular": 9, "bt": false, "mwords": []}];
+
+(function(){
+  function norm(s){return (s||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();}
+  function dist(a,b){var m=a.length,n=b.length,d=[],i,j;for(i=0;i<=m;i++)d[i]=[i];for(j=0;j<=n;j++)d[0][j]=j;
+    for(i=1;i<=m;i++)for(j=1;j<=n;j++){d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+      /* A swapped pair of letters ("hczt") is one typo, not two. */
+      if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);}return d[m][n];}
+  function allowed(len){return len<=3?0:len<=5?1:len<=9?2:3;}  /* govbb-search rule 3 */
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  /* Words that only say "a medication" ("my sugar pills", "medicine for asthma"): dropped if the rest matches. */
+  var FILLER=' my the a an for of to is what whats which do does i need get take taking medication medications medicine medicines meds drug drugs tablet tablets pill pills ';
+  function strip(q){var w=q.split(' '),k=w.filter(function(x){return FILLER.indexOf(' '+x+' ')===-1;});return k.length&&k.length<w.length?k.join(' '):q;}
+  /* Emergency words get the 511 answer first, whatever else matches. */
+  /* Emergency phrases, matched on words as typed (with common misspellings) — never by closest
+     spelling: "cant breath" once fuzzy-matched "breast cancer". MDA NOTE: confirm whether "seizure"
+     on its own should count; for now only "having a seizure/fit" does, so epilepsy lookups are not alarmed. */
+  /* Side-effect words ("swollen ankles", "bleeding gums", "I took my metformin") are NOT alarmed: they
+     get normal results with the one-line 511 net. Swelling counts only in the face, lips, tongue or throat;
+     "took" only when it is someone else, extra or the wrong one. Poisons never spelling-match ("bleach"
+     once matched "breath"). This list can never be complete — the 511 line on every result is the net. */
+  var MEDW='(pills|tablets|tablet|medication|medications|medicine|medicines|meds|bottle|bleach)';
+  function emergency(q){var n=' '+q+' ';
+    return / (over ?dose|over ?dosed|over ?doses|overdoes|over ?doze|overdosing|od|poison|poisoned|poisoning|posion|poisen|bleach|kerosene|rat poison|weed killer|paraquat|gramoxone|unconscious|unresponsive|collapsed|fainted|passed out|pass out|past out|pasted out|passout|not waking|wont wake|cant wake|chestpain|(chest|chess|chist) (pain|pains|hurt|hurts|hurting|tight|tightness)|tight chest|(heart|hart) (attack|attak)|stroke|emergency|a and e|a e|anaphylaxis|anaphylactic|allergic reaction|reaction to|asthma attack|having a (seizure|fit)|(seizure|seizures|fit|fits|fitting) now|is fitting|double dose|took (it|them) twice|took (extra|double|the wrong|wrong|someones|someone elses|somebodys)|(wont|will not|cant) stop bleeding|bleeding (a lot|heavily|badly|wont stop)|heavy bleeding|coughing (up )?blood|vomiting blood|throat (closing|closed|swelling|swollen|tight)|wheezing (badly|bad|a lot)) /.test(n)
+      ||/ (swollen|swelling|swell|swelled|swole) (up )?(face|lip|lips|tongue|throat|mouth) /.test(n)||/ (face|lip|lips|tongue|throat|mouth) (is |are |has |have |all )?(swollen|swelling|swell|swelled|swole|blowing up) /.test(n)
+      ||/ (son|daughter|child|children|kid|kids|baby|toddler|grandchild|grandson|granddaughter|boy|girl|he|she) (took|ate|eaten|swallowed|drank|got into|has eaten|has taken|has swallowed) /.test(n)
+      ||new RegExp(' (ate|eaten|got into|chewed|drank|swallowed) ((my|his|her|their|the|some|all|a|all my|all the) )?'+MEDW+' ').test(n)
+      ||/ (took|taken|take|had|swallowed|ate|eaten|drank|gave|given) (too?|2) (much|many) /.test(n)||/ (too?|2) (much|many) (pills|tablets|medication|medications|medicine|medicines|meds|doses|of) /.test(n)||/^ (too?|2) (much|many) $/.test(n)
+      ||/ (cant|cannot|can not|cnt|short of|trouble|difficulty|not|stopped|struggling to|hard to|cant get my|cannot get my) (breath|breathe|breathing|breth|brethe|brething|breathin|breating) /.test(n);}
+  /* Self-harm: its own answer, no medications listed. MDA NOTE in the page. */
+  function crisis(q){return / (suicide|suicidal|kill (myself|my self)|killing (myself|my self)|end (my|it) (life|all)|want to die|wanna die|want to be dead|hurt (myself|my self)|harm (myself|my self)|self harm|take my (own )?life) /.test(' '+q+' ');}
+  /* Questions about who gets it free ("child", "free medication"): answered, not "still adding". */
+  function info(q){return / (child|children|kids|kid|baby|babies|under 16|pensioner|pensioners|elderly|old age|65|free|cheap|cheaper|subsidised|subsidized|group a|group b|group c|drug service|bndf|formulary|apply|application|eligible|eligibility|qualify) /.test(' '+q+' ');}
+  /* "Where do I collect my prescription" is someone collecting their own: carer only when it is for someone else. */
+  var FAM='(mother|mom|mum|mommy|father|dad|daddy|grandmother|granny|grandma|grandfather|grandad|granddad|grandpa|husband|wife|parent|parents|son|daughter|child|kid|aunt|aunty|auntie|uncle|neighbour|neighbor|friend|brother|sister|partner)';
+  function carer(q){var n=' '+q+' ';
+    return / (carer|caregiver|on behalf|someone else|somebody else|another person) /.test(n)
+      ||(/ (collect|collecting|pick up|picking up|pickup|get|getting) /.test(n)&&new RegExp(' (for (a|an|my|his|her|their|someone|somebody) |my '+FAM+' )').test(n));}
+
+  /* Score one medication. Exact and partial names beat condition words. */
+  function score(m,q){
+    var names=[m.name].concat(m.brands).concat(m.short).map(norm), words=[norm(m.condition)].concat(m.cwords.map(norm)), own=(m.mwords||[]).map(norm), best=0, via='';
+    names.forEach(function(n,i){var s=0;
+      if(n===q)s=100;else if(n.indexOf(q)===0)s=80;else if(q.length>=3&&n.indexOf(q)!==-1)s=60;else if(q.length>=4&&q.indexOf(n.split(' ')[0])!==-1)s=55;
+      if(s>best){best=s;via=i>0&&i<=m.brands.length?m.brands[i-1]:'';}});
+    /* A medication's own words ("water pill", "preventer") beat shared condition words; a whole
+       condition phrase ("eye pressure") beats one shared word ("pressure"). */
+    own.forEach(function(w){if(w===q||(q.length>=3&&(w.indexOf(q)===0||q.indexOf(w)!==-1))){if(52>best){best=52;via='';}}});
+    words.forEach(function(w){var s=w===q?51:(q.length>=3&&(w.indexOf(q)===0||q.indexOf(w)!==-1))?50:0;if(s>best){best=s;via='';}});
+    return {s:best,brand:via};
+  }
+  function fuzzy(m,q){
+    var best=99;
+    [m.name].concat(m.brands).concat(m.short).concat(m.name.split(' ')).forEach(function(n){best=Math.min(best,dist(norm(n),q));});
+    if(best<=allowed(q.length))return best;
+    var cw=[m.condition].concat(m.cwords).map(norm), cbest=99;
+    cw.forEach(function(w){var d=dist(w,q);if(d<=allowed(q.length))cbest=Math.min(cbest,d+0.5);});
+    /* "fever" alone is not "hay fever": an allergy tablet is the wrong answer for a fever. */
+    var common=['blood','high','type','eyes','chest','tablet','tablets','pills','medication','medicine','fever'];
+    q.split(' ').filter(function(t){return t.length>=4&&common.indexOf(t)===-1;}).forEach(function(t){
+      cw.forEach(function(w){w.split(' ').forEach(function(wt){if(wt.length>=4&&common.indexOf(wt)===-1){var d=dist(wt,t);if(d<=allowed(t.length))cbest=Math.min(cbest,d+2);}});});});
+    return cbest;
+  }
+  /* THE one matcher. Suggestions, the Search button and ?q= all use it, so they can never disagree. */
+  function search(raw){
+    var q0=norm(raw); if(!q0)return null;
+    var cr=crisis(q0), noFuzzy=cr||emergency(q0);
+    function run(q){
+      var hits=MEDS.map(function(m){var r=score(m,q);return {m:m,s:r.s,brand:r.brand};}).filter(function(h){return h.s>0;})
+        .sort(function(a,b){return b.s-a.s||a.m.popular-b.m.popular||a.m.name.localeCompare(b.m.name);});
+      if(hits.length||noFuzzy)return {hits:hits,closest:false};
+      hits=MEDS.map(function(m){var d=fuzzy(m,q),b='';m.brands.forEach(function(x){if(!b&&dist(norm(x),q)===d&&d<=allowed(q.length)&&dist(norm(m.name),q)>d)b=x;});return {m:m,d:d,brand:b};}).filter(function(h){return h.d<99;})
+        .sort(function(a,b){return a.d-b.d||a.m.popular-b.m.popular;});
+      if(hits.length){var top=hits[0].d;hits=hits.filter(function(h){return h.d===top;});}
+      return {hits:hits,closest:true};
+    }
+    var r=run(q0); if(!r.hits.length||r.closest){var q1=strip(q0);if(q1!==q0){var r1=run(q1);if(r1.hits.length&&(!r.hits.length||!r1.closest))r=r1;}}
+    r.crisis=cr; r.emergency=noFuzzy&&!cr; r.info=info(q0); r.carer=carer(q0); return r;
+  }
+  /* One exact name or brand goes straight to its page. A brand says which page it is on. */
+  function exact(raw){var q=norm(raw),hit=null;MEDS.forEach(function(m){if(norm(m.name)===q||m.short.some(function(n){return norm(n)===q;}))hit={m:m,brand:''};m.brands.forEach(function(b){if(norm(b)===q)hit={m:m,brand:b};});});return hit;}
+  function pageFor(h){return h.m.slug+'.html'+(h.brand?'?brand='+encodeURIComponent(h.brand):'');}
+
+  var input=document.getElementById('q'), list=document.getElementById('q-suggestions');
+  var box=document.getElementById('results'), h=document.getElementById('results-h'),
+      note=document.getElementById('results-note'), ul=document.getElementById('results-list'),
+      none=document.getElementById('results-none'), emerg=document.getElementById('results-emergency'),
+      infoBox=document.getElementById('results-info'), carerBox=document.getElementById('results-carer'), TITLE=document.title,
+      net=document.getElementById('results-511'), crisisBox=document.getElementById('results-crisis'), notEm=document.getElementById('results-notemerg');
+
+  function render(raw){
+    var r=search(raw), clear=document.getElementById('clear-search'); clear.hidden=!r;
+    if(!r){box.hidden=true;return;}
+    var shown=raw.trim();
+    box.hidden=false; ul.innerHTML=''; none.hidden=true; note.hidden=true; emerg.hidden=!r.emergency; infoBox.hidden=true; carerBox.hidden=true;
+    crisisBox.hidden=!r.crisis; net.hidden=r.emergency||r.crisis; notEm.hidden=true;
+    document.title=(r.crisis?'Get help now':r.emergency?'Emergency':'Results for ‘'+shown+'’')+' - '+TITLE;
+    if(r.crisis){h.textContent='If you are thinking of harming yourself, get help now';h.focus();return;}
+    if(r.emergency){
+      /* Emergency words: the 511 answer IS the heading. Matching medications follow, never "not found". */
+      h.textContent='In an emergency';
+      if(r.hits.length){note.hidden=false;note.textContent='Medications that match ‘'+shown+'’:';}else notEm.hidden=false;
+    }else if(!r.hits.length&&r.carer){
+      h.textContent='Collecting medication for someone else'; carerBox.hidden=false;
+    }else if(!r.hits.length&&r.info){
+      h.textContent='Is my medication free?'; infoBox.hidden=false;
+    }else if(!r.hits.length){
+      /* Soft landing: say what happened, reassure, and give next steps. Never a dead end. */
+      h.textContent='We could not find ‘'+shown+'’'; none.hidden=false;
+    }
+    if(r.hits.length){
+      if(!r.emergency)h.textContent='Results for ‘'+shown+'’: '+(r.hits.length===1?'1 medication':r.hits.length+' medications');
+      if(r.closest&&!r.emergency){note.hidden=false;note.textContent='There is no exact match for ‘'+shown+'’. '+(r.hits.length===1?'This is the closest one. Not right? Check the spelling.':'These are the closest ones. Not right? Check the spelling.');}
+      ul.innerHTML=r.hits.map(function(x){var m=x.m;
+        return '<li><h3 class="govbb-text-h4"><a class="govbb-link" href="'+pageFor(x)+'">'+esc(m.name)+'</a></h3>'+
+          (x.brand?'<p class="govbb-text-body-sm">'+(m.bt?esc(m.name)+' contains '+esc(m.brands.join(' and '))+'.':esc(x.brand)+' is a brand name for '+esc(m.name.toLowerCase())+'.')+'</p>':'')+
+          '<p class="govbb-text-body-sm md-muted">For '+esc(m.condition.toLowerCase())+(m.brands.length&&!x.brand?(m.bt?'. Contains ':'. Also called ')+esc(m.brands.join(m.bt?' and ':' or ')):'')+'.</p>'+
+          '<p class="govbb-text-body"><span class="govbb-text-bold">Is it free?</span> '+esc(m.free)+'</p></li>';}).join('');
+    }
+    h.focus();
+  }
+
+  /* Suggestions come from search(), so "asth", "pressure" and "metfromin" suggest exactly what
+     Search would find. Each option says what it is; a brand option names its medication. */
+  var ACT={};
+  function suggest(){
+    /* Choosing an option puts its label in the box and fires "input" BEFORE the select event:
+       don't rebuild the options from that label, or the choice is lost (Ventolin went nowhere). */
+    if(ACT[input.value])return;
+    var r=search(input.value),opts=[];ACT={};
+    /* Emergency words: no suggestions, so Enter always reaches the 511 answer. */
+    if(r&&!r.emergency&&!r.crisis&&norm(input.value).length>=1&&r.hits.length){
+      r.hits.slice(0,6).forEach(function(x){var label=x.brand?(x.m.bt?x.brand.charAt(0).toUpperCase()+x.brand.slice(1)+' ('+x.m.name+')':x.brand+' ('+x.m.name.toLowerCase()+')'):x.m.name;ACT[label]=x;opts.push(label);});
+    }
+    list.replaceChildren.apply(list,opts.map(function(o){return new Option(o);}));
+  }
+  input.addEventListener('input',suggest);
+  input.addEventListener('focus',function(){if(window.innerWidth<640)setTimeout(function(){(document.getElementById('q-label')||input).scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});},250);});
+  document.querySelector('.govbb-combobox').addEventListener('govbb-combobox-select',function(ev){
+    var v=ev.detail&&ev.detail.value,a=ACT[v];
+    if(a){location.href=pageFor(a);return;}
+    var m=exact(v); if(m)location.href=pageFor(m);
+  });
+  /* The Search button: the same matcher. An exact name or brand goes straight to its page. */
+  document.querySelector('form.md-search').addEventListener('submit',function(ev){
+    ev.preventDefault();var v=input.value,a=ACT[v];
+    if(a){location.href=pageFor(a);return;}
+    var m=exact(v);if(m){location.href=pageFor(m);return;}
+    try{history.replaceState(null,'','?q='+encodeURIComponent(v));}catch(err){}
+    render(v);
+  });
+
+  /* GET ?q= so results can be bookmarked and shared; the box keeps the query. */
+  var q=new URLSearchParams(location.search).get('q');
+  if(q){var m=exact(q); if(m){location.replace(pageFor(m));return;} input.value=q; render(q);}
+})();
+
+</script>
+<script type="module">
+import { initAll } from 'https://cdn.jsdelivr.net/npm/@govtech-bb/frontend@1.0.0-alpha.29/index.js';
+initAll();
+</script>
+</body>
+</html>
