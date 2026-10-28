@@ -89,7 +89,7 @@
       </div>
       <div class="flex flex-wrap items-center gap-s">
         <a class="govbb-button" href="https://www.google.com/maps/search/?api=1&query=St.%20Andrew%20Outpatient%20Clinic%2C%20Belleplaine%2C%20St.%20Andrew%2C%20Barbados">Get directions</a>
-        <a class="govbb-button govbb-button--secondary" href="tel:+12465363200">Call Maurice Byer Polyclinic</a>
+        <a class="govbb-button govbb-button--secondary" href="tel:+12465363200">Call Maurice Byer Polyclinic: (246) 536-3200</a>
       </div>
       
 
@@ -115,7 +115,7 @@
         <table class="govbb-table" id="pc-week">
           <caption class="govbb-table__caption govbb-visually-hidden">Clinics held each weekday at St. Andrew Outpatient Clinic</caption>
           <thead><tr><th class="govbb-table__header" scope="col">Day</th><th class="govbb-table__header" scope="col">Clinics</th></tr></thead>
-          <tbody><tr data-day="1"><th class="govbb-table__header" scope="row">Monday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Wound dressings</li></ul></td></tr><tr data-day="2"><th class="govbb-table__header" scope="row">Tuesday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Seeing a doctor (general practice)</li></ul></td></tr><tr data-day="3"><th class="govbb-table__header" scope="row">Wednesday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Pregnancy and new baby care (antenatal): 1st and 3rd Wednesday of the month only</li><li>Child health and vaccinations clinic: 2nd and 4th Wednesday of the month only</li></ul></td></tr><tr data-day="4"><th class="govbb-table__header" scope="row">Thursday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Mental health</li><li>Wound dressings</li></ul></td></tr><tr data-day="5"><th class="govbb-table__header" scope="row">Friday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Seeing a doctor (general practice)</li><li>Child health and vaccinations clinic: 1st and 3rd Friday of the month only</li></ul></td></tr></tbody>
+          <tbody><tr data-day="1"><th class="govbb-table__header" scope="row">Monday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Wound dressings</li></ul></td></tr><tr data-day="2"><th class="govbb-table__header" scope="row">Tuesday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Seeing a doctor (general practice)</li></ul></td></tr><tr data-day="3"><th class="govbb-table__header" scope="row">Wednesday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Pregnancy and new baby care (antenatal and postnatal): 1st and 3rd Wednesday of the month only</li><li>Child health and vaccinations: 2nd and 4th Wednesday of the month only</li></ul></td></tr><tr data-day="4"><th class="govbb-table__header" scope="row">Thursday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Mental health</li><li>Wound dressings</li></ul></td></tr><tr data-day="5"><th class="govbb-table__header" scope="row">Friday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Seeing a doctor (general practice)</li><li>Child health and vaccinations: 1st and 3rd Friday of the month only</li></ul></td></tr></tbody>
         </table>
         </div>
         <p class="govbb-text-body-sm pc-muted">These clinic days are not confirmed. Call before you go.</p>
@@ -134,13 +134,13 @@
       <section aria-labelledby="location-h" class="pc-section">
         <h2 class="govbb-text-h2" id="location-h">Location</h2>
         <div id="pc-map" class="pc-map" role="region" aria-label="Map showing where St. Andrew Outpatient Clinic is"></div><p class="govbb-text-body-sm pc-muted">The pin position is approximate.</p>
-        <h3 class="govbb-text-h4">Which areas it serves</h3>
+        <h3 class="govbb-text-h3">Which areas it serves</h3>
         <p class="govbb-text-body">We are still confirming which areas this clinic serves. To check which polyclinic is yours, contact the Ministry of Health and Wellness (details below).</p>
       </section>
 
       <section aria-labelledby="contact-and-help" class="pc-section">
         <h2 class="govbb-text-h2" id="contact-and-help">Contact and help</h2>
-        <dl class="pc-meta"><dt>Telephone</dt><dd>No direct number is published. Call Maurice Byer Polyclinic or the Ministry.</dd><dt>Pharmacy</dt><dd><a class="govbb-link" style="white-space:nowrap" href="tel:+12465364071">(246) 536-4071</a></dd></dl>
+        <dl class="pc-meta"><dt>Telephone</dt><dd>No direct number is published. Call Maurice Byer Polyclinic on <a class="govbb-link" style="white-space:nowrap" href="tel:+12465363200">(246) 536-3200</a>, or the Ministry.</dd><dt>Pharmacy</dt><dd><a class="govbb-link" style="white-space:nowrap" href="tel:+12465364071">(246) 536-4071</a></dd></dl>
         <p class="govbb-text-body">For general questions, contact the Ministry of Health and Wellness on <a class="govbb-link" style="white-space:nowrap" href="tel:+12465363800">(246) 536-3800</a> or <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a>. If you are overseas, email rather than call.</p>
       </section>
     </div>
@@ -232,12 +232,10 @@ var PC = (function(){
 
 (function(){
   var el=document.querySelector('.pc-status'); PC.paint(el,JSON.parse(el.getAttribute('data-hours')));
-  var row=document.querySelector('#pc-hours [data-day="'+PC.bbNow().dow+'"]');
-  if(row){row.classList.add('pc-today');row.querySelector('dt').insertAdjacentHTML('afterbegin','<span class="govbb-visually-hidden">Today, </span>');}
   /* Today's row is marked in the clinic table. */
   var t=PC.bbNow();
   var tr=document.querySelector('#pc-week tr[data-day="'+t.dow+'"]');
-  if(tr){tr.classList.add('pc-today');tr.querySelector('th').insertAdjacentHTML('afterbegin','<span class="govbb-visually-hidden">Today, </span>');}
+  if(tr){tr.classList.add('pc-today');tr.querySelector('th').insertAdjacentHTML('beforeend',' (today)');}
 })();
 </script>
 </body>

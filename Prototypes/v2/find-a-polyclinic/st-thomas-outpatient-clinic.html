@@ -89,7 +89,7 @@
       </div>
       <div class="flex flex-wrap items-center gap-s">
         <a class="govbb-button" href="https://www.google.com/maps/search/?api=1&query=St.%20Thomas%20Outpatient%20Clinic%2C%20Rock%20Hall%2C%20St.%20Thomas%2C%20Barbados">Get directions</a>
-        <a class="govbb-button govbb-button--secondary" href="tel:+12465364000">Call Eunice Gibson Polyclinic</a>
+        <a class="govbb-button govbb-button--secondary" href="tel:+12465364000">Call Eunice Gibson Polyclinic: (246) 536-4000</a>
       </div>
       
 
@@ -134,13 +134,13 @@
       <section aria-labelledby="location-h" class="pc-section">
         <h2 class="govbb-text-h2" id="location-h">Location</h2>
         <div id="pc-map" class="pc-map" role="region" aria-label="Map showing where St. Thomas Outpatient Clinic is"></div><p class="govbb-text-body-sm pc-muted">The shaded area is the area Eunice Gibson Polyclinic serves.</p>
-        <h3 class="govbb-text-h4">Which areas it serves</h3>
+        <h3 class="govbb-text-h3">Which areas it serves</h3>
         <p class="govbb-text-body">It serves people who live in an area covering parts of St. Thomas, St. Michael, St. James, St. Andrew and St. Joseph. Places in this area include Warrens, Welchman Hall, Rock Hall (St. Thomas), Redmans, Hopewell, Bagatelle, Apes Hill, Jackmans, Lodge Hill and Hillaby.</p><p class="govbb-text-body">To check a particular address, <a class="govbb-link" href="find.html">search for where you live</a>.</p>
       </section>
 
       <section aria-labelledby="contact-and-help" class="pc-section">
         <h2 class="govbb-text-h2" id="contact-and-help">Contact and help</h2>
-        <dl class="pc-meta"><dt>Telephone</dt><dd>No direct number is published. Call Eunice Gibson Polyclinic or the Ministry.</dd></dl>
+        <dl class="pc-meta"><dt>Telephone</dt><dd>No direct number is published. Call Eunice Gibson Polyclinic on <a class="govbb-link" style="white-space:nowrap" href="tel:+12465364000">(246) 536-4000</a>, or the Ministry.</dd></dl>
         <p class="govbb-text-body">For general questions, contact the Ministry of Health and Wellness on <a class="govbb-link" style="white-space:nowrap" href="tel:+12465363800">(246) 536-3800</a> or <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a>. If you are overseas, email rather than call.</p>
       </section>
     </div>
@@ -232,12 +232,10 @@ var PC = (function(){
 
 (function(){
   var el=document.querySelector('.pc-status'); PC.paint(el,JSON.parse(el.getAttribute('data-hours')));
-  var row=document.querySelector('#pc-hours [data-day="'+PC.bbNow().dow+'"]');
-  if(row){row.classList.add('pc-today');row.querySelector('dt').insertAdjacentHTML('afterbegin','<span class="govbb-visually-hidden">Today, </span>');}
   /* Today's row is marked in the clinic table. */
   var t=PC.bbNow();
   var tr=document.querySelector('#pc-week tr[data-day="'+t.dow+'"]');
-  if(tr){tr.classList.add('pc-today');tr.querySelector('th').insertAdjacentHTML('afterbegin','<span class="govbb-visually-hidden">Today, </span>');}
+  if(tr){tr.classList.add('pc-today');tr.querySelector('th').insertAdjacentHTML('beforeend',' (today)');}
 })();
 </script>
 </body>

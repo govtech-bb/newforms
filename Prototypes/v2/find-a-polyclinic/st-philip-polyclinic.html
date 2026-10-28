@@ -115,7 +115,7 @@
         <table class="govbb-table" id="pc-week">
           <caption class="govbb-table__caption govbb-visually-hidden">Clinics held each weekday at St. Philip Polyclinic</caption>
           <thead><tr><th class="govbb-table__header" scope="col">Day</th><th class="govbb-table__header" scope="col">Clinics</th></tr></thead>
-          <tbody><tr data-day="1"><th class="govbb-table__header" scope="row">Monday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Blood tests: mornings, no appointment needed</li><li>Family planning and contraception</li></ul></td></tr><tr data-day="2"><th class="govbb-table__header" scope="row">Tuesday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Dental health: by appointment</li><li>Sexual health testing (STIs): walk-in, confidential</li></ul></td></tr><tr data-day="3"><th class="govbb-table__header" scope="row">Wednesday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Child health and vaccinations clinic: by appointment</li><li>Pregnancy and new baby care (antenatal): by appointment</li></ul></td></tr><tr data-day="4"><th class="govbb-table__header" scope="row">Thursday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Dental health: by appointment</li><li>Blood tests: mornings, no appointment needed</li><li>Mental health: mornings</li></ul></td></tr><tr data-day="5"><th class="govbb-table__header" scope="row">Friday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Child health and vaccinations clinic: by appointment</li><li>Diabetes care: by appointment</li></ul></td></tr></tbody>
+          <tbody><tr data-day="1"><th class="govbb-table__header" scope="row">Monday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Blood tests</li><li>Family planning and contraception</li></ul></td></tr><tr data-day="2"><th class="govbb-table__header" scope="row">Tuesday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Dental health</li><li>Sexual health testing (STIs)</li></ul></td></tr><tr data-day="3"><th class="govbb-table__header" scope="row">Wednesday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Child health and vaccinations</li><li>Pregnancy and new baby care (antenatal and postnatal)</li></ul></td></tr><tr data-day="4"><th class="govbb-table__header" scope="row">Thursday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Dental health</li><li>Blood tests</li><li>Mental health</li></ul></td></tr><tr data-day="5"><th class="govbb-table__header" scope="row">Friday</th><td class="govbb-table__cell"><ul class="govbb-list"><li>Child health and vaccinations</li><li>Diabetes care</li></ul></td></tr></tbody>
         </table>
         </div>
         <p class="govbb-text-body-sm pc-muted">These clinic days are not confirmed. Call before you go.</p>
@@ -123,7 +123,7 @@
 
       <section aria-labelledby="services-h" class="pc-section">
         <h2 class="govbb-text-h2" id="services-h">Services</h2>
-        <details class="govbb-show-hide"><summary class="govbb-show-hide__summary">Services every polyclinic offers</summary><div class="govbb-show-hide__content"><ul class="govbb-list govbb-list--bullet pc-cols"><li>Seeing a doctor (general practice)</li><li>Pregnancy and new baby care (antenatal and postnatal)</li><li>Child health and vaccinations</li><li>Family planning and contraception</li><li>Dental health</li><li>Foot care (podiatry)</li><li>Diet and nutrition advice</li><li>Counselling</li><li>Physiotherapy and speech therapy</li><li>School health checks</li><li>Nurses who visit your home (district nursing)</li><li>Advice on staying healthy</li><li>Medical records</li><li>Diabetes care</li><li>Blood pressure care</li><li>Asthma care</li><li>Breastfeeding support</li><li>Men’s health</li><li>Teen health</li></ul></div></details><p class="govbb-text-body">It also has clinic days for:</p><ul class="govbb-list govbb-list--bullet pc-cols"><li>Blood tests</li><li>Mental health</li><li>Sexual health testing (STIs)</li></ul>
+        <p class="govbb-text-body">Like every polyclinic, it offers:</p><ul class="govbb-list govbb-list--bullet pc-cols"><li>Seeing a doctor (general practice)</li><li>Pregnancy and new baby care (antenatal and postnatal)</li><li>Child health and vaccinations</li><li>Family planning and contraception</li><li>Dental health</li><li>Foot care (podiatry)</li><li>Diet and nutrition advice</li><li>Counselling</li><li>Physiotherapy and speech therapy</li><li>School health checks</li><li>Nurses who visit your home (district nursing)</li><li>Advice on staying healthy</li><li>Medical records</li><li>Diabetes care</li><li>Blood pressure care</li><li>Asthma care</li><li>Breastfeeding support</li><li>Men’s health</li><li>Teen health</li></ul><p class="govbb-text-body">It also has clinic days for:</p><ul class="govbb-list govbb-list--bullet pc-cols"><li>Blood tests</li><li>Mental health</li><li>Sexual health testing (STIs)</li></ul>
       </section>
 
       <section aria-labelledby="pharmacy-h" class="pc-section">
@@ -134,7 +134,7 @@
       <section aria-labelledby="location-h" class="pc-section">
         <h2 class="govbb-text-h2" id="location-h">Location</h2>
         <div id="pc-map" class="pc-map" role="region" aria-label="Map showing where St. Philip Polyclinic is"></div>
-        <h3 class="govbb-text-h4">Which areas it serves</h3>
+        <h3 class="govbb-text-h3">Which areas it serves</h3>
         <p class="govbb-text-body">We are still confirming which areas this polyclinic serves. To check which polyclinic is yours, contact the Ministry of Health and Wellness (details below).</p>
       </section>
 
@@ -232,12 +232,10 @@ var PC = (function(){
 
 (function(){
   var el=document.querySelector('.pc-status'); PC.paint(el,JSON.parse(el.getAttribute('data-hours')));
-  var row=document.querySelector('#pc-hours [data-day="'+PC.bbNow().dow+'"]');
-  if(row){row.classList.add('pc-today');row.querySelector('dt').insertAdjacentHTML('afterbegin','<span class="govbb-visually-hidden">Today, </span>');}
   /* Today's row is marked in the clinic table. */
   var t=PC.bbNow();
   var tr=document.querySelector('#pc-week tr[data-day="'+t.dow+'"]');
-  if(tr){tr.classList.add('pc-today');tr.querySelector('th').insertAdjacentHTML('afterbegin','<span class="govbb-visually-hidden">Today, </span>');}
+  if(tr){tr.classList.add('pc-today');tr.querySelector('th').insertAdjacentHTML('beforeend',' (today)');}
 })();
 </script>
 </body>
