@@ -55,7 +55,7 @@
   @media (width>=40rem){.md-az-cols{columns:2;column-gap:var(--govbb-space-l)}}
   @media (width>=64rem){.md-az-cols{columns:3}}
   .md-az{list-style:none;padding:0;margin:0 0 var(--govbb-space-s)} .md-az li{margin:0 0 var(--govbb-space-xxs)}
-  #brand-note[hidden],#results-emergency[hidden],#results-info[hidden],#results-carer[hidden],#results-511[hidden],#results-crisis[hidden],#results-notemerg[hidden],#emergency-default[hidden]{display:none}
+  #brand-note[hidden],#results-emergency[hidden],#results-info[hidden],#results-carer[hidden],#results-511[hidden],#results-crisis[hidden],#results-notemerg[hidden],#results-list[hidden],#emergency-default[hidden]{display:none}
   /* Results sit straight under the search box, boxed off so they read as the answer to the search. */
   .md-results-area{margin-top:var(--govbb-space-m);padding-top:var(--govbb-space-s);border-top:4px solid var(--govbb-blue-10);display:flex;flex-direction:column;gap:var(--govbb-space-s)}
   .md-results-area > *{margin:0;max-inline-size:var(--govbb-measure)}
@@ -115,13 +115,6 @@
 
 <main id="main-content" tabindex="-1">
   <div class="govbb-width-container govbb-main-wrapper mb-xm">
-    <div class="flex flex-col gap-xs mb-m">
-      <p class="govbb-text-body-sm govbb-text-bold inline-flex w-fit items-center rounded-md px-3 py-1 bg-teal-10 text-teal-80">Pain</p>
-      <h1 class="govbb-text-h1 wrap-anywhere">Ibuprofen</h1>
-      <div class="border-blue-10 border-b-4 pb-4 text-grey-70">
-        <p class="govbb-text-body-sm">Last updated on October 28th, 2026</p>
-      </div>
-    </div>
     <form role="search" class="govbb-search md-search md-search--top" action="find.html" method="get" novalidate>
       <div class="govbb-form-group">
         <label class="govbb-label" for="q-top">Search for another medication</label>
@@ -131,6 +124,13 @@
         </div>
       </div>
     </form>
+    <div class="flex flex-col gap-xs mb-m">
+      <p class="govbb-text-body-sm govbb-text-bold inline-flex w-fit items-center rounded-md px-3 py-1 bg-teal-10 text-teal-80">Pain</p>
+      <h1 class="govbb-text-h1 wrap-anywhere">Ibuprofen</h1>
+      <div class="border-blue-10 border-b-4 pb-4 text-grey-70">
+        <p class="govbb-text-body-sm">Last updated on October 28th, 2026</p>
+      </div>
+    </div>
 
     <section aria-labelledby="about-h">
       <h2 id="about-h" class="govbb-text-h2">About the medication</h2>
@@ -159,10 +159,10 @@
         <div class="md-qa"><h3 class="govbb-text-h4">Where can I get it?</h3>
           <p class="govbb-text-body">At a private pharmacy.</p>
         <!-- MDA NOTE (Barbados Drug Service): confirm this medication is sold without a prescription in Barbados, and whether the group price applies then. -->
-        <p class="govbb-text-body">Without a prescription, you can buy it at any pharmacy or shop. You will not get the lower price there, so it may cost more than $8 Barbados dollars.</p>
+        <p class="govbb-text-body">Without a prescription, you can also buy it at a pharmacy or shop. The shop sets its own price, which may be more than $8 Barbados dollars.</p>
         <p class="govbb-text-body"><a class="govbb-link" href="https://alpha.gov.bb/health-and-emergency-services/find-an-open-pharmacy">Find a pharmacy near you</a></p></div>
         <div class="md-qa"><h3 class="govbb-text-h4">What do I need to bring?</h3>
-          <p class="govbb-text-body">To pay $8 Barbados dollars, bring your prescription. Without one, the shop sets its own price.</p>
+          <p class="govbb-text-body">To pay $8 Barbados dollars, bring your prescription.</p>
           <p class="govbb-text-body"><a class="govbb-link" href="https://alpha.gov.bb/health-and-emergency-services/prescription-colours">Check what the prescription colours mean</a></p></div>
         <div class="md-qa"><h3 class="govbb-text-h4">What does it look like?</h3>
           <p class="govbb-text-body">They are white tablets. They come in 2 sizes: 200 mg and 400 mg.</p></div>

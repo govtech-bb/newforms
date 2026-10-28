@@ -55,7 +55,7 @@
   @media (width>=40rem){.md-az-cols{columns:2;column-gap:var(--govbb-space-l)}}
   @media (width>=64rem){.md-az-cols{columns:3}}
   .md-az{list-style:none;padding:0;margin:0 0 var(--govbb-space-s)} .md-az li{margin:0 0 var(--govbb-space-xxs)}
-  #brand-note[hidden],#results-emergency[hidden],#results-info[hidden],#results-carer[hidden],#results-511[hidden],#results-crisis[hidden],#results-notemerg[hidden],#emergency-default[hidden]{display:none}
+  #brand-note[hidden],#results-emergency[hidden],#results-info[hidden],#results-carer[hidden],#results-511[hidden],#results-crisis[hidden],#results-notemerg[hidden],#results-list[hidden],#emergency-default[hidden]{display:none}
   /* Results sit straight under the search box, boxed off so they read as the answer to the search. */
   .md-results-area{margin-top:var(--govbb-space-m);padding-top:var(--govbb-space-s);border-top:4px solid var(--govbb-blue-10);display:flex;flex-direction:column;gap:var(--govbb-space-s)}
   .md-results-area > *{margin:0;max-inline-size:var(--govbb-measure)}
@@ -115,13 +115,6 @@
 
 <main id="main-content" tabindex="-1">
   <div class="govbb-width-container govbb-main-wrapper mb-xm">
-    <div class="flex flex-col gap-xs mb-m">
-      <p class="govbb-text-body-sm govbb-text-bold inline-flex w-fit items-center rounded-md px-3 py-1 bg-teal-10 text-teal-80">Glaucoma</p>
-      <h1 class="govbb-text-h1 wrap-anywhere">Timolol eye drops</h1>
-      <div class="border-blue-10 border-b-4 pb-4 text-grey-70">
-        <p class="govbb-text-body-sm">Last updated on October 28th, 2026</p>
-      </div>
-    </div>
     <form role="search" class="govbb-search md-search md-search--top" action="find.html" method="get" novalidate>
       <div class="govbb-form-group">
         <label class="govbb-label" for="q-top">Search for another medication</label>
@@ -131,6 +124,13 @@
         </div>
       </div>
     </form>
+    <div class="flex flex-col gap-xs mb-m">
+      <p class="govbb-text-body-sm govbb-text-bold inline-flex w-fit items-center rounded-md px-3 py-1 bg-teal-10 text-teal-80">Glaucoma</p>
+      <h1 class="govbb-text-h1 wrap-anywhere">Timolol eye drops</h1>
+      <div class="border-blue-10 border-b-4 pb-4 text-grey-70">
+        <p class="govbb-text-body-sm">Last updated on October 28th, 2026</p>
+      </div>
+    </div>
 
     <section aria-labelledby="about-h">
       <h2 id="about-h" class="govbb-text-h2">About the medication</h2>
@@ -140,11 +140,11 @@
         <p class="govbb-text-body">Also called <span class="govbb-text-bold">Timoptol or Timoptic</span>. These are brand names for the same medication.</p>
       </div>
       <div class="md-rows md-list">
-        <div class="md-qa"><h3 class="govbb-text-h4">What does it treat?</h3>
+        <div class="md-qa"><h3 class="govbb-text-h4">What is glaucoma?</h3>
           <p class="govbb-text-body">Glaucoma is when pressure builds up in your eye and can damage your sight.</p></div>
-        <div class="md-qa"><h3 class="govbb-text-h4">How do I take it?</h3>
+        <div class="md-qa"><h3 class="govbb-text-h4">How do I use it?</h3>
           <!-- MDA NOTE (Barbados Drug Service): no amounts or times a day on the page: the prescription label decides. Confirm the general advice below. -->
-          <p class="govbb-text-body">Take it exactly as your doctor or pharmacist tells you. Check the label on your medication. If you cannot read the label, ask your pharmacist.</p></div>
+          <p class="govbb-text-body">Use it exactly as your doctor or pharmacist tells you. Check the label on your medication. If you cannot read the label, ask your pharmacist.</p></div>
         <div class="md-qa"><h3 class="govbb-text-h4">Is it safe for everyone?</h3>
           <p class="govbb-text-body">Not always. Tell your doctor if you have asthma or a slow heartbeat. The drops can affect your breathing and heart.</p>
           <p class="govbb-text-body">If you are not sure, ask your doctor or pharmacist.</p></div>
@@ -162,10 +162,9 @@
           <p class="govbb-text-body"><a class="govbb-link" href="https://alpha.gov.bb/health-and-emergency-services/free-or-subsidised-medication">Read more about free or cheaper medication</a></p></div>
         <div class="md-qa"><h3 class="govbb-text-h4">How much does it cost if I pay the full amount?</h3>
           <p class="govbb-text-body">$30 Barbados dollars for 1 bottle (5 ml).<!-- MDA NOTE (Barbados Drug Service): the price is sample data, made up for the prototype. Confirm before publishing. --></p>
-          <!-- MDA NOTE (Barbados Drug Service): confirm the lower price for people who cannot get it free. -->
-        <p class="govbb-text-body">If you cannot get it free, you may pay less than this.</p></div>
+          </div>
         <div class="md-qa"><h3 class="govbb-text-h4">Where can I get it?</h3>
-          <p class="govbb-text-body">At a pharmacy that works with the Barbados Drug Service. This includes polyclinic pharmacies.</p>
+          <p class="govbb-text-body">At a pharmacy that works with the Barbados Drug Service, where you may pay less if you cannot get it free. This includes polyclinic pharmacies.</p>
         <p class="govbb-text-body">At a private pharmacy, you may pay a fee to prepare your medication. This is called a dispensing fee.</p>
         <p class="govbb-text-body"><a class="govbb-link" href="https://alpha.gov.bb/health-and-emergency-services/find-an-open-pharmacy">Find a pharmacy near you</a></p></div>
         <div class="md-qa"><h3 class="govbb-text-h4">What do I need to bring?</h3>

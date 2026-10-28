@@ -143,9 +143,53 @@
     "muscle pain",
     "knee pain",
     "neck pain",
-    "hurting",
-    "hurts",
-    "aching"
+    "foot hurting",
+    "foot hurts",
+    "foot aching",
+    "feet hurting",
+    "feet hurts",
+    "feet aching",
+    "leg hurting",
+    "leg hurts",
+    "leg aching",
+    "legs hurting",
+    "legs hurts",
+    "legs aching",
+    "back hurting",
+    "back hurts",
+    "back aching",
+    "knee hurting",
+    "knee hurts",
+    "knee aching",
+    "knees hurting",
+    "knees hurts",
+    "knees aching",
+    "neck hurting",
+    "neck hurts",
+    "neck aching",
+    "head hurting",
+    "head aching",
+    "hand hurting",
+    "hand hurts",
+    "hand aching",
+    "shoulder hurting",
+    "shoulder hurts",
+    "shoulder aching",
+    "hip hurting",
+    "hip hurts",
+    "hip aching",
+    "joint hurting",
+    "joint hurts",
+    "joint aching",
+    "joints hurting",
+    "joints hurts",
+    "joints aching",
+    "tooth hurting",
+    "tooth hurts",
+    "tooth aching",
+    "teeth hurting",
+    "teeth hurts",
+    "teeth aching"
    ],
    "notWith": [
     "stomach",
@@ -166,7 +210,13 @@
     "swollen",
     "swelling",
     "swolen",
-    "calf"
+    "calf",
+    "feelings",
+    "feeling",
+    "inside",
+    "sad",
+    "mind",
+    "pride"
    ]
   },
   "inflammation": {
@@ -229,7 +279,8 @@
    "safe": "Not always. If your kidneys or liver are not well, your doctor may give you less or choose a different medication.",
    "price": "18",
    "pack": "60 tablets (500 mg)",
-   "popular": 1
+   "popular": 1,
+   "treatsHeading": "How does it work?"
   },
   {
    "slug": "gliclazide",
@@ -246,7 +297,8 @@
    "safe": "Not always. It can make your blood sugar go too low, so you may feel shaky, sweaty or confused. Eat or drink something sugary and tell your doctor if this happens.",
    "price": "22",
    "pack": "60 tablets (80 mg)",
-   "popular": 6
+   "popular": 6,
+   "treatsHeading": "How does it work?"
   },
   {
    "slug": "amlodipine",
@@ -263,7 +315,8 @@
    "safe": "Most people can take it. Your ankles may swell at first. Tell your doctor if it does not go away.",
    "price": "15",
    "pack": "30 tablets (5 mg)",
-   "popular": 2
+   "popular": 2,
+   "treatsHeading": "How does it work?"
   },
   {
    "slug": "lisinopril",
@@ -281,7 +334,8 @@
    "safe": "Not always. Do not take it if you are pregnant or trying to get pregnant. Tell your doctor if you get a dry cough that will not go away.",
    "price": "20",
    "pack": "30 tablets (10 mg)",
-   "popular": 3
+   "popular": 3,
+   "treatsHeading": "What else is it used for?"
   },
   {
    "slug": "hydrochlorothiazide",
@@ -307,7 +361,8 @@
    "short": [
     "HCTZ"
    ],
-   "breaks": "Hydro|chloro|thiazide"
+   "breaks": "Hydro|chloro|thiazide",
+   "treatsHeading": "How does it work?"
   },
   {
    "slug": "natrixam",
@@ -317,7 +372,7 @@
    ],
    "condition": "high-blood-pressure",
    "summary": "Natrixam is one tablet with 2 blood pressure medications in it. It lowers your blood pressure.",
-   "treats": "It has indapamide, a water tablet, and amlodipine, which relaxes your blood vessels. Your doctor may give you this if you already take both, so you have 1 tablet instead of 2.",
+   "treats": "Indapamide is a water tablet. Amlodipine relaxes your blood vessels. Your doctor may give you this if you already take both, so you have 1 tablet instead of 2.",
    "looks": "They are tablets. They come in 2 strengths: 1.5 mg indapamide with 5 mg amlodipine, and 1.5 mg indapamide with 10 mg amlodipine.",
    "maker": "Servier",
    "group": "A",
@@ -330,7 +385,8 @@
     "water pill",
     "water pills",
     "diuretic"
-   ]
+   ],
+   "treatsHeading": "How does it work?"
   },
   {
    "slug": "salbutamol-inhaler",
@@ -359,7 +415,9 @@
     "blue inhaler",
     "blue pump",
     "blue puffer"
-   ]
+   ],
+   "treatsHeading": "What kind of inhaler is it?",
+   "verb": "use"
   },
   {
    "slug": "beclometasone-inhaler",
@@ -369,7 +427,7 @@
     "Clenil"
    ],
    "condition": "asthma",
-   "summary": "A beclometasone inhaler stops asthma attacks from starting if you use it every day.",
+   "summary": "A beclometasone inhaler helps stop asthma attacks from starting.",
    "treats": "It is a preventer: you use it every day, even when you feel well.",
    "looks": "It is a brown inhaler.",
    "maker": "Caribpharm Ltd",
@@ -386,7 +444,9 @@
     "brown puffer",
     "steroid inhaler",
     "steroid inhalers"
-   ]
+   ],
+   "treatsHeading": "What kind of inhaler is it?",
+   "verb": "use"
   },
   {
    "slug": "carbamazepine",
@@ -403,7 +463,8 @@
    "safe": "Not always. It can affect other medications, including the contraceptive pill. Tell your doctor about everything you take. Do not stop taking it suddenly. Talk to your doctor first.",
    "price": "42",
    "pack": "60 tablets (200 mg)",
-   "popular": 11
+   "popular": 11,
+   "treatsHeading": "What else is it used for?"
   },
   {
    "slug": "timolol-eye-drops",
@@ -424,7 +485,9 @@
    "popular": 12,
    "words": [
     "glaucoma drops"
-   ]
+   ],
+   "treatsHeading": "What is glaucoma?",
+   "verb": "use"
   },
   {
    "slug": "tamoxifen",
@@ -441,7 +504,8 @@
    "safe": "Not always. Do not take it if you are pregnant. Call 511 straight away if one leg becomes painful and swollen, or if you are suddenly short of breath.",
    "price": "55",
    "pack": "30 tablets (20 mg)",
-   "popular": 13
+   "popular": 13,
+   "treatsHeading": "How does it work?"
   },
   {
    "slug": "amoxicillin",
@@ -542,7 +606,8 @@
    "words": [
     "inflammation",
     "anti-inflammatory",
-    "anti inflammatory"
+    "anti inflammatory",
+    "inflamation"
    ],
    "alias": [
     "brufen"
@@ -581,7 +646,8 @@
    "words": [
     "inflammation",
     "anti-inflammatory",
-    "anti inflammatory"
+    "anti inflammatory",
+    "inflamation"
    ],
    "notWith": [
     "throat",
@@ -598,7 +664,7 @@
    "brands": [],
    "condition": "inflammation",
    "summary": "Prednisolone is a steroid tablet that calms inflammation (swelling, redness and pain) in your body.",
-   "treats": "For example, after a bad asthma attack, or in arthritis or some skin and bowel conditions. Your doctor will decide if it is right for you.",
+   "treats": "A bad asthma attack, arthritis, and some skin and bowel conditions. Your doctor will decide if it is right for you.",
    "looks": "They are white tablets. They come in 2 sizes: 1 mg and 5 mg.",
    "maker": "Island Generics Inc",
    "group": "A",
