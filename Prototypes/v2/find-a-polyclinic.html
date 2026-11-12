@@ -26,7 +26,7 @@
   .pc-meta{display:grid;grid-template-columns:11rem 1fr;gap:4px var(--govbb-space-s)}
   .pc-meta dt{font-weight:700} .pc-meta dd{margin:0;min-width:0;overflow-wrap:anywhere}
   @media (max-width:30rem){.pc-meta{grid-template-columns:1fr} .pc-meta dd{margin-bottom:var(--govbb-space-xs)}}
-  .pc-map{display:block;width:100%;max-inline-size:var(--govbb-measure);height:240px;border:1px solid var(--govbb-grey-20);border-radius:var(--govbb-radius)}
+  .pc-map{display:block;width:100%;max-inline-size:var(--govbb-measure);height:max(240px,12em);border:1px solid var(--govbb-grey-20);border-radius:var(--govbb-radius)}
   /* Narrow phones: less cell padding so the clinics table fits 320px without sideways scrolling. */
   @media (max-width:40rem){#pc-week .govbb-table__header,#pc-week .govbb-table__cell{padding-inline:var(--govbb-space-xs)}}
   #pc-week .govbb-list{margin:0;padding:0;list-style:none} #pc-week .govbb-list li + li{margin-top:2px}
@@ -34,6 +34,11 @@
   /* Today's row gets a border as well as the tint, so it stands out without relying on colour alone. */
   #pc-week tr.pc-today{outline:3px solid var(--govbb-blue-40);outline-offset:-3px}
   .pc-notice > * + *{margin-top:var(--govbb-space-xxs)}
+  .pc-section a[href^="mailto:"]{overflow-wrap:anywhere}
+  .leaflet-control-attribution a:focus{color:#0b0c0c}
+  h1.wrap-anywhere{hyphens:auto}
+  @media (max-width:30rem){#pc-week thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)} #pc-week,#pc-week tbody,#pc-week tr,#pc-week th,#pc-week td{display:block;width:auto} #pc-week tr{padding-block:var(--govbb-space-xs)}}
+  .pc-cols li{overflow-wrap:anywhere}
   .pc-emergency{border:2px solid var(--govbb-color-error,#b10e1e);border-radius:var(--govbb-radius);padding:var(--govbb-space-s);max-inline-size:var(--govbb-measure)}
   .pc-emergency > *{margin:0} .pc-emergency > * + *{margin-top:var(--govbb-space-xs)}
 </style>
@@ -66,7 +71,7 @@
 
 <div class="govbb-status-banner govbb-status-banner--alpha govbb-status-banner--full-width">
   <div class="govbb-status-banner__inner govbb-width-container">
-    <p>This page is in <a class="govbb-link" href="https://alpha.gov.bb/what-we-mean-by-alpha">Alpha</a>. Opening hours and services are not confirmed. Call before you go.</p>
+    <p>This page is in <a class="govbb-link" href="https://alpha.gov.bb/what-we-mean-by-alpha">Alpha</a>.</p>
   </div>
 </div>
 
@@ -82,52 +87,50 @@
       <div class="space-y-6 lg:col-span-2 lg:space-y-8">
         <div class="space-y-4 lg:space-y-6">
           <h1 class="govbb-text-h1 wrap-anywhere">Find a polyclinic</h1>
-          <div class="flex flex-col gap-xs"><div class="border-blue-10 border-b-4 pb-4 text-grey-70"><p class="govbb-text-body-sm">Last updated on November 5th, 2026</p></div></div>
+          <div class="flex flex-col gap-xs"><div class="border-blue-10 border-b-4 pb-4 text-grey-70"><p class="govbb-text-body-sm">Last updated on November 12th, 2026</p></div></div>
         </div>
         <div class="govbb-prose">
-          <p>Use this service to find a polyclinic or outpatient clinic, and check its opening hours, phone number and directions.</p>
+          <p>Find a polyclinic or outpatient clinic, and check when it is open, its phone number and how to get there.</p>
           <p>Outpatient clinics are smaller than polyclinics and offer fewer services.</p>
-          <p>Each area of Barbados is looked after by a polyclinic. This is called a catchment area. Your nearest polyclinic may not be the one for your area.</p>
-          <h2 id="before-you-go">Before you go</h2>
-          <p>Opening hours vary. Call the clinic before you go to check that it is open and offers the service you need.</p>
           <p><a class="govbb-button" href="find-a-polyclinic/find.html">Find a polyclinic</a></p>
 
           <h2 id="in-an-emergency">In an emergency</h2>
-                    <p>Call 511 for an ambulance, or go to the Queen Elizabeth Hospital’s Accident and Emergency Department. It is open 24 hours a day.</p>
+                    <p>Call 511 for an ambulance, or go to the Accident and Emergency Department (A&amp;E) at the Queen Elizabeth Hospital (QEH). It is open 24 hours a day.</p>
 
-          <h2 id="who-can-use-a-polyclinic">Who can use a polyclinic</h2>
-                    <p>Barbadian citizens can use a polyclinic. If you are not a Barbadian citizen, contact the Ministry of Health and Wellness to check what care you can get.</p>
+          <h2 id="opening-hours">Opening hours</h2>
+          <p>Polyclinics are open Monday to Friday, 8:30am to 4:30pm. Outpatient clinics and pharmacies keep their own hours.</p>
+          <p>Some services, such as child health, run on certain days only. Hours and days can change, so call before you go.</p>
 
-          <h2 id="cost">Cost</h2>
-          <p>Health care at a polyclinic is free for Barbadian citizens. Polyclinic pharmacies charge no dispensing fee. <a class="govbb-link" href="https://alpha.gov.bb/health-and-emergency-services/find-an-open-pharmacy/">Find an open pharmacy</a> shows which prescriptions each one accepts. <a class="govbb-link" href="https://alpha.gov.bb/health-and-emergency-services/free-or-subsidised-medication">Check if your medication is free or subsidised</a>.</p>
-
-          <h2 id="how-to-find-a-clinic">How to find a clinic</h2>
-          <p>You can:</p>
+          <h2 id="urgent-care">Urgent care</h2>
+                              <p>Urgent care is for when you are sick or hurt and it cannot wait, but your life is not in danger. When polyclinics are closed, you can see a doctor at urgent care.</p>
+          <p>Urgent care is open:</p>
           <ul>
-            <li>search by clinic name or place, for example Redmans or Rock Hall</li>
-            <li>search for a service, for example blood tests or dental health</li>
-            <li>filter by parish</li>
-            <li>use your location to find clinics near you</li>
+            <li>24 hours, every day, at Winston Scott Polyclinic and the David Thompson Health Complex</li><li>Monday to Friday, 4:30pm to 6:30pm, at Branford Taitt Polyclinic</li><li>Monday to Friday, 4:30pm to 8:30pm, at Maurice Byer Polyclinic and Randal Phillips Polyclinic</li>
           </ul>
-          <p>If you live in the Eunice Gibson Polyclinic area, the search can tell you which polyclinic is yours. We are adding other areas. Until then, the parish filter shows the polyclinics that usually serve your parish. The Ministry of Health and Wellness can also tell you which one is yours.</p>
 
-          <h2 id="clinics-and-urgent-care">Clinics and urgent care</h2>
-                                        <p>Polyclinics run clinics, such as dental health, child health and pregnancy care. Most clinics run Monday to Friday, 8:30am to 4:30pm. At other times, and on public holidays, use urgent care.</p>
-          <p>Urgent care is for problems that need help today but are not life-threatening, including seeing a doctor outside clinic hours. It is open:</p>
-          <ul>
-            <li>24 hours, every day, at Sir Winston Scott Polyclinic and the David Thompson Health and Social Services Complex</li>
-            <li>on weekday evenings until 6:30pm at Branford Taitt Polyclinic, and until 8:30pm at Maurice Byer and Randal Phillips polyclinics</li>
-          </ul>
-          <p>On public holidays, polyclinic pharmacies are closed too.</p>
+          <h2 id="public-holidays">Public holidays</h2>
+                    <p>On public holidays, polyclinics and outpatient clinics are closed, including their pharmacies, medical records and evening urgent care. Only the 24-hour urgent care is open.</p>
+
+          <h2 id="which-polyclinic-is-yours">Which polyclinic is yours</h2>
+          <p>Each polyclinic looks after the people who live in its area. Eunice Gibson Polyclinic looks after people who live in Warrens, Welchman Hall, Redmans and nearby.</p>
+          <p>For other areas, call the Ministry of Health and Wellness on <a class="govbb-link" href="tel:+12465363800">(246) 536-3800</a> and ask which polyclinic is yours.</p>
+
+          <h2 id="cost">Who can use a polyclinic and what it costs</h2>
+                    <p>Health care at a polyclinic is free for Barbadian citizens.</p>
+          <p>If you are not a Barbadian citizen or permanent resident, call the Ministry of Health and Wellness on <a class="govbb-link" href="tel:+12465363800">(246) 536-3800</a>. Ask if you can use a polyclinic, and what you will pay.</p>
+
+          <h2 id="medication">Medication</h2>
+                    <p>At a polyclinic pharmacy, you pay no fee to have your prescription filled. The medication itself may still cost something. If you are a Barbadian citizen or permanent resident, <a class="govbb-link" href="https://alpha.gov.bb/health-and-emergency-services/free-or-subsidised-medication">check if you can get free or subsidised medication</a>.</p>
+          <p>Take your original prescription and ID for the person the medication is for: a Barbados ID card, passport or child health book. Photocopies are not accepted.</p>
+                    <p>Polyclinic pharmacies do not fill white prescriptions. Yellow and green prescriptions are filled for selected medication only. To find a pharmacy that is open now, and which prescriptions it takes, use <a class="govbb-link" href="https://alpha.gov.bb/health-and-emergency-services/find-an-open-pharmacy/">Find an open pharmacy</a>.</p>
 
 
           <h2 id="get-help">Get help</h2>
           <p>Contact the Ministry of Health and Wellness:</p>
           <ul>
-            <li>Telephone: <a class="govbb-link" style="white-space:nowrap" href="tel:+12465363800">(246) 536-3800</a></li>
+            <li>Telephone: <a class="govbb-link" href="tel:+12465363800">(246) 536-3800</a></li>
             <li>Email: <a class="govbb-link" href="mailto:info@health.gov.bb">info@health.gov.bb</a></li>
           </ul>
-          <p>If you are overseas, email rather than call.</p>
         </div>
       </div>
     </div>
